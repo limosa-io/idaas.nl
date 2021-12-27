@@ -1,0 +1,27 @@
+version: '3.7'
+services:
+  docker-host:
+    image: qoomon/docker-host
+    cap_add: [ 'NET_ADMIN', 'NET_RAW' ]
+    restart: on-failure
+    environment:
+      - PORTS=9000
+    networks:
+      - custom
+  # Simplifies connecting to the host running docker. Useful for xdebug for example
+  php:
+    build:
+      context: .
+      dockerfile: ./Test.Dockerfile
+    volumes:
+      - .:/app
+    environment:
+      XDEBUG_CONFIG: "remote_enable=1 remote_mode=req remote_port=9000 remote_host=docker-host remote_connect_back=0"
+    env_file:
+      - ./.env
+      - ./.env.test
+    networks:
+      - custom
+
+networks:
+  custom:

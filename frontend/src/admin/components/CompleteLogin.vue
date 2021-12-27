@@ -1,0 +1,117 @@
+
+<template>
+<div v-if="isError" class="error-container" :class="{'error-access-denied': isAccessDenied}">
+  <template v-if="isAccessDenied">
+      <h1>You canceled log in</h1>
+    <p>It seems like you've cancelled the log in process. <router-link to="/">Retry</router-link></p>
+  </template>
+  <template v-else>
+    <h1>Could not log in</h1>
+    <p>There were some problems with getting you logged in. <router-link to="/">Retry</router-link>.</p>
+  </template>
+</div>
+</template>
+
+<style lang="scss">
+.error-container {
+    text-align: center;
+    font-family: Arial;
+    display: table-cell;
+    vertical-align: middle;
+    width: 100vw;
+    height: 100vh;
+    background-color: #d9342e;
+    color: white;
+
+    &.error-access-denied{
+      background-color: #ffa51e;
+    }
+
+    a, a:hover {
+      color: white;
+      text-decoration: underline;
+    }
+}
+</style>
+
+<script>
+/**
+ * Obtains the access token from the fragment parameters.
+ * 
+ * Check the state, as set in InitLogin
+ */
+import queryString from 'query-string';
+
+export default {
+
+  data() {
+    return {
+      isError: false,
+      isAccessDenied: false
+    }
+  },
+
+  mounted() {
+
+    const parsed = Object.assign({}, queryString.parse(location.hash), queryString.parse(location.search));
+
+    const error = parsed.error;
+
+    if (error) {
+
+      this.isError = true;
+
+      if (error == 'access_denied') {
+
+        this.isAccessDenied = true;
+
+      } else {
+        //unexpected
+      }
+    } else if (window.localStorage.getItem('state') == null) {
+
+      this.isError = true;
+      console.error('No state was set!');
+
+    } else if (parsed.state != window.localStorage.getItem('state')) {
+
+      this.isError = true;
+      console.error('The returned state is different than the requested state. Perhaps because you\'ve started multiple logins');
+
+    } else {
+
+      let code = parsed.code || parsed.code;
+
+      this.$http.post(this.$oidcUrl('token'), {
+        client_id: window.manageClient.clientId,
+        grant_type: 'authorization_code',
+        code: code,
+        redirect_uri: window.manageClient.redirectUri
+      }, {
+        public: true
+      }).then(response => {
+        
+        window.sessionStorage.setItem('access_token', response.body.access_token);
+        window.sessionStorage.setItem('refresh_token', response.body.refresh_token);
+
+        window.localStorage.removeItem('state');
+
+        let goto = window.localStorage.getItem('goto') || '/';
+        window.localStorage.removeItem('goto');
+
+        this.$router.push(goto);
+
+      }).catch(response => {
+
+        this.isError = true;
+        console.error('Could not exchange code for an access token');
+
+
+      });
+
+    }
+
+  }
+
+}
+</script>

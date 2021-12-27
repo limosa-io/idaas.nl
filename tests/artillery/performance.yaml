@@ -1,0 +1,33 @@
+# TODO: test via proxy. HTTP_PROXY / HTTPS_PROXY
+config:
+  target: https://master.manage.iam.arietimmerman.nl
+  phases:
+    - duration: 100
+      arrivalRate: 50
+  defaults:
+    headers:
+      authorization: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjNiMjcxMzJkZTE1NjgyNzRlOTkzYTg0MjUyN2Q5MjExNGRkYzhjMDYzODg0ODI3YWJkOTU2MTU2NmU5NWJkMjYzMTBlNjFkNDRlN2JiNzM4In0.eyJhdWQiOiI4YzFmNzcwZS1hYTU5LTRmNjctODgwNC1lNTRkNTNkM2FhZjUiLCJqdGkiOiIzYjI3MTMyZGUxNTY4Mjc0ZTk5M2E4NDI1MjdkOTIxMTRkZGM4YzA2Mzg4NDgyN2FiZDk1NjE1NjZlOTViZDI2MzEwZTYxZDQ0ZTdiYjczOCIsImlhdCI6MTU0MTcwMzgyNSwibmJmIjoxNTQxNzAzODI1LCJleHAiOjE1NDE3MDc0MjUsInN1YiI6IjhjMzc5NmUyLTM0YjAtNGZlMS1iNzVlLTBjNGY2ZDJhMWRlOCIsInNjb3BlcyI6WyJvcGVuaWQiLCJhcHBsaWNhdGlvbnM6bWFuYWdlIl19.PY04Ls-Myhfg0ZHCrnrUyJHQEGc3aZx4utTEpmYN1ENxcc1xn_BE28GWTFbsXVnWs5emKeBfzsp5sYWtt6RmHf-o0h0DPghJX5-m6bq9amufh0tsfN54uM4QpOE2aN7fs1MQa55XE0Gq9Jnl97VV4TR775US36A1dda7oULl9yFJ5Y0jedasgfvbJgDOm3IVTQBi5oLz8x53ocXE7UfX9mk9q0QHMhvOxV17-d_24mF6w0jlPsjOIanR61aen3BuKc-YnONcavIAtF4UJkjhbn-AOGzV30k8xx1X1_NBBBLTNTgDpKqtpNb8M8eDL_XdSVYu4ZYHzGW_s3qD-CqoTQ'
+      content-type: application/json
+  payload:
+    path: "users.csv"
+    fields:
+      - "username"
+      - "password"
+      - "email"
+scenarios:
+  - name: "Create users"
+    flow:
+      - post:
+          url: "/api/scim/v2/Users"
+          body: |
+            {
+                "schemas": ["urn:ietf:params:scim:schemas:core:2.0:User"],
+                "urn:ietf:params:scim:schemas:core:2.0:User": {
+                    "userName": "{{ username }}",
+                    "password": "{{ password }}",
+                    "active": false,
+                    "emails": [{
+                        "value": "{{ email }}"
+                    }]
+                }
+            }

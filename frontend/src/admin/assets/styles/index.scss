@@ -1,0 +1,24 @@
+
+$theme-colors: (
+    "primary": #4285f4,
+);
+
+$modal-lg: 1600px !default;
+
+@import "~bootstrap/scss/bootstrap";
+@import "~bootstrap-vue/dist/bootstrap-vue";
+
+@import 'spec/settings/index';
+@import 'spec/tools/index';
+@import 'spec/index';
+
+@import './vendor/themify-icons';
+@import './vendor/vue-multiselect.min.css';
+
+@import "~noty/src/noty.scss";
+@import "~noty/src/themes/mint.scss";
+
+.was-validated .form-control:invalid, .form-control.is-invalid, .was-validated .custom-select:invalid, .custom-select.is-invalid{
+    border-color: #f44336!important;
+}
+

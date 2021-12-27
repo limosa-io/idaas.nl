@@ -1,0 +1,126 @@
+clients:
+- client_id: 8e663956-038b-4f18-ba19-a1b7ba732032
+  name: Manager
+  secret: Q7u7YKrrzQSuOjVcJEtav5AZeeeOCIlr61LNccSw
+  redirect_uris:
+  - https://master.manage.test.dev/completelogin
+  post_logout_redirect_uris:
+  - https://master.manage.test.dev/logout
+  response_types:
+  - token
+  - code
+  - id_token
+  grant_types:
+  - authorization_code
+  - implicit
+  - refresh_token
+  - client_credentials
+  application_type: web
+  public: public
+  token_endpoint_auth_method: client_secret_post
+  default_prompt_allow_override: true
+  default_acr_values_allow_override: true
+  trusted: true
+  client_name: Manager
+- client_id: 8e663956-05a0-4ba8-9e84-04f3c746c22f
+  name: Tenant - master
+  secret: VA6zlC69tVkCx1Yb0Tdit2Zsudg2krGkI9jrCxjA
+  redirect_uris:
+  - https://master.test.dev/oidc/callback
+  response_types:
+  - token
+  - code
+  - id_token
+  grant_types:
+  - authorization_code
+  - implicit
+  - refresh_token
+  - client_credentials
+  application_type: web
+  public: confidential
+  token_endpoint_auth_method: client_secret_post
+  default_prompt_allow_override: true
+  default_acr_values_allow_override: true
+  trusted: true
+  client_name: Tenant - master
+authentication_modules:
+- t: start
+  skippable: true
+  enabled: true
+  remember_lifetime: 3600
+  name: Start
+  system: false
+  hide_if_not_requested: false
+  auth_levels: []
+- t: openIDConnect
+  settings:
+    client_id: 8e663956-05a0-4ba8-9e84-04f3c746c22f
+    client_secret: VA6zlC69tVkCx1Yb0Tdit2Zsudg2krGkI9jrCxjA
+    userinfo_endpoint: https://master.test.dev/oauth/userinfo
+    scopes: openid roles
+    authorization_endpoint: https://master.test.dev/oauth/authorize
+    token_endpoint: https://master.test.dev/token
+  skippable: true
+  enabled: true
+  group: social
+  remember_lifetime: 3600
+  name: Admin Login
+  system: false
+  hide_if_not_requested: true
+  auth_levels:
+  - id: 8e663955-f62b-4223-8325-0b3dc9b6b47a
+    provider_id: "1"
+    type: oidc
+    level: urn:mace:incommon:iap:bronze
+    ranking: "1"
+    created_at: "2019-08-13 11:49:57"
+    updated_at: "2019-08-13 11:49:57"
+    pivot:
+      auth_module_id: 8e663956-0766-4cf1-8405-50d1df470103
+      auth_level_id: 8e663955-f62b-4223-8325-0b3dc9b6b47a
+      tenant_id: 8e663955-d70a-4bb2-9bdb-c85e748de4cd
+  - id: 8e663955-f82f-4632-b88a-d3edd3cd90c1
+    provider_id: "1"
+    type: oidc
+    level: manage
+    ranking: "1"
+    created_at: "2019-08-13 11:49:57"
+    updated_at: "2019-08-13 11:49:57"
+    pivot:
+      auth_module_id: 8e663956-0766-4cf1-8405-50d1df470103
+      auth_level_id: 8e663955-f82f-4632-b88a-d3edd3cd90c1
+      tenant_id: 8e663955-d70a-4bb2-9bdb-c85e748de4cd
+- t: password
+  skippable: true
+  enabled: true
+  remember_lifetime: 3600
+  name: Password log in
+  system: false
+  hide_if_not_requested: false
+  auth_levels: []
+- t: passwordless
+  skippable: true
+  enabled: true
+  remember_lifetime: 3600
+  name: Magic Link
+  system: false
+  hide_if_not_requested: false
+  auth_levels: []
+- &passwordForgotten
+  t: passwordForgotten
+  skippable: true
+  enabled: true
+  remember_lifetime: 3600
+  name: Password Forgotten
+  system: false
+  hide_if_not_requested: false
+  auth_levels: []
+authentication_chain:
+- from: *passwordForgotten
+  to: *passwordForgotten
+- from: 8e663956-0698-49f5-85cb-5ef188b083a8
+  to: 8e663956-09fb-4370-9cd2-95e14b35999e
+- from: 8e663956-0698-49f5-85cb-5ef188b083a8
+  to: 8e663956-0ab6-44ed-bf29-016e41c5c435
+- from: 8e663956-0698-49f5-85cb-5ef188b083a8
+  to: 8e663956-0766-4cf1-8405-50d1df470103
