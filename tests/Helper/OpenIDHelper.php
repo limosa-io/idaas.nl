@@ -32,7 +32,7 @@ class OpenIDHelper extends LoginStateHelper
         );
 
         $response = $testCase->post(
-            '/oauth/connect/register',
+            'https://master.test.dev/oauth/connect/register',
             $clientData,
             [
                 'Authorization' => sprintf('Bearer %s', $testCase->getAccessToken())

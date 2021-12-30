@@ -27,9 +27,9 @@ class SpecialAccessToken extends AccessToken
 
         $token = $config->builder()
             ->withHeader('kid', method_exists($privateKey, 'getKid') ? $privateKey->getKid() : null)
-            ->withHeader('sub', $this->getUserIdentifier())
             ->identifiedBy($this->getIdentifier())
             ->permittedFor($this->getClient()->getIdentifier())
+            ->relatedTo($this->getUserIdentifier())
             ->canOnlyBeUsedAfter(new DateTimeImmutable())
             ->expiresAt($this->getExpiryDateTime())
             ->issuedAt(new DateTimeImmutable())

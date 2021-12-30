@@ -47,7 +47,7 @@ class OpenIDConnectRequestTest extends TestCase
                 'redirect_uri' => route('ice.manage.completelogin'),
                 'state' => 'k2m2flx5own',
                 'nonce' => '12345678910',
-                'scope' => 'applications:manage'
+                'scope' => 'openid applications:manage'
             ]
         )
             ->expectInternalOpenIDConnect()

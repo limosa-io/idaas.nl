@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 use ArieTimmerman\Laravel\AuthChain\Helper;
 use ArieTimmerman\Laravel\AuthChain\State;
 use League\OAuth2\Server\AuthorizationServer;
-use Zend\Diactoros\Response as Psr7Response;
+use GuzzleHttp\Psr7\Response as Psr7Response;
+
 use Illuminate\Contracts\Auth\Authenticatable;
 use App\Exceptions\NoSessionException;
 use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
@@ -58,7 +59,9 @@ class AuthChainCompleteProcessor implements CompleteProcessorInterface
                 $authRequest->setUser(new User($subject->getKey()));
                 $authRequest->setAuthorizationApproved(true);
 
-                return $this->convertResponse($this->server->completeAuthorizationRequest($authRequest, new Psr7Response));
+                return $this->convertResponse(
+                    $this->server->completeAuthorizationRequest($authRequest, new Psr7Response)
+                );
             } else {
                 return \ArieTimmerman\Laravel\SAML\Http\Controllers\SAMLController::getIdpProcessor($request, $authRequest)->continueSingleSignOn(
                     new SAMLSubject($subject)

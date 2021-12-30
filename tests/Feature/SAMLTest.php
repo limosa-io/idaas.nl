@@ -53,7 +53,7 @@ class SAMLTest extends TestCase
         $this->assertNotNull($remoteServiceProvider);
 
         $response = $this->post(
-            '/saml/v2/login', [
+            'https://master.test.dev/saml/v2/login', [
             'SAMLRequest' => base64_encode(
                 <<<SAML
 <samlp:AuthnRequest xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="_9e08ac832054f79e380c463b7baea30949ff129765" Version="2.0" IssueInstant="2019-07-22T19:05:44Z" Destination="https://master.test.dev/saml/v2/login" AssertionConsumerServiceURL="http://localhost:9080/simplesaml/module.php/saml/sp/saml2-acs.php/default-sp" ProtocolBinding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST">
@@ -77,7 +77,7 @@ SAML
         )->expectSAMLFinish();
 
         $response = $this->call(
-            'GET', '/isLoggedIn', [], collect($helper->response->baseResponse->headers->getCookies())->mapWithKeys(
+            'GET', 'https://master.test.dev/isLoggedIn', [], collect($helper->response->baseResponse->headers->getCookies())->mapWithKeys(
                 function ($value, $key) {
                     return [$value->getName() => $value->getValue()];
                 }

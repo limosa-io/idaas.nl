@@ -194,7 +194,7 @@ class LoginStateHelper
         $proofOfCreation = $response->baseResponse->headers->get('x-scim-proof-of-creation');
 
         $response = $testCase->post(
-            sprintf('/api/authchain/v2/p/%s', urlencode($module['id'])),
+            sprintf('https://master.test.dev/api/authchain/v2/p/%s', urlencode($module['id'])),
             [
                 'proof-of-creation' => $proofOfCreation
             ],
