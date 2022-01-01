@@ -9,11 +9,7 @@
   "repositories": [
     {
       "type": "vcs",
-      "url": "git@bitbucket.org:arietimmerman/laravel-oidc.git"
-    },
-    {
-      "type": "vcs",
-      "url": "git@bitbucket.org:arietimmerman/laravel-authchain.git"
+      "url": "git@github.com:arietimmerman/laravel-authchain.git"
     },
     {
       "type": "vcs",

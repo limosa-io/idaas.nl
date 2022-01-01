@@ -4,15 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7855bbdf79699e752600a1143f2fede1",
+    "content-hash": "7322050358c46d6cb6c2fdbf3ed7d5a1",
     "packages": [
         {
             "name": "arietimmerman/laravel-authchain",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "git@bitbucket.org:arietimmerman/laravel-authchain.git",
-                "reference": "62e3c2c346d474e273b6156185e5eecd66836ffd"
+                "url": "https://github.com/arietimmerman/laravel-authchain.git",
+                "reference": "ab757f974f67d0e1a691f646364fa36e4818f51b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/arietimmerman/laravel-authchain/zipball/ab757f974f67d0e1a691f646364fa36e4818f51b",
+                "reference": "ab757f974f67d0e1a691f646364fa36e4818f51b",
+                "shasum": ""
             },
             "require": {
                 "defuse/php-encryption": "^2.1",
@@ -67,7 +73,11 @@
                 }
             ],
             "description": "Laravel Package for creating a authentication chain",
-            "time": "2020-02-25T19:42:41+00:00"
+            "support": {
+                "source": "https://github.com/arietimmerman/laravel-authchain/tree/master",
+                "issues": "https://github.com/arietimmerman/laravel-authchain/issues"
+            },
+            "time": "2022-01-01T22:25:17+00:00"
         },
         {
             "name": "arietimmerman/laravel-saml",
