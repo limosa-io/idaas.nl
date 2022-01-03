@@ -11,7 +11,6 @@ class ImportTest extends TestCase
 
     public function testBasicTest()
     {
-        
         $response = $this->post(
             'https://master.manage.test.dev/api/import', [
             'yaml' => file_get_contents(__DIR__ . '/import.yml')
