@@ -11,7 +11,13 @@ class ImportTest extends TestCase
 
     public function testBasicTest()
     {
+        // TODO: deze test faalt met GitHub 
         
+        var_dump(file_get_contents(__DIR__ . '/import.yml'));
+        var_dump(sprintf('Bearer %s', $this->getAccessToken()));
+
+        var_dump("continue");
+
         $response = $this->post(
             'https://master.manage.test.dev/api/import', [
             'yaml' => file_get_contents(__DIR__ . '/import.yml')
