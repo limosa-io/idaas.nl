@@ -6,30 +6,12 @@
   "type": "project",
   "minimum-stability": "dev",
   "prefer-stable": true,
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "git@github.com:arietimmerman/laravel-authchain.git"
-    },
-    {
-      "type": "vcs",
-      "url": "git@github.com:arietimmerman/laravel-scim-server.git"
-    },
-    {
-      "type": "vcs",
-      "url": "git@github.com:arietimmerman/laravel-saml.git"
-    },
-    {
-      "type": "vcs",
-      "url": "git@github.com:arietimmerman/laravel-openid-connect-server.git"
-    }
-  ],
   "require": {
     "php": ">=7.0.0",
-    "arietimmerman/laravel-authchain": "dev-master",
-    "arietimmerman/laravel-saml": "dev-master",
-    "arietimmerman/laravel-scim-server": "dev-master",
-    "nl.idaas/laravel-openid-connect": ">=0.2.1",
+    "arietimmerman/laravel-authchain": "^0",
+    "arietimmerman/laravel-saml": "^0",
+    "arietimmerman/laravel-scim-server": "^0",
+    "nl.idaas/laravel-openid-connect": "^0",
     "aws/aws-sdk-php": "^3.81",
     "doctrine/dbal": "^2.9",
     "fideloper/proxy": "~4.0",
