@@ -200,7 +200,8 @@ class Activation extends AbstractType
             ->issuedBy(url('/'))
             ->withHeader('sub', $identifier)
             ->permittedFor(url('/'))
-            ->expiresAt(\DateTimeImmutable::createFromMutable((new \DateTime('+300 seconds'))))
+            // TODO: make expiration time configurable
+            ->expiresAt(\DateTimeImmutable::createFromMutable((new \DateTime('+7200 seconds'))))
             ->issuedAt(new \DateTimeImmutable())
             ->withClaim('state', (string) $state);
 
