@@ -143,7 +143,7 @@ class Activation extends AbstractType
 
             //TODO: is this really needed for activation?
             if ($request->input('password')) {
-                $user = $state->getIncomplete()->getSubject()->getUser();
+            $user = $state->getIncomplete()->getSubject()->getUser();
 
                 $user->password = Hash::make($request->input('password'));
                 $user->save();
@@ -200,7 +200,8 @@ class Activation extends AbstractType
             ->issuedBy(url('/'))
             ->withHeader('sub', $identifier)
             ->permittedFor(url('/'))
-            ->expiresAt(\DateTimeImmutable::createFromMutable((new \DateTime('+300 seconds'))))
+            // TODO: make expiration time configurable
+            ->expiresAt(\DateTimeImmutable::createFromMutable((new \DateTime('+7200 seconds'))))
             ->issuedAt(new \DateTimeImmutable())
             ->withClaim('state', (string) $state);
 
