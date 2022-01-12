@@ -143,7 +143,7 @@ class Activation extends AbstractType
 
             //TODO: is this really needed for activation?
             if ($request->input('password')) {
-            $user = $state->getIncomplete()->getSubject()->getUser();
+                $user = $state->getIncomplete()->getSubject()->getUser();
 
                 $user->password = Hash::make($request->input('password'));
                 $user->save();
