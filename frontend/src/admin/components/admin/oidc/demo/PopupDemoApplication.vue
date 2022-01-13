@@ -83,7 +83,7 @@ export default {
 
       this.$http
         .post(this.$oidcUrl("oauth/connect/register"), {
-          client_name: `Test Application - ${date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes()}`,
+          client_name: `Test Application - ${date.getDate() + '/' + (date.getMonth()+1) + '/' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes()}`,
           application_type: "web",
           public: "public",
           grant_types: ["authorization_code", "refresh_token"]
