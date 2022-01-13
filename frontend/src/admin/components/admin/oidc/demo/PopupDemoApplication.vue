@@ -100,6 +100,8 @@ export default {
           return this.$http
             .post("https://codesandbox.io/api/v1/sandboxes/define?json=1", {
               files: response.body
+            }, {
+              credentials: false
             })
             .then(response => {
               // Here is your demo app => https://fvpgp.csb.app
