@@ -85,7 +85,7 @@ export default {
 
       this.loadImages();
       
-        Uppy({
+        new Uppy({
           debug: true
         })
         .use(AwsS3, {
