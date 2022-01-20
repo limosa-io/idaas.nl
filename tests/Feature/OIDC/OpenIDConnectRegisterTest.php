@@ -79,7 +79,7 @@ class OpenIDConnectRegisterTest extends TestCase
 
         $response->assertStatus(200);
 
-        $this->assertContains('logo_uri', $response->json());
+        $this->assertArrayHasKey('logo_uri', $response->json());
         $this->assertEquals($first['logo_uri'], $response->json('logo_uri'));
         $this->assertNotNull(Client::find($first['client_id']));
 

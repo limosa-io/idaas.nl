@@ -1,13 +1,13 @@
 <?php
 namespace Tests\Helper;
 
-use Illuminate\Foundation\Testing\TestResponse;
+use Illuminate\Testing\TestResponse;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 use App\AuthTypes\OpenIDConnect;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
-use function GuzzleHttp\Psr7\parse_query;
+use GuzzleHttp\Psr7\Query;
 use App\Mail\StandardMail;
 use Illuminate\Contracts\Mail\Mailable;
 use Illuminate\Support\Str;
@@ -57,7 +57,7 @@ class LoginStateHelper
 
         // Expect a return to the completelogin page
         $response->assertStatus(302);
-        
+
         return new static($this->testCase, $response, $this->data);
 
     }
@@ -79,7 +79,7 @@ class LoginStateHelper
 
             $response->assertStatus(200);
 
-            $decoded = $response->json();    
+            $decoded = $response->json();
         }
         return $decoded;
     }
@@ -88,7 +88,7 @@ class LoginStateHelper
     {
 
         $decoded = $this->getDecoded();
-                
+
         $response = null;
 
         switch($type){
@@ -103,7 +103,7 @@ class LoginStateHelper
             break;
         case 'facebook':
             $response = self::chooseFacebook($this->testCase, $decoded, $data);
-            break;                
+            break;
         case 'registration':
             $response = self::chooseRegistration($this->testCase, $decoded, $data);
             break;
@@ -154,7 +154,7 @@ class LoginStateHelper
         );
 
         $testCase->assertNotNull($module);
-        
+
         // First init
         $response = $testCase->post(
             sprintf('/api/authchain/v2/p/%s', urlencode($module['id'])),
@@ -223,9 +223,9 @@ class LoginStateHelper
         app()->instance(\Laravel\Socialite\Contracts\Factory::class, $factory);
 
         $abstractUser = Mockery::mock('Laravel\Socialite\Two\User');
-        
+
         // Get the api user object here
-        $abstractUser->shouldReceive('getId') 
+        $abstractUser->shouldReceive('getId')
             ->andReturn(1234)
             ->shouldReceive('getEmail')
             ->andReturn(Str::random(10).'@noemail.app')
@@ -235,7 +235,7 @@ class LoginStateHelper
             ->andReturn('Laztopaz')
             ->shouldReceive('getAvatar')
             ->andReturn('https://en.gravatar.com/userimage');
-        
+
         $provider->shouldReceive('buildProvider')->andReturn($provider);
         $provider->shouldReceive('stateless')->andReturn($provider);
         $provider->shouldReceive('with')->andReturn($provider);
@@ -366,7 +366,7 @@ class LoginStateHelper
                 $render = $mail->build();
 
                 preg_match('/href="(.*?)"/', $render, $matches);
-            
+
                 $link = $matches[1];
 
                 return $mail->hasTo('arietimmerman@gmail.com');
@@ -388,26 +388,26 @@ class LoginStateHelper
         return new MockHandler(
             [
                 function ($request, $options) {
-                    
-                    $query = parse_query((string) $request->getBody());
+
+                    $query = Query::parse((string) $request->getBody());
 
                     $response = $this->testCase->call($request->getMethod(), $request->getUri()->getPath(), $query);
 
                     return new Response($response->baseResponse->getStatusCode(), $response->baseResponse->headers->all(), $response->baseResponse->getContent());
-                    
+
                 },
                 function ($request, $options) {
-                    
+
                     $headers = collect($request->getHeaders())->map(
                         function ($value) {
                             return $value[0];
                         }
                     )->toArray();
-                    
+
                     $response = $this->testCase->get($request->getUri()->getPath(), $headers);
 
                     return new Response($response->baseResponse->getStatusCode(), $response->baseResponse->headers->all(), $response->baseResponse->getContent());
-                    
+
                 }
             ]
         );
