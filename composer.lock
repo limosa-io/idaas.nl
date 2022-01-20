@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0fd767e1b48a65a0e892b43b6820eab9",
+    "content-hash": "3d3d22bef5370796cf7d431ce73ec2ca",
     "packages": [
         {
             "name": "arietimmerman/laravel-authchain",
@@ -76,16 +76,16 @@
         },
         {
             "name": "arietimmerman/laravel-saml",
-            "version": "dev-feature/another-simplesamlphp-update",
+            "version": "v0.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/arietimmerman/laravel-saml.git",
-                "reference": "a1006d35dcd0a1ddd5a01e6b2642da732a52df7d"
+                "reference": "dca2e116596af5306db8b85725500a65efbf4ec1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/arietimmerman/laravel-saml/zipball/a1006d35dcd0a1ddd5a01e6b2642da732a52df7d",
-                "reference": "a1006d35dcd0a1ddd5a01e6b2642da732a52df7d",
+                "url": "https://api.github.com/repos/arietimmerman/laravel-saml/zipball/dca2e116596af5306db8b85725500a65efbf4ec1",
+                "reference": "dca2e116596af5306db8b85725500a65efbf4ec1",
                 "shasum": ""
             },
             "require": {
@@ -137,9 +137,9 @@
             "description": "Laravel Package for creating a SAML identity provider",
             "support": {
                 "issues": "https://github.com/arietimmerman/laravel-saml/issues",
-                "source": "https://github.com/arietimmerman/laravel-saml/tree/feature/another-simplesamlphp-update"
+                "source": "https://github.com/arietimmerman/laravel-saml/tree/v0.5.3"
             },
-            "time": "2022-01-15T19:55:26+00:00"
+            "time": "2022-01-15T20:51:24+00:00"
         },
         {
             "name": "arietimmerman/laravel-scim-server",
@@ -11010,9 +11010,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "arietimmerman/laravel-saml": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
