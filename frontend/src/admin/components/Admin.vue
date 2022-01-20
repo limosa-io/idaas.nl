@@ -30,7 +30,7 @@
         </main>
 
         <footer class="text-center p-3 c-grey-600">
-          <span>Copyright © 2019 An Arie Timmerman product. All rights reserved.</span>
+          <span>Copyright © 2022 a11n. All rights reserved.</span>
         </footer>
       </div>
     </div>
