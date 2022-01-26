@@ -37,7 +37,7 @@ export default {
 
   mounted() {
 
-    this.$http.get(this.$murl('/authchain/v2/manage/types')).then(response => {
+    this.$http.get(this.$murl('authchain/v2/manage/types')).then(response => {
       this.types = response.data;
     }, response => {
       // error callback
@@ -49,7 +49,7 @@ export default {
 
     createModule(t) {
 
-      this.$http.post(this.$murl('/authchain/v2/manage/modules'),
+      this.$http.post(this.$murl('authchain/v2/manage/modules'),
           {
             type: t,
             enabled: false,
