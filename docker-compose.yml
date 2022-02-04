@@ -72,6 +72,20 @@ services:
             test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
             retries: 3
             timeout: 5s
+    createbuckets:
+        image: minio/mc
+        depends_on:
+        - minio
+        entrypoint: >
+            /bin/sh -c "
+            /usr/bin/mc config host add myminio http://minio:9000 sail password;
+            /usr/bin/mc rm -r --force myminio/uploads;
+            /usr/bin/mc mb myminio/uploads;
+            /usr/bin/mc policy set public myminio/uploads;
+            exit 0;
+            "
+        networks:
+            - sail
     mailhog:
         image: 'mailhog/mailhog:latest'
         ports:
