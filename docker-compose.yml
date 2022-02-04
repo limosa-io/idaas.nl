@@ -1,58 +1,105 @@
+# For more information: https://laravel.com/docs/sail
 version: '3'
 services:
-  # Simplifies connecting to the host running docker. Useful for xdebug for example
-  docker-host:
-    image: qoomon/docker-host
-    cap_add: [ 'NET_ADMIN', 'NET_RAW' ]
-    restart: on-failure
-    environment:
-      - PORTS=9000
-    networks:
-      - my-network-name
-  redis:
-    image: redis:5.0-alpine
-    networks:
-      - my-network-name
-  postgres:
-    image: postgres:11.1-alpine
-    environment:
-      - POSTGRES_PASSWORD=secret
-      - POSTGRES_USER=laravel
-      - POSTGRES_DB=laravel
-    ports:
-      - 5432:5432
-    volumes: 
-      - ~/.pgdata:/var/lib/postgresql/data:delegated
-      # - ./data.sql:/docker-entrypoint-initdb.d/init.sql
-    networks:
-      - my-network-name
-  nginx:
-    # https://dockerfile.readthedocs.io/en/latest/content/DockerImages/dockerfiles/php-dev.html
-    # image: webdevops/php-nginx-dev:7.2
-    dns: 172.17.0.1
-    build: .
-    environment:
-      - WEB_ALIAS_DOMAIN=*.*
-      - WEB_DOCUMENT_ROOT=/app/public
-      - PHP_DEBUGGER=xdebug
-      - XDEBUG_MODE=debug
-      - XDEBUG_CONFIG="client_host=docker-host
-      # ip addr show docker0 | grep -Po 'inet \K[\d.]+'
-      # - XDEBUG_REMOTE_HOST=172.17.0.1
-      - SSH_AUTH_SOCK=/ssh-agent
-    volumes: 
-      - ./:/app:delegated
-      - ./docker/ssl:/opt/docker/etc/nginx/ssl:delegated
-      - ${SSH_AUTH_SOCK}:/ssh-agent
-    command: sh -c "/app/init.sh; supervisord"
-    working_dir: /app
-    ports:
-     - "443:443"
-    # expose:
-    #  - "443"
-    networks:
-    - my-network-name
-
+    laravel.test:
+        build:
+            context: ./vendor/laravel/sail/runtimes/7.4
+            dockerfile: Dockerfile
+            args:
+                WWWGROUP: '${WWWGROUP}'
+        image: idaas_nl
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
+        ports:
+            - '${APP_PORT:-80}:80'
+        environment:
+            PHP_CLI_SERVER_WORKERS: 10
+            WWWUSER: '${WWWUSER}'
+            LARAVEL_SAIL: 1
+            XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
+            XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
+        volumes:
+            - '.:/var/www/html'
+        networks:
+            - sail
+        depends_on:
+            - pgsql
+            - redis
+            - minio
+    pgsql:
+        image: 'timescale/timescaledb:2.5.1-pg13'
+        ports:
+            - '${FORWARD_DB_PORT:-5432}:5432'
+        environment:
+            PGPASSWORD: '${DB_PASSWORD:-secret}'
+            POSTGRES_DB: '${DB_DATABASE}'
+            POSTGRES_USER: '${DB_USERNAME}'
+            POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
+        volumes:
+            - 'sail-pgsql:/var/lib/postgresql/data'
+        networks:
+            - sail
+        healthcheck:
+            test: ["CMD", "pg_isready", "-q", "-d", "${DB_DATABASE}", "-U", "${DB_USERNAME}"]
+            retries: 3
+            timeout: 5s
+    redis:
+        image: 'redis:alpine'
+        ports:
+            - '${FORWARD_REDIS_PORT:-6379}:6379'
+        volumes:
+            - 'sail-redis:/data'
+        networks:
+            - sail
+        healthcheck:
+            test: ["CMD", "redis-cli", "ping"]
+            retries: 3
+            timeout: 5s
+    minio:
+        image: 'minio/minio:latest'
+        ports:
+            - '${FORWARD_MINIO_PORT:-9000}:9000'
+            - '${FORWARD_MINIO_CONSOLE_PORT:-8900}:8900'
+        environment:
+            MINIO_ROOT_USER: 'sail'
+            MINIO_ROOT_PASSWORD: 'password'
+        volumes:
+            - 'sail-minio:/data/minio'
+        networks:
+            - sail
+        command: minio server /data/minio --console-address ":8900"
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+            retries: 3
+            timeout: 5s
+    createbuckets:
+        image: minio/mc
+        depends_on:
+        - minio
+        entrypoint: >
+            /bin/sh -c "
+            /usr/bin/mc config host add myminio http://minio:9000 sail password;
+            /usr/bin/mc rm -r --force myminio/uploads;
+            /usr/bin/mc mb myminio/uploads;
+            /usr/bin/mc policy set public myminio/uploads;
+            exit 0;
+            "
+        networks:
+            - sail
+    mailhog:
+        image: 'mailhog/mailhog:latest'
+        ports:
+            - '${FORWARD_MAILHOG_PORT:-1025}:1025'
+            - '${FORWARD_MAILHOG_DASHBOARD_PORT:-8025}:8025'
+        networks:
+            - sail
 networks:
-  my-network-name:
-
+    sail:
+        driver: bridge
+volumes:
+    sail-pgsql:
+        driver: local
+    sail-redis:
+        driver: local
+    sail-minio:
+        driver: local

@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-
+use Illuminate\Support\Facades\DB;
 class CreateStatsTable extends Migration
 {
     /**
@@ -39,12 +39,11 @@ class CreateStatsTable extends Migration
             DB::statement("SELECT create_hypertable('stats', 'time', chunk_time_interval => interval '7 days');");
 
             // for showing the number of logins per tenant
-            DB::statement("
-                CREATE VIEW hourly_logins 
+            // TODO: dit werkt niet??
+            DB::raw("
+                CREATE materialized VIEW hourly_logins 
                 WITH (
-                    timescaledb.continuous,
-                    timescaledb.refresh_interval = '30m',
-                    timescaledb.refresh_lag = '-7 days'
+                    timescaledb.continuous
                 )
                 AS
                 SELECT
@@ -60,7 +59,7 @@ class CreateStatsTable extends Migration
             ");
             
             // for showing the number of logins per user, per week
-            DB::statement("
+            DB::raw("
                 CREATE VIEW user_logins 
                 WITH (
                     timescaledb.continuous,
@@ -84,7 +83,7 @@ class CreateStatsTable extends Migration
             ");
 
             // for showing the number of access tokens per OAuth client
-            DB::statement("
+            DB::raw("
                 CREATE VIEW app_tokens 
                 WITH (
                     timescaledb.continuous,

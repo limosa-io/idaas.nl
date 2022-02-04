@@ -398,17 +398,20 @@ class NewTenant extends Command
                 if ($tenant->master) {
                     $levels[] = AuthLevel::where(['level' => 'urn:mace:incommon:iap:bronze'])->first()->id;
 
-                    $to[] = AuthModule::firstOrCreate(
-                        [
-                        'name' => (new Facebook)->getDefaultName()
-                        ], [
-                        'type' => (new Facebook())->getIdentifier(),
-                        'config' => [
-                        'client_id' => env('FACEBOOK_CLIENT_ID'),
-                        'client_secret' => env('FACEBOOK_CLIENT_SECRET')
-                        ]
-                        ]
-                    );
+                    if (env('FACEBOOK_CLIENT_ID') !== null) {
+                        $to[] = AuthModule::firstOrCreate(
+                            [
+                            'name' => (new Facebook)->getDefaultName()
+                            ],
+                            [
+                                'type' => (new Facebook())->getIdentifier(),
+                                'config' => [
+                                'client_id' => env('FACEBOOK_CLIENT_ID'),
+                                'client_secret' => env('FACEBOOK_CLIENT_SECRET')
+                                ]
+                            ]
+                        );
+                    }
                 }
 
                 $module->authLevels()->sync($levels, false);
