@@ -39,12 +39,11 @@ class CreateStatsTable extends Migration
             DB::statement("SELECT create_hypertable('stats', 'time', chunk_time_interval => interval '7 days');");
 
             // for showing the number of logins per tenant
+            // TODO: dit werkt niet??
             DB::raw("
-                CREATE VIEW hourly_logins 
+                CREATE materialized VIEW hourly_logins 
                 WITH (
-                    timescaledb.continuous,
-                    timescaledb.refresh_interval = '30m',
-                    timescaledb.refresh_lag = '-7 days'
+                    timescaledb.continuous
                 )
                 AS
                 SELECT
