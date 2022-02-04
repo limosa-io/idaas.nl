@@ -3,13 +3,7 @@
 # Idaas.nl
 
 This is the core of idaas.nl
-## Installation
-
-~~~
-composer install
-~~~
-
-## Development
+## Demo environment
 
 ~~~
 docker run --rm \
