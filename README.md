@@ -19,6 +19,7 @@ docker run --rm \
     laravelsail/php81-composer:latest \
     composer install --ignore-platform-reqs
 ./vendor/bin/sail up -d
-./vendor/bin/sail migrate
+./vendor/bin/sail artisan migrate
 ./vendor/bin/sail artisan queue:work --daemon
+./vendor/bin/sail artisan tenant:master login youremail@example.com
 ~~~
