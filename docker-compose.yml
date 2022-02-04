@@ -7,7 +7,7 @@ services:
             dockerfile: Dockerfile
             args:
                 WWWGROUP: '${WWWGROUP}'
-        image: sail-8.1/app
+        image: idaas_nl
         extra_hosts:
             - 'host.docker.internal:host-gateway'
         ports:
