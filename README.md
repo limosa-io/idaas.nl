@@ -1,6 +1,6 @@
 ![](https://github.com/arietimmerman/idaas.nl/workflows/CI/badge.svg)
 
-# Idaas.nl
+# idaas.nl
 
 This is the core of [idaas.nl](https://www.idaas.nl/): (not) yet another identity platform.
 
