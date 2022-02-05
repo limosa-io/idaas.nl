@@ -10,6 +10,7 @@ Idaas.nl is a true multi-tenant solution. It is design to scale out and provides
 ## Demo environment
 
 ~~~
+source .env.demo
 docker run --rm \
     -u "$(id -u):$(id -g)" \
     -v $(pwd):/var/www/html \
