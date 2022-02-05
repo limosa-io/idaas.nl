@@ -2,6 +2,8 @@
 version: '3'
 services:
     laravel.test:
+        env_file:
+            - .env.demo
         build:
             context: ./vendor/laravel/sail/runtimes/7.4
             dockerfile: Dockerfile
