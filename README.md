@@ -9,7 +9,7 @@ Idaas.nl has similaries with Auth0, Okta, Oracle IDCS Azure AD B2C, Ping Identit
 Idaas.nl is a true multi-tenant solution. It is design to scale out and provides great flexibility.
 ## Demo environment
 
-Run the commands listed below and access your tenant via http://master.notidaas.nl
+Run the commands listed below and access your tenant via http://login.notidaas.nl
 
 _Note:_ `notidaas.nl` is a special domain. This domain and all subdomains point to localhost.
 
