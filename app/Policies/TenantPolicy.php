@@ -24,9 +24,11 @@ class TenantPolicy
      * @return bool
      */
     public function manage(SubjectInterface $subject)
-    {   
+    {
+        $current = ($tenant = resolve(Tenant::class)) != null ? $tenant->id : '_';
+
         return Cache::remember(
-            'subject:can_manage:' . $subject->id, 10, function () use ($subject) {
+            'subject:can_manage:' . $subject->id . ':' . $current, 10, function () use ($subject) {
                 return Role::whereIn('id', $subject->getRoles())->exists();
             }
         );
@@ -34,11 +36,11 @@ class TenantPolicy
 
     /**
      * Wether a user is allowed to control (his) tenants: list and create.
-     * 
+     *
      * Only allowed for master by users with a specific group
      */
     public function control(Subject $subject)
-    {   
+    {
         return config('app.tenant_control_group') == null || (($tenant = resolve(Tenant::class)) != null && $tenant->master && $subject->user->groups()->where('groups.id', config('app.tenant_control_group'))->exists());
     }
 
