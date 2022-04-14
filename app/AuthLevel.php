@@ -74,7 +74,7 @@ class AuthLevel extends Model implements AuthLevelInterface
 
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize() : array
     {
         return [
             'id'    => $this->id,

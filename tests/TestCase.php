@@ -92,6 +92,6 @@ abstract class TestCase extends BaseTestCase
 
         $privateKey = resolve(KeyRepository::class)->getPrivateKey();
 
-        return (string) $accessToken->convertToJWT($privateKey);
+        return (string) $accessToken->convertToJWT($privateKey)->toString();
     }
 }

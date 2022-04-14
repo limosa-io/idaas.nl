@@ -13,9 +13,8 @@
     "arietimmerman/laravel-scim-server": "^0",
     "aws/aws-sdk-php": "^3.81",
     "doctrine/dbal": "^2.9",
-    "fideloper/proxy": "~4.0",
     "guzzlehttp/guzzle": "^7.0.1",
-    "laravel/framework": "^8.0",
+    "laravel/framework": "^9",
     "laravel/legacy-factories": "^1.3",
     "laravel/socialite": "^5.3",
     "laravel/tinker": "^2.0",
@@ -23,12 +22,12 @@
     "nl.idaas/laravel-openid-connect": "^0",
     "phpunit/phpunit": "^9.0",
     "predis/predis": "^1.1",
-    "spomky-labs/otphp": "^9.1",
+    "spomky-labs/otphp": "^10",
     "tijsverkoyen/css-to-inline-styles": "^2.2",
-    "vemcogroup/laravel-sparkpost-driver": "^4.0"
+    "vemcogroup/laravel-sparkpost-driver": "^5"
   },
   "require-dev": {
-    "composer/composer": "^1.9",
+    "composer/composer": "^2",
     "filp/whoops": "~2.0",
     "fzaninotto/faker": "~1.4",
     "laravel/sail": "^1.13",
@@ -64,6 +63,9 @@
   "config": {
     "preferred-install": "dist",
     "sort-packages": true,
-    "optimize-autoloader": true
+    "optimize-autoloader": true,
+    "allow-plugins": {
+      "symfony/thanks": false
+    }
   }
 }
