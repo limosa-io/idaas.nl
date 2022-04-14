@@ -22,7 +22,7 @@ class RemoteServiceProvider extends Model implements RemoteServiceProviderConfig
 
     protected $guarded = [ 'id' ];
 
-    public function jsonSerialize()
+    public function jsonSerialize() : array
     {
 
         $result = parent::jsonSerialize();

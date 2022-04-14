@@ -4,7 +4,9 @@ namespace Tests\Helper;
 
 use Illuminate\Support\Str;
 use Tests\TestCase;
-use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\UnencryptedToken;
+use Lcobucci\JWT\Signer\Hmac\Sha256;
 
 class OpenIDHelper extends LoginStateHelper
 {
@@ -128,10 +130,13 @@ class OpenIDHelper extends LoginStateHelper
 
         if (in_array('openid', $this->data['scope'])) {
             $this->testCase->assertArrayHasKey('id_token', $result);
-            $parser = new Parser();
+
+            $configuration = Configuration::forUnsecuredSigner();
+            
+            $parser = $configuration->parser();
             $token = $parser->parse($result['id_token']);
 
-            $this->testCase->assertEquals($this->data['nonce'], $token->getClaim('nonce'));
+            $this->testCase->assertEquals($this->data['nonce'], $token->claims()->get('nonce'));
 
             // $this->testCase->assertEquals(url('/'), $token->getClaim('iss'));
         } else {
@@ -168,12 +173,14 @@ class OpenIDHelper extends LoginStateHelper
 
         if (in_array('openid', $this->data['scope'])) {
             $this->testCase->assertArrayHasKey('id_token', $json);
-            $parser = new Parser();
+            $configuration = Configuration::forUnsecuredSigner();
+            
+            $parser = $configuration->parser();
             $token = $parser->parse($json['id_token']);
 
-            $this->testCase->assertEquals($this->data['nonce'], $token->getClaim('nonce'));
+            $this->testCase->assertEquals($this->data['nonce'], $token->claims()->get('nonce'));
 
-            $this->testCase->assertEquals(url('/'), $token->getClaim('iss'));
+            $this->testCase->assertEquals(url('/'), $token->claims()->get('iss'));
         } else {
             $this->testCase->assertArrayNotHasKey('id_token', $json);
         }

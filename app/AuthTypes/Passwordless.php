@@ -57,8 +57,7 @@ class Passwordless extends AbstractType
         // 1. get token
         $publicKey = resolve(KeyRepository::class)->getPublicKey();
 
-        $parser = new Parser();
-        $token = $parser->parse($request->query->get('token'));
+        
 
         // 2. check signature
 
@@ -68,6 +67,9 @@ class Passwordless extends AbstractType
             InMemory::plainText($publicKey->getKeyContents())
         );
 
+        $parser = $config->parser();
+        $token = $parser->parse($request->query->get('token'));
+        
         $config->validator()->validate($token, ...[new SignedWith($config->signer(), $config->verificationKey())]);
 
 //        $token->verify(new Sha256(), new Key($publicKey->getKeyPath()));
@@ -142,7 +144,8 @@ class Passwordless extends AbstractType
                 return (new ModuleResult())->setCompleted(false)->setResponse(response(['error'=>'We could not find a user with this attribute.'], 422));
             }
 
-            $url = route('ice.login.passwordless') . '?token=' . urlencode(self::getToken($user->id, $state));
+            $url = route('ice.login.passwordless') . '?token=' .
+                urlencode(self::getToken($user->id, $state)->toString());
 
             Mail::to($user->email)->send(
                 new StandardMail(

@@ -103,7 +103,7 @@ class AuthModule extends Module
         return $this;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize() : array
     {
         
         $result = parent::jsonSerialize();

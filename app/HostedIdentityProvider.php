@@ -28,7 +28,7 @@ class HostedIdentityProvider extends Model implements HostedIdentityProviderConf
         
     ];
     
-    public function jsonSerialize()
+    public function jsonSerialize() : array
     {
         return $this->toSimpleSAMLArray();
     }
