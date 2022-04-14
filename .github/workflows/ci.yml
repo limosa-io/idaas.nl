@@ -14,6 +14,7 @@ jobs:
     - uses: php-actions/phpunit@v3
       with:
         configuration: phpunit.xml
+        memory_limit: 256M
         php_version: 8
         version: 8.5
         php_extensions: yaml
