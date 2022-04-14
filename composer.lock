@@ -3873,16 +3873,16 @@
         },
         {
             "name": "nl.idaas/openid-server",
-            "version": "v0.2.3",
+            "version": "v0.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/arietimmerman/openid-connect-server.git",
-                "reference": "724bc38345b6f674a06ac1d7208aa0007b218fb8"
+                "reference": "88904c9a4c3198f5337af485184cf8ec8c355136"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/arietimmerman/openid-connect-server/zipball/724bc38345b6f674a06ac1d7208aa0007b218fb8",
-                "reference": "724bc38345b6f674a06ac1d7208aa0007b218fb8",
+                "url": "https://api.github.com/repos/arietimmerman/openid-connect-server/zipball/88904c9a4c3198f5337af485184cf8ec8c355136",
+                "reference": "88904c9a4c3198f5337af485184cf8ec8c355136",
                 "shasum": ""
             },
             "require": {
@@ -3912,9 +3912,9 @@
             "description": "OpenID Connect server for PHP",
             "support": {
                 "issues": "https://github.com/arietimmerman/openid-connect-server/issues",
-                "source": "https://github.com/arietimmerman/openid-connect-server/tree/v0.2.3"
+                "source": "https://github.com/arietimmerman/openid-connect-server/tree/v0.2.4"
             },
-            "time": "2022-01-18T21:41:29+00:00"
+            "time": "2022-04-14T20:15:19+00:00"
         },
         {
             "name": "nyholm/psr7",
