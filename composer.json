@@ -1,8 +1,8 @@
 {
-  "name": "laravel/laravel",
-  "description": "The Laravel Framework.",
+  "name": "idaas.nl/idaas.nl",
+  "description": "idaas.nl is (not) yet another identity platform ",
   "keywords": ["framework", "laravel"],
-  "license": "MIT",
+  "license": "Commons Clause",
   "type": "project",
   "minimum-stability": "dev",
   "prefer-stable": true,
