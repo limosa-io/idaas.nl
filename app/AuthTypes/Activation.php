@@ -96,7 +96,7 @@ class Activation extends AbstractType
         $user = User::findOrFail($token->headers()->get("sub"));
 
         // 5. check if last_login_date is the same from the jwt
-        $state = Helper::loadStateFromSession(app(), $token->claims()->get('state'));
+        $state = Helper::loadStateFromSession(app(), $token->getClaim('state'));
 
         if ($state == null) {
             throw new \Exception("Unknown state");
@@ -127,7 +127,9 @@ class Activation extends AbstractType
             new StandardMail(
                 @$module->config['template_id'],
                 [
-                'url'=> htmlentities(route('ice.login.activation') . '?token=' . urlencode(self::getToken($subject->getUserId(), $state))),
+                'url'=> htmlentities(route('ice.login.activation') . '?token=' . urlencode(
+                    self::getToken($subject->getUserId(), $state)->toString()
+                )),
                 'subject' => $subject,
                 'user' =>  $subject->getUser()
                 ],
@@ -140,7 +142,6 @@ class Activation extends AbstractType
     public function process(Request $request, State $state, ModuleInterface $module)
     {
         if ($state->getIncomplete() != null && $state->getIncomplete()->moduleState != null && $state->getIncomplete()->moduleState['state'] == 'confirmed') {
-
             //TODO: is this really needed for activation?
             if ($request->input('password')) {
                 $user = $state->getIncomplete()->getSubject()->getUser();
