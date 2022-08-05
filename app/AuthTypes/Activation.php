@@ -96,7 +96,7 @@ class Activation extends AbstractType
         $user = User::findOrFail($token->headers()->get("sub"));
 
         // 5. check if last_login_date is the same from the jwt
-        $state = Helper::loadStateFromSession(app(), $token->getClaim('state'));
+        $state = Helper::loadStateFromSession(app(), $token->claims()->get('state'));
 
         if ($state == null) {
             throw new \Exception("Unknown state");
