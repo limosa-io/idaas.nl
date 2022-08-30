@@ -31,7 +31,7 @@ class NewMaster extends NewTenant
      *
      * @var string
      */
-    protected $signature = 'tenant:master {subdomain} {admin}';
+    protected $signature = 'tenant:master {subdomain : Subdomain} {admin : Admin}';
 
     /**
      * The console command description.

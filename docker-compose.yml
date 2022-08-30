@@ -5,7 +5,7 @@ services:
         env_file:
             - .env.demo
         build:
-            context: ./vendor/laravel/sail/runtimes/7.4
+            context: ./vendor/laravel/sail/runtimes/8.1
             dockerfile: Dockerfile
             args:
                 WWWGROUP: '${WWWGROUP}'

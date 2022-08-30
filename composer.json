@@ -30,7 +30,7 @@
     "composer/composer": "^2",
     "filp/whoops": "~2.0",
     "fzaninotto/faker": "~1.4",
-    "laravel/sail": "^1.13",
+    "laravel/sail": "^1.15",
     "mockery/mockery": "~1.0",
     "symfony/thanks": "^1.0"
   },
