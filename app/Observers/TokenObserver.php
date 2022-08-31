@@ -28,7 +28,7 @@ class TokenObserver
      * @param  \App\User $user
      * @return void
      */
-    public function deleted(Token $user)
+    public function deleted(Token $token)
     {
         resolve(TokenCache::class)->clearCacheForToken($token->id);
     }

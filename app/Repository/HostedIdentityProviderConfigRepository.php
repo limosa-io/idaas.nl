@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use ArieTimmerman\Laravel\SAML\Repository\HostedIdentityProviderConfigRepositoryInterface;
-use App\RemoteServiceProvider;
 use App\HostedIdentityProvider;
 
 class HostedIdentityProviderConfigRepository implements HostedIdentityProviderConfigRepositoryInterface

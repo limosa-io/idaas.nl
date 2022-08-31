@@ -40,7 +40,6 @@ use DateTimeImmutable;
 
 class PasswordForgotten extends AbstractType
 {
-
     /**
      * This module can work as a first-factor, or as a second-factor in case the subject has a mail address
      */
@@ -56,7 +55,6 @@ class PasswordForgotten extends AbstractType
 
     public function processCallback(Request $request)
     {
-        
         // 1. get token
         $publicKey = resolve(KeyRepository::class)->getPublicKey();
 
@@ -74,9 +72,9 @@ class PasswordForgotten extends AbstractType
         );
 
         $parser = $config->parser();
-        
+
         $token = $parser->parse($request->query->get('token'));
-        
+
         $constraints = $config->validationConstraints();
         // 2. check signature
         if (! $config->validator()->validate($token, ...$constraints)) {
@@ -89,7 +87,7 @@ class PasswordForgotten extends AbstractType
             throw new TokenExpiredException('Activation token expired');
         }
 
-         // 4. get user with id equals subject
+        // 4. get user with id equals subject
         $user = User::findOrFail($token->headers()->get('sub'));
 
         // 5. check if last_login_date is the same from the jwt
@@ -120,7 +118,6 @@ class PasswordForgotten extends AbstractType
 
     public function sendPasswordForgottenMail(Subject $subject, ModuleInterface $module, State $state)
     {
-        
         Mail::to($subject->getEmail())->send(
             new StandardMail(
                 @$module->config['template_id'],
@@ -141,12 +138,11 @@ class PasswordForgotten extends AbstractType
 
     public function process(Request $request, State $state, ModuleInterface $module)
     {
-
         if ($state->getIncomplete() != null && $state->getIncomplete()->moduleState != null && $state->getIncomplete()->moduleState['state'] == 'confirmed') {
             if ($request->input('password')) {
                 $subject = $state->getIncomplete()->getSubject();
                 $user = $subject->getUser();
-                
+
                 $user->password = Hash::make($request->input('password'));
                 $user->save();
 
@@ -183,14 +179,13 @@ class PasswordForgotten extends AbstractType
             $subject->setUserId($user->id);
 
             $this->sendPasswordForgottenMail($subject, $module, $state);
-                    
+
             return $module->baseResult()->setSubject($subject)->setCompleted(false)->setResponse(response([]));
         }
     }
 
     public static function getToken($identifier, State $state)
     {
-
         $privateKey = resolve(KeyRepository::class)->getPrivateKey();
 
         $config = Configuration::forAsymmetricSigner(
@@ -198,6 +193,7 @@ class PasswordForgotten extends AbstractType
             InMemory::plainText($privateKey->getKeyContents()),
             InMemory::plainText($privateKey->getKeyContents())
         );
+
         $token = $config->builder()
             ->withHeader('kid', method_exists($privateKey, 'getKid') ? $privateKey->getKid() : null)
             ->issuedBy(url('/'))

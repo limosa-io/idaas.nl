@@ -13,7 +13,6 @@ use App\Repository\HostedIdentityProviderConfigRepository;
 use App\Http\AuthChainCompleteProcessor;
 use App\Repository\AuthLevelRepository;
 use Illuminate\Support\Facades\Log;
-use function GuzzleHttp\json_encode;
 use Illuminate\Support\Facades\Session;
 use ArieTimmerman\Laravel\AuthChain\AuthChain;
 use App\AuthTypes\TOTP;
@@ -22,13 +21,7 @@ use App\Session\DatabaseSessionHandler;
 use Illuminate\Database\ConnectionInterface;
 use App\AuthTypes\OpenIDConnect;
 use App\AuthTypes\OtpMail;
-use App\ResourceServerCustom;
-use League\OAuth2\Server\ResourceServer;
-
-// TODO: waarschijnlijk nodig bij registratie
-// use ArieTimmerman\Passport\Bridge\AccessTokenRepository;
-// use ArieTimmerman\Passport\OIDC\AdvancedBearerTokenValidator;
-
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\AuthChain\StateStorage;
 use App\SCIMConfig;
 use App\SAMLConfig;
@@ -45,20 +38,15 @@ use App\Repository\ClaimRepository;
 use App\Repository\KeyRepository;
 use App\Repository\OIDCUserRepository;
 use App\Repository\ProviderRepository;
-use App\Repository\RefreshTokenRepository;
 use App\Repository\TokenRepository;
 use App\Session\OIDCSession;
 use App\TokenCache;
 use Idaas\OpenID\Repositories\UserRepositoryInterface;
-use Idaas\Passport\Bridge\ClientRepository as BridgeClientRepository;
-use Idaas\Passport\ClientRepository as IdaasClientRepository;
 use Idaas\Passport\ProviderRepository as PassportProviderRepository;
-use Laravel\Passport\ClientRepository;
 use Laravel\Passport\Passport;
 
 class AppServiceProvider extends ServiceProvider
 {
-
     /**
      * Bootstrap any application services.
      *
@@ -66,7 +54,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(ConnectionInterface $connection)
     {
-
         Session::extend(
             'databaseWithCache',
             function ($app) use ($connection) {
@@ -75,7 +62,7 @@ class AppServiceProvider extends ServiceProvider
         );
 
         if (config('app.env') == 'development') {
-            \DB::listen(
+            DB::listen(
                 function ($sql) {
                     Log::debug(json_encode($sql));
                 }
@@ -86,7 +73,6 @@ class AppServiceProvider extends ServiceProvider
 
         if (!app()->runningInConsole()) {
             if (preg_match('/^((?!manage).+?)\./', request()->getHttpHost(), $matches)) {
-
                 $subdomain = $matches[1];
 
                 $tenant = Cache::remember(
