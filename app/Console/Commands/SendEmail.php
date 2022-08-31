@@ -55,8 +55,6 @@ class SendEmail extends Command
             ]
         );
 
-        // echo $m->render('{{# template1 }} hoi: {{ name }} {{ niets }} {{/ template1 }}',  new Mailer ); // "Hello World!"
-
         // if has parent: (1) prepend template with {{<parent}} and append with {{/parent}}, at parent to options.
         //
 

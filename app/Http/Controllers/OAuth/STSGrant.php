@@ -51,14 +51,20 @@ class STSGrant extends AbstractGrant
         $validator->ensureValidity($token);
 
         $tokenEloquent = resolve(TokenRepository::class)->find($token->getClaim('jti'));
-        $client = resolve(ClientRepository::class)->getClientEntity($tokenEloquent->client_id, 'authorization_code', null, false);
+        $client = resolve(ClientRepository::class)
+            ->getClientEntity($tokenEloquent->client_id, 'authorization_code', null, false);
 
         if ($decrypted['user_id'] != $tokenEloquent->user_id) {
             throw new OAuthServerException('Invalid subject_token', 400, 'subject_token');
         }
 
         /* @var $accessToken \App\Http\Controllers\OAuth\SpecialAccessToken */
-        $accessToken = $this->issueAccessToken($accessTokenTTL, $client, $tokenEloquent->user_id, $this->validateScopes(implode(self::SCOPE_DELIMITER_STRING, $tokenEloquent->scopes)));
+        $accessToken = $this->issueAccessToken(
+            $accessTokenTTL,
+            $client,
+            $tokenEloquent->user_id,
+            $this->validateScopes(implode(self::SCOPE_DELIMITER_STRING, $tokenEloquent->scopes))
+        );
 
         unset($decrypted['user_id']);
         $accessToken->addVerified($decrypted);

@@ -4,11 +4,10 @@ namespace App;
 
 use ArieTimmerman\Laravel\AuthChain\Helper;
 use ArieTimmerman\Laravel\AuthChain\State;
-use ArieTimmerman\Laravel\AuthChain\AuthLevel;
 use ArieTimmerman\Laravel\AuthChain\UIServer;
 use ArieTimmerman\Laravel\SAML\SAML2\State\SamlState;
-use ArieTimmerman\Laravel\SAML\Helper as SAMLHelper;
 use ArieTimmerman\Laravel\AuthChain\Session;
+use Illuminate\Support\Facades\URL;
 
 class SAMLConfig extends \ArieTimmerman\Laravel\SAML\SAMLConfig
 {
@@ -24,9 +23,11 @@ class SAMLConfig extends \ArieTimmerman\Laravel\SAML\SAMLConfig
 
     public function doAuthenticationResponse(SamlState $samlState)
     {
-        $isPassive = $samlState->getRequest()->getIsPassive();
-        $isForce = $samlState->getRequest()->getForceAuthn();
-        $requestedAuthnContext = $samlState->getRequest()->getRequestedAuthnContext() ?? [];
+        /** @var SAML2\AuthnRequest */
+        $request = $samlState->getRequest();
+        $isPassive = $request->getIsPassive();
+        $isForce = $request->getForceAuthn();
+        $requestedAuthnContext = $request->getRequestedAuthnContext() ?? [];
 
         $loginUrl = route('ice.login.ui', []);
         $parsed = parse_url($loginUrl);
@@ -55,7 +56,7 @@ class SAMLConfig extends \ArieTimmerman\Laravel\SAML\SAMLConfig
                 ->setUiServer($uiServer)
                 ->setOnFinishUrl(route('ssourl.continue'))
                 ->setOnCancelUrl('http://cancel')
-                ->setRetryUrl(url()->full())
+                ->setRetryUrl(URL::full())
         );
     }
 }

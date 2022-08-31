@@ -7,6 +7,7 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Http\Middleware\DetectTenant;
 use App\Tenant;
 use App\Token;
+use Illuminate\Support\Facades\DB;
 
 class Kernel extends ConsoleKernel
 {

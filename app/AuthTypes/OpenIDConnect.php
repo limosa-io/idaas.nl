@@ -141,7 +141,11 @@ class OpenIDConnect extends AbstractType
             return Helper::getAuthResponseAsRedirect($request, $state);
         } catch (RequestException $e) {
             Log::error($e);
-            $state->addResult($module->baseResult()->addMessage(Message::error('Could not authenticate using this method. Is the authorization host reachable?')));
+            $state->addResult(
+                $module->baseResult()->addMessage(
+                    Message::error('Could not authenticate using this method. Is the authorization host reachable?')
+                )
+            );
 
             return Helper::getAuthResponseAsRedirect($request, $state);
         }
@@ -175,7 +179,9 @@ class OpenIDConnect extends AbstractType
 
     public function getRedirectResponse(Request $request, State $state, ModuleInterface $module)
     {
-        return $module->baseResult()->setResponse(response(null, 302, ['location' => $this->getUrl($state, $module)]))->setCompleted(false)->setPrompted(false);
+        return $module->baseResult()->setResponse(
+            response(null, 302, ['location' => $this->getUrl($state, $module)])
+        )->setCompleted(false)->setPrompted(false);
     }
 
     public function process(Request $request, State $state, ModuleInterface $module)

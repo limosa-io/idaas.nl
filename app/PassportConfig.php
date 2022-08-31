@@ -11,6 +11,7 @@ use App\Http\Controllers\HomeController;
 use Idaas\OpenID\RequestTypes\AuthenticationRequest;
 use Idaas\Passport\ClientRepository;
 use Idaas\Passport\PassportConfig as IdaasPassportConfig;
+use Illuminate\Support\Facades\URL;
 
 class PassportConfig extends IdaasPassportConfig
 {
@@ -50,7 +51,12 @@ class PassportConfig extends IdaasPassportConfig
             );
         }
 
-        $acrValues = ($client->default_acr_values_allow_override ? AuthLevel::oidcAll($authenticationRequest->getAcrValues()) : null)
+        $acrValues =
+            (
+                $client->default_acr_values_allow_override ?
+                AuthLevel::oidcAll($authenticationRequest->getAcrValues())
+                : null
+            )
             ?? $client->defaultAcrValues->all();
 
         // from request allows reading cookies and session_ids
@@ -62,7 +68,11 @@ class PassportConfig extends IdaasPassportConfig
 
         $scopeStringArray = (array) json_decode(json_encode($authenticationRequest->getScopes()));
 
-        $frameAncestor = substr($authenticationRequest->getRedirectUri(), 0, strpos($authenticationRequest->getRedirectUri(), '/', 8));
+        $frameAncestor = substr(
+            $authenticationRequest->getRedirectUri(),
+            0,
+            strpos($authenticationRequest->getRedirectUri(), '/', 8)
+        );
 
         $prompt = false;
 
@@ -84,7 +94,12 @@ class PassportConfig extends IdaasPassportConfig
                 ->setPrompt(
                     $prompt
                 )
-                ->setPassive((($client->default_prompt_allow_override ? $authenticationRequest->getPrompt() : null) ?? $client->default_prompt) == 'none')
+                ->setPassive((
+                    (
+                        $client->default_prompt_allow_override ?
+                        $authenticationRequest->getPrompt() :
+                        null
+                    ) ?? $client->default_prompt) == 'none')
                 ->setLoginHint($authenticationRequest->getLoginHint())
                 ->setMaxAge($prompt ? 1 : $authenticationRequest->getMaxAge())
                 //->setUserSubjectHint(null)
@@ -101,7 +116,7 @@ class PassportConfig extends IdaasPassportConfig
                 ->setOnFinishUrl(route('authorize_continue_chain', ['state' => $state->getstateId()]))
                 ->setOnCancelUrl(route('authorize_continue_chain', ['state' => $state->getstateId()]))
                 ->setRetryUrl(
-                    url()->full()
+                    URL::full()
                 ),
             $index,
             true

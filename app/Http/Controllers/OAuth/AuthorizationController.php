@@ -17,7 +17,7 @@ class AuthorizationController extends IdaasAuthorizationController
     public function continueAuthorizeWtithState(
         State $state,
         $authRequest = null,
-        Request $request,
+        Request $request = null,
         ClientRepository $clients,
         TokenRepository $tokens
     ) {

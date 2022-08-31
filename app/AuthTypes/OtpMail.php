@@ -44,12 +44,15 @@ class OtpMail extends AbstractType
     {
         if ($request->input('otp')) {
             if ($this->getOtp($state) == $request->input('otp')) {
-                //TODO: find user,
                 $user = User::find(decrypt($request->input('user_id_hashed')));
 
                 $result = $module->baseResult()->setSubject(
-                    resolve(SubjectRepositoryInterface::class)->with($user->email, $this, $module)->setTypeIdentifier($this->getIdentifier())->setUserId($user->id)
-                    //$this->createSubject($request->input['subject_id'], $this, $module)->setUserId($request->input['subject_id'])
+                    resolve(SubjectRepositoryInterface::class)
+                        ->with(
+                            $user->email,
+                            $this,
+                            $module
+                        )->setTypeIdentifier($this->getIdentifier())->setUserId($user->id)
                 )->complete()->setPrompted(true);
 
                 if ($request->input('remember') !== true) {

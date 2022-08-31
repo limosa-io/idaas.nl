@@ -78,9 +78,17 @@ class CloudFunction extends Model
 
         static::saved(
             function ($model) {
-                // if we save the cloud function, we can only ensure it gets redeployed if the sequence is also marked as needed for redploy
+                // if we save the cloud function,
+                // we can only ensure it gets redeployed if the sequence is also marked as needed for redploy
                 if (!$model->is_sequence) {
-                    $cloudFunction = CloudFunction::firstOrNew(['type' => $model->type, 'is_sequence' => true], ['display_name' => sprintf('sequence_%s', $model->type)]);
+                    $cloudFunction = CloudFunction::firstOrNew(
+                        [
+                            'type' => $model->type,
+                            'is_sequence' => true
+                        ],
+                        [
+                            'display_name' => sprintf('sequence_%s', $model->type)]
+                    );
 
                     $cloudFunction->touch();
                 }

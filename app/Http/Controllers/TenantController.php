@@ -19,7 +19,12 @@ class TenantController extends Controller
     public function __construct()
     {
         $this->validations = [
-            'subdomain' => ['required', 'regex:/^[a-z]+-?[a-z]+?$/', 'min:3', 'not_in:www,www1,www2,www3,www4,idaas,mail,ns1,ns2,ns3,ftp,static,cdn']
+            'subdomain' => [
+                'required',
+                'regex:/^[a-z]+-?[a-z]+?$/',
+                'min:3',
+                'not_in:www,www1,www2,www3,www4,idaas,mail,ns1,ns2,ns3,ftp,static,cdn'
+            ]
         ];
 
         $this->middleware('can:control,App\Tenant');
@@ -27,7 +32,9 @@ class TenantController extends Controller
 
     public function getMyTenants()
     {
-        return Tenant::whereIn('id', Role::whereIn('id', Auth::user()->getRoles())->pluck('tenant_id'));
+        /** @var \ArieTimmerman\Laravel\AuthChain\Object */
+        $user = Auth::user();
+        return Tenant::whereIn('id', Role::whereIn('id', $user->getRoles())->pluck('tenant_id'));
     }
 
     public function index()
@@ -38,7 +45,9 @@ class TenantController extends Controller
 
     public function destroy($id)
     {
-        if (Role::whereIn('id', Auth::user()->getRoles())->pluck('tenant_id')->contains($id)) {
+        /** @var \ArieTimmerman\Laravel\AuthChain\Object\Subject */
+        $subject = Auth::user();
+        if (Role::whereIn('id', $subject->getRoles())->pluck('tenant_id')->contains($id)) {
             return Tenant::destroy($id);
         }
 

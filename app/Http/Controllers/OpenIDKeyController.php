@@ -75,7 +75,7 @@ class OpenIDKeyController extends Controller
                 "",
                 $data['x509']
             );
-            $keyForParsing = 
+            $keyForParsing =
                 "-----BEGIN CERTIFICATE-----\n" .
                 chunk_split($key, 64, "\n") .
                 "-----END CERTIFICATE-----\n";

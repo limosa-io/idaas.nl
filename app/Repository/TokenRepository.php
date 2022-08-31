@@ -7,6 +7,7 @@
 namespace App\Repository;
 
 use App\Token;
+use Carbon\Carbon;
 use Laravel\Passport\TokenRepository as LaravelTokenRepository;
 
 class TokenRepository extends LaravelTokenRepository

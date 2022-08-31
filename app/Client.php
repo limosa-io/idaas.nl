@@ -15,7 +15,15 @@ class Client extends IdaasClient implements SubjectInterface, Authenticatable, S
     use HasApiTokens;
     use StatableTrait;
 
-    protected $hidden = ['tenant_id', 'created_at', 'updated_at', 'user_id', 'personal_access_client', 'password_client', 'revoked'];
+    protected $hidden = [
+        'tenant_id',
+        'created_at',
+        'updated_at',
+        'user_id',
+        'personal_access_client',
+        'password_client',
+        'revoked'
+    ];
 
     protected $with = [];
 
@@ -23,17 +31,32 @@ class Client extends IdaasClient implements SubjectInterface, Authenticatable, S
 
     public function defaultAcrValues()
     {
-        return $this->belongsToMany('\App\AuthLevel', 'client_authlevel', 'client_id', 'auth_level_id')->wherePivot('tenant_id', resolve('App\Tenant')->id)->using('App\TenantPivot');
+        return $this->belongsToMany(
+            '\App\AuthLevel',
+            'client_authlevel',
+            'client_id',
+            'auth_level_id'
+        )->wherePivot('tenant_id', resolve('App\Tenant')->id)->using('App\TenantPivot');
     }
 
     public function roles()
     {
-        return $this->belongsToMany('\App\Role', 'client_role', 'client_id', 'role_id')->wherePivot('tenant_id', resolve('App\Tenant')->id)->using('App\TenantPivot');
+        return $this->belongsToMany(
+            '\App\Role',
+            'client_role',
+            'client_id',
+            'role_id'
+        )->wherePivot('tenant_id', resolve('App\Tenant')->id)->using('App\TenantPivot');
     }
 
     public function groups()
     {
-        return $this->belongsToMany('\App\Group', 'client_group', 'client_id', 'group_id')->wherePivot('tenant_id', resolve('App\Tenant')->id)->using('App\TenantPivot');
+        return $this->belongsToMany(
+            '\App\Group',
+            'client_group',
+            'client_id',
+            'group_id'
+        )->wherePivot('tenant_id', resolve('App\Tenant')->id)->using('App\TenantPivot');
     }
 
     public function getRoles()

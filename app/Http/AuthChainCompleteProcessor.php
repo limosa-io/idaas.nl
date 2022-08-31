@@ -12,10 +12,13 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use App\Exceptions\NoSessionException;
 use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
 use App\SAML\Subject as SAMLSubject;
+use Exception;
+use Idaas\OpenID\RequestTypes\AuthenticationRequest;
 use Idaas\OpenID\SessionInformation;
 use Idaas\Passport\Http\Controllers\AuthorizationController;
 use Laravel\Passport\Bridge\User;
 use Laravel\Passport\Http\Controllers\ConvertsPsrResponses;
+use ArieTimmerman\Laravel\AuthChain\Object\Subject;
 
 class AuthChainCompleteProcessor implements CompleteProcessorInterface
 {
@@ -40,7 +43,7 @@ class AuthChainCompleteProcessor implements CompleteProcessorInterface
             //TODO: implement a better handler
             throw new NoSessionException('No session');
         } elseif ($state->getScopesApproved() == $state->requestedScopes) {
-            if ($authRequest instanceof AuthorizationRequest) {
+            if ($authRequest instanceof AuthenticationRequest && $subject instanceof Subject) {
                 $r = [];
                 foreach ($state->getLevels() as $l) {
                     $r[] = $l->getLevel();
@@ -59,7 +62,10 @@ class AuthChainCompleteProcessor implements CompleteProcessorInterface
                     $this->server->completeAuthorizationRequest($authRequest, new Psr7Response())
                 );
             } else {
-                return \ArieTimmerman\Laravel\SAML\Http\Controllers\SAMLController::getIdpProcessor($request, $authRequest)->continueSingleSignOn(
+                return \ArieTimmerman\Laravel\SAML\Http\Controllers\SAMLController::getIdpProcessor(
+                    $request,
+                    $authRequest
+                )->continueSingleSignOn(
                     new SAMLSubject($subject)
                 );
             }
@@ -67,7 +73,7 @@ class AuthChainCompleteProcessor implements CompleteProcessorInterface
             if ($authRequest instanceof AuthorizationRequest) {
                 return resolve(AuthorizationController::class)->returnError($authRequest);
             } else {
-                throw Exception('Not implemented for SAML');
+                throw new Exception('Not implemented for SAML');
             }
         }
     }
