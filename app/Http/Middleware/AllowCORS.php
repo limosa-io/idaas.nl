@@ -8,7 +8,6 @@ use Illuminate\Contracts\Encryption\DecryptException;
 
 class AllowCORS
 {
-
     public $headers = 'Content-Type, X-AuthRequest, Authorization';
     public $exposeHeaders = 'x-scim-proof-of-creation';
 
@@ -33,11 +32,9 @@ class AllowCORS
      */
     public function handle($request, Closure $next)
     {
-
         $response = $next($request);
 
         if ($request->header('origin')) {
-
             //TODO: Check the request is coming from the UI Server.
 
             $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');

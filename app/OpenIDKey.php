@@ -7,7 +7,6 @@ use App\Scopes\TenantTrait;
 
 class OpenIDKey extends Model
 {
-    
     protected $hidden = [
         'private_key'
     ];
@@ -20,5 +19,4 @@ class OpenIDKey extends Model
     {
         return $this->belongsTo('App\OpenIDProvider', 'provider_id');
     }
-
 }

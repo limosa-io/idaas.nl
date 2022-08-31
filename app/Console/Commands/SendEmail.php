@@ -3,11 +3,9 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-
 use Illuminate\Support\Facades\Mail;
 use App\Mail\StandardMail;
 use App\Mailer;
-
 
 class SendEmail extends Command
 {
@@ -60,10 +58,11 @@ class SendEmail extends Command
         // echo $m->render('{{# template1 }} hoi: {{ name }} {{ niets }} {{/ template1 }}',  new Mailer ); // "Hello World!"
 
         // if has parent: (1) prepend template with {{<parent}} and append with {{/parent}}, at parent to options.
-        // 
+        //
 
         echo $m->render(
-            '{{<parent}}{{$planet}}test 123 !{{/planet }} {{$ footer }}greetings{{/ footer }} {{/ parent }}', [
+            '{{<parent}}{{$planet}}test 123 !{{/planet }} {{$ footer }}greetings{{/ footer }} {{/ parent }}',
+            [
             'button' => ''
             ]
         );

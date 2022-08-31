@@ -7,7 +7,6 @@ use Ramsey\Uuid\Uuid;
 
 class Store extends \Illuminate\Session\Store
 {
-
     /**
      * Improves performance
      */
@@ -20,5 +19,4 @@ class Store extends \Illuminate\Session\Store
     {
         return $id != null && Uuid::isValid($id);
     }
-
 }

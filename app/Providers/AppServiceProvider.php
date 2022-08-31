@@ -57,7 +57,12 @@ class AppServiceProvider extends ServiceProvider
         Session::extend(
             'databaseWithCache',
             function ($app) use ($connection) {
-                return new DatabaseSessionHandler($connection, $app['config']['session.table'], $app['config']['session.lifetime'], $app);
+                return new DatabaseSessionHandler(
+                    $connection,
+                    $app['config']['session.table'],
+                    $app['config']['session.lifetime'],
+                    $app
+                );
             }
         );
 
@@ -95,6 +100,7 @@ class AppServiceProvider extends ServiceProvider
         Token::observe(TokenObserver::class);
 
         //You must use singleton
+        // phpcs:ignoreFile Generic.Files.LineLength.TooLong
         $this->app->singleton('ArieTimmerman\Laravel\AuthChain\Repository\ModuleRepositoryInterface', ModuleRepository::class);
         $this->app->singleton('ArieTimmerman\Laravel\AuthChain\Repository\ChainRepositoryInterface', ChainRepository::class);
         $this->app->singleton('ArieTimmerman\Laravel\AuthChain\Repository\SubjectRepositoryInterface', SubjectRepository::class);

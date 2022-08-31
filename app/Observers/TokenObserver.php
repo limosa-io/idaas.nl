@@ -1,8 +1,11 @@
 <?php
+
 /**
- * Used as a token observer. Set with `Laravel\Passport\Token::observe` in order to clear the caches if a token is revoked.
+ * Used as a token observer.
+ * Set with `Laravel\Passport\Token::observe` in order to clear the caches if a token is revoked.
  * Only works in a replicated or single redis environment.
  */
+
 namespace App\Observers;
 
 use Laravel\Passport\Token;
@@ -10,7 +13,6 @@ use App\TokenCache;
 
 class TokenObserver
 {
-    
     /**
      * Handle the User "updated" event.
      *
@@ -32,5 +34,4 @@ class TokenObserver
     {
         resolve(TokenCache::class)->clearCacheForToken($token->id);
     }
-
 }

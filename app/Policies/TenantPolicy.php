@@ -1,7 +1,9 @@
 <?php
+
 /**
  * Who can manage the current tenant
  */
+
 namespace App\Policies;
 
 use App\Tenant;
@@ -15,7 +17,6 @@ use App\Subject;
 
 class TenantPolicy
 {
-
     /**
      * Determine if the given post can be updated by the user.
      *
@@ -28,7 +29,9 @@ class TenantPolicy
         $current = ($tenant = resolve(Tenant::class)) != null ? $tenant->id : '_';
 
         return Cache::remember(
-            'subject:can_manage:' . $subject->id . ':' . $current, 10, function () use ($subject) {
+            'subject:can_manage:' . $subject->id . ':' . $current,
+            10,
+            function () use ($subject) {
                 return Role::whereIn('id', $subject->getRoles())->exists();
             }
         );
@@ -41,12 +44,17 @@ class TenantPolicy
      */
     public function control(Subject $subject)
     {
-        return config('app.tenant_control_group') == null || (($tenant = resolve(Tenant::class)) != null && $tenant->master && $subject->user->groups()->where('groups.id', config('app.tenant_control_group'))->exists());
+        return config(
+            'app.tenant_control_group'
+        ) == null || (
+            ($tenant = resolve(Tenant::class)) != null &&
+            $tenant->master &&
+            $subject->user->groups()->where('groups.id', config('app.tenant_control_group'))->exists()
+        );
     }
 
     public function manageOther(SubjectInterface $subject)
     {
         return false; //true; //Role::whereIn('id', $subject->getRoles())->exists();
     }
-
 }

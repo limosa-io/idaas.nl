@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use ArieTimmerman\Laravel\AuthChain\State;
 use ArieTimmerman\Laravel\AuthChain\Module\ModuleInterface;
 use ArieTimmerman\Laravel\AuthChain\Repository\SubjectRepositoryInterface;
-
 use ArieTimmerman\Laravel\AuthChain\Types\AbstractType;
 use ArieTimmerman\Laravel\AuthChain\Helper;
 use GuzzleHttp\Exception\RequestException;
@@ -15,7 +14,6 @@ use ArieTimmerman\Laravel\AuthChain\Module\Message;
 
 class OpenIDConnect extends AbstractType
 {
-
     // Guzzle handler. Set for testing
     public static $handler = null;
 
@@ -24,7 +22,6 @@ class OpenIDConnect extends AbstractType
      */
     public function getConfigValidation()
     {
-
         return [
             'config.client_id' => 'required',
             'config.client_secret' => 'required',
@@ -79,7 +76,6 @@ class OpenIDConnect extends AbstractType
 
     public function processCallback(Request $request)
     {
-
         $state = decrypt($request->query->get('state'));
 
         $state = Helper::loadStateFromSession(app(), $state['state']);
@@ -153,7 +149,6 @@ class OpenIDConnect extends AbstractType
 
     protected function getUrl(State $state, ModuleInterface $module)
     {
-
         $config = $module->config;
 
         $parameters = [
@@ -187,8 +182,7 @@ class OpenIDConnect extends AbstractType
     {
         if (($remembered = $state->getRememberedModuleResult($module)) != null) {
             return $remembered->setPrompted(false);
-        } else if ($request->input('init')) {
-
+        } elseif ($request->input('init')) {
             // TODO: on init return /sp_init url?
             $url = $this->getUrl($state, $module);
 

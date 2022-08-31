@@ -7,7 +7,6 @@ use App\Scopes\TenantTrait;
 
 class Stat extends Model
 {
- 
     protected $guarded = ['id'];
 
     public $timestamps = false;
@@ -20,5 +19,4 @@ class Stat extends Model
     {
         return $this->morphTo();
     }
-    
 }

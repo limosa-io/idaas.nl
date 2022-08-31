@@ -1,5 +1,5 @@
 <?php
-//TODO: deletion candidate
+
 namespace App\Repository;
 
 use Laravel\Passport\Events\RefreshTokenCreated;
@@ -8,7 +8,6 @@ use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 
 class RefreshTokenRepository extends LaravelRefreshTokenRepository
 {
-
     /**
      * {@inheritdoc}
      */
@@ -52,5 +51,4 @@ class RefreshTokenRepository extends LaravelRefreshTokenRepository
             $refreshToken->access_token_id
         );
     }
-
 }

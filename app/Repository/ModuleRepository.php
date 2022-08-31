@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use ArieTimmerman\Laravel\AuthChain\Repository\ModuleRepositoryInterface;
 use App\AuthModule;
-
 use ArieTimmerman\Laravel\AuthChain\Exceptions\ApiException;
 use ArieTimmerman\Laravel\AuthChain\Types\Type;
 use ArieTimmerman\Laravel\AuthChain\Module\ModuleInterface;
@@ -15,7 +14,6 @@ use App\OpenIDProvider;
 
 class ModuleRepository implements ModuleRepositoryInterface
 {
-
     protected $modules;
 
     public function getModules()
@@ -37,9 +35,8 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     public function get($id)
     {
-
         if ($id == 'consent') {
-            $consent = Module::withTypeAndConfig(new Consent, ['id' => 'consent', 'levels' => []]);
+            $consent = Module::withTypeAndConfig(new Consent(), ['id' => 'consent', 'levels' => []]);
             $consent->skippable = false;
             return $consent;
         }
@@ -65,13 +62,11 @@ class ModuleRepository implements ModuleRepositoryInterface
     /**
      * @return AuthModule
      */
-    public function add($name = null, Type $type)
+    public function add($name = null, Type $type = null)
     {
-
         $first = null;
 
         if ($name == null) {
-
             $count = 1;
             $name = $type->getDefaultName();
 
@@ -112,9 +107,7 @@ class ModuleRepository implements ModuleRepositoryInterface
 
     public function delete(ModuleInterface $module)
     {
-
         if ($module instanceof AuthModule) {
-
             if ($module->system) {
                 throw new ApiException('This is a system module. Could not delete module');
             }
@@ -127,9 +120,7 @@ class ModuleRepository implements ModuleRepositoryInterface
 
     public function save(ModuleInterface $module)
     {
-
         if ($module instanceof AuthModule) {
-
             if ($module->system) {
                 $module->enabled = true;
             }

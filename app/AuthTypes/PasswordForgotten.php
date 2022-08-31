@@ -1,4 +1,5 @@
 <?php
+
 /*
 Allows self-service password reset.
 
@@ -21,7 +22,6 @@ use ArieTimmerman\Laravel\AuthChain\Module\ModuleResult;
 use ArieTimmerman\Laravel\AuthChain\Module\ModuleInterface;
 use ArieTimmerman\Laravel\AuthChain\Repository\SubjectRepositoryInterface;
 use Illuminate\Support\Facades\Hash;
-
 use Illuminate\Support\Facades\Mail;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Configuration;
@@ -104,7 +104,7 @@ class PasswordForgotten extends AbstractType
         $module = $state->getIncomplete()->getModule();
 
         // 6. log the user in
-        $result = $module->baseResult()->setCompleted(false)->setModuleState(['state'=>'confirmed'])->setSubject(resolve(SubjectRepositoryInterface::class)->with($user->email, $this, $module)->setTypeIdentifier($this->getIdentifier())->setUserId($user->id));
+        $result = $module->baseResult()->setCompleted(false)->setModuleState(['state' => 'confirmed'])->setSubject(resolve(SubjectRepositoryInterface::class)->with($user->email, $this, $module)->setTypeIdentifier($this->getIdentifier())->setUserId($user->id));
 
         $state->addResult($result);
 
@@ -122,7 +122,7 @@ class PasswordForgotten extends AbstractType
             new StandardMail(
                 @$module->config['template_id'],
                 [
-                    'url'=> htmlentities(
+                    'url' => htmlentities(
                         route('ice.login.passwordforgotten') . '?token=' . urlencode(
                             self::getToken($subject->getUserId(), $state)->toString()
                         )
@@ -154,11 +154,11 @@ class PasswordForgotten extends AbstractType
             $subject = $state->getSubject();
 
             if ($state->getSubject()->getEmail() == null) {
-                return (new ModuleResult())->setCompleted(false)->setResponse(response(['error'=>'No email address is known for this user']));
+                return (new ModuleResult())->setCompleted(false)->setResponse(response(['error' => 'No email address is known for this user']));
             }
 
             if ($state->getSubject()->getUserId() == null) {
-                return (new ModuleResult())->setCompleted(false)->setResponse(response(['error'=>'No user id is known for this user']));
+                return (new ModuleResult())->setCompleted(false)->setResponse(response(['error' => 'No user id is known for this user']));
             }
 
             $this->sendPasswordForgottenMail($subject, $module, $state);
@@ -168,7 +168,7 @@ class PasswordForgotten extends AbstractType
             $user = resolve(UserRepositoryInterface::class)->findByIdentifier($request->input('username'));
 
             if ($user == null) {
-                return (new ModuleResult())->setCompleted(false)->setResponse(response(['error'=>'User is not found'], 422));
+                return (new ModuleResult())->setCompleted(false)->setResponse(response(['error' => 'User is not found'], 422));
             }
 
             $url = route('ice.login.passwordforgotten') . '?token=' . urlencode(

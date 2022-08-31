@@ -8,9 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class OpenIDProvider extends Model implements ProviderInterface
 {
-
     use TenantTrait;
-    
+
     protected $casts = [
         'response_types_supported' => 'array'
     ];
@@ -41,17 +40,23 @@ class OpenIDProvider extends Model implements ProviderInterface
 
     public function relationsToArray()
     {
-
         return [
-            'scopes_supported' => array_merge(['openid','online_access'], $this->scopesSupported->pluck('name')->toArray()),
-            'acr_values_supported' => $this->acrValuesSupported()->where(['type'=>'oidc'])->get()->pluck('level')->toArray(),
+            'scopes_supported' => array_merge(
+                ['openid','online_access'],
+                $this->scopesSupported->pluck('name')->toArray()
+            ),
+            'acr_values_supported' => $this->acrValuesSupported()
+                ->where(['type' => 'oidc'])
+                ->get()
+                ->pluck('level')
+                ->toArray(),
         ];
     }
 
     public function toArray()
     {
         $result = parent::toArray();
-                
+
         unset($result['id']);
         unset($result['init_url']);
         unset($result['tenant_id']);
@@ -94,8 +99,8 @@ class OpenIDProvider extends Model implements ProviderInterface
 
     public function getProfileURL($userId)
     {
-        return $this->profile_url_template ? str_replace('{userid}', urlencode($userId), $this->profile_url_template) : route('ice.manage.profile', ['user_id'=>$userId]);
+        return $this->profile_url_template ?
+            str_replace('{userid}', urlencode($userId), $this->profile_url_template) :
+            route('ice.manage.profile', ['user_id' => $userId]);
     }
-
-
 }

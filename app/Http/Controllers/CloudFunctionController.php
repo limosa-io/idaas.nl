@@ -1,9 +1,11 @@
 <?php
+
 /**
  * Manage cloud functions.
- * 
+ *
  * Does not upload nor run these.
  */
+
 namespace App\Http\Controllers;
 
 use App\CloudFunction;
@@ -12,18 +14,17 @@ use App\CloudFunctionHelper;
 
 class CloudFunctionController extends Controller
 {
-
     public function getValidations()
     {
         return [
-            'display_name' => 'required|max:200',   
+            'display_name' => 'required|max:200',
             'code' => 'nullable|max:10000',
             'variables' => 'nullable|array',
             'active' => 'nullable|boolean',
             'type' => ['in:attribute,guard,jit,user_event']
         ];
     }
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -31,12 +32,11 @@ class CloudFunctionController extends Controller
      */
     public function index(Request $request)
     {
-        if($request->input('type')) {
+        if ($request->input('type')) {
             return CloudFunction::where('type', $request->input('type'))->get();
-        }else{
+        } else {
             return CloudFunction::get();
         }
-        
     }
 
     /**
@@ -66,7 +66,7 @@ class CloudFunctionController extends Controller
         $result = CloudFunctionHelper::invoke($cloudFunction, $request->input());
 
         CloudFunctionHelper::handle($result);
-        
+
         return $result;
     }
 
@@ -100,21 +100,19 @@ class CloudFunctionController extends Controller
 
     public function withDefaults($data)
     {
-
-        if(!isset($data['code'])) {
-
+        if (!isset($data['code'])) {
             $code = '';
 
-            switch($data['type']){
-            case 'jit':
-                $code = file_get_contents(resource_path('serverless/jit.default.js'));
-                break;
-            case 'user_event':
-                $code = file_get_contents(resource_path('serverless/user_event.default.js'));
-                break;
-            case 'attribute':
-                $code = file_get_contents(resource_path('serverless/attribute.default.js'));
-                break;                                         
+            switch ($data['type']) {
+                case 'jit':
+                    $code = file_get_contents(resource_path('serverless/jit.default.js'));
+                    break;
+                case 'user_event':
+                    $code = file_get_contents(resource_path('serverless/user_event.default.js'));
+                    break;
+                case 'attribute':
+                    $code = file_get_contents(resource_path('serverless/attribute.default.js'));
+                    break;
             }
 
             $data['code'] = $code;

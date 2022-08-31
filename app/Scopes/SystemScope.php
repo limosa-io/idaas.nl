@@ -20,5 +20,4 @@ class SystemScope implements Scope
     {
         $builder->orderBy('system', 'asc');
     }
-    
 }

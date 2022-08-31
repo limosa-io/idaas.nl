@@ -9,7 +9,6 @@ use Idaas\Passport\Bridge\ClaimRepository;
 
 class OAuthScopeController extends Controller
 {
-
     protected $validations = [
         'name' => 'required|alpha_dash|min:2|unique:o_auth_scopes,name',
         'description' => 'required'
@@ -31,10 +30,9 @@ class OAuthScopeController extends Controller
         return resolve(ClaimRepository::class)->getScopeClaims();
     }
 
-    
+
     public function store(Request $request)
     {
-
         $data = $this->validate($request, $this->validations);
 
         $oAuthScope = new OAuthScope();
@@ -56,12 +54,12 @@ class OAuthScopeController extends Controller
      */
     public function update(Request $request, OAuthScope $oAuthScope)
     {
-
-        if($oAuthScope->system) {
+        if ($oAuthScope->system) {
             return response(
                 [
                 'error' => 'You cannot update system scopes'
-                ], 401
+                ],
+                401
             );
         }
 
@@ -90,12 +88,12 @@ class OAuthScopeController extends Controller
      */
     public function destroy(OAuthScope $oAuthScope)
     {
-
-        if($oAuthScope->system) {
+        if ($oAuthScope->system) {
             return response(
                 [
                 'error' => 'You cannot delete system scopes'
-                ], 401
+                ],
+                401
             );
         }
 

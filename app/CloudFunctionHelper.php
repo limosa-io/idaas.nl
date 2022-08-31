@@ -19,21 +19,25 @@ use Ramsey\Uuid\Uuid;
 
 class CloudFunctionHelper
 {
-
     public static function getActionUrl(CloudFunction $cloudFunction)
     {
-        return sprintf('https://%s/api/v1/namespaces/_/actions/%s?overwrite=true', config('serverless.openwhisk_host'), \urlencode($cloudFunction->name));;
+        return sprintf(
+            'https://%s/api/v1/namespaces/_/actions/%s?overwrite=true',
+            config('serverless.openwhisk_host'),
+            \urlencode($cloudFunction->name)
+        );
     }
 
     public static function deploy(CloudFunction $cloudFunction)
     {
-
         $response = null;
         $guzzle = new Client();
-        // $actionUrl = sprintf('https://%s/api/v1/namespaces/_/actions/%s?overwrite=true', config('serverless.openwhisk_host'), \urlencode($cloudFunction->name));
 
         if ($cloudFunction->is_sequence) {
-            $all = CloudFunction::where('type', $cloudFunction->type)->where('active', true)->where('is_sequence', false)->orderBy('order')->get()->each(
+            $all = CloudFunction::where(
+                'type',
+                $cloudFunction->type
+            )->where('active', true)->where('is_sequence', false)->orderBy('order')->get()->each(
                 function ($item, $key) {
                     // always deploy, if the sequence needs to be deployed, most likely the rules need to be as well
                     self::deploy($item);
@@ -44,7 +48,10 @@ class CloudFunctionHelper
                 }
             );
 
-            $sequence = CloudFunction::firstOrCreate(['type' => $cloudFunction->type, 'is_sequence' => true], ['display_name' => sprintf('sequence_%s', $cloudFunction->type)]);
+            $sequence = CloudFunction::firstOrCreate(
+                ['type' => $cloudFunction->type, 'is_sequence' => true],
+                ['display_name' => sprintf('sequence_%s', $cloudFunction->type)]
+            );
 
             $response = $guzzle->request(
                 'PUT',
@@ -68,7 +75,6 @@ class CloudFunctionHelper
                 ]
             );
         } else {
-
             // check: https://console.bluemix.net/apidocs/functions
             //TODO: set timeout on Guzzle client to 12 seconds?? What if timeout occurs? Continue?
             $guzzle = new Client();
@@ -110,26 +116,26 @@ class CloudFunctionHelper
 
     public static function handle($result)
     {
-
         Log::debug($result['results'] ?? null);
 
         $results = $result['results'] ?? [];
 
         foreach ($results as $result) {
             if (isset($result['type']) && $result['type'] == 'mail' && isset($result['to']) && $result['template_id']) {
-
                 $to = null;
 
                 // complete user object
                 if (is_array($result['to'])) {
                     $to = @$result['to']['urn:ietf:params:scim:schemas:core:2.0:User']['emails'][0]['value'] ?? null;
-                } else if (filter_var($result['to'], FILTER_VALIDATE_EMAIL)) {
+                } elseif (filter_var($result['to'], FILTER_VALIDATE_EMAIL)) {
                     $to = $result['to'];
-                } else if (Uuid::isValid($result['to'])) {
+                } elseif (Uuid::isValid($result['to'])) {
                     $to = User::find($result['to'])->value('email');
                 }
 
-                Mail::to($to)->cc($result['cc'] ?? [])->send(new StandardMail($result['template_id'], $result['data'] ?? [], EmailTemplate::TYPE_ACTIVATION));
+                Mail::to($to)->cc($result['cc'] ?? [])->send(
+                    new StandardMail($result['template_id'], $result['data'] ?? [], EmailTemplate::TYPE_ACTIVATION)
+                );
             }
         }
     }
@@ -143,12 +149,10 @@ class CloudFunctionHelper
         $parameters['variables'] = [];
 
         foreach ($cloudFunction->getMembers() as $member) {
-
             $counts = [];
 
             $parameters['variables'][$member->id] = collect($member->variables)->mapWithKeys(
                 function ($value) use (&$counts) {
-
                     $result = null;
 
                     switch ($value['type']) {
@@ -172,7 +176,11 @@ class CloudFunctionHelper
             )->toArray();
         }
 
-        $actionUrl = sprintf('https://%s/api/v1/namespaces/_/actions/%s?blocking=true&result=true', config('serverless.openwhisk_host'), \urlencode($cloudFunction->name));
+        $actionUrl = sprintf(
+            'https://%s/api/v1/namespaces/_/actions/%s?blocking=true&result=true',
+            config('serverless.openwhisk_host'),
+            \urlencode($cloudFunction->name)
+        );
         $triedDeployment = false;
         $success = false;
         $guzzle = new Client();

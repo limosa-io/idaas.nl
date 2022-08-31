@@ -8,7 +8,6 @@ use ArieTimmerman\Laravel\AuthChain\Helper;
 use ArieTimmerman\Laravel\AuthChain\State;
 use League\OAuth2\Server\AuthorizationServer;
 use GuzzleHttp\Psr7\Response as Psr7Response;
-
 use Illuminate\Contracts\Auth\Authenticatable;
 use App\Exceptions\NoSessionException;
 use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
@@ -20,7 +19,6 @@ use Laravel\Passport\Http\Controllers\ConvertsPsrResponses;
 
 class AuthChainCompleteProcessor implements CompleteProcessorInterface
 {
-
     use ConvertsPsrResponses;
 
     protected $server;
@@ -35,15 +33,13 @@ class AuthChainCompleteProcessor implements CompleteProcessorInterface
      */
     public function onFinish(Request $request, State $state, Authenticatable $subject)
     {
-
         $authRequest = $state->data;
         Helper::deleteState($state);
 
         if ($authRequest == null) {
             //TODO: implement a better handler
             throw new NoSessionException('No session');
-        } else if ($state->getScopesApproved() == $state->requestedScopes) {
-
+        } elseif ($state->getScopesApproved() == $state->requestedScopes) {
             if ($authRequest instanceof AuthorizationRequest) {
                 $r = [];
                 foreach ($state->getLevels() as $l) {
@@ -60,7 +56,7 @@ class AuthChainCompleteProcessor implements CompleteProcessorInterface
                 $authRequest->setAuthorizationApproved(true);
 
                 return $this->convertResponse(
-                    $this->server->completeAuthorizationRequest($authRequest, new Psr7Response)
+                    $this->server->completeAuthorizationRequest($authRequest, new Psr7Response())
                 );
             } else {
                 return \ArieTimmerman\Laravel\SAML\Http\Controllers\SAMLController::getIdpProcessor($request, $authRequest)->continueSingleSignOn(

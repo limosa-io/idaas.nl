@@ -1,7 +1,9 @@
 <?php
+
 /**
  * Extends Passport's TokenRepository. Ensures tenant-scope is applied by making use of custom Token model. And auto cleans up tokens ...
  */
+
 namespace App\Repository;
 
 use App\Token;
@@ -9,7 +11,6 @@ use Laravel\Passport\TokenRepository as LaravelTokenRepository;
 
 class TokenRepository extends LaravelTokenRepository
 {
-
     /**
      * Creates a new Access Token.
      *
@@ -125,5 +126,4 @@ class TokenRepository extends LaravelTokenRepository
             ->latest('expires_at')
             ->first();
     }
-
 }

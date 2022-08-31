@@ -9,7 +9,6 @@ use App\Scopes\TenantTrait;
 
 class AuthLevel extends Model implements AuthLevelInterface
 {
-
     /**
      * The database table used by the model.
      *
@@ -54,27 +53,25 @@ class AuthLevel extends Model implements AuthLevelInterface
      */
     public static function fromJsonObject($json)
     {
-
         $result = [];
 
-        if($json == null) {
-
-        }else if(is_array($json)) {
-            foreach($json as $k){
+        if ($json == null) {
+        } elseif (is_array($json)) {
+            foreach ($json as $k) {
                 //TODO: This null check is a workaround. Fix it.
-                if($k == null) { continue;
+                if ($k == null) {
+                    continue;
                 }
-                $result[] = self::where(['level'=>$k->level,'type'=>$k->type])->first();
+                $result[] = self::where(['level' => $k->level,'type' => $k->type])->first();
             }
-        }else{
-            $result[] = self::where(['level'=>$json->level,'type'=>$json->type])->first();
+        } else {
+            $result[] = self::where(['level' => $json->level,'type' => $json->type])->first();
         }
 
         return count($result) == 0 ? null : $result;
-
     }
 
-    public function jsonSerialize() : array
+    public function jsonSerialize(): array
     {
         return [
             'id'    => $this->id,
@@ -85,8 +82,7 @@ class AuthLevel extends Model implements AuthLevelInterface
 
     public function equals(?AuthLevelInterface $authLevel)
     {
-
-        if($authLevel == null) {
+        if ($authLevel == null) {
             return false;
         }
 
@@ -95,17 +91,15 @@ class AuthLevel extends Model implements AuthLevelInterface
 
     public function compare(?AuthLevelInterface $authLevel)
     {
-
         $result = -1;
 
-        if($this->equals($authLevel)) {
+        if ($this->equals($authLevel)) {
             $result = 0;
         }
-        
+
         //TODO: implement the rest
 
         return $result;
-
     }
 
     public function getIdentifier()
@@ -127,5 +121,4 @@ class AuthLevel extends Model implements AuthLevelInterface
     {
         return $this->id;
     }
-    
 }

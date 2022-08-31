@@ -1,4 +1,5 @@
 <?php
+
 /*
 Allows self-service password reset.
 
@@ -22,7 +23,6 @@ use ArieTimmerman\Laravel\AuthChain\Module\ModuleResult;
 use ArieTimmerman\Laravel\AuthChain\Module\ModuleInterface;
 use ArieTimmerman\Laravel\AuthChain\Repository\SubjectRepositoryInterface;
 use Illuminate\Support\Facades\Hash;
-
 use Illuminate\Support\Facades\Mail;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
@@ -42,7 +42,6 @@ use DateTimeImmutable;
 
 class Activation extends AbstractType
 {
-
     /**
      * This module can work as a first-factor, or as a second-factor in case the subject has a mail address
      */
@@ -63,7 +62,6 @@ class Activation extends AbstractType
 
     public function processCallback(Request $request)
     {
-
         // 1. get token
         $privateKey = resolve(KeyRepository::class)->getPrivateKey();
         $publicKey = resolve(KeyRepository::class)->getPublicKey();
@@ -127,7 +125,7 @@ class Activation extends AbstractType
             new StandardMail(
                 @$module->config['template_id'],
                 [
-                'url'=> htmlentities(route('ice.login.activation') . '?token=' . urlencode(
+                'url' => htmlentities(route('ice.login.activation') . '?token=' . urlencode(
                     self::getToken($subject->getUserId(), $state)->toString()
                 )),
                 'subject' => $subject,
@@ -157,15 +155,15 @@ class Activation extends AbstractType
             $subject = $state->getSubject();
 
             if ($state->getSubject()->getEmail() == null) {
-                return (new ModuleResult())->setCompleted(false)->setResponse(response(['error'=>'No email address is known for this user']));
+                return (new ModuleResult())->setCompleted(false)->setResponse(response(['error' => 'No email address is known for this user']));
             }
 
             if ($state->getSubject()->getUserId() == null) {
-                return (new ModuleResult())->setCompleted(false)->setResponse(response(['error'=>'No user id is known for this user']));
+                return (new ModuleResult())->setCompleted(false)->setResponse(response(['error' => 'No user id is known for this user']));
             }
 
             if ($state->getSubject()->isActive()) {
-                return (new ModuleResult())->setCompleted(false)->setResponse(response(['error'=>'The user is already active']));
+                return (new ModuleResult())->setCompleted(false)->setResponse(response(['error' => 'The user is already active']));
             }
 
             $this->sendEmail($subject, $module, $state);
@@ -175,7 +173,7 @@ class Activation extends AbstractType
             $user = resolve(UserRepositoryInterface::class)->findByIdentifier($request->input('username'));
 
             if ($user == null) {
-                return (new ModuleResult())->setCompleted(false)->setResponse(response(['error'=>'User is not found'], 422));
+                return (new ModuleResult())->setCompleted(false)->setResponse(response(['error' => 'User is not found'], 422));
             }
 
             $subject = resolve(SubjectRepositoryInterface::class)->with($request->input('username'), $this, $module);

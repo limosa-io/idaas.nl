@@ -2,10 +2,10 @@
 
 /**
  * Overrides the default PassportServiceProvider in order to set custom expiration times.
- * 
+ *
  * Authorization code expires after 10m
  * Personal access tokens in 1 years
- * 
+ *
  * TODO: delete this class
  */
 
@@ -19,7 +19,6 @@ use Idaas\Passport\Passport as IdaasPassport;
 
 class PassportServiceProvider extends \Idaas\Passport\PassportServiceProvider
 {
-
     public function boot()
     {
         IdaasPassport::useAuthCodeModel(AuthCode::class);
@@ -32,10 +31,9 @@ class PassportServiceProvider extends \Idaas\Passport\PassportServiceProvider
     {
         return Client::class;
     }
-    
+
     public function makeAuthorizationServer()
     {
-        
         $scopes = OAuthScope::all()->pluck('description', 'name')->all();
 
         IdaasPassport::tokensCan($scopes);

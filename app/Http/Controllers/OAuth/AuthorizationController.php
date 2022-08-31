@@ -24,11 +24,11 @@ class AuthorizationController extends IdaasAuthorizationController
         if ($authRequest == null) {
             $authRequest = $state->data;
         }
-        
+
         if (!$state->isCompleted()) {
             return $this->returnError($authRequest);
         }
-        
+
         return parent::continueAuthorize($authRequest, $request, $clients, $tokens);
     }
 

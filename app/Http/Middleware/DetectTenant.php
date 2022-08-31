@@ -11,10 +11,8 @@ use Illuminate\Support\Facades\Auth;
 
 class DetectTenant
 {
-
     public static function activateTenant(Tenant $tenant = null)
     {
-
         if ($tenant == null) {
             throw new NoTenantException('No tenant!');
         }
@@ -36,7 +34,6 @@ class DetectTenant
      */
     public function handle($request, Closure $next)
     {
-
         self::activateTenant(resolve('App\Tenant'));
 
         $result = $next($request);

@@ -7,7 +7,6 @@ use Laravel\Passport\HasApiTokens;
 
 class Helper
 {
-
     use HasApiTokens;
 
     //TODO: Introduce something like hasRole('admin'), to protect admin apis
@@ -21,16 +20,13 @@ class Helper
 
         foreach ($routeCollection as $value) {
             /**
- * @var Illuminate\Routing\Route $value 
+ * @var Illuminate\Routing\Route $value
 */
-            if($value->getName()) {
-                $urls[$value->getName()] = url($value->uri()); 
-                
+            if ($value->getName()) {
+                $urls[$value->getName()] = url($value->uri());
             }
-            
         }
 
         return json_encode($urls);
     }
-
 }

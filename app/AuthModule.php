@@ -11,9 +11,12 @@ use Illuminate\Support\Str;
 
 class AuthModule extends Module
 {
-    
+    use TenantTrait {
+        doCreating as traitDoCreating;
+    }
+
     public $withConfig = false;
-    
+
     protected $with = ['authLevels'];
 
     protected $casts = [
@@ -27,10 +30,6 @@ class AuthModule extends Module
     protected $guarded = ['id', 'tenant_id'];
     protected $hidden = ['tenant_id'];
 
-    use TenantTrait {
-        doCreating as traitDoCreating;
-    }
-
     protected static function boot()
     {
         parent::boot();
@@ -42,7 +41,6 @@ class AuthModule extends Module
                 return self::doCreating($model);
             }
         );
-        
     }
 
     protected static function doCreating($model)
@@ -99,27 +97,24 @@ class AuthModule extends Module
     public function withConfig()
     {
         $this->withConfig = true;
-        
+
         return $this;
     }
 
-    public function jsonSerialize() : array
+    public function jsonSerialize(): array
     {
-        
         $result = parent::jsonSerialize();
 
-        if(!$this->withConfig && isset($result['config'])) {
-
+        if (!$this->withConfig && isset($result['config'])) {
             $allowed = $this->getTypeObject()->getPublicConfigKeys();
             $result['config'] = array_intersect_key($result['config'], array_combine($allowed, $allowed));
-            
         }
 
         $result['levels'] = $this->authLevels;
 
         $result['system'] = $this->system;
 
-        if(isset($this->relations['fromChain'])) {
+        if (isset($this->relations['fromChain'])) {
             $result['chained'] = $this->fromChain()->exists() || $this->toChain()->exists();
         }
 
@@ -129,6 +124,4 @@ class AuthModule extends Module
 
         return $result;
     }
-
-
 }

@@ -7,7 +7,6 @@ use ArieTimmerman\Laravel\AuthChain\State;
 use ArieTimmerman\Laravel\AuthChain\Module\ModuleResult;
 use ArieTimmerman\Laravel\AuthChain\Module\ModuleInterface;
 use ArieTimmerman\Laravel\AuthChain\Repository\SubjectRepositoryInterface;
-
 use Illuminate\Support\Facades\Mail;
 use Lcobucci\JWT\Parser;
 use DateTimeImmutable;
@@ -52,12 +51,10 @@ class Passwordless extends AbstractType
 
     public function processCallback(Request $request)
     {
-        
-
         // 1. get token
         $publicKey = resolve(KeyRepository::class)->getPublicKey();
 
-        
+
 
         // 2. check signature
 
@@ -69,7 +66,7 @@ class Passwordless extends AbstractType
 
         $parser = $config->parser();
         $token = $parser->parse($request->query->get('token'));
-        
+
         $config->validator()->validate($token, ...[new SignedWith($config->signer(), $config->verificationKey())]);
 
 //        $token->verify(new Sha256(), new Key($publicKey->getKeyPath()));
@@ -99,7 +96,7 @@ class Passwordless extends AbstractType
         $result = $module->baseResult()->setCompleted(true)->setSubject(resolve(SubjectRepositoryInterface::class)->with($user->email, $this, $module)->setTypeIdentifier($this->getIdentifier())->setUserId($user->id));
 
         $state->addResult($result);
-        
+
         return Helper::getAuthResponseAsRedirect($request, $state);
     }
 
@@ -111,23 +108,22 @@ class Passwordless extends AbstractType
     public function process(Request $request, State $state, ModuleInterface $module)
     {
         if ($state->getSubject() != null) {
-
             //MUST approve subject!
             $subject = $state->getSubject();
 
             if ($state->getSubject()->getEmail() == null) {
-                return (new ModuleResult())->setCompleted(false)->setResponse(response(['error'=>'No email address is known for this user']));
+                return (new ModuleResult())->setCompleted(false)->setResponse(response(['error' => 'No email address is known for this user']));
             }
 
             if ($state->getSubject()->getUserId() == null) {
-                return (new ModuleResult())->setCompleted(false)->setResponse(response(['error'=>'No user id is known for this user']));
+                return (new ModuleResult())->setCompleted(false)->setResponse(response(['error' => 'No user id is known for this user']));
             }
 
             Mail::to($state->getSubject()->getEmail())->send(
                 new StandardMail(
                     @$module->config['template_id'],
                     [
-                    'url'=> htmlentities(route('ice.login.passwordless') . '?token=' . urlencode(self::getToken($state->getSubject()->getUserId(), $state))),
+                    'url' => htmlentities(route('ice.login.passwordless') . '?token=' . urlencode(self::getToken($state->getSubject()->getUserId(), $state))),
                     'subject' => $state->getSubject(),
                     'user' =>  $state->getSubject() ? $state->getSubject()->getUser() : null,
                     ],
@@ -135,13 +131,13 @@ class Passwordless extends AbstractType
                     $subject->getPreferredLanguage()
                 )
             );
-            
+
             return $module->baseResult()->setCompleted(false)->setResponse(response([]));
         } else {
             $user = resolve(UserRepositoryInterface::class)->findByIdentifier($request->input('username'));
 
             if ($user == null) {
-                return (new ModuleResult())->setCompleted(false)->setResponse(response(['error'=>'We could not find a user with this attribute.'], 422));
+                return (new ModuleResult())->setCompleted(false)->setResponse(response(['error' => 'We could not find a user with this attribute.'], 422));
             }
 
             $url = route('ice.login.passwordless') . '?token=' .
@@ -151,7 +147,7 @@ class Passwordless extends AbstractType
                 new StandardMail(
                     @$module->config['template_id'],
                     [
-                    'url'=> htmlentities($url),
+                    'url' => htmlentities($url),
                     'subject' => $state->getSubject(),
                     'user' =>  $state->getSubject() ? $state->getSubject()->getUser() : null
                     ],
@@ -159,7 +155,7 @@ class Passwordless extends AbstractType
                     $user->preferredLanguage
                 )
             );
-                    
+
             return $module->baseResult()->setCompleted(false)->setResponse(response([]));
         }
     }

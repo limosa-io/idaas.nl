@@ -20,5 +20,4 @@ class SortChainScope implements Scope
     {
         $builder->orderBy('position', 'asc');
     }
-    
 }

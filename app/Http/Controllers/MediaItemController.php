@@ -8,9 +8,8 @@ use Illuminate\Support\Facades\File;
 
 class MediaItemController extends Controller
 {
-
     protected $validations = [
-        
+
         'external_id' => 'nullable|max:200',
         'url' => 'url|max:1000',
         'size' => 'nullable|integer',
@@ -70,19 +69,18 @@ class MediaItemController extends Controller
 
     public function getExampleClient(Request $request, $type = 'vue')
     {
-
         $clientId = $request->input('client_id');
         $tenant = route('ice.login.ui', []);
 
         $files = [];
 
-        foreach(File::allFiles(resource_path(sprintf('examples/%s', $type))) as $file){
+        foreach (File::allFiles(resource_path(sprintf('examples/%s', $type))) as $file) {
             $name = $file->getRelativePathname();
             $contents = $file->getContents();
 
             $contents = str_replace('{{ client_id }}', $clientId, $contents);
             $contents = str_replace('{{ tenant }}', $tenant, $contents);
-            
+
             $files[$name] = [
                 'content' => $contents
             ];

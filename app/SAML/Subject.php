@@ -6,11 +6,9 @@ use ArieTimmerman\Laravel\SAML\Subject as SAMLSubject;
 
 class Subject extends SAMLSubject
 {
-
-
     protected $subject;
 
-    function __construct(\App\Subject $subject)
+    public function __construct(\App\Subject $subject)
     {
         $this->subject = $subject;
     }
@@ -26,6 +24,4 @@ class Subject extends SAMLSubject
             'user_id' => $this->subject->getUserId()
         ];
     }
-
-
 }

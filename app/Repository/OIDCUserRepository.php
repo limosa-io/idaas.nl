@@ -8,7 +8,6 @@ use League\OAuth2\Server\Entities\UserEntityInterface;
 
 class OIDCUserRepository extends UserRepository
 {
-
     /**
      * Returns an associative array with attribute (claim) keys and values
      */

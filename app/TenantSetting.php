@@ -23,11 +23,10 @@ class TenantSetting extends Model
     public static function getValidations()
     {
         return [
-            
+
             'registration:allow' => 'nullable|boolean',
             'registration:allow_active' => 'nullable|boolean',
             'registration:attributes_create' => ['nullable','array', function ($attribute, $value, $fail) {
-
                 //TODO: validate if array contains email attribute
             }],
             'registration:attributes_update' => 'nullable|array',
@@ -47,11 +46,9 @@ class TenantSetting extends Model
             'ui:navbar_backgroundColor' => 'nullable',
             'ui:label_display' => 'nullable|in:show,hidden',
             'ui:languages' => ['nullable','array', function ($attribute, $value, $fail) {
-
-                if(count($value) !== count(array_unique($value))) {
+                if (count($value) !== count(array_unique($value))) {
                     $fail('You have already added this language');
                 }
-
             }],
             'ui:languageDefault' => 'nullable',
 
@@ -75,8 +72,9 @@ class TenantSetting extends Model
             }
         )->merge(
             self::when(
-                $namespace, function ($query) use ($namespace) {
-                        return $query->where('key', 'like', $namespace . ':%');
+                $namespace,
+                function ($query) use ($namespace) {
+                    return $query->where('key', 'like', $namespace . ':%');
                 }
             )->get()->mapWithKeys(
                 function ($item) {

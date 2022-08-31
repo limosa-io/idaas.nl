@@ -7,7 +7,5 @@ use App\Scopes\TenantTrait;
 
 class Link extends BaseLink
 {
-
     use TenantTrait;
-
 }

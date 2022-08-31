@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Validator;
 
 class MailTemplateController extends Controller
 {
-
     protected $validations = [
         'name' => 'required|min:2',
         'subject' => 'required|min:10',
@@ -24,44 +23,41 @@ class MailTemplateController extends Controller
         ];
     }
 
-    function __construct()
+    public function __construct()
     {
-
-
         Validator::extend(
-            'self_not_parent', function ($attribute, $value, $parameters, $validator) {
-            
+            'self_not_parent',
+            function ($attribute, $value, $parameters, $validator) {
                 $data = $validator->getData();
 
-                if(empty($data['id'])) {
+                if (empty($data['id'])) {
                     return false;
                 }
 
                 // The parent must exist ...
                 $parent = EmailTemplate::find($data['parent_id']);
 
-                if($parent == null) {
+                if ($parent == null) {
                     return false;
                 }
 
                 // ... and must not have a parent itself
-                if($parent->parent != null) {
+                if ($parent->parent != null) {
                     return false;
                 }
 
-                if($parent->id == $data['id']) {
+                if ($parent->id == $data['id']) {
                     return false;
                 }
 
                 // A template which acts as a parent for other templates, may not have a parent itself
                 $current = EmailTemplate::find($data['id']);
 
-                if($current->children()->exists()) {
+                if ($current->children()->exists()) {
                     return false;
                 }
 
                 return true;
-
             }
         );
 
@@ -71,12 +67,10 @@ class MailTemplateController extends Controller
             'exists:email_templates,id',
             'self_not_parent'
         ];
-
     }
-    
+
     public static function inline($html)
     {
-
         $cssToInlineStyles = new CssToInlineStyles();
 
         return $cssToInlineStyles->convert($html);
@@ -111,7 +105,6 @@ class MailTemplateController extends Controller
         $emailTemplate->save();
 
         return $emailTemplate;
-
     }
 
     /**
@@ -147,8 +140,7 @@ class MailTemplateController extends Controller
     }
 
     public function preview(Request $request, $id)
-    {  
-
+    {
         $data = $this->validate($request, $this->validations);
 
         $model = EmailTemplate::findOrFail($id);
@@ -157,15 +149,19 @@ class MailTemplateController extends Controller
 
         $model->body_inlined = self::inline($model->body);
 
-        return ['preview'=>$model->render(
+        return ['preview' => $model->render(
             [
-            'main_color' => '#00ff00',
-            'otp' => 1245,
-            'url' => 'https://www.example.com',
-            'lines' => [['line'=>'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'],['line'=>'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.']]
+                'main_color' => '#00ff00',
+                'otp' => 1245,
+                'url' => 'https://www.example.com',
+                'lines' => [
+                    // phpcs:ignore Generic.Files.LineLength.TooLong
+                    ['line' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'],
+                    // phpcs:ignore Generic.Files.LineLength.TooLong
+                    ['line' => 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.']
+                ]
             ]
         )];
-
     }
 
     /**

@@ -8,8 +8,6 @@ use App\Subject as EloquentSubject;
 
 class SubjectRepository extends \ArieTimmerman\Laravel\AuthChain\Repository\SubjectRepository
 {
-
-
     public function getSubjectClass()
     {
         return Subject::class;
@@ -22,9 +20,6 @@ class SubjectRepository extends \ArieTimmerman\Laravel\AuthChain\Repository\Subj
 
     public function get($id)
     {
-        
         return EloquentSubject::withoutGlobalScope(TenantScope::class)->find($id);
-
     }
-
 }

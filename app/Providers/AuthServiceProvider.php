@@ -28,13 +28,13 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Auth::provider(
-            'chainusers', function ($app, array $config) {
+            'chainusers',
+            function ($app, array $config) {
                 // Return an instance of Illuminate\Contracts\Auth\UserProvider...
                 return new SubjectProvider();
             }
         );
 
         Passport::enableImplicitGrant();
-        
     }
 }

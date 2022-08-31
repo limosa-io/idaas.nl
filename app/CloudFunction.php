@@ -23,7 +23,6 @@ class CloudFunction extends Model
 
     public function getNameAttribute()
     {
-
         if ($this->is_sequence) {
             return \sprintf('sequence.%s.%s.%s', $this->tenant_id, $this->type, $this->id);
         } else {
@@ -52,7 +51,6 @@ class CloudFunction extends Model
         $result = str_replace('[cloud_function_id]', $this->id, $result);
 
         return $result;
-
     }
 
     protected static function boot()
@@ -61,16 +59,13 @@ class CloudFunction extends Model
 
         static::deleting(
             function ($model) {
-
-                TenantSetting::where('key', 'like', 'rule:%')->where('value',  json_encode($model->id))->delete();
+                TenantSetting::where('key', 'like', 'rule:%')->where('value', json_encode($model->id))->delete();
             }
         );
 
         static::deleted(
             function ($model) {
-
                 if (!$model->is_sequence) {
-
                     if (CloudFunction::where(['type' => $model->type, 'is_sequence' => false])->count() == 0) {
                         CloudFunction::where(['type' => $model->type, 'is_sequence' => true])->delete();
                     } else {
@@ -83,7 +78,6 @@ class CloudFunction extends Model
 
         static::saved(
             function ($model) {
-
                 // if we save the cloud function, we can only ensure it gets redeployed if the sequence is also marked as needed for redploy
                 if (!$model->is_sequence) {
                     $cloudFunction = CloudFunction::firstOrNew(['type' => $model->type, 'is_sequence' => true], ['display_name' => sprintf('sequence_%s', $model->type)]);
@@ -100,11 +94,10 @@ class CloudFunction extends Model
 
         if ($this->is_sequence) {
             $all = CloudFunction::where('type', $this->type)->where('active', true)->where('is_sequence', false)->orderBy('order')->get();
-        }else{
+        } else {
             $all = [$this];
         }
 
         return $all;
     }
-
 }

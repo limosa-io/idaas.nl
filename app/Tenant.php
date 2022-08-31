@@ -9,7 +9,6 @@ use Illuminate\Support\Str;
 
 class Tenant extends Model
 {
-
     public $incrementing = false;
     protected $keyType = 'string';
 
@@ -59,13 +58,12 @@ class Tenant extends Model
 
     public function getMainUrlAttribute()
     {
-
         return route(
-            'ice.manage.home', [
+            'ice.manage.home',
+            [
             'tenant' => $this->subdomain
             ]
         );
-        
     }
 
     public function do(callable $f)
@@ -76,8 +74,8 @@ class Tenant extends Model
 
         $f($this);
 
-        if($original != null) { DetectTenant::activateTenant($original);
+        if ($original != null) {
+            DetectTenant::activateTenant($original);
         }
     }
-
 }

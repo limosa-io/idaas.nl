@@ -14,7 +14,6 @@ use League\OAuth2\Server\AuthorizationValidators\BearerTokenValidator;
 
 class STSGrant extends AbstractGrant
 {
-
     public function getIdentifier()
     {
         return 'urn:ietf:params:oauth:grant-type:token-exchange';
@@ -25,7 +24,6 @@ class STSGrant extends AbstractGrant
         ResponseTypeInterface $responseType,
         \DateInterval $accessTokenTTL
     ) {
-
         $body = $request->getParsedBody();
 
         if (!isset($body['subject_token_type']) || $body['subject_token_type'] != 'io.orange:one-time-token') {

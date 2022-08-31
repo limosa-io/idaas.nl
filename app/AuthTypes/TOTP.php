@@ -13,14 +13,13 @@ use ParagonIE\ConstantTime\Base32;
 
 class TOTP extends AbstractType
 {
-
     /**
      * For the Admin
      */
     public function getConfigValidation()
     {
         return [
-            
+
         ];
     }
 
@@ -35,39 +34,35 @@ class TOTP extends AbstractType
     public function getInfo()
     {
         return [
-            
+
         ];
     }
 
     public function isEnabled(?Subject $subject)
     {
-
         /**
          * If we cannot determine if the user has enabled this module, assume it is.
          */
-        if($subject == null) {
+        if ($subject == null) {
             return true;
         }
 
         $result = $subject != null && $subject->getAttributeAllowUser('otp_secret') != null;
-        
-        Log::debug('TOTP enabled?: ' . ($result?'enabled':'disabled'));
+
+        Log::debug('TOTP enabled?: ' . ($result ? 'enabled' : 'disabled'));
         return $result;
     }
-   
+
     /**
      * Initialize the module
      */
     public function init(Request $request, State $state, ModuleInterface $module)
     {
-
         $this->remembered = $state->getRememberedModuleResult($module) != null;
-
     }
 
     public function remembered()
     {
-
         return $this->remembered;
     }
 
@@ -122,7 +117,7 @@ class TOTP extends AbstractType
         if ($totp->verify($otp)) {
             $result = $module->baseResult()->setCompleted(true);
 
-            if($request->input('remember') !== true) {
+            if ($request->input('remember') !== true) {
                 $result->setRememberAlways(false);
                 $result->setRememberForSession(false);
             }
@@ -133,12 +128,10 @@ class TOTP extends AbstractType
                 response(
                     [
                     'error' => 'The provided code is incorrect.'
-                    ], 422
+                    ],
+                    422
                 )
             );
         }
-
     }
-
-
 }

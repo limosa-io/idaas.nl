@@ -9,13 +9,12 @@ use Illuminate\Support\Str;
 
 class EmailTemplate extends Model
 {
-        
     protected $appends = ['is_parent'];
 
     protected $hidden = ['is_parent', 'tenant_id'];
-    
-    protected $casts = ['default'=>'boolean'];
-    
+
+    protected $casts = ['default' => 'boolean'];
+
     public const TYPE_GENERIC = 'generic';
     public const TYPE_ACTIVATION = 'activation';
     public const TYPE_FORGOTTEN = 'forgotten';
@@ -40,9 +39,7 @@ class EmailTemplate extends Model
 
     protected static function getPreferredLanguage($preferredLanguage)
     {
-
-        if($preferredLanguage == null && ($request = request()) != null) {
-
+        if ($preferredLanguage == null && ($request = request()) != null) {
             $availableLanguages = TenantSetting::where('key', 'ui:languages')->value('value') ?? [];
 
             $preferredLanguage = $availableLanguages[0] ?? null;
@@ -60,13 +57,12 @@ class EmailTemplate extends Model
                 }
             )->all();
 
-            foreach($options as $option){
-                if(in_array($option, $availableLanguages)) {
+            foreach ($options as $option) {
+                if (in_array($option, $availableLanguages)) {
                     $preferredLanguage = $option;
                     break;
                 }
             }
-
         }
 
         return $preferredLanguage;
@@ -74,9 +70,8 @@ class EmailTemplate extends Model
 
     public function renderSubject($data = [], $preferredLanguage = null)
     {
-
         $preferredLanguage = self::getPreferredLanguage($preferredLanguage);
-        
+
         $data['preferredLanguage'] = $preferredLanguage;
 
         $template = $this->subject;
@@ -95,14 +90,12 @@ class EmailTemplate extends Model
         $m = new \Mustache_Engine($options);
 
         return $m->render($template, $data);
-
     }
 
     public function render($data = [], $preferredLanguage = null)
     {
-
         $preferredLanguage = self::getPreferredLanguage($preferredLanguage);
-        
+
         $data['preferredLanguage'] = $preferredLanguage;
 
         $template = "{{%FILTERS}}\n" . $this->body;
@@ -120,9 +113,8 @@ class EmailTemplate extends Model
                 }
             ]
         ];
-        
-        if($this->parent != null) {            
 
+        if ($this->parent != null) {
             $options['partials'] = [
                 'parent' => $this->parent->body
             ];
@@ -130,13 +122,12 @@ class EmailTemplate extends Model
             // die($this->parent->body);
 
             $template = '{{<parent}}' . $template . '{{/parent}}';
-
         }
 
         $m = new \Mustache_Engine($options);
 
-        foreach($data as $key=>&$value){
-            if(!is_string($value)) {
+        foreach ($data as $key => &$value) {
+            if (!is_string($value)) {
                 $value = json_encode($value);
             }
         }
@@ -148,7 +139,5 @@ class EmailTemplate extends Model
         $result = $cssToInlineStyles->convert($result);
 
         return $result;
-
     }
-    
 }

@@ -13,7 +13,10 @@ use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable implements UserInterface, StatableInterface
 {
-    use Notifiable, HasApiTokens, TenantTrait, StatableTrait;
+    use Notifiable;
+    use HasApiTokens;
+    use TenantTrait;
+    use StatableTrait;
 
     protected $dates = [
         'created_at',
@@ -46,7 +49,7 @@ class User extends Authenticatable implements UserInterface, StatableInterface
     ];
 
     protected $with = [
-        
+
     ];
 
     public function setEmailAttribute($value)
@@ -64,9 +67,7 @@ class User extends Authenticatable implements UserInterface, StatableInterface
 
     public function links()
     {
-        // ->using('App\TenantPivot')
         return $this->hasMany('\App\Link');
-        // return $this->belongsToMany('App\Link')->wherePivot('tenant_id', resolve('App\Tenant')->id)->using('App\TenantPivot');
     }
 
     public function roles()
@@ -78,7 +79,8 @@ class User extends Authenticatable implements UserInterface, StatableInterface
 
     public function groups()
     {
-        return $this->belongsToMany('App\Group')->wherePivot('tenant_id', resolve('App\Tenant')->id)->using('App\TenantPivot');
+        return $this->belongsToMany('App\Group')
+            ->wherePivot('tenant_id', resolve('App\Tenant')->id)->using('App\TenantPivot');
     }
 
     public function getId()
@@ -109,10 +111,9 @@ class User extends Authenticatable implements UserInterface, StatableInterface
             function ($user) {
                 // before delete() method call this
 
-                foreach($user->links as $link){
+                foreach ($user->links as $link) {
                     $link->delete();
                 }
-             
             }
         );
 
@@ -121,7 +122,5 @@ class User extends Authenticatable implements UserInterface, StatableInterface
                 $model->{$model->getKeyName()} = (string) Str::orderedUuid();
             }
         );
-        
     }
-    
 }

@@ -18,8 +18,10 @@ use Ramsey\Uuid\Uuid;
 
 class CloudFunction implements ShouldQueue
 {
-
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     public $tries = 3;
     public $timeout = 120;
@@ -32,16 +34,12 @@ class CloudFunction implements ShouldQueue
     {
         $this->cloudFunctionId = $cloudFunction->id;
         $this->parameters = $parameters;
-       
     }
 
     public function handle()
     {
-        
         $result = CloudFunctionHelper::invoke(CloudFunctionModel::find($this->cloudFunctionId), $this->parameters);
 
         CloudFunctionHelper::handle($result);
-        
     }
-
 }

@@ -1,11 +1,14 @@
 <?php
+
 /**
  * Store the state for the authentication process.
- * 
- * The state keeps track of the current result and desired result. And ensures all steps in a multi-factor authentication are full filled.
- * 
+ *
+ * The state keeps track of the current result and desired result.
+ * And ensures all steps in a multi-factor authentication are full filled.
+ *
  * Preferably, the state storage should be super fast and temporary.
  */
+
 namespace App\Http\Controllers\AuthChain;
 
 use ArieTimmerman\Laravel\AuthChain\StateStorage as BaseStateStorage;
@@ -15,11 +18,10 @@ use App\State as EloquentState;
 
 class StateStorage extends BaseStateStorage
 {
-
     public function getEloquentClass()
     {
         return EloquentState::class;
-    }  
+    }
 
     public function saveState(State $state)
     {
@@ -28,7 +30,6 @@ class StateStorage extends BaseStateStorage
         } else {
             return parent::saveState($state);
         }
-
     }
 
     public function getStateFromSession($stateId)
@@ -42,14 +43,10 @@ class StateStorage extends BaseStateStorage
 
     public function deleteState(State $state)
     {
-
         if (config('database.redis.enabled')) {
-            return Redis::del('state:' . $stateId);
+            return Redis::del('state:' . $state->getstateId());
         } else {
             return parent::deleteState($state);
         }
-
     }
-
-
 }

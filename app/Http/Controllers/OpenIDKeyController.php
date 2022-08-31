@@ -1,7 +1,9 @@
 <?php
+
 /**
  * For managing the keys to sign access and id_tokens
  */
+
 namespace App\Http\Controllers;
 
 use App\OAuthScope;
@@ -12,35 +14,33 @@ use App\Repository\KeyRepository;
 
 class OpenIDKeyController extends Controller
 {
-
     protected $validations;
 
-    function __construct()
+    public function __construct()
     {
-
         $this->validations = [
             'private_key' => ['required', function ($attribute, $value, $fail) {
-                try{
-                    if(openssl_pkey_get_private($value) === false) {
+                try {
+                    if (openssl_pkey_get_private($value) === false) {
                         throw new \Exception('Invalid private key');
                     }
-                }catch(\Exception $e){
+                } catch (\Exception $e) {
                     $fail('The provided data is not a valid private key');
                 }
             }],
             'x509' => ['required_without:public_key', function ($attribute, $value, $fail) {
-                try{
+                try {
                     openssl_x509_read($value);
-                }catch(\Exception $e){
+                } catch (\Exception $e) {
                     $fail('The provided data is not a valid x509 certificate');
                 }
             }],
             'public_key' => ['required_without:x509',function ($attribute, $value, $fail) {
-                try{
-                    if(openssl_pkey_get_public($value) === false) {
+                try {
+                    if (openssl_pkey_get_public($value) === false) {
                         throw new \Exception('Invalid public key');
                     }
-                }catch(\Exception $e){
+                } catch (\Exception $e) {
                     $fail('The provided data is not a valid public key');
                 }
             }]
@@ -58,15 +58,27 @@ class OpenIDKeyController extends Controller
         return OpenIDKey::all();
     }
 
-    
+
     public function store(Request $request)
     {
-
         $data = $this->validate($request, $this->validations);
-        
-        if(!empty($data['x509']) ) {
-            $key = str_replace(array('-----BEGIN CERTIFICATE-----','-----END CERTIFICATE-----',"\r", "\n", " "), "", $data['x509']);
-            $keyForParsing = "-----BEGIN CERTIFICATE-----\n".chunk_split($key, 64, "\n")."-----END CERTIFICATE-----\n";
+
+        if (!empty($data['x509'])) {
+            $key = str_replace(
+                array(
+                    '-----BEGIN CERTIFICATE-----',
+                    '-----END CERTIFICATE-----',
+                    "\r",
+                    "\n",
+                    " "
+                ),
+                "",
+                $data['x509']
+            );
+            $keyForParsing = 
+                "-----BEGIN CERTIFICATE-----\n" .
+                chunk_split($key, 64, "\n") .
+                "-----END CERTIFICATE-----\n";
             $details = openssl_pkey_get_details(openssl_pkey_get_public(openssl_x509_read($keyForParsing)));
             $data['public_key'] = $details['key'];
         }
@@ -91,9 +103,7 @@ class OpenIDKeyController extends Controller
 
     public function createGenerated(Request $request)
     {
-
         return self::generateKey();
-
     }
 
     /**
@@ -105,15 +115,15 @@ class OpenIDKeyController extends Controller
      */
     public function update(Request $request, OpenIDKey $openidKey)
     {
-
         $data = $this->validate(
-            $request, [
+            $request,
+            [
             'active' => 'boolean'
             ]
         );
 
-        if($data['active'] == false && OpenIDKey::where('active', true)->count() == 1) {
-            return response(['error'=>'You must have at least one active key pair'], 422);
+        if ($data['active'] == false && OpenIDKey::where('active', true)->count() == 1) {
+            return response(['error' => 'You must have at least one active key pair'], 422);
         }
 
         $openidKey->active = $data['active'];
@@ -131,7 +141,6 @@ class OpenIDKeyController extends Controller
      */
     public function destroy(OpenIDKey $openidKey)
     {
-
         $openidKey->delete();
     }
 }

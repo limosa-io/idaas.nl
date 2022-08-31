@@ -40,17 +40,12 @@ class InvokeFunction extends Command
      */
     public function handle()
     {
-        
-        $tenant = Tenant::where(['subdomain'=>$this->argument('subdomain')])->first();
+        $tenant = Tenant::where(['subdomain' => $this->argument('subdomain')])->first();
 
         $tenant->do(
             function () {
-
                 var_dump(CloudFunctionHelper::invoke(CloudFunction::find('8c48d2b9-22be-4bbf-9e7f-5c203f7b4410')));
-
             }
         );
-
     }
-
 }

@@ -6,7 +6,6 @@ use Laravel\Socialite\Two\LinkedInProvider;
 
 class Linkedin extends Generic
 {
-    
     public function getSocialProvider()
     {
         return LinkedInProvider::class;
@@ -16,5 +15,4 @@ class Linkedin extends Generic
     {
         return "LinkedIn";
     }
-
 }

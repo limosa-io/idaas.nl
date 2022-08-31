@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\AuthCode;
 use Illuminate\Console\Command;
 use App\Token;
 use Carbon\Carbon;
@@ -41,12 +42,9 @@ class CollectGarbarge extends Command
      */
     public function handle()
     {
-        
         Token::withoutGlobalScopes()->where('expires_at', '<', Carbon::now())->delete();
         ModuleResult::withoutGlobalScopes()->where('expires_at', '<', Carbon::now())->delete();
-        AuthCode::withoutGlobalScopes()->where('expires_at', '<', Carbon::now())->delete();        
+        AuthCode::withoutGlobalScopes()->where('expires_at', '<', Carbon::now())->delete();
         Subject::withoutGlobalScopes()->doesntHave('tokens')->doesntHave('moduleResults')->delete();
-
     }
-
 }

@@ -7,10 +7,8 @@ use App\Link;
 
 class LinkRepository extends BaseLinkRepository
 {
-
     public function getLinkClass()
     {
         return Link::class;
     }
-    
 }

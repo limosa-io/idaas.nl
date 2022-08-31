@@ -38,12 +38,9 @@ class ListTenant extends NewTenant
      */
     public function handle()
     {
-        
         $headers = ['Subdomain', 'Is Master'];
         $tenants = Tenant::all(['subdomain', 'master'])->toArray();
 
         return $this->table($headers, $tenants);
-
     }
-
 }

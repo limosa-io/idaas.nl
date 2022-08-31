@@ -15,10 +15,11 @@ class CloudFunctionException extends Exception
     public function render()
     {
         return response(
-            $this->getMessage(), 502, [
+            $this->getMessage(),
+            502,
+            [
             'Content-Type' => 'application/json'
             ]
         );
     }
-    
 }

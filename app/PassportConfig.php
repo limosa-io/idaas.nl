@@ -14,10 +14,8 @@ use Idaas\Passport\PassportConfig as IdaasPassportConfig;
 
 class PassportConfig extends IdaasPassportConfig
 {
-
     public function doAuthenticationResponse(AuthenticationRequest $authenticationRequest)
     {
-
         $client = resolve(ClientRepository::class)
             ->find($authenticationRequest->getClient()->getIdentifier());
 
@@ -76,7 +74,7 @@ class PassportConfig extends IdaasPassportConfig
 
         /**
          * Returns a regular AuthChain response.
-         * 
+         *
          * If the request is completed, uses CompleteProcessorInterface App\Http\AuthChainCompleteProcessor
          */
         return Helper::getAuthResponseAsRedirect(
@@ -117,7 +115,6 @@ class PassportConfig extends IdaasPassportConfig
 
     public function doLogoutResponse(\Illuminate\Http\Request $request, $valid, $redirectUri, $state)
     {
-
         Session::logout($request);
 
         //TODO: add frame headers

@@ -41,14 +41,10 @@ class ParserCommand extends Command
     {
         $parser = new Parser(Mode::PATH());
 
-        
+
         $parser->parse('links[id eq "2"]');
 
 
         echo "Done\n";
-        
-
     }
-
 }
-

@@ -7,7 +7,6 @@ use Laravel\Passport\Token as LaravelToken;
 
 class Token extends LaravelToken
 {
-
     use TenantTrait;
 
     protected $casts = [
@@ -15,7 +14,7 @@ class Token extends LaravelToken
         'revoked' => 'bool',
         'claims' => 'array'
     ];
-    
+
     public function client()
     {
         return $this->belongsTo(Client::class, 'client_id', 'client_id');
@@ -25,5 +24,4 @@ class Token extends LaravelToken
     {
         return $this->belongsTo(Subject::class, 'user_id', 'id');
     }
-
 }

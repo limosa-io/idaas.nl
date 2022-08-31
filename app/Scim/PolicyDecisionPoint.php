@@ -1,7 +1,9 @@
 <?php
+
 /**
  * Defines what SCIM actions and attributes may be called or modified.
  */
+
 namespace App\Scim;
 
 use ArieTimmerman\Laravel\SCIMServer\PolicyDecisionPoint as BasePolicyDecisionPoint;
@@ -15,43 +17,51 @@ use Illuminate\Support\Str;
 
 class PolicyDecisionPoint extends BasePolicyDecisionPoint
 {
-
     protected function areAttributesAllowed($attributesAllowed, $attributesProvided)
     {
-
         $short = [];
 
-        foreach($attributesProvided as $key=>$value){
-
-            if(is_array($value)) { continue;
+        foreach ($attributesProvided as $key => $value) {
+            if (is_array($value)) {
+                continue;
             }
 
-            if(strrpos($key, ":") !== false) {
+            if (strrpos($key, ":") !== false) {
                 $short = substr($key, strrpos($key, ":") + 1);
-            }else{
+            } else {
                 $short = $key;
             }
 
-            if($p = strpos($short, ".")) {
-                $short = substr($short, 0,  $p);
+            if ($p = strpos($short, ".")) {
+                $short = substr($short, 0, $p);
             }
 
-            if(!in_array($short, $attributesAllowed)) {
-                throw new SCIMException(sprintf('Attribute "%s" is not allowed for me-endpoint requests. Allowed are: %s', $short, empty($attributesAllowed) ? 'none' : implode(', ', $attributesAllowed)));
+            if (!in_array($short, $attributesAllowed)) {
+                throw new SCIMException(
+                    sprintf(
+                        'Attribute "%s" is not allowed for me-endpoint requests. Allowed are: %s',
+                        $short,
+                        empty($attributesAllowed) ? 'none' : implode(', ', $attributesAllowed)
+                    )
+                );
             }
         }
-        
     }
 
-    public function isAllowed(Request $request, $operation, array $attributes, ResourceType $resourceType, ?Model $resourceObject, $isMe = false)
-    {
-
+    public function isAllowed(
+        Request $request,
+        $operation,
+        array $attributes,
+        ResourceType $resourceType,
+        ?Model $resourceObject,
+        $isMe = false
+    ) {
         // This check relies on the fact that non-ME endpoints require extra authorization (different route middleware)
-        if(!$isMe) {
+        if (!$isMe) {
             return true;
         }
 
-        if(! (TenantSetting::where('key', 'registration:allow')->value('value') ?? false)) {
+        if (! (TenantSetting::where('key', 'registration:allow')->value('value') ?? false)) {
             return false;
         }
 
@@ -61,42 +71,37 @@ class PolicyDecisionPoint extends BasePolicyDecisionPoint
             }
         );
 
-        if($operation == self::OPERATION_POST) {
-
+        if ($operation == self::OPERATION_POST) {
             $this->areAttributesAllowed($registrationSettings['attributes_create'] ?? [], $attributes);
 
             return true;
         }
 
-        if($operation == self::OPERATION_PATCH || $operation == self::OPERATION_PUT) {
-
+        if ($operation == self::OPERATION_PATCH || $operation == self::OPERATION_PUT) {
             $this->areAttributesAllowed($registrationSettings['attributes_update'] ?? [], $attributes);
 
             // TODO: Check when last authentication was done (not token issue date, but subject creation date).
             // Only allow password change within last 30 seconds
             if (isset($attributes['urn:ietf:params:scim:schemas:core:2.0:User:emails'])) {
-
-
                 $parser = resolve(Parser::class);
                 $parsed = $parser->parse($request->bearerToken());
                 $verified = $parsed->getClaim('verified');
-                
-                foreach($attributes['urn:ietf:params:scim:schemas:core:2.0:User:emails'] as $email){
-                    
-                    if(!isset($verified) || $verified->email != $email['value']) {
-                        throw new SCIMException(sprintf('The provided email is not allowed for update requests because it was not confirmed'));
-                    }
-                    
-                }
 
+                foreach ($attributes['urn:ietf:params:scim:schemas:core:2.0:User:emails'] as $email) {
+                    if (!isset($verified) || $verified->email != $email['value']) {
+                        throw new SCIMException(
+                            sprintf(
+                                'The provided email is not allowed for update requests because it was not confirmed'
+                            )
+                        );
+                    }
+                }
             }
-            
+
 
             return true;
         }
 
         return false;
-        
     }
-
 }

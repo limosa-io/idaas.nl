@@ -36,7 +36,6 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
-
         $this->mapManageApiRoutes();
         $this->mapManageWebRoutes();
 
@@ -60,7 +59,6 @@ class RouteServiceProvider extends ServiceProvider
 
         Passport::routes(
             function ($router) {
-
                 $router->forUserinfo();
                 $router->forIntrospect();
             },
@@ -87,7 +85,10 @@ class RouteServiceProvider extends ServiceProvider
             function () {
                 \ArieTimmerman\Laravel\SCIMServer\RouteProvider::meRoutes();
 
-                Route::get('/hotp_secret_generator', '\App\Http\Controllers\AuthChain\ManageTOTPController@generateSecuret');
+                Route::get(
+                    '/hotp_secret_generator',
+                    '\App\Http\Controllers\AuthChain\ManageTOTPController@generateSecuret'
+                );
 
                 Route::post('/updateEmail', 'App\Http\Controllers\SCIMMeController@updateEmail');
 
@@ -101,12 +102,10 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::middleware(['api.noauth'])->prefix('api')->domain('{tenant}.manage.' . config('app.domain'))->group(
             function () {
-
                 Route::post('/scim/v2/Me', 'App\Http\Controllers\SCIMMeController@createMe')->name('scim.me.post');
 
                 // TODO: this is not working for some reason why not?
                 // \ArieTimmerman\Laravel\SCIMServer\RouteProvider::publicRoutes();
-
             }
         );
     }

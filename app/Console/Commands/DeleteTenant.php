@@ -38,10 +38,9 @@ class DeleteTenant extends NewTenant
      */
     public function handle()
     {
-        
-        $tenant = Tenant::where(['subdomain'=>$this->argument('subdomain')])->first();
+        $tenant = Tenant::where(['subdomain' => $this->argument('subdomain')])->first();
 
-        if($tenant == null) {
+        if ($tenant == null) {
             $this->error('This tenant does not exists!');
             return;
         }
@@ -49,7 +48,5 @@ class DeleteTenant extends NewTenant
         $tenant->delete();
 
         return $this->line('Succesfully delete the tenant');
-
     }
-
 }

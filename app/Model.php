@@ -8,7 +8,6 @@ use App\Scopes\TenantTrait;
 
 class Model extends BaseModel
 {
-
     use TenantTrait {
         doCreating as traitDoCreating;
     }
@@ -30,10 +29,8 @@ class Model extends BaseModel
      */
     protected static function doCreating($model)
     {
-
         self::traitDoCreating($model);
 
         $model->{$model->getKeyName()} = (string) Str::orderedUuid();
     }
-
 }

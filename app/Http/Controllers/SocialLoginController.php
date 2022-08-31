@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\AuthTypes\Facebook;
+use App\AuthTypes\Google;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
 
 class SocialLoginController extends Controller
 {
-
     public function process(Request $request, string $type)
     {
-        if(!preg_match('/^[a-zA-Z]+/', $type) || strlen($type) == 0) {
+        if (!preg_match('/^[a-zA-Z]+/', $type) || strlen($type) == 0) {
             throw new \Exception('Type is invalid');
         }
 
@@ -27,5 +28,4 @@ class SocialLoginController extends Controller
     {
         return Google::processCallback($request);
     }
-
 }

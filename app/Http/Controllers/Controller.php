@@ -9,15 +9,16 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class Controller extends BaseController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    use AuthorizesRequests;
+    use DispatchesJobs;
+    use ValidatesRequests;
 
 
     protected static $nonce = null;
 
     public static function nonce()
     {
-
-        if(self::$nonce == null) {
+        if (self::$nonce == null) {
             self::$nonce = base64_encode(random_bytes(9));
         }
 

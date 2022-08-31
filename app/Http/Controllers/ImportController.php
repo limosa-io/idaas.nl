@@ -1,7 +1,9 @@
 <?php
+
 /**
  * Used by the login form
  */
+
 namespace App\Http\Controllers;
 
 use App\AuthChain;
@@ -14,26 +16,23 @@ use Illuminate\Http\Request;
 
 class ImportController extends Controller
 {
-
     public function index(Request $request)
     {
-
         $content = $request->input('yaml');
 
         $yaml = \yaml_parse($content);
 
         $clients = [];
-        foreach($clients as $client){
+        foreach ($clients as $client) {
             // TODO: check if client with id exists
             // TODO: override all properties
         }
-
     }
 
     protected static function filterNull($array)
     {
         return array_filter(
-            $array, 
+            $array,
             function ($value) {
                 return !is_null($value);
             }
@@ -51,10 +50,9 @@ class ImportController extends Controller
 
     public function export()
     {
-
         $clients = [];
 
-        foreach(Client::all() as $client){
+        foreach (Client::all() as $client) {
             $client = self::filterNull($client->toArray());
             $client = self::filterDates($client);
             $clients[] = $client;
@@ -63,7 +61,7 @@ class ImportController extends Controller
 
         $authLevels = [];
 
-        foreach(AuthLevel::all() as $authLevel){
+        foreach (AuthLevel::all() as $authLevel) {
             $authLevel = self::filterNull($authLevel->toArray());
             $authLevel = self::filterDates($authLevel);
 
@@ -73,8 +71,8 @@ class ImportController extends Controller
         }
 
         $authModules = [];
-        
-        foreach(AuthModule::all() as $authModule){
+
+        foreach (AuthModule::all() as $authModule) {
             $module = self::filterNull($authModule->toArray());
             $module = self::filterDates($module);
 
@@ -89,8 +87,8 @@ class ImportController extends Controller
         }
 
         $authChains = [];
-        
-        foreach(AuthChain::all() as $authChain){
+
+        foreach (AuthChain::all() as $authChain) {
             $authChain = self::filterNull($authChain->toArray());
             $authChain = self::filterDates($authChain);
 
@@ -100,8 +98,8 @@ class ImportController extends Controller
         }
 
         $emails = [];
-        
-        foreach(EmailTemplate::all() as $emailTemplate){
+
+        foreach (EmailTemplate::all() as $emailTemplate) {
             $emailTemplate = self::filterNull($authChain->toArray());
             $emailTemplate = self::filterDates($authChain);
 
@@ -112,7 +110,7 @@ class ImportController extends Controller
 
         $settings = [];
 
-        foreach(TenantSetting::all() as $setting){
+        foreach (TenantSetting::all() as $setting) {
             $settings[$setting->key] = $setting->value;
         }
 
@@ -128,5 +126,4 @@ class ImportController extends Controller
 
         return \yaml_emit($yaml);
     }
-
 }

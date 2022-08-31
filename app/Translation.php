@@ -8,5 +8,4 @@ use Illuminate\Support\Str;
 
 class Translation extends Model
 {
-    
 }

@@ -3,6 +3,7 @@
 /**
  * TODO: Add new "OpenIDConnect" module and connect to other tenant OR self tenant.
  */
+
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -57,17 +58,16 @@ class NewMaster extends NewTenant
      */
     public function handle()
     {
-
-        if($this->validateInput()) {
+        if ($this->validateInput()) {
             $username = $this->argument('admin');
             self::createTenant(
-                $this->argument('subdomain'), null, true, function () use ($username) {
+                $this->argument('subdomain'),
+                null,
+                true,
+                function () use ($username) {
                     return $this->ensureUser($username);
                 }
             );
-
-            
         }
     }
-
 }

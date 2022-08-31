@@ -11,8 +11,6 @@ use App\OpenIDProvider;
 
 class AuthLevelRepository extends BaseAuthLevelRepository
 {
-
-
     /**
      * @return AuthLevelInterface[]
      */
@@ -21,7 +19,7 @@ class AuthLevelRepository extends BaseAuthLevelRepository
         return AuthLevel::all();
     }
 
-    public function getByValue($value,$type)
+    public function getByValue($value, $type)
     {
         throw new ApiException('Operation not supported');
     }
@@ -40,7 +38,6 @@ class AuthLevelRepository extends BaseAuthLevelRepository
      */
     public function add($level, $type)
     {
-        
         $authLevel = new AuthLevel();
 
         $authLevel->provider_id = OpenIDProvider::first()->id;
@@ -49,7 +46,6 @@ class AuthLevelRepository extends BaseAuthLevelRepository
         $authLevel->save();
 
         return $authLevel;
-
     }
 
     /**
@@ -57,35 +53,27 @@ class AuthLevelRepository extends BaseAuthLevelRepository
      */
     public function save(AuthLevelInterface $authLevel)
     {
-        
-        if($authLevel instanceof Model) {
+        if ($authLevel instanceof Model) {
             $authLevel->save();
-        }else{
+        } else {
             throw new ApiException('Operation not supported');
         }
-
     }
 
     /**
-     * 
+     *
      */
     public function delete(AuthLevelInterface $authLevel)
     {
-        
-
-        if($authLevel instanceof Model) {
+        if ($authLevel instanceof Model) {
             $authLevel->delete();
-        }else{
+        } else {
             throw new ApiException('Operation not supported');
         }
-
     }
 
     public function fromJson($json)
     {
-        
         return AuthLevel::fromJsonObject($json);
-
     }
-
 }

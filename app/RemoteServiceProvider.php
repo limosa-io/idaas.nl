@@ -3,7 +3,6 @@
 namespace App;
 
 use App\Model;
-
 use ArieTimmerman\Laravel\SAML\SAML2\Entity\RemoteServiceProviderConfigInterface;
 use App\Scopes\TenantTrait;
 
@@ -22,26 +21,23 @@ class RemoteServiceProvider extends Model implements RemoteServiceProviderConfig
 
     protected $guarded = [ 'id' ];
 
-    public function jsonSerialize() : array
+    public function jsonSerialize(): array
     {
-
         $result = parent::jsonSerialize();
 
         $result['AssertionConsumerService'] = $result['assertionConsumerService'];
         $result['SingleLogoutService'] = $result['singleLogoutService'];
         $result['entityid'] = $result['entityid'];
-        
+
         unset($result['assertionConsumerService']);
         unset($result['singleLogoutService']);
         // unset($result['entityid']);
-        
-        return $result;
 
+        return $result;
     }
 
     public function toSimpleSAMLArray()
     {
-
         return [
             'entityid' => $this->entityid,
             'metadata-set' => 'saml20-sp-remote',
@@ -55,14 +51,11 @@ class RemoteServiceProvider extends Model implements RemoteServiceProviderConfig
             'wantSignedLogoutRequest' => $this->wantSignedLogoutRequest
 
         ];
-
     }
 
     public function fromSimpleSAMLArray(array $array)
     {
-
         //not implemented
         return null;
     }
-
 }

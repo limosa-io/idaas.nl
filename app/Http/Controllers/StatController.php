@@ -1,19 +1,20 @@
 <?php
+
 /**
  * Generates some stats.
- * 
+ *
  * In use by the admin ui dashboard.
  */
+
 namespace App\Http\Controllers;
 
-use DB;
 use App\Client;
 use App\User;
 use App\Token;
+use Illuminate\Support\Facades\DB;
 
 class StatController extends Controller
 {
-    
     public function dashboard()
     {
         $now = \Carbon\Carbon::now();
@@ -33,13 +34,11 @@ class StatController extends Controller
             'users' => User::count(),
             'tokens' => Token::count(),
             'user_creations' => $creations
-        ];        
-
+        ];
     }
 
     public function loginsPerDay30Days()
     {
-
         $results = DB::table('hourly_logins')
             ->select(DB::raw("to_char(date_trunc('day',time),'YYYY-MM-DD') as d"), DB::raw('count(*) as total'))
             ->where('tenant_id', resolve('App\Tenant')->id)
@@ -54,9 +53,9 @@ class StatController extends Controller
             }
         );
 
-        for($i = -29; $i <= 0; $i++){
+        for ($i = -29; $i <= 0; $i++) {
             $date = date('Y-m-d', strtotime(sprintf("%d days", $i)));
-            if(!isset($results[$date])) {
+            if (!isset($results[$date])) {
                 $results[$date] = 0;
             }
         }
@@ -69,7 +68,5 @@ class StatController extends Controller
 
     public function loginsPerHour1Day()
     {
-        
     }
-
 }

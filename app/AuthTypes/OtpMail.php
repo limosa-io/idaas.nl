@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use ArieTimmerman\Laravel\AuthChain\State;
 use ArieTimmerman\Laravel\AuthChain\Module\ModuleResult;
 use ArieTimmerman\Laravel\AuthChain\Module\ModuleInterface;
-
 use Illuminate\Support\Facades\Mail;
 use ArieTimmerman\Laravel\AuthChain\Types\AbstractType;
 use App\Mail\StandardMail;
@@ -19,14 +18,13 @@ use ParagonIE\ConstantTime\Base32;
 
 class OtpMail extends AbstractType
 {
-
     public function isPassive()
     {
         return false;
     }
 
     public function init(Request $request, State $state, ModuleInterface $module)
-    { 
+    {
     }
 
     public function getDefaultName()
@@ -44,10 +42,8 @@ class OtpMail extends AbstractType
 
     public function process(Request $request, State $state, ModuleInterface $module)
     {
-
         if ($request->input('otp')) {
             if ($this->getOtp($state) == $request->input('otp')) {
-
                 //TODO: find user,
                 $user = User::find(decrypt($request->input('user_id_hashed')));
 
@@ -67,12 +63,12 @@ class OtpMail extends AbstractType
                     response(
                         [
                         'error' => 'The provided otp is incorrect.'
-                        ], 422
+                        ],
+                        422
                     )
                 );
             }
-        } else if ($state->getSubject() != null) {
-
+        } elseif ($state->getSubject() != null) {
             //MUST approve subject!
             $subject = $state->getSubject();
 
@@ -88,7 +84,8 @@ class OtpMail extends AbstractType
 
             Mail::to($state->getSubject()->getEmail())->send(
                 new StandardMail(
-                    @$module->config['template_id'], [
+                    @$module->config['template_id'],
+                    [
                         'subject' => $state->getSubject(),
                         'user' =>  $state->getSubject() ? $state->getSubject()->getUser() : null,
                         'otp' => $otp
@@ -107,7 +104,6 @@ class OtpMail extends AbstractType
                 )
             );
         } else {
-
             $user = resolve(UserRepositoryInterface::class)->findByIdentifier($request->input('username'));
 
             if ($user == null) {

@@ -28,7 +28,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-
         $schedule->call(
             function () {
                 $now = date('Y-m-d');
@@ -36,7 +35,6 @@ class Kernel extends ConsoleKernel
                 DB::table('recent_users')->delete();
             }
         )->daily();
-
     }
 
     /**
@@ -46,30 +44,29 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-
         $tenantEnv = getenv('TENANT');
         $tenant = null;
 
-        try{
-            if($tenantEnv != null) {
+        try {
+            if ($tenantEnv != null) {
                 $tenant = Tenant::where(['subdomain' => $tenantEnv])->first();
             }
 
-            if($tenantEnv == null || $tenant == null) {
+            if ($tenantEnv == null || $tenant == null) {
                 $tenant = Tenant::where(['master' => true])->first();
             }
-        }catch(\Illuminate\Database\QueryException $e){
+        } catch (\Illuminate\Database\QueryException $e) {
             // this exception is thrown in case the application was not yet installed (migrated)
         }
 
-        if($tenant != null) {
+        if ($tenant != null) {
             DetectTenant::activateTenant($tenant);
         }
 
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         $now = date('Y-m-d');
-        
+
         include base_path('routes/console.php');
     }
 }

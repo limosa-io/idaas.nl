@@ -10,7 +10,6 @@ use Laravel\Passport\Token;
 
 class OAuthSubscriber
 {
-
     protected $settings = null;
 
     public function onAccessTokenCreated(AccessTokenCreated $event)
@@ -21,7 +20,7 @@ class OAuthSubscriber
     public function onRefreshTokenCreated(RefreshTokenCreated $event)
     {
         $token = Token::find($event->accessTokenId);
-        
+
         Statter::emit(Client::find($token->client_id), 'refresh_token', $token->user_id);
     }
 
@@ -32,7 +31,6 @@ class OAuthSubscriber
      */
     public function subscribe($events)
     {
-
         $events->listen(
             'Laravel\Passport\Events\AccessTokenCreated',
             'App\Listeners\OAuthSubscriber@onAccessTokenCreated'
@@ -42,7 +40,5 @@ class OAuthSubscriber
             'Laravel\Passport\Events\RefreshTokenCreated',
             'App\Listeners\OAuthSubscriber@onRefreshTokenCreated'
         );
-
     }
-
 }

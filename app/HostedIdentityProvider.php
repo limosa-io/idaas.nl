@@ -25,18 +25,16 @@ class HostedIdentityProvider extends Model implements HostedIdentityProviderConf
 
         'expire' => 'integer',
         'cacheDuration' => 'integer'
-        
+
     ];
-    
-    public function jsonSerialize() : array
+
+    public function jsonSerialize(): array
     {
         return $this->toSimpleSAMLArray();
     }
 
     public function toSimpleSAMLArray()
     {
-
-        
         return [
             'entityId' => $this->id,
 
@@ -63,21 +61,17 @@ class HostedIdentityProvider extends Model implements HostedIdentityProviderConf
             'contacts' => $this->contacts ?? [],
             'organization' => $this->organization ?? [],
 
-            //metadata: 
-            'expire' => time()+3600,
+            //metadata:
+            'expire' => time() + 3600,
             'cacheDuration' => 3600,
             'metadata.sign.enable' => $this->metadataSignEnable,
 
         ];
-
     }
 
     public function fromSimpleSAMLArray(array $array)
     {
-
         //not implemented
         return null;
     }
-
-
 }

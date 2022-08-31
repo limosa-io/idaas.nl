@@ -3,6 +3,7 @@
 /**
  * Lists the access tokens in use. For management purposes.
  */
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -15,7 +16,6 @@ class UploadController extends Controller
      */
     public function s3sign(Request $request)
     {
-
         $config = [
             'version' => 'latest',
             'region' => config('s3.aws_region'),
@@ -35,13 +35,15 @@ class UploadController extends Controller
             'PutObject',
             [
                 'Bucket' => config('s3.aws_bucket'),
-                'Key' => config('s3.aws_directory') . "/" . resolve('App\Tenant')->id . '/' . $request->input('filename'),
+                'Key' => config('s3.aws_directory') .
+                    "/" . resolve('App\Tenant')->id .
+                    '/' . $request->input('filename'),
                 'ACL' => 'public-read',
                 'ContentType' => $request->input('contentType'),
                 'Body' => '',
             ]
         );
-        
+
         $response = $s3->createPresignedRequest($command, '+5 minutes');
 
         return [

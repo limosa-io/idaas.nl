@@ -6,7 +6,6 @@ use Laravel\Socialite\Two\GithubProvider;
 
 class Github extends Generic
 {
-    
     public function getSocialProvider()
     {
         return GithubProvider::class;
@@ -16,5 +15,4 @@ class Github extends Generic
     {
         return "GitHub";
     }
-
 }

@@ -11,5 +11,4 @@ class MediaItem extends Model
     protected $casts = [
         'meta' => 'array'
     ];
-
 }

@@ -11,7 +11,6 @@ use Idaas\OpenID\Session;
 
 class OIDCSession extends Session
 {
-
     public function getAuthTime()
     {
         $state = resolve(State::class);

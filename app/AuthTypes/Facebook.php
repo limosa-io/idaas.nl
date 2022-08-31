@@ -6,7 +6,6 @@ use Laravel\Socialite\Two\FacebookProvider;
 
 class Facebook extends Generic
 {
-
     public function getSocialProvider()
     {
         return FacebookProvider::class;
@@ -16,5 +15,4 @@ class Facebook extends Generic
     {
         return "Facebook";
     }
-
 }

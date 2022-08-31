@@ -10,9 +10,9 @@ use App\Scopes\SystemScope;
 class OAuthScope extends Model
 {
     protected $hidden = [
-        
+
     ];
-    
+
     protected $casts = [
         'system'    => 'boolean'
     ];
@@ -27,10 +27,5 @@ class OAuthScope extends Model
         parent::boot();
 
         static::addGlobalScope(new SystemScope());
-
     }
-
-
-    
-
 }

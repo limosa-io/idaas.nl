@@ -11,14 +11,14 @@ class TenantSettingController extends Controller
 {
     protected $validations;
 
-    const LANGUAGES = 'languages';
-    const LANGUAGE_DEFAULT = 'language_default';
+    public const LANGUAGES = 'languages';
+    public const LANGUAGE_DEFAULT = 'language_default';
 
     public function __construct()
     {
         $this->validations = TenantSetting::getValidations();
     }
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -97,8 +97,7 @@ class TenantSettingController extends Controller
 
     public function validateForNamespace(Request $request, $validations, $namespace = null)
     {
-
-        if($namespace == null) {
+        if ($namespace == null) {
             return $this->validate($request, $validations);
         }
 
@@ -115,25 +114,23 @@ class TenantSettingController extends Controller
                 return [$namespace . ':' . $key => $value];
             }
         )->all();
-
     }
 
 
     public function updateMany(Request $request)
     {
-
         $data = $this->validateForNamespace($request, $this->validations, $request->input('namespace'));
 
         $settings = TenantSetting::whereIn('key', array_keys($data))->get();
 
-        foreach($settings as $setting){
+        foreach ($settings as $setting) {
             $setting->value = $data[$setting->key];
             $setting->save();
 
             unset($data[$setting->key]);
         }
 
-        foreach($data as $key=>$value){
+        foreach ($data as $key => $value) {
             $setting = new TenantSetting();
             $setting->key = $key;
             $setting->value = $value;
@@ -142,7 +139,6 @@ class TenantSettingController extends Controller
 
         //Return all settings
         return $this->index($request);
-
     }
 
     /**
@@ -159,7 +155,6 @@ class TenantSettingController extends Controller
 
     public function uiSettings()
     {
-
         return response(
             TenantSetting::where('key', 'like', 'ui:%')->get()->mapWithKeys(
                 function ($item) {
@@ -167,6 +162,5 @@ class TenantSettingController extends Controller
                 }
             )
         )->header('Cache-Control', 'public, max-age=31536000');
-
     }
 }

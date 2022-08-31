@@ -1,9 +1,11 @@
 <?php
+
 /**
  * Used by the authentication chain to allow storing module results.
- * 
+ *
  * Effectivly, this represents the session store.
  */
+
 namespace App\Http\Controllers\AuthChain;
 
 use ArieTimmerman\Laravel\AuthChain\State;
@@ -19,7 +21,6 @@ use Carbon\Carbon;
 
 class RememberStorage extends \ArieTimmerman\Laravel\AuthChain\RememberStorage
 {
-
     protected $request;
 
     public function __construct(Request $request)
@@ -29,16 +30,17 @@ class RememberStorage extends \ArieTimmerman\Laravel\AuthChain\RememberStorage
 
     public function clearModuleResults(Request $request)
     {
-        
         $sessionId = Session::getId();
         $cookieId = Cookie::get('remember_id');
-        
-        EloquentModuleResult::where('session_or_cookie_id', $sessionId)->orWhere('session_or_cookie_id', $cookieId)->delete();
-        
-        \Cookie::queue(\Cookie::forget('remember_id'));
+
+        EloquentModuleResult::where(
+            'session_or_cookie_id',
+            $sessionId
+        )->orWhere('session_or_cookie_id', $cookieId)->delete();
+
+        Cookie::queue(Cookie::forget('remember_id'));
 
         session()->flush();
-        
     }
 
     /**
@@ -46,7 +48,6 @@ class RememberStorage extends \ArieTimmerman\Laravel\AuthChain\RememberStorage
      */
     public function saveModuleResults(Authenticatable $subject, State $state)
     {
-
         $sessionId = Session::getId();
         $cookieId = Cookie::get('remember_id');
 
@@ -56,7 +57,7 @@ class RememberStorage extends \ArieTimmerman\Laravel\AuthChain\RememberStorage
             // Ensure the cookie gets send to the client
             $cookieId = Str::uuid();
             Cookie::queue(
-                'remember_id', 
+                'remember_id',
                 $cookieId,
                 config('session.cookie_lifetime'),
                 '/',
@@ -71,14 +72,12 @@ class RememberStorage extends \ArieTimmerman\Laravel\AuthChain\RememberStorage
         $inserts = [];
 
         /**
-         * @var ModuleResult $r 
+         * @var ModuleResult $r
         */
         foreach ($state->getModuleResults()->toArray() as $r) {
-
             // Save if whaterver has prompted. Else it forgets the first factor ...
             // TODO: Check if "getPrompted()" is a better check than "getSubject"
             if ($r->getSubject() != null && ($r->rememberAlways || $r->rememberForSession)) {
-
                 $rememberLifetime = $r->rememberLifetime ?? 3600;
 
                 $expiresAt = null;
@@ -88,9 +87,9 @@ class RememberStorage extends \ArieTimmerman\Laravel\AuthChain\RememberStorage
                     );
                 } else {
                     // Save it for a day. Since session.cookie_lifetime is meant to get updated upon activeness
-                    $expiresAt = Carbon::now()->addSeconds(min($rememberLifetime, 24*3600));
+                    $expiresAt = Carbon::now()->addSeconds(min($rememberLifetime, 24 * 3600));
                 }
-                
+
                 $inserts[] = [
                     'session_or_cookie_id' =>
                         $r->rememberForSession ? $sessionId : $cookieId,
@@ -107,7 +106,7 @@ class RememberStorage extends \ArieTimmerman\Laravel\AuthChain\RememberStorage
                     ),
 
                     'module_result' => json_encode($r),
-                    
+
                     'expires_at' => $expiresAt
                 ];
 
@@ -117,13 +116,15 @@ class RememberStorage extends \ArieTimmerman\Laravel\AuthChain\RememberStorage
 
         if ($hasSavedNew) {
             // TODO: why was this line here? Why delete earlier remembered module results?
-            EloquentModuleResult::where('session_or_cookie_id', $sessionId)->orWhere('session_or_cookie_id', $cookieId)->delete();
+            EloquentModuleResult::where(
+                'session_or_cookie_id',
+                $sessionId
+            )->orWhere('session_or_cookie_id', $cookieId)->delete();
         }
 
         foreach ($inserts as $insert) {
             EloquentModuleResult::create($insert);
         }
-
     }
 
     public function getRememberedModuleResults(Request $request)
@@ -131,16 +132,14 @@ class RememberStorage extends \ArieTimmerman\Laravel\AuthChain\RememberStorage
         $result = new ModuleResultList(
             EloquentModuleResult::select('module_result')->where(
                 function ($query) use ($request) {
-
                     $sessionId = $request->session()->getId();
                     $rememberId = Cookie::get('remember_id');
-            
+
                     $query->where('session_or_cookie_id', $sessionId);
 
-                    if(!empty($rememberId)) {
+                    if (!empty($rememberId)) {
                         $query->orWhere('session_or_cookie_id', $rememberId);
                     }
-
                 }
             )->get()->map(
                 function ($eloquent) {
@@ -150,7 +149,5 @@ class RememberStorage extends \ArieTimmerman\Laravel\AuthChain\RememberStorage
         );
 
         return $result;
-
     }
-
 }

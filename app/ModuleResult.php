@@ -6,7 +6,6 @@ use App\Model;
 
 class ModuleResult extends Model
 {
-    
     protected $casts = [
         'session' => 'boolean'
     ];
@@ -14,7 +13,7 @@ class ModuleResult extends Model
     protected $dates = [
         'expires_at',
     ];
-    
+
     protected $hidden = ['module_result'];
 
     public function user()
@@ -31,6 +30,4 @@ class ModuleResult extends Model
     {
         return $this->belongsTo('App\AuthModule');
     }
-
-
 }

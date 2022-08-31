@@ -11,7 +11,6 @@ use Laravel\Passport\HasApiTokens;
 
 class Client extends IdaasClient implements SubjectInterface, Authenticatable, StatableInterface
 {
-
     use TenantTrait;
     use HasApiTokens;
     use StatableTrait;
@@ -107,5 +106,4 @@ class Client extends IdaasClient implements SubjectInterface, Authenticatable, S
     {
         return $this->public == 'confidential';
     }
-
 }

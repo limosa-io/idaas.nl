@@ -12,13 +12,11 @@ use ArieTimmerman\Laravel\AuthChain\Session;
 
 class SAMLConfig extends \ArieTimmerman\Laravel\SAML\SAMLConfig
 {
-
     /**
      * A non-null response will be returned as a HTTP response. Else, the logout flow continues.
      */
     public function doLogoutResponse()
     {
-        
         Session::logout(request());
 
         return null;
@@ -26,7 +24,6 @@ class SAMLConfig extends \ArieTimmerman\Laravel\SAML\SAMLConfig
 
     public function doAuthenticationResponse(SamlState $samlState)
     {
-
         $isPassive = $samlState->getRequest()->getIsPassive();
         $isForce = $samlState->getRequest()->getForceAuthn();
         $requestedAuthnContext = $samlState->getRequest()->getRequestedAuthnContext() ?? [];
@@ -42,15 +39,16 @@ class SAMLConfig extends \ArieTimmerman\Laravel\SAML\SAMLConfig
                 $loginUrl
             ]
         );
-        
+
         $state = State::fromRequest(request());
         $state->setData($samlState);
         // This removes the need from storing the state in a session ...
         app()->instance(State::class, $state);
-        
+
         //route('ssourl.continue')
         return Helper::getAuthResponseAsRedirect(
-            request(), $state
+            request(),
+            $state
             // ->setRequiredAuthLevel(AuthLevel::samlAll($requestedAuthnContext))
                 ->setPrompt($isForce)
                 ->setPassive($isPassive)
@@ -59,6 +57,5 @@ class SAMLConfig extends \ArieTimmerman\Laravel\SAML\SAMLConfig
                 ->setOnCancelUrl('http://cancel')
                 ->setRetryUrl(url()->full())
         );
-
     }
 }

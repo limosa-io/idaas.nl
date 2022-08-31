@@ -1,9 +1,11 @@
 <?php
+
 /**
- * Design a cache system that holds information of 10.000 tokens max? 
+ * Design a cache system that holds information of 10.000 tokens max?
  * Perhaps by storing the tokenId in the cache itself? Allows very short key sizes. Acceptable if look-up is faster.
  * Or really short expiration times that auto increase upon usage?
  */
+
 namespace App;
 
 use Idaas\Passport\TokenCache as IdaasTokenCache;
@@ -11,7 +13,6 @@ use Illuminate\Support\Facades\Cache;
 
 class TokenCache extends IdaasTokenCache
 {
-
     /**
      * TODO: Store in hashmap. Only first xx characters? rest in map.
      */
@@ -41,9 +42,7 @@ class TokenCache extends IdaasTokenCache
      */
     public function clearCacheForToken(string $tokenId)
     {
-
         Cache::forget('info:' . $tokenId);
         Cache::forget('user:' . $tokenId);
     }
-
 }

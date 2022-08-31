@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\DB;
 
 class StatterFacade
 {
-
     protected $queue = [];
 
     public function emit(StatableInterface $statable, $key, $value)
@@ -22,12 +21,9 @@ class StatterFacade
 
     public function save()
     {
-
-        if(!empty($this->queue)) {
+        if (!empty($this->queue)) {
             DB::table('stats')->insert($this->queue);
             $this->queue = [];
         }
-
     }
-
 }

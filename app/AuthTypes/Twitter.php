@@ -6,7 +6,6 @@ use Laravel\Socialite\One\TwitterProvider;
 
 class Twitter extends Generic
 {
-    
     public function getSocialProvider()
     {
         return TwitterProvider::class;
@@ -16,5 +15,4 @@ class Twitter extends Generic
     {
         return "Twitter";
     }
-
 }

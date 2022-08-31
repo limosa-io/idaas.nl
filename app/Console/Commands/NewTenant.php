@@ -34,7 +34,6 @@ use Illuminate\Support\Str;
 
 class NewTenant extends Command
 {
-
     /**
      * The name and signature of the console command.
      *
@@ -66,11 +65,13 @@ class NewTenant extends Command
      */
     public function handle()
     {
-
         if ($this->validateInput()) {
             $username = $this->argument('admin');
             self::createTenant(
-                $this->argument('subdomain'), null, false, function () use ($username) {
+                $this->argument('subdomain'),
+                null,
+                false,
+                function () use ($username) {
                     return $this->ensureUser($username);
                 }
             );
@@ -81,7 +82,6 @@ class NewTenant extends Command
 
     public function ensureUser($admin)
     {
-
         $user = User::withOutGlobalScope(TenantScope::class)->where(
             [
             'name' => $admin
@@ -93,7 +93,6 @@ class NewTenant extends Command
         )->first();
 
         if ($user == null) {
-
             $password = Str::random(10);
 
             $user = User::create(
@@ -110,7 +109,6 @@ class NewTenant extends Command
 
     public function validateInput()
     {
-
         if (!filter_var($this->argument('admin'), FILTER_VALIDATE_EMAIL) && User::withoutGlobalScope(TenantScope::class)->find($this->argument('admin')) == null) {
             $this->error('Please provide a mail address!');
             return false;
@@ -121,10 +119,9 @@ class NewTenant extends Command
 
     public static function createTenant($subdomain, ?User $user, $master = false, \Closure $createUserFunction = null)
     {
-
         $tenant = null;
 
-        if ($master && ($tenant = Tenant::where(['master' => $master])->first()) != null) { 
+        if ($master && ($tenant = Tenant::where(['master' => $master])->first()) != null) {
         } else {
             $tenant = Tenant::updateOrCreate(
                 [
@@ -136,7 +133,6 @@ class NewTenant extends Command
 
         $tenant->do(
             function ($tenant) use ($subdomain, $user, $createUserFunction) {
-
                 $roles = [Role::firstOrCreate(
                     ['display' => 'Administrator', 'system' => true]
                 ), Role::firstOrCreate(
@@ -153,7 +149,6 @@ class NewTenant extends Command
                 $provider = OpenIDProvider::first();
 
                 if ($provider == null) {
-
                     $provider = (new OpenIDProvider())->forceFill(
                         [
                         'liftime_access_token' => 3600,
@@ -303,7 +298,8 @@ class NewTenant extends Command
                     [
                     'provider_id' => OpenIDProvider::first()->id,
                     'active' => true
-                    ], KeyRepository::generateNew()
+                    ],
+                    KeyRepository::generateNew()
                 );
 
                 // Manager is the tenant's manager client. That is, the client connected to the manager application
@@ -338,7 +334,6 @@ class NewTenant extends Command
 
                 Tenant::where(['master' => true])->first()->do(
                     function ($master) use (&$client, $tenant, $roles, &$urls, $redirectUri, $user) {
-
                         $client = Client::firstOrCreate(
                             [
                             'name' => 'Tenant - ' . $tenant->subdomain,
@@ -363,7 +358,7 @@ class NewTenant extends Command
                 );
 
                 $from = AuthModule::firstOrCreate(
-                    ['type' => (new Start)->getIdentifier()],
+                    ['type' => (new Start())->getIdentifier()],
                     [
                     'name' => 'Start',
                     'skippable' => true,
@@ -401,7 +396,7 @@ class NewTenant extends Command
                     if (env('FACEBOOK_CLIENT_ID') !== null) {
                         $to[] = AuthModule::firstOrCreate(
                             [
-                            'name' => (new Facebook)->getDefaultName()
+                            'name' => (new Facebook())->getDefaultName()
                             ],
                             [
                                 'type' => (new Facebook())->getIdentifier(),
@@ -425,7 +420,7 @@ class NewTenant extends Command
                     ]
                 );
 
-                if($tenant->master) {
+                if ($tenant->master) {
                     $to[] = AuthModule::firstOrCreate(
                         ['name' => (new Passwordless())->getDefaultName()],
                         [
@@ -434,8 +429,7 @@ class NewTenant extends Command
                         'group' => (new Passwordless())->getDefaultGroup()
                         ]
                     );
-    
-                }else{
+                } else {
                     $to[] = AuthModule::firstOrCreate(
                         ['name' => (new OtpMail())->getDefaultName()],
                         [
@@ -445,7 +439,7 @@ class NewTenant extends Command
                         ]
                     );
                 }
-            
+
                 $to[] = AuthModule::firstOrCreate(
                     ['name' => (new PasswordForgotten())->getDefaultName()],
                     [
@@ -458,7 +452,6 @@ class NewTenant extends Command
                 $to[] = $module;
 
                 foreach ($to as $t) {
-
                     AuthChain::firstOrCreate(
                         [
                         'from' => $from->id,

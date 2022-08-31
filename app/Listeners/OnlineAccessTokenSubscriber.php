@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This listener ensures access tokens with scope online_access get revoked upon session revocation
  */
@@ -10,7 +11,6 @@ use Laravel\Passport\Events\AccessTokenCreated;
 
 class OnlineAccessTokenSubscriber
 {
-
     /**
      * Handle user logout events.
      */
@@ -27,14 +27,9 @@ class OnlineAccessTokenSubscriber
      */
     public function subscribe($events)
     {
-
         $events->listen(
             'Laravel\Passport\Events\AccessTokenCreated',
             'App\Listeners\OnlineAccessTokenSubscriber@onAccessTokenCreated'
         );
-
     }
-
 }
-
-

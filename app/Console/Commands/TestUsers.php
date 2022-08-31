@@ -44,20 +44,20 @@ class TestUsers extends NewTenant
      */
     public function handle()
     {
-
         $faker = resolve(Faker::class);
 
         $i = 0;
-        
+
         $out = fopen('php://output', 'w');
-        
-        while($i < 3000){
-            fputcsv($out, array($this->clean($faker->username),$this->clean($faker->password),$this->clean($faker->email)));
+
+        while ($i < 3000) {
+            fputcsv(
+                $out,
+                array($this->clean($faker->username),$this->clean($faker->password),$this->clean($faker->email))
+            );
             $i++;
         }
 
         fclose($out);
-
     }
-
 }

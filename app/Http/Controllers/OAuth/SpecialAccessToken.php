@@ -13,12 +13,10 @@ use League\OAuth2\Server\CryptKey;
 
 class SpecialAccessToken extends AccessToken
 {
-
     protected $verified = null;
 
     public function convertToJWT(CryptKey $privateKey)
     {
-
         $config = Configuration::forAsymmetricSigner(
             new Sha256(),
             InMemory::plainText($privateKey->getKeyContents()),
@@ -40,8 +38,6 @@ class SpecialAccessToken extends AccessToken
         }
 
         return $token->getToken($config->signer(), $config->signingKey());
-
-
     }
 
     public function addVerified(array $verified)

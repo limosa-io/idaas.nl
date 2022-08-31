@@ -29,7 +29,6 @@ class Role extends Model
      */
     public function toArray()
     {
-        
         return [
             "id" => $this->id,
             "meta" => [
@@ -43,7 +42,5 @@ class Role extends Model
             "system" => $this->system,
             "tenant" => $this->relationLoaded('tenant') && $this->tenant ? $this->tenant->subdomain : null
         ];
-        
     }
-
 }

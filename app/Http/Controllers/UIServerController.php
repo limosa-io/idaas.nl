@@ -61,7 +61,7 @@ class UIServerController extends Controller
         $data = $this->validate($request, $this->validations);
         $uIServer->forceFill($data);
         $uIServer->save();
-        
+
         return $uIServer;
     }
 

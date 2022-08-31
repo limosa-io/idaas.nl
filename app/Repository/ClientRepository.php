@@ -13,19 +13,17 @@ use Idaas\Passport\ClientRepository as IdaasClientRepository;
 
 class ClientRepository extends IdaasClientRepository
 {
-
     protected $clientClass = Client::class;
 
     protected static $cache = [];
 
-    function __construct()
+    public function __construct()
     {
         $this->validations['default_acr_values'] = 'nullable|array';
 
         $this->validations['roles'] = ['nullable', 'array'];
         $this->validations['roles.*.value'] =
             function ($attribute, $value, $fail) {
-
                 if (Role::find($value) == null) {
                     return $fail($attribute . ' is not a valid role.');
                 }
@@ -34,7 +32,6 @@ class ClientRepository extends IdaasClientRepository
         $this->validations['groups'] = ['nullable', 'array'];
         $this->validations['groups.*.value'] =
             function ($attribute, $value, $fail) {
-
                 if (Group::find($value) == null) {
                     return $fail($attribute . ' is not a valid group.');
                 }
@@ -49,6 +46,7 @@ class ClientRepository extends IdaasClientRepository
     public function find($id)
     {
         //TODO: sure this is without TenantScope?? Not insecure?
+        // phpcs:ignore Generic.Files.LineLength.TooLong
         $client =  self::$cache[$id] ??  self::$cache[$id] = $this->clientClass::withoutGlobalScope(TenantScope::class)->find($id);
 
         if ($client == null) {
@@ -60,7 +58,6 @@ class ClientRepository extends IdaasClientRepository
 
     public function updateWithRequest(Client $client, Request $request)
     {
-
         if (!($client instanceof Client)) {
             throw new ApiException('No good!');
         }

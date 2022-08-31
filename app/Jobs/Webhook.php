@@ -11,7 +11,10 @@ use App\TenantSetting;
 
 class Webhook implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     public $tries = 3;
 
@@ -44,13 +47,21 @@ class Webhook implements ShouldQueue
      * @return void
      */
     public function handle()
-    {   
+    {
+        $guzzle = new \GuzzleHttp\Client(
+            [
+                'verify' => false,
+                'connect_timeout' => 1.0,
+                'read_timeout' => 1.0,
+                'headers' => ['Content-Type' => 'application/json']
+            ]
+        );
 
-        $guzzle = new \GuzzleHttp\Client(['verify' => false, 'connect_timeout'=> 1.0, 'read_timeout' => 1.0, 'headers' => ['Content-Type' => 'application/json']]);
-        
         //TODO: if it fails, log it for the tenant user...
         $guzzle->request(
-            'POST', self::getWebHookUrl(), [
+            'POST',
+            self::getWebHookUrl(),
+            [
             \GuzzleHttp\RequestOptions::JSON => [
                 'action' => strtolower(substr($this->action, strrpos($this->action, '\\') + 1)),
                 'model' => json_encode($this->model)

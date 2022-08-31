@@ -10,12 +10,10 @@ use Idaas\Passport\ProviderRepository as IdaasProviderRepository;
 
 class ProviderRepository extends IdaasProviderRepository
 {
-
     protected $validations;
 
-    function __construct()
+    public function __construct()
     {
-
         $this->validations  = [
             'liftime_access_token' => 'required|numeric|min:0',
             'liftime_refresh_token' => 'required|numeric|min:0',
@@ -41,7 +39,6 @@ class ProviderRepository extends IdaasProviderRepository
 
     public function update(Request $request)
     {
-
         $validator = Validator::make($request->all(), $this->validations);
 
         $data = $validator->validate();
@@ -56,7 +53,9 @@ class ProviderRepository extends IdaasProviderRepository
         AuthLevel::where(['type' => 'oidc'])->whereNotIn('level', $acrValuesSupported)->delete();
 
         foreach ($acrValuesSupported as $value) {
-            AuthLevel::firstOrCreate(array('type' => 'oidc', 'level' => $value, 'provider_id' => OpenIDProvider::first()->id));
+            AuthLevel::firstOrCreate(
+                array('type' => 'oidc', 'level' => $value, 'provider_id' => OpenIDProvider::first()->id)
+            );
         }
 
         return $provider;

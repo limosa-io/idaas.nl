@@ -52,7 +52,7 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-        if($exception instanceof AuthorizationException) {
+        if ($exception instanceof AuthorizationException) {
             return response()->json(['error' => $exception->getMessage()], 403);
         }
 
@@ -65,5 +65,4 @@ class Handler extends ExceptionHandler
                     ? response()->json(['message' => $exception->getMessage()], 401)
                     : response()->view('errors.401', [], 401);
     }
-
 }
