@@ -18,7 +18,7 @@ use Idaas\OpenID\SessionInformation;
 use Idaas\Passport\Http\Controllers\AuthorizationController;
 use Laravel\Passport\Bridge\User;
 use Laravel\Passport\Http\Controllers\ConvertsPsrResponses;
-use ArieTimmerman\Laravel\AuthChain\Object\Subject;
+use App\Subject;
 
 class AuthChainCompleteProcessor implements CompleteProcessorInterface
 {
