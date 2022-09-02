@@ -36,6 +36,7 @@ class SCIMConfig extends \ArieTimmerman\Laravel\SCIMServer\SCIMConfig
 
                 // Note the notation of '2___0'
                 'urn:ietf:params:scim:schemas:core:2.0:User:emails.*.value'
+                // phpcs:ignore Generic.Files.LineLength.TooLong
                     => 'nullable|email|required_without:urn:ietf:params:scim:schemas:core:2___0:User:userName|unique:users,email,[OBJECT_ID]',
 
                 'urn:ietf:params:scim:schemas:core:2.0:User:phoneNumbers.*.value' => 'nullable',
@@ -135,7 +136,9 @@ class SCIMConfig extends \ArieTimmerman\Laravel\SCIMServer\SCIMConfig
                 )->ignoreWrite(),
 
                 'urn:ietf:params:scim:schemas:extension:account:2.0:Password' => [
-                    'lastSuccessfulLoginDate' => AttributeMapping::eloquent("last_successful_login_date")->disableWrite()
+                    'lastSuccessfulLoginDate' => AttributeMapping::eloquent(
+                        "last_successful_login_date"
+                    )->disableWrite()
                 ],
 
                 'arietimmerman:ice' => [
@@ -172,7 +175,7 @@ class SCIMConfig extends \ArieTimmerman\Laravel\SCIMServer\SCIMConfig
                                         throw new SCIMException('Unknown subject', 500);
                                     }
 
-                                    $type = strtok($subjectId, '|');
+                                    $type = strtok((string)$subjectId, '|');
 
                                     $link = Link::create(
                                         [
@@ -235,7 +238,8 @@ class SCIMConfig extends \ArieTimmerman\Laravel\SCIMServer\SCIMConfig
                     'profileUrl' => null,
                     'title' => null,
                     'userType' => null,
-                    'preferredLanguage' => AttributeMapping::eloquent("preferredLanguage"), // Section 5.3.5 of [RFC7231]
+                    // // Section 5.3.5 of [RFC7231]
+                    'preferredLanguage' => AttributeMapping::eloquent("preferredLanguage"),
                     'locale' => null, // see RFC5646
                     'timezone' => null, // see RFC6557
                     'timezone' => null,
@@ -310,7 +314,10 @@ class SCIMConfig extends \ArieTimmerman\Laravel\SCIMServer\SCIMConfig
                     )->ignoreWrite()->setGetSubNode(
                         function ($key, $schema = null) {
                             if ($key == 'value') {
-                                return AttributeMapping::eloquent('groups.id')->ignoreRead()->ignoreWrite()->setRelationship('groups');
+                                return AttributeMapping::eloquent('groups.id')
+                                    ->ignoreRead()
+                                    ->ignoreWrite()
+                                    ->setRelationship('groups');
                             }
 
                             return null;
@@ -410,7 +417,10 @@ class SCIMConfig extends \ArieTimmerman\Laravel\SCIMServer\SCIMConfig
                             $existingUsers = User::whereIn('id', [$value])->select('id')->get()->pluck('id');
 
                             if (($diff = collect($value)->diff($existingUsers))->count() > 0) {
-                                throw new SCIMException(sprintf('One or more members are unknown: %s', implode(',', $diff->all())), 500);
+                                throw new SCIMException(
+                                    sprintf('One or more members are unknown: %s', implode(',', $diff->all())),
+                                    500
+                                );
                             }
 
                             $object->members()->syncWithoutDetaching($existingUsers->all());

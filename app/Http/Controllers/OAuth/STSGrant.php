@@ -67,7 +67,10 @@ class STSGrant extends AbstractGrant
         );
 
         unset($decrypted['user_id']);
-        $accessToken->addVerified($decrypted);
+
+        if ($accessToken instanceof SpecialAccessToken) {
+            $accessToken->addVerified($decrypted);
+        }
 
         $responseType->setAccessToken($accessToken);
 

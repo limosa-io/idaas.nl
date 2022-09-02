@@ -18,6 +18,7 @@
     "laravel/legacy-factories": "^1.3",
     "laravel/socialite": "^5.3",
     "laravel/tinker": "^2.0",
+    "lcobucci/jwt": "^4.2",
     "mustache/mustache": "^2.12",
     "nl.idaas/laravel-openid-connect": "^0",
     "phpunit/phpunit": "^9.0",

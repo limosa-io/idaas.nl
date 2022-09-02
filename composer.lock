@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9d9c37a9cdd0ba1316ea9dc61f107f20",
+    "content-hash": "85eeb51e90e7b70c1ec9befa9d6d9155",
     "packages": [
         {
             "name": "arietimmerman/laravel-authchain",

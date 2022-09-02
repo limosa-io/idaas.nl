@@ -11,6 +11,8 @@ use Idaas\Passport\ClientRepository;
 use Idaas\Passport\Http\Controllers\AuthorizationController as IdaasAuthorizationController;
 use Idaas\Passport\KeyRepository;
 use Laravel\Passport\TokenRepository;
+use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\Signer\Key\InMemory;
 
 class AuthorizationController extends IdaasAuthorizationController
 {
@@ -40,15 +42,20 @@ class AuthorizationController extends IdaasAuthorizationController
 
         $privateKey = resolve(KeyRepository::class)->getPrivateKey();
 
-        return (new Builder())->setHeader('kid', $privateKey->getKid())
-            ->setIssuer(url('/'))
-            ->setSubject($request->input('subject'))
-            ->setAudience(url('/'))
-            ->setExpiration((new \DateTime('+300 seconds'))->getTimestamp())
-            ->setIssuedAt((new \DateTime())->getTimestamp())
-            ->set('state', $request->input('state'))
-            ->set('nonce', $request->input('nonce'))
-            ->sign(new Sha256(), new Key($privateKey->getKeyPath(), $privateKey->getPassPhrase()))
-            ->getToken();
+        $config = Configuration::forAsymmetricSigner(
+            new Sha256(),
+            InMemory::plainText($privateKey->getKeyContents()),
+            InMemory::plainText($privateKey->getKeyContents())
+        );
+
+        $token = $config->builder()
+            ->withHeader('kid', method_exists($privateKey, 'getKid') ? $privateKey->getKid() : null)
+            ->issuedBy(url('/'))
+            ->withHeader('sub', $request->input('subject'))
+            ->permittedFor(url('/'))
+            ->expiresAt(\DateTimeImmutable::createFromMutable((new \DateTime('+300 seconds'))))
+            ->issuedAt(new \DateTimeImmutable())
+            ->withClaim('state', $request->input('state'))
+            ->withClaim('nonce', $request->input('nonce'));
     }
 }

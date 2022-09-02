@@ -54,8 +54,6 @@ class Passwordless extends AbstractType
         // 1. get token
         $publicKey = resolve(KeyRepository::class)->getPublicKey();
 
-
-
         // 2. check signature
 
         $config = Configuration::forAsymmetricSigner(
@@ -137,7 +135,14 @@ class Passwordless extends AbstractType
                 new StandardMail(
                     @$module->config['template_id'],
                     [
-                    'url' => htmlentities(route('ice.login.passwordless') . '?token=' . urlencode(self::getToken($state->getSubject()->getUserId(), $state))),
+                    'url' => htmlentities(
+                        route('ice.login.passwordless') . '?token=' . urlencode(
+                            self::getToken(
+                                $state->getSubject()->getUserId(),
+                                $state
+                            )->toString()
+                        )
+                    ),
                     'subject' => $state->getSubject(),
                     'user' =>  $state->getSubject() ? $state->getSubject()->getUser() : null,
                     ],
@@ -151,7 +156,11 @@ class Passwordless extends AbstractType
             $user = resolve(UserRepositoryInterface::class)->findByIdentifier($request->input('username'));
 
             if ($user == null) {
-                return (new ModuleResult())->setCompleted(false)->setResponse(response(['error' => 'We could not find a user with this attribute.'], 422));
+                return (new ModuleResult())
+                    ->setCompleted(false)
+                    ->setResponse(
+                        response(['error' => 'We could not find a user with this attribute.'], 422)
+                    );
             }
 
             $url = route('ice.login.passwordless') . '?token=' .

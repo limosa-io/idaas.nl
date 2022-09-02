@@ -20,7 +20,7 @@ class ImportController extends Controller
     {
         $content = $request->input('yaml');
 
-        $yaml = \yaml_parse($content);
+        $yaml = yaml_parse($content);
 
         $clients = [];
         foreach ($clients as $client) {

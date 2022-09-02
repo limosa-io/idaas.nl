@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\OAuth;
 
 use DateTimeImmutable;
+use Exception;
 use Laravel\Passport\Bridge\AccessToken;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Key\InMemory;
-use League\OAuth2\Server\CryptKey;
+use Idaas\OpenID\CryptKey;
 
 class SpecialAccessToken extends AccessToken
 {

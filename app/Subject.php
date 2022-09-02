@@ -240,7 +240,7 @@ class Subject extends EloquentSubject implements SubjectInterface, StatableInter
                 )->all()
             );
 
-            $result = $result + $attributes;
+            $result = array_merge($result, $attributes);
         }
 
         $result['acr'] = $this->levels;
