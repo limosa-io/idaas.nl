@@ -69,7 +69,10 @@ class CloudFunction extends Model
                     if (CloudFunction::where(['type' => $model->type, 'is_sequence' => false])->count() == 0) {
                         CloudFunction::where(['type' => $model->type, 'is_sequence' => true])->delete();
                     } else {
-                        $cloudFunction = CloudFunction::firstOrNew(['type' => $model->type, 'is_sequence' => true], ['display_name' => sprintf('sequence_%s', $model->type)]);
+                        $cloudFunction = CloudFunction::firstOrNew(
+                            ['type' => $model->type, 'is_sequence' => true],
+                            ['display_name' => sprintf('sequence_%s', $model->type)]
+                        );
                         $cloudFunction->touch();
                     }
                 }
@@ -101,7 +104,11 @@ class CloudFunction extends Model
         $all = [];
 
         if ($this->is_sequence) {
-            $all = CloudFunction::where('type', $this->type)->where('active', true)->where('is_sequence', false)->orderBy('order')->get();
+            $all = CloudFunction::where('type', $this->type)
+                ->where('active', true)
+                ->where('is_sequence', false)
+                ->orderBy('order')
+                ->get();
         } else {
             $all = [$this];
         }

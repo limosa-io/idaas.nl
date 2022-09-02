@@ -76,11 +76,15 @@ class OtpMail extends AbstractType
             $subject = $state->getSubject();
 
             if ($state->getSubject()->getEmail() == null) {
-                return (new ModuleResult())->setCompleted(false)->setResponse(response(['error' => 'No email address is known for this user']));
+                return (new ModuleResult())
+                    ->setCompleted(false)
+                    ->setResponse(response(['error' => 'No email address is known for this user']));
             }
 
             if ($state->getSubject()->getUserId() == null) {
-                return (new ModuleResult())->setCompleted(false)->setResponse(response(['error' => 'No user id is known for this user']));
+                return (new ModuleResult())
+                    ->setCompleted(false)
+                    ->setResponse(response(['error' => 'No user id is known for this user']));
             }
 
             $otp = $this->getOtp($state);
@@ -110,7 +114,9 @@ class OtpMail extends AbstractType
             $user = resolve(UserRepositoryInterface::class)->findByIdentifier($request->input('username'));
 
             if ($user == null) {
-                return (new ModuleResult())->setCompleted(false)->setResponse(response(['error' => 'We could not find a user with this attribute.'], 422));
+                return (new ModuleResult())
+                    ->setCompleted(false)
+                    ->setResponse(response(['error' => 'We could not find a user with this attribute.'], 422));
             }
 
             $otp = $this->getOtp($state);

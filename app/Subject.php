@@ -211,7 +211,14 @@ class Subject extends EloquentSubject implements SubjectInterface, StatableInter
         $user = $this->getUser();
         $subject = $this->getSubject();
 
-        if (config('serverless.openwhisk_enabled') && ($cloudFunction = CloudFunction::where('is_sequence', true)->where('type', CloudFunction::TYPE_ATTRIBUTE)->first()) != null) {
+        if (
+            config('serverless.openwhisk_enabled') &&
+            (
+                $cloudFunction = CloudFunction::where('is_sequence', true)
+                    ->where('type', CloudFunction::TYPE_ATTRIBUTE)
+                    ->first()
+            ) != null
+        ) {
             $cloudResult = CloudFunctionHelper::invoke(
                 $cloudFunction,
                 [

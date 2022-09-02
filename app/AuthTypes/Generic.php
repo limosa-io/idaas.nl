@@ -123,7 +123,10 @@ abstract class Generic extends AbstractType
     public function process(Request $request, State $state, ModuleInterface $module)
     {
         if (!$this->isConfigured($module)) {
-            return $module->baseResult()->addMessage(Message::error('This module has not yet been configured'))->setCompleted(false);
+            return $module
+                ->baseResult()
+                ->addMessage(Message::error('This module has not yet been configured'))
+                ->setCompleted(false);
         }
 
         if ($request->input('init')) {
@@ -152,7 +155,11 @@ abstract class Generic extends AbstractType
 
             $user = $provider->user();
 
-            return $module->baseResult()->setCompleted(true)->setSubject((new SocialSubject($this->getIdentifier(), $user))->setTypeIdentifier($this->getIdentifier()));
+            return $module
+                ->baseResult()
+                ->setCompleted(true)
+                ->setSubject((new SocialSubject($this->getIdentifier(), $user))
+                ->setTypeIdentifier($this->getIdentifier()));
         }
     }
 

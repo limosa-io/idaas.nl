@@ -86,9 +86,16 @@ class Register extends AbstractType
         }
 
         if (!empty($user->last_successful_login_date)) {
-            return (new ModuleResult())->setCompleted(false)->setResponse(response(['error' => 'This user has already logged in']));
+            return (new ModuleResult())
+                ->setCompleted(false)
+                ->setResponse(response(['error' => 'This user has already logged in']));
         }
 
-        return $module->baseResult()->setCompleted(true)->setSubject((new Subject($user->id))->setUserId($user->id)->setTypeIdentifier('register'));
+        return $module
+            ->baseResult()
+            ->setCompleted(true)
+            ->setSubject((new Subject($user->id))
+            ->setUserId($user->id)
+            ->setTypeIdentifier('register'));
     }
 }

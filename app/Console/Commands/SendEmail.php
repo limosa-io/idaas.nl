@@ -50,7 +50,10 @@ class SendEmail extends Command
             [
                 'pragmas' => [\Mustache_Engine::PRAGMA_BLOCKS],
                 'partials' => [
-                    'parent' => 'Parent! Hello {{$ planet }}planet{{/ planet }} en nu {{# button }}<button>{{ button }}</button>{{/ button }} de footer: {{$ footer }}{{/ footer }}'
+                    'parent' => '
+                        Parent! Hello {{$ planet }} 
+                        planet{{/ planet }} en nu {{# button }}<button>{{ button }}</button>{{/ button }} 
+                        de footer: {{$ footer }}{{/ footer }}'
                 ],
             ]
         );

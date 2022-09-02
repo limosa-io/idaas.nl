@@ -93,7 +93,17 @@ class Passwordless extends AbstractType
         $module = $state->getIncomplete()->getModule();
 
         // 6. log the user in
-        $result = $module->baseResult()->setCompleted(true)->setSubject(resolve(SubjectRepositoryInterface::class)->with($user->email, $this, $module)->setTypeIdentifier($this->getIdentifier())->setUserId($user->id));
+        $result = $module
+            ->baseResult()
+            ->setCompleted(true)
+            ->setSubject(
+                resolve(SubjectRepositoryInterface::class)
+                ->with($user->email, $this, $module)
+                ->setTypeIdentifier(
+                    $this->getIdentifier()
+                )
+                ->setUserId($user->id)
+            );
 
         $state->addResult($result);
 
@@ -112,11 +122,15 @@ class Passwordless extends AbstractType
             $subject = $state->getSubject();
 
             if ($state->getSubject()->getEmail() == null) {
-                return (new ModuleResult())->setCompleted(false)->setResponse(response(['error' => 'No email address is known for this user']));
+                return (new ModuleResult())
+                    ->setCompleted(false)
+                    ->setResponse(response(['error' => 'No email address is known for this user']));
             }
 
             if ($state->getSubject()->getUserId() == null) {
-                return (new ModuleResult())->setCompleted(false)->setResponse(response(['error' => 'No user id is known for this user']));
+                return (new ModuleResult())
+                    ->setCompleted(false)
+                    ->setResponse(response(['error' => 'No user id is known for this user']));
             }
 
             Mail::to($state->getSubject()->getEmail())->send(

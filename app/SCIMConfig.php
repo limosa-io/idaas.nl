@@ -35,7 +35,8 @@ class SCIMConfig extends \ArieTimmerman\Laravel\SCIMServer\SCIMConfig
                 'urn:ietf:params:scim:schemas:core:2.0:User:preferredLanguage' => 'nullable|max:15',
 
                 // Note the notation of '2___0'
-                'urn:ietf:params:scim:schemas:core:2.0:User:emails.*.value' => 'nullable|email|required_without:urn:ietf:params:scim:schemas:core:2___0:User:userName|unique:users,email,[OBJECT_ID]',
+                'urn:ietf:params:scim:schemas:core:2.0:User:emails.*.value'
+                    => 'nullable|email|required_without:urn:ietf:params:scim:schemas:core:2___0:User:userName|unique:users,email,[OBJECT_ID]',
 
                 'urn:ietf:params:scim:schemas:core:2.0:User:phoneNumbers.*.value' => 'nullable',
                 'urn:ietf:params:scim:schemas:core:2.0:User:addresses.*.formatted' => 'nullable',
@@ -46,11 +47,13 @@ class SCIMConfig extends \ArieTimmerman\Laravel\SCIMServer\SCIMConfig
                 'urn:ietf:params:scim:schemas:core:2.0:User:password' => 'nullable|min:1|max:200',
 
                 // 'urn:ietf:params:scim:schemas:core:2.0:User:roles' => 'nullable|array',
-                'urn:ietf:params:scim:schemas:core:2.0:User:roles.*.value' => ['required', function ($attribute, $value, $fail) {
-                    if (Role::find($value) == null) {
-                        return $fail($attribute . ' is not a valid role.');
+                'urn:ietf:params:scim:schemas:core:2.0:User:roles.*.value' =>
+                    ['required', function ($attribute, $value, $fail) {
+                        if (Role::find($value) == null) {
+                            return $fail($attribute . ' is not a valid role.');
+                        }
                     }
-                }],
+                ],
 
 
                 'arietimmerman:ice:metadataUser' => 'nullable|json',
@@ -88,7 +91,11 @@ class SCIMConfig extends \ArieTimmerman\Laravel\SCIMServer\SCIMConfig
                 'urn:ietf:params:scim:schemas:core:2.0:User:password' => 'required',
             ],
 
-            'schema' => [Schema::SCHEMA_USER, 'arietimmerman:ice', 'urn:ietf:params:scim:schemas:extension:account:2.0:Password'],
+            'schema' => [
+                Schema::SCHEMA_USER,
+                'arietimmerman:ice',
+                'urn:ietf:params:scim:schemas:extension:account:2.0:Password'
+            ],
             'withRelations' => ['links', 'roles', 'groups'],
             'map_unmapped' => true,
             'unmapped_namespace' => 'urn:ietf:params:scim:schemas:laravel:unmapped',

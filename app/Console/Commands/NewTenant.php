@@ -109,7 +109,12 @@ class NewTenant extends Command
 
     public function validateInput()
     {
-        if (!filter_var($this->argument('admin'), FILTER_VALIDATE_EMAIL) && User::withoutGlobalScope(TenantScope::class)->find($this->argument('admin')) == null) {
+        if (
+            !filter_var(
+                $this->argument('admin'),
+                FILTER_VALIDATE_EMAIL
+            ) && User::withoutGlobalScope(TenantScope::class)->find($this->argument('admin')) == null
+        ) {
             $this->error('Please provide a mail address!');
             return false;
         }
@@ -389,7 +394,8 @@ class NewTenant extends Command
                 AuthLevel::where(['level' => 'manage'])->first()->id
                 ];
 
-                //The master tenant authenticates against itself, and therefore should have the level as required by the "oidc authentication module".
+                //The master tenant authenticates against itself,
+                // and therefore should have the level as required by the "oidc authentication module".
                 if ($tenant->master) {
                     $levels[] = AuthLevel::where(['level' => 'urn:mace:incommon:iap:bronze'])->first()->id;
 

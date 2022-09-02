@@ -1,7 +1,8 @@
 <?php
 
 /**
- * Extends Passport's TokenRepository. Ensures tenant-scope is applied by making use of custom Token model. And auto cleans up tokens ...
+ * Extends Passport's TokenRepository.
+ * Ensures tenant-scope is applied by making use of custom Token model. And auto cleans up tokens ...
  */
 
 namespace App\Repository;

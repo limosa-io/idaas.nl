@@ -31,7 +31,10 @@ Route::group(['domain' => '{tenant}.' . config('app.domain')], function () {
     Route::get('/register', 'HomeController@index')->name('ice.login.register');
 
     Route::get('/passwordless', '\App\AuthTypes\Passwordless@processCallback')->name('ice.login.passwordless');
-    Route::get('/passwordforgotten', '\App\AuthTypes\PasswordForgotten@processCallback')->name('ice.login.passwordforgotten');
+    Route::get(
+        '/passwordforgotten',
+        '\App\AuthTypes\PasswordForgotten@processCallback'
+    )->name('ice.login.passwordforgotten');
     Route::get('/activateaccount', '\App\AuthTypes\Activation@processCallback')->name('ice.login.activation');
 
     Route::get('/oidc/callback', '\App\AuthTypes\OpenIDConnect@processCallback')->name('ice.login.openid');
@@ -40,5 +43,8 @@ Route::group(['domain' => '{tenant}.' . config('app.domain')], function () {
 
     \ArieTimmerman\Laravel\SAML\RouteProvider::routes();
 
-    Route::get('login/social/callback/{type}', '\App\Http\Controllers\SocialLoginController@process')->name('authchain.social.callback');
+    Route::get(
+        'login/social/callback/{type}',
+        '\App\Http\Controllers\SocialLoginController@process'
+    )->name('authchain.social.callback');
 });

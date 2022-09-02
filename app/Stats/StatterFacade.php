@@ -2,6 +2,7 @@
 
 namespace App\Stats;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 class StatterFacade
@@ -10,13 +11,15 @@ class StatterFacade
 
     public function emit(StatableInterface $statable, $key, $value)
     {
-        $this->queue[] = [
-            'key' => $key,
-            'value' => $value,
-            'statable_id' => $statable->getKey(),
-            'statable_type' => get_class($statable),
-            'tenant_id' => resolve('App\Tenant')->id
-        ];
+        if ($statable instanceof Model) {
+            $this->queue[] = [
+                'key' => $key,
+                'value' => $value,
+                'statable_id' => $statable->getKey(),
+                'statable_type' => get_class($statable),
+                'tenant_id' => resolve('App\Tenant')->id
+            ];
+        }
     }
 
     public function save()

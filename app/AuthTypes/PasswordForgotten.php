@@ -104,7 +104,16 @@ class PasswordForgotten extends AbstractType
         $module = $state->getIncomplete()->getModule();
 
         // 6. log the user in
-        $result = $module->baseResult()->setCompleted(false)->setModuleState(['state' => 'confirmed'])->setSubject(resolve(SubjectRepositoryInterface::class)->with($user->email, $this, $module)->setTypeIdentifier($this->getIdentifier())->setUserId($user->id));
+        $result = $module
+            ->baseResult()
+            ->setCompleted(false)
+            ->setModuleState(['state' => 'confirmed'])
+            ->setSubject(
+                resolve(SubjectRepositoryInterface::class)
+                ->with($user->email, $this, $module)
+                ->setTypeIdentifier($this->getIdentifier())
+                ->setUserId($user->id)
+            );
 
         $state->addResult($result);
 
@@ -138,7 +147,11 @@ class PasswordForgotten extends AbstractType
 
     public function process(Request $request, State $state, ModuleInterface $module)
     {
-        if ($state->getIncomplete() != null && $state->getIncomplete()->moduleState != null && $state->getIncomplete()->moduleState['state'] == 'confirmed') {
+        if (
+            $state->getIncomplete() != null &&
+            $state->getIncomplete()->moduleState != null &&
+            $state->getIncomplete()->moduleState['state'] == 'confirmed'
+        ) {
             if ($request->input('password')) {
                 $subject = $state->getIncomplete()->getSubject();
                 $user = $subject->getUser();
@@ -148,17 +161,23 @@ class PasswordForgotten extends AbstractType
 
                 return $state->getIncomplete()->setCompleted(true)->setResponse(response([  ]));
             } else {
-                return $state->getIncomplete()->setResponse(response([ 'error' => 'You must provide a password'  ], 400));
+                return $state
+                    ->getIncomplete()
+                    ->setResponse(response([ 'error' => 'You must provide a password'  ], 400));
             }
         } elseif ($state->getSubject() != null) {
             $subject = $state->getSubject();
 
             if ($state->getSubject()->getEmail() == null) {
-                return (new ModuleResult())->setCompleted(false)->setResponse(response(['error' => 'No email address is known for this user']));
+                return (new ModuleResult())
+                    ->setCompleted(false)
+                    ->setResponse(response(['error' => 'No email address is known for this user']));
             }
 
             if ($state->getSubject()->getUserId() == null) {
-                return (new ModuleResult())->setCompleted(false)->setResponse(response(['error' => 'No user id is known for this user']));
+                return (new ModuleResult())
+                    ->setCompleted(false)
+                    ->setResponse(response(['error' => 'No user id is known for this user']));
             }
 
             $this->sendPasswordForgottenMail($subject, $module, $state);
@@ -168,7 +187,9 @@ class PasswordForgotten extends AbstractType
             $user = resolve(UserRepositoryInterface::class)->findByIdentifier($request->input('username'));
 
             if ($user == null) {
-                return (new ModuleResult())->setCompleted(false)->setResponse(response(['error' => 'User is not found'], 422));
+                return (new ModuleResult())
+                    ->setCompleted(false)
+                    ->setResponse(response(['error' => 'User is not found'], 422));
             }
 
             $url = route('ice.login.passwordforgotten') . '?token=' . urlencode(
