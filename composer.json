@@ -22,6 +22,7 @@
     "nl.idaas/laravel-openid-connect": "^0",
     "phpunit/phpunit": "^9.0",
     "predis/predis": "^1.1",
+    "sdboyer/gliph": "^0.7.0",
     "spomky-labs/otphp": "^10",
     "tijsverkoyen/css-to-inline-styles": "^2.2",
     "vemcogroup/laravel-sparkpost-driver": "^5"
