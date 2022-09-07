@@ -8,7 +8,6 @@
   "prefer-stable": true,
   "require": {
     "php": ">=7.0.0",
-    "arietimmerman/laravel-authchain": "^0",
     "arietimmerman/laravel-saml": "^0.5.3",
     "arietimmerman/laravel-scim-server": "^0",
     "aws/aws-sdk-php": "^3.81",

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Signer\Key;
-use ArieTimmerman\Laravel\AuthChain\State;
+use App\AuthChain\State;
 use Idaas\Passport\ClientRepository;
 use Idaas\Passport\Http\Controllers\AuthorizationController as IdaasAuthorizationController;
 use Idaas\Passport\KeyRepository;

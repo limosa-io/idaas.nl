@@ -4,10 +4,10 @@ namespace App\AuthTypes;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
-use ArieTimmerman\Laravel\AuthChain\State;
-use ArieTimmerman\Laravel\AuthChain\Module\ModuleResult;
-use ArieTimmerman\Laravel\AuthChain\Module\Module;
-use ArieTimmerman\Laravel\AuthChain\Module\ModuleInterface;
+use App\AuthChain\State;
+use App\AuthChain\Module\ModuleResult;
+use App\AuthChain\Module\Module;
+use App\AuthChain\Module\ModuleInterface;
 use App\OpenIDProvider;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Parser;
@@ -15,10 +15,10 @@ use League\OAuth2\Server\CryptKey;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Signer\Key;
 use App\Repository\KeyRepository;
-use ArieTimmerman\Laravel\AuthChain\Types\AbstractType;
-use ArieTimmerman\Laravel\AuthChain\Helper;
+use App\AuthChain\Types\AbstractType;
+use App\AuthChain\Helper;
 use App\User;
-use ArieTimmerman\Laravel\AuthChain\Object\Subject;
+use App\AuthChain\Object\Subject;
 use Illuminate\Support\Facades\Crypt;
 use App\TenantSetting;
 

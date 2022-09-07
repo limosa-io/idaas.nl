@@ -4,7 +4,7 @@ namespace App;
 
 use App\Scopes\TenantTrait;
 
-class State extends \ArieTimmerman\Laravel\AuthChain\Object\Eloquent\State
+class State extends \App\AuthChain\Object\Eloquent\State
 {
     use TenantTrait;
 }

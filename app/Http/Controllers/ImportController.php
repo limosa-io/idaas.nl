@@ -14,6 +14,8 @@ use App\EmailTemplate;
 use App\TenantSetting;
 use Illuminate\Http\Request;
 
+use function Safe\yaml_parse;
+
 class ImportController extends Controller
 {
     public function index(Request $request)

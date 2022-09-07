@@ -2,10 +2,10 @@
 
 namespace App;
 
-use ArieTimmerman\Laravel\AuthChain\Module\Module;
+use App\AuthChain\Module\Module;
 use App\Model;
-use ArieTimmerman\Laravel\AuthChain\Module\ModuleTrait;
-use ArieTimmerman\Laravel\AuthChain\Module\ChainInterface;
+use App\AuthChain\Module\ModuleTrait;
+use App\AuthChain\Module\ChainInterface;
 use App\Scopes\TenantTrait;
 use App\Scopes\SortChainScope;
 

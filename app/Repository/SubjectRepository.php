@@ -6,7 +6,7 @@ use App\Scopes\TenantScope;
 use App\Http\Controllers\AuthChain\Subject;
 use App\Subject as EloquentSubject;
 
-class SubjectRepository extends \ArieTimmerman\Laravel\AuthChain\Repository\SubjectRepository
+class SubjectRepository extends \App\AuthChain\Repository\SubjectRepository
 {
     public function getSubjectClass()
     {

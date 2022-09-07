@@ -4,7 +4,7 @@ namespace App;
 
 use App\Model;
 use Illuminate\Contracts\Auth\Authenticatable;
-use ArieTimmerman\Laravel\AuthChain\AuthLevelInterface;
+use App\AuthChain\AuthLevelInterface;
 use App\Scopes\TenantTrait;
 
 class AuthLevel extends Model implements AuthLevelInterface

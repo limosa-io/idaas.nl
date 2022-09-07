@@ -2,9 +2,9 @@
 
 namespace App\Repository;
 
-use ArieTimmerman\Laravel\AuthChain\Repository\UserRepositoryInterface;
+use App\AuthChain\Repository\UserRepositoryInterface;
 use App\User;
-use ArieTimmerman\Laravel\AuthChain\Object\Eloquent\SubjectInterface;
+use App\AuthChain\Object\Eloquent\SubjectInterface;
 use ArieTimmerman\Laravel\SCIMServer\Http\Controllers\ResourceController;
 use App\CloudFunctionHelper;
 use App\CloudFunction;

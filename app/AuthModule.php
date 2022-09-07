@@ -3,10 +3,10 @@
 namespace App;
 
 use App\Model;
-use ArieTimmerman\Laravel\AuthChain\AuthChain;
+use App\AuthChain\AuthChain;
 use App\Scopes\SystemScope;
 use App\Scopes\TenantTrait;
-use ArieTimmerman\Laravel\AuthChain\Module\Module;
+use App\AuthChain\Module\Module;
 use Illuminate\Support\Str;
 
 class AuthModule extends Module

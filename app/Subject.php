@@ -6,7 +6,7 @@ use App\Repository\SubjectRepository;
 use App\Scopes\TenantTrait;
 use App\Stats\StatableInterface;
 use App\Stats\StatableTrait;
-use ArieTimmerman\Laravel\AuthChain\Object\Eloquent\Subject as EloquentSubject;
+use App\AuthChain\Object\Eloquent\Subject as EloquentSubject;
 use Idaas\OpenID\Entities\ClaimEntityInterface;
 use Laravel\Passport\HasApiTokens;
 

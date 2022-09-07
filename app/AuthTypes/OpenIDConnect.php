@@ -4,13 +4,13 @@ namespace App\AuthTypes;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
-use ArieTimmerman\Laravel\AuthChain\State;
-use ArieTimmerman\Laravel\AuthChain\Module\ModuleInterface;
-use ArieTimmerman\Laravel\AuthChain\Repository\SubjectRepositoryInterface;
-use ArieTimmerman\Laravel\AuthChain\Types\AbstractType;
-use ArieTimmerman\Laravel\AuthChain\Helper;
+use App\AuthChain\State;
+use App\AuthChain\Module\ModuleInterface;
+use App\AuthChain\Repository\SubjectRepositoryInterface;
+use App\AuthChain\Types\AbstractType;
+use App\AuthChain\Helper;
 use GuzzleHttp\Exception\RequestException;
-use ArieTimmerman\Laravel\AuthChain\Module\Message;
+use App\AuthChain\Module\Message;
 
 class OpenIDConnect extends AbstractType
 {

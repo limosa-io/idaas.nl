@@ -8,18 +8,18 @@
 
 namespace App\Http\Controllers\AuthChain;
 
-use ArieTimmerman\Laravel\AuthChain\State;
-use ArieTimmerman\Laravel\AuthChain\Module\ModuleResult;
+use App\AuthChain\State;
+use App\AuthChain\Module\ModuleResult;
 use App\ModuleResult as EloquentModuleResult;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
-use ArieTimmerman\Laravel\AuthChain\Module\ModuleResultList;
+use App\AuthChain\Module\ModuleResultList;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 
-class RememberStorage extends \ArieTimmerman\Laravel\AuthChain\RememberStorage
+class RememberStorage extends \App\AuthChain\RememberStorage
 {
     protected $request;
 

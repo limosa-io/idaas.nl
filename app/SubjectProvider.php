@@ -2,7 +2,7 @@
 
 namespace App;
 
-use ArieTimmerman\Laravel\AuthChain\Providers\UserProvider;
+use App\AuthChain\Providers\UserProvider;
 
 class SubjectProvider extends UserProvider
 {

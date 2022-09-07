@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use ArieTimmerman\Laravel\AuthChain\Object\Eloquent\UserInterface;
+use App\AuthChain\Object\Eloquent\UserInterface;
 use Illuminate\Support\Str;
 use App\Scopes\TenantTrait;
 use App\Stats\StatableInterface;

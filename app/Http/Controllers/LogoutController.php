@@ -9,7 +9,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use ArieTimmerman\Laravel\AuthChain\Session;
+use App\AuthChain\Session;
 
 class LogoutController extends Controller
 {

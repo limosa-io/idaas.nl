@@ -2,11 +2,11 @@
 
 namespace App;
 
-use ArieTimmerman\Laravel\AuthChain\Helper;
-use ArieTimmerman\Laravel\AuthChain\State;
-use ArieTimmerman\Laravel\AuthChain\AuthLevel;
-use ArieTimmerman\Laravel\AuthChain\UIServer;
-use ArieTimmerman\Laravel\AuthChain\Session;
+use App\AuthChain\Helper;
+use App\AuthChain\State;
+use App\AuthChain\AuthLevel;
+use App\AuthChain\UIServer;
+use App\AuthChain\Session;
 use App\Http\Controllers\HomeController;
 use Idaas\OpenID\RequestTypes\AuthenticationRequest;
 use Idaas\Passport\ClientRepository;

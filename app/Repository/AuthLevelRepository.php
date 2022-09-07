@@ -2,11 +2,11 @@
 
 namespace App\Repository;
 
-use ArieTimmerman\Laravel\AuthChain\Repository\AuthLevelRepository as BaseAuthLevelRepository;
+use App\AuthChain\Repository\AuthLevelRepository as BaseAuthLevelRepository;
 use App\AuthLevel;
 use Illuminate\Database\Eloquent\Model;
-use ArieTimmerman\Laravel\AuthChain\Exceptions\ApiException;
-use ArieTimmerman\Laravel\AuthChain\AuthLevelInterface;
+use App\AuthChain\Exceptions\ApiException;
+use App\AuthChain\AuthLevelInterface;
 use App\OpenIDProvider;
 
 class AuthLevelRepository extends BaseAuthLevelRepository

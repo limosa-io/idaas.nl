@@ -3,10 +3,10 @@
 namespace App\AuthTypes;
 
 use Illuminate\Http\Request;
-use ArieTimmerman\Laravel\AuthChain\State;
-use ArieTimmerman\Laravel\AuthChain\Module\ModuleResult;
-use ArieTimmerman\Laravel\AuthChain\Module\ModuleInterface;
-use ArieTimmerman\Laravel\AuthChain\Repository\SubjectRepositoryInterface;
+use App\AuthChain\State;
+use App\AuthChain\Module\ModuleResult;
+use App\AuthChain\Module\ModuleInterface;
+use App\AuthChain\Repository\SubjectRepositoryInterface;
 use Illuminate\Support\Facades\Mail;
 use Lcobucci\JWT\Parser;
 use DateTimeImmutable;
@@ -15,15 +15,15 @@ use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use App\Repository\KeyRepository;
-use ArieTimmerman\Laravel\AuthChain\Types\AbstractType;
-use ArieTimmerman\Laravel\AuthChain\Helper;
+use App\AuthChain\Types\AbstractType;
+use App\AuthChain\Helper;
 use App\User;
 use App\Mail\StandardMail;
-use ArieTimmerman\Laravel\AuthChain\Object\Subject;
-use ArieTimmerman\Laravel\AuthChain\Repository\UserRepositoryInterface;
+use App\AuthChain\Object\Subject;
+use App\AuthChain\Repository\UserRepositoryInterface;
 use App\Exceptions\TokenExpiredException;
 use App\EmailTemplate;
-use ArieTimmerman\Laravel\AuthChain\Exceptions\AuthFailedException;
+use App\AuthChain\Exceptions\AuthFailedException;
 
 class Passwordless extends AbstractType
 {

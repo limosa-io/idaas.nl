@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use App\Client;
 use Illuminate\Http\Request;
-use ArieTimmerman\Laravel\AuthChain\Exceptions\ApiException;
+use App\AuthChain\Exceptions\ApiException;
 use App\Scopes\TenantScope;
 use App\Role;
 use App\Group;
