@@ -50,13 +50,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             OIDCSession::class
         );
 
-        $this->app->bindIf('App\AuthChain\Repository\ChainRepositoryInterface', ChainRepository::class);
 
-        $this->app->bindIf('App\AuthChain\Repository\UserRepositoryInterface', UserRepository::class);
         $this->app->bindIf('App\AuthChain\Repository\LinkRepositoryInterface', LinkRepository::class);
         $this->app->bindIf('App\AuthChain\Repository\SubjectRepositoryInterface', SubjectRepository::class);
 
-        $this->app->bindIf('App\AuthChain\Http\CompleteProcessorInterface', CompleteProcessor::class);
 
         $this->app->singleton('App\AuthChain\AuthChain', AuthChain::class);
 
