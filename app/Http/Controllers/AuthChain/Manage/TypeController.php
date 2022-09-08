@@ -1,9 +1,9 @@
 <?php
 
-namespace App\AuthChain\Http\Controllers\Manage;
+namespace App\Http\Controllers\AuthChain\Manage;
 
 use Illuminate\Http\Request;
-use App\AuthChain\Http\Controllers\Controller;
+use App\Http\Controllers\AuthChain\Controller;
 use App\AuthChain\AuthChain;
 
 class TypeController extends Controller
