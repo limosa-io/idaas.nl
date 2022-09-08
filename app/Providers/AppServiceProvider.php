@@ -99,8 +99,6 @@ class AppServiceProvider extends ServiceProvider
         Token::observe(TokenObserver::class);
 
         //You must use singleton
-        // phpcs:ignoreFile Generic.Files.LineLength.TooLong
-        $this->app->singleton('App\AuthChain\Repository\ModuleRepositoryInterface', ModuleRepository::class);
         $this->app->singleton('App\AuthChain\Repository\ChainRepositoryInterface', ChainRepository::class);
         $this->app->singleton('App\AuthChain\Repository\SubjectRepositoryInterface', SubjectRepository::class);
         $this->app->singleton('App\AuthChain\Repository\LinkRepositoryInterface', LinkRepository::class);

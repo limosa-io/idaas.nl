@@ -8,7 +8,6 @@ use App\AuthChain\Repository\ModuleRepository;
 use App\AuthChain\Module\Module;
 use App\AuthChain\Module\ModuleInterface;
 use App\AuthChain\AuthChain;
-use App\AuthChain\Repository\ModuleRepositoryInterface;
 use App\AuthChain\Repository\AuthLevelRepository;
 
 class AuthLevelController extends Controller

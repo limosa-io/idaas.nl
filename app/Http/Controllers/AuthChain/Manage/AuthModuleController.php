@@ -4,11 +4,10 @@ namespace App\Http\Controllers\AuthChain\Manage;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthChain\Controller;
-use App\AuthChain\Repository\ModuleRepository;
 use App\AuthChain\Module\Module;
 use App\AuthChain\Module\ModuleInterface;
 use App\AuthChain\AuthChain;
-use App\AuthChain\Repository\ModuleRepositoryInterface;
+use App\Repository\ModuleRepository;
 use Illuminate\Support\Facades\Auth;
 
 class AuthModuleController extends Controller
@@ -47,22 +46,22 @@ class AuthModuleController extends Controller
     /**
      *
      */
-    public function index(ModuleRepositoryInterface $repository)
+    public function index(ModuleRepository $repository)
     {
         return $repository->all();
     }
 
-    public function get(ModuleRepositoryInterface $repository, $authModuleId)
+    public function get(ModuleRepository $repository, $authModuleId)
     {
         return $repository->get($authModuleId);
     }
 
-    public function info(ModuleRepositoryInterface $repository, $authModuleId)
+    public function info(ModuleRepository $repository, $authModuleId)
     {
         return $repository->info($authModuleId);
     }
 
-    public function delete(ModuleRepositoryInterface $repository, $authModuleId)
+    public function delete(ModuleRepository $repository, $authModuleId)
     {
         //TODO: check if module exists!
         $repository->delete($repository->get($authModuleId));
@@ -71,7 +70,7 @@ class AuthModuleController extends Controller
     }
 
 
-    public function create(ModuleRepositoryInterface $repository, Request $request)
+    public function create(ModuleRepository $repository, Request $request)
     {
         $data = $this->validate($request, $this->validations);
 
@@ -84,7 +83,7 @@ class AuthModuleController extends Controller
         return $this->update($repository, $request, $module->getIdentifier(), true);
     }
 
-    public function update(ModuleRepositoryInterface $repository, Request $request, $authModuleId, $keepLevels = false)
+    public function update(ModuleRepository $repository, Request $request, $authModuleId, $keepLevels = false)
     {
         $validations = $this->validations;
 

@@ -10,13 +10,13 @@ use App\Session\OIDCSession;
 use App\AuthChain\Exceptions\AuthFailedException;
 use App\AuthChain\Helper;
 use App\AuthChain\AuthChain;
-use App\AuthChain\Repository\ModuleRepository;
 use App\AuthChain\Repository\ChainRepository;
 use App\AuthChain\Repository\UserRepository;
 use App\AuthChain\Repository\LinkRepository;
 use App\AuthChain\Repository\SubjectRepository;
 use App\AuthChain\Http\CompleteProcessor;
 use App\AuthChain\Exceptions\NoStateException;
+use App\Repository\ModuleRepository;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -38,11 +38,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
                 return $state;
             }
-        );
-
-        $this->app->bindIf(
-            'App\AuthChain\Repository\ModuleRepositoryInterface',
-            ModuleRepository::class
         );
 
         $this->app->bind(
@@ -67,7 +62,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $router->bind(
             'module',
             function ($moduleId, $route) {
-                $module = \resolve('App\AuthChain\Repository\ModuleRepositoryInterface')->get($moduleId);
+                $module = \resolve(ModuleRepository::class)->get($moduleId);
 
                 if ($module == null) {
                     throw new AuthFailedException('Unknown module: ' . $moduleId);

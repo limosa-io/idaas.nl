@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use App\AuthChain\Repository\ModuleRepositoryInterface;
 use App\AuthModule;
 use App\AuthChain\Exceptions\ApiException;
 use App\AuthChain\Types\Type;
@@ -12,7 +11,7 @@ use App\AuthChain\Types\Consent;
 use App\AuthLevel;
 use App\OpenIDProvider;
 
-class ModuleRepository implements ModuleRepositoryInterface
+class ModuleRepository
 {
     protected $modules;
 

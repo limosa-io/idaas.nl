@@ -4,12 +4,12 @@ namespace App\Http\Controllers\AuthChain\Manage;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthChain\Controller;
-use App\AuthChain\Repository\ModuleRepositoryInterface;
 use App\AuthChain\Module\Module;
 use App\AuthChain\Module\ModuleInterface;
 use App\AuthChain\Repository\ChainRepository;
 use App\AuthChain\Repository\ChainRepositoryInterface;
 use App\AuthChain\AuthChain;
+use App\Repository\ModuleRepository;
 
 class ChainController extends Controller
 {
@@ -19,7 +19,7 @@ class ChainController extends Controller
 
     protected static function mustBeModule($attribute, $value, $fail)
     {
-        $module = resolve(ModuleRepositoryInterface::class)->get($value);
+        $module = resolve(ModuleRepository::class)->get($value);
 
         if ($module == null) {
             return $fail($attribute . ' is not a valid module.');
@@ -29,8 +29,8 @@ class ChainController extends Controller
     protected function getValidationGraph($fromId, $toId)
     {
         if ($this->validationGraph == null) {
-            $from = resolve(ModuleRepositoryInterface::class)->get($fromId);
-            $to = resolve(ModuleRepositoryInterface::class)->get($toId);
+            $from = resolve(ModuleRepository::class)->get($fromId);
+            $to = resolve(ModuleRepository::class)->get($toId);
 
             $graph = AuthChain::buildGraph();
 
@@ -58,8 +58,8 @@ class ChainController extends Controller
             'to' => ['required', function ($attribute, $value, $fail) {
                 self::mustBeModule($attribute, $value, $fail);
             }, function ($attribute, $value, $fail) {
-                $from = resolve(ModuleRepositoryInterface::class)->get(request('from'));
-                $to = resolve(ModuleRepositoryInterface::class)->get(request('to'));
+                $from = resolve(ModuleRepository::class)->get(request('from'));
+                $to = resolve(ModuleRepository::class)->get(request('to'));
 
                 $graph = $this->getValidationGraph(request('from'), request('to'));
 
@@ -105,7 +105,7 @@ class ChainController extends Controller
         $data = $this->validate($request, $this->getValidations());
         $graph = $this->getValidationGraph(request('from'), request('to'));
 
-        $from = resolve(ModuleRepositoryInterface::class)->get(request('from'));
+        $from = resolve(ModuleRepository::class)->get(request('from'));
 
         $pre = iterator_to_array($graph->predecessorsOf($from));
 

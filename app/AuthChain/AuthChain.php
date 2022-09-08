@@ -11,6 +11,7 @@ use App\AuthChain\Module\Module;
 use Illuminate\Http\Request;
 use App\AuthChain\Module\ModuleInterface;
 use App\AuthChain\Types\Consent;
+use App\Repository\ModuleRepository;
 use Illuminate\Support\Facades\Log;
 
 class AuthChain
@@ -51,7 +52,7 @@ class AuthChain
 
         $modules = [];
 
-        foreach (resolve('App\AuthChain\Repository\ModuleRepositoryInterface')->all() as $module) {
+        foreach (resolve(ModuleRepository::class)->all() as $module) {
             $modules[$module->getIdentifier()] = $module;
             $directedAdjacencyList->ensureVertex($module);
         }
