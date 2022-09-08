@@ -2,10 +2,10 @@
 
 namespace App\Http;
 
-use ArieTimmerman\Laravel\AuthChain\Http\CompleteProcessorInterface;
+use App\AuthChain\Http\CompleteProcessorInterface;
 use Illuminate\Http\Request;
-use ArieTimmerman\Laravel\AuthChain\Helper;
-use ArieTimmerman\Laravel\AuthChain\State;
+use App\AuthChain\Helper;
+use App\AuthChain\State;
 use League\OAuth2\Server\AuthorizationServer;
 use GuzzleHttp\Psr7\Response as Psr7Response;
 use Illuminate\Contracts\Auth\Authenticatable;

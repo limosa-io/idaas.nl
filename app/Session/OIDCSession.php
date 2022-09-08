@@ -6,7 +6,7 @@
 
 namespace App\Session;
 
-use ArieTimmerman\Laravel\AuthChain\State;
+use App\AuthChain\State;
 use Idaas\OpenID\Session;
 
 class OIDCSession extends Session

@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use ArieTimmerman\Laravel\AuthChain\Repository\SubjectRepositoryInterface;
+use App\AuthChain\Repository\SubjectRepositoryInterface;
 use Idaas\Passport\Bridge\UserRepository;
 use League\OAuth2\Server\Entities\UserEntityInterface;
 

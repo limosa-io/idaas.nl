@@ -4,9 +4,9 @@ namespace App\Listeners;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
-use ArieTimmerman\Laravel\AuthChain\Events\Authenticated;
+use App\AuthChain\Events\Authenticated;
 use App\Stats\Statter;
-use ArieTimmerman\Laravel\AuthChain\Events\LoggedOut;
+use App\AuthChain\Events\LoggedOut;
 use App\Token;
 use App\Http\Controllers\AuthChain\RememberStorage;
 use App\TenantSetting;
@@ -75,12 +75,12 @@ class AuthChainSubscriber
     public function subscribe($events)
     {
         $events->listen(
-            'ArieTimmerman\Laravel\AuthChain\Events\Authenticated',
+            'App\AuthChain\Events\Authenticated',
             'App\Listeners\AuthChainSubscriber@onAuthenticated'
         );
 
         $events->listen(
-            'ArieTimmerman\Laravel\AuthChain\Events\LoggedOut',
+            'App\AuthChain\Events\LoggedOut',
             'App\Listeners\AuthChainSubscriber@onLoggedOut'
         );
     }

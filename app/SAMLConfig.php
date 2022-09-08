@@ -2,11 +2,11 @@
 
 namespace App;
 
-use ArieTimmerman\Laravel\AuthChain\Helper;
-use ArieTimmerman\Laravel\AuthChain\State;
-use ArieTimmerman\Laravel\AuthChain\UIServer;
+use App\AuthChain\Helper;
+use App\AuthChain\State;
+use App\AuthChain\UIServer;
 use ArieTimmerman\Laravel\SAML\SAML2\State\SamlState;
-use ArieTimmerman\Laravel\AuthChain\Session;
+use App\AuthChain\Session;
 use Illuminate\Support\Facades\URL;
 
 class SAMLConfig extends \ArieTimmerman\Laravel\SAML\SAMLConfig

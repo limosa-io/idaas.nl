@@ -2,13 +2,13 @@
 
 namespace App\AuthTypes;
 
-use ArieTimmerman\Laravel\AuthChain\Types\AbstractType;
+use App\AuthChain\Types\AbstractType;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Http\Request;
-use ArieTimmerman\Laravel\AuthChain\State;
-use ArieTimmerman\Laravel\AuthChain\Helper;
-use ArieTimmerman\Laravel\AuthChain\Module\ModuleInterface;
-use ArieTimmerman\Laravel\AuthChain\Module\Message;
+use App\AuthChain\State;
+use App\AuthChain\Helper;
+use App\AuthChain\Module\ModuleInterface;
+use App\AuthChain\Module\Message;
 
 abstract class Generic extends AbstractType
 {

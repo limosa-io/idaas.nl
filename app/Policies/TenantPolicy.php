@@ -12,7 +12,7 @@ use App\SubjectInterface;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Auth\Access\AuthorizationException;
-use ArieTimmerman\Laravel\AuthChain\Object\Eloquent\SubjectInterface as EloquentSubjectInterface;
+use App\AuthChain\Object\Eloquent\SubjectInterface as EloquentSubjectInterface;
 use App\Subject;
 
 class TenantPolicy

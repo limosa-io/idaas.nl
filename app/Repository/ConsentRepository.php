@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use App\OAuthScope;
 
-class ConsentRepository extends \ArieTimmerman\Laravel\AuthChain\Repository\ConsentRepository
+class ConsentRepository extends \App\AuthChain\Repository\ConsentRepository
 {
     public function getDescriptions($scopes)
     {

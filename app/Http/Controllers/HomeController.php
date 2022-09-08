@@ -9,7 +9,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\OpenIDProvider;
 use App\Tenant;
-use ArieTimmerman\Laravel\AuthChain\Session;
+use App\AuthChain\Session;
 use Illuminate\Contracts\Encryption\DecryptException;
 
 class HomeController extends Controller

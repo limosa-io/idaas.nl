@@ -41,7 +41,7 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::middleware(['api'])->domain('{tenant}.manage.' . config('app.domain'))->group(
             function () {
-                \ArieTimmerman\Laravel\AuthChain\Providers\RouteProvider::manageRoutes();
+                \App\AuthChain\Providers\RouteProvider::manageRoutes();
             }
         );
 

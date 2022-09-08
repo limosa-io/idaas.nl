@@ -2,11 +2,11 @@
 
 namespace App\AuthTypes;
 
-use ArieTimmerman\Laravel\AuthChain\Types\AbstractType;
+use App\AuthChain\Types\AbstractType;
 use Illuminate\Http\Request;
-use ArieTimmerman\Laravel\AuthChain\State;
-use ArieTimmerman\Laravel\AuthChain\Object\Subject;
-use ArieTimmerman\Laravel\AuthChain\Module\ModuleInterface;
+use App\AuthChain\State;
+use App\AuthChain\Object\Subject;
+use App\AuthChain\Module\ModuleInterface;
 use Illuminate\Support\Facades\Log;
 use OTPHP\TOTP as BaseTOTP;
 use ParagonIE\ConstantTime\Base32;

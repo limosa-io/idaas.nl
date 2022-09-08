@@ -2,9 +2,9 @@
 
 namespace App\Repository;
 
-use ArieTimmerman\Laravel\AuthChain\Repository\ChainRepositoryInterface;
+use App\AuthChain\Repository\ChainRepositoryInterface;
 use App\AuthChain;
-use ArieTimmerman\Laravel\AuthChain\Module\ChainInterface;
+use App\AuthChain\Module\ChainInterface;
 
 class ChainRepository implements ChainRepositoryInterface
 {

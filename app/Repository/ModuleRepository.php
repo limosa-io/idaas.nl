@@ -2,13 +2,13 @@
 
 namespace App\Repository;
 
-use ArieTimmerman\Laravel\AuthChain\Repository\ModuleRepositoryInterface;
+use App\AuthChain\Repository\ModuleRepositoryInterface;
 use App\AuthModule;
-use ArieTimmerman\Laravel\AuthChain\Exceptions\ApiException;
-use ArieTimmerman\Laravel\AuthChain\Types\Type;
-use ArieTimmerman\Laravel\AuthChain\Module\ModuleInterface;
-use ArieTimmerman\Laravel\AuthChain\Module\Module;
-use ArieTimmerman\Laravel\AuthChain\Types\Consent;
+use App\AuthChain\Exceptions\ApiException;
+use App\AuthChain\Types\Type;
+use App\AuthChain\Module\ModuleInterface;
+use App\AuthChain\Module\Module;
+use App\AuthChain\Types\Consent;
 use App\AuthLevel;
 use App\OpenIDProvider;
 

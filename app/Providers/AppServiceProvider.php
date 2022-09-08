@@ -14,7 +14,7 @@ use App\Http\AuthChainCompleteProcessor;
 use App\Repository\AuthLevelRepository;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
-use ArieTimmerman\Laravel\AuthChain\AuthChain;
+use App\AuthChain\AuthChain;
 use App\AuthTypes\TOTP;
 use App\Scim\PolicyDecisionPoint;
 use App\Session\DatabaseSessionHandler;
@@ -101,13 +101,13 @@ class AppServiceProvider extends ServiceProvider
 
         //You must use singleton
         // phpcs:ignoreFile Generic.Files.LineLength.TooLong
-        $this->app->singleton('ArieTimmerman\Laravel\AuthChain\Repository\ModuleRepositoryInterface', ModuleRepository::class);
-        $this->app->singleton('ArieTimmerman\Laravel\AuthChain\Repository\ChainRepositoryInterface', ChainRepository::class);
-        $this->app->singleton('ArieTimmerman\Laravel\AuthChain\Repository\SubjectRepositoryInterface', SubjectRepository::class);
-        $this->app->singleton('ArieTimmerman\Laravel\AuthChain\Repository\LinkRepositoryInterface', LinkRepository::class);
-        $this->app->singleton('ArieTimmerman\Laravel\AuthChain\Repository\UserRepositoryInterface', UserRepository::class);
-        $this->app->singleton('ArieTimmerman\Laravel\AuthChain\Repository\AuthLevelRepository', AuthLevelRepository::class);
-        $this->app->singleton('ArieTimmerman\Laravel\AuthChain\Http\CompleteProcessorInterface', AuthChainCompleteProcessor::class);
+        $this->app->singleton('App\AuthChain\Repository\ModuleRepositoryInterface', ModuleRepository::class);
+        $this->app->singleton('App\AuthChain\Repository\ChainRepositoryInterface', ChainRepository::class);
+        $this->app->singleton('App\AuthChain\Repository\SubjectRepositoryInterface', SubjectRepository::class);
+        $this->app->singleton('App\AuthChain\Repository\LinkRepositoryInterface', LinkRepository::class);
+        $this->app->singleton('App\AuthChain\Repository\UserRepositoryInterface', UserRepository::class);
+        $this->app->singleton('App\AuthChain\Repository\AuthLevelRepository', AuthLevelRepository::class);
+        $this->app->singleton('App\AuthChain\Http\CompleteProcessorInterface', AuthChainCompleteProcessor::class);
         $this->app->singleton(
             'ArieTimmerman\Laravel\SAML\Repository\RemoteServiceProviderConfigRepositoryInterface',
             RemoteServiceProviderConfigRepository::class
@@ -131,11 +131,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton('ArieTimmerman\Laravel\SAML\SAMLConfig', SAMLConfig::class);
 
         $this->app->singleton(
-            \ArieTimmerman\Laravel\AuthChain\PolicyDecisionPoint::class,
+            \App\AuthChain\PolicyDecisionPoint::class,
             \App\Http\Controllers\AuthChain\PolicyDecisionPoint::class
         );
         $this->app->singleton(
-            \ArieTimmerman\Laravel\AuthChain\Repository\ConsentRepository::class,
+            \App\AuthChain\Repository\ConsentRepository::class,
             \App\Repository\ConsentRepository::class
         );
 
@@ -158,11 +158,11 @@ class AppServiceProvider extends ServiceProvider
         // );
 
         $this->app->singleton(
-            'ArieTimmerman\Laravel\AuthChain\StateStorage',
+            'App\AuthChain\StateStorage',
             StateStorage::class
         );
         $this->app->singleton(
-            'ArieTimmerman\Laravel\AuthChain\RememberStorage',
+            'App\AuthChain\RememberStorage',
             RememberStorage::class
         );
 

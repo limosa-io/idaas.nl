@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use ArieTimmerman\Laravel\AuthChain\RememberStorage;
+use App\AuthChain\RememberStorage;
 use Illuminate\Http\Request;
 
 class SessionController extends Controller

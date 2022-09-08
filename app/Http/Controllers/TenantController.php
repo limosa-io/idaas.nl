@@ -32,7 +32,7 @@ class TenantController extends Controller
 
     public function getMyTenants()
     {
-        /** @var \ArieTimmerman\Laravel\AuthChain\Object */
+        /** @var \App\AuthChain\Object */
         $user = Auth::user();
         return Tenant::whereIn('id', Role::whereIn('id', $user->getRoles())->pluck('tenant_id'));
     }
@@ -45,7 +45,7 @@ class TenantController extends Controller
 
     public function destroy($id)
     {
-        /** @var \ArieTimmerman\Laravel\AuthChain\Object\Subject */
+        /** @var \App\AuthChain\Object\Subject */
         $subject = Auth::user();
         if (Role::whereIn('id', $subject->getRoles())->pluck('tenant_id')->contains($id)) {
             return Tenant::destroy($id);

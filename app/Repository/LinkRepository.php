@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use ArieTimmerman\Laravel\AuthChain\Repository\LinkRepository as BaseLinkRepository;
+use App\AuthChain\Repository\LinkRepository as BaseLinkRepository;
 use App\Link;
 
 class LinkRepository extends BaseLinkRepository

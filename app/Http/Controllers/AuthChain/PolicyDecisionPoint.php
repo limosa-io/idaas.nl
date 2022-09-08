@@ -6,9 +6,9 @@
 
 namespace App\Http\Controllers\AuthChain;
 
-use ArieTimmerman\Laravel\AuthChain\PolicyDecisionPoint as BasePolicyDecisionPoint;
-use ArieTimmerman\Laravel\AuthChain\State;
-use ArieTimmerman\Laravel\AuthChain\Object\Subject;
+use App\AuthChain\PolicyDecisionPoint as BasePolicyDecisionPoint;
+use App\AuthChain\State;
+use App\AuthChain\Object\Subject;
 use App\Client;
 
 class PolicyDecisionPoint extends BasePolicyDecisionPoint

@@ -11,8 +11,8 @@
 
 namespace App\Http\Controllers\AuthChain;
 
-use ArieTimmerman\Laravel\AuthChain\StateStorage as BaseStateStorage;
-use ArieTimmerman\Laravel\AuthChain\State;
+use App\AuthChain\StateStorage as BaseStateStorage;
+use App\AuthChain\State;
 use Illuminate\Support\Facades\Redis;
 use App\State as EloquentState;
 
