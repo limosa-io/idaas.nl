@@ -1,6 +1,6 @@
 <?php
 
-namespace App\AuthChain\Http\Controllers;
+namespace App\Http\Controllers\AuthChain;
 
 use Illuminate\Http\Request;
 use App\AuthChain\Module\ModuleInterface;

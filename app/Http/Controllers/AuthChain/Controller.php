@@ -1,6 +1,6 @@
 <?php
 
-namespace App\AuthChain\Http\Controllers;
+namespace App\Http\Controllers\AuthChain;
 
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;

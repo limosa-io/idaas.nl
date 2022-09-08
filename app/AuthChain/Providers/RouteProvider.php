@@ -129,17 +129,17 @@ class RouteProvider
             function () {
                 Route::get(
                     '/redirect/{module}/{state}',
-                    '\App\AuthChain\Http\Controllers\AuthChainController@redirect'
+                    '\App\Http\Controllers\AuthChain\AuthChainController@redirect'
                 );
 
                 // web routes
                 Route::get(
                     '/complete',
-                    '\App\AuthChain\Http\Controllers\AuthChainController@complete'
+                    '\App\Http\Controllers\AuthChain\AuthChainController@complete'
                 )->name('authchain.complete.get');
                 Route::post(
                     '/complete',
-                    '\App\AuthChain\Http\Controllers\AuthChainController@complete'
+                    '\App\Http\Controllers\AuthChain\AuthChainController@complete'
                 )->name('authchain.complete');
             }
         );
@@ -155,7 +155,7 @@ class RouteProvider
                  */
                 Route::get(
                     '/authresponse/{state}',
-                    '\App\AuthChain\Http\Controllers\AuthChainController@getAuthResponse'
+                    '\App\Http\Controllers\AuthChain\AuthChainController@getAuthResponse'
                 );
 
                 /**
@@ -164,20 +164,20 @@ class RouteProvider
 
                 Route::options(
                     '/{module}/{state}',
-                    '\App\AuthChain\Http\Controllers\AuthChainController@processOptions'
+                    '\App\Http\Controllers\AuthChain\AuthChainController@processOptions'
                 );
                 Route::get(
                     '/{module}/{state}',
-                    '\App\AuthChain\Http\Controllers\AuthChainController@process'
+                    '\App\Http\Controllers\AuthChain\AuthChainController@process'
                 );
 
                 Route::post(
                     '/{module}',
-                    '\App\AuthChain\Http\Controllers\AuthChainController@process'
+                    '\App\Http\Controllers\AuthChain\AuthChainController@process'
                 )->name('chainProcessor');
 
                 Route::fallback(
-                    '\App\AuthChain\Http\Controllers\AuthChainController@notFound'
+                    '\App\Http\Controllers\AuthChain\AuthChainController@notFound'
                 );
             }
         );
