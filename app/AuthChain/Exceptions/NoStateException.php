@@ -25,7 +25,7 @@ class NoStateException extends Exception
             )->setStatusCode(404);
         } else {
             return view(
-                'authchain::error',
+                'authchain.error',
                 [
                 'exception' => $this
                 ]

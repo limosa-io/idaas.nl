@@ -22,38 +22,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     public function boot(\Illuminate\Routing\Router $router)
     {
-        $this->publishes(
-            [
-                __DIR__ .
-                DIRECTORY_SEPARATOR .
-                '..' .
-                DIRECTORY_SEPARATOR .
-                '..' .
-                DIRECTORY_SEPARATOR .
-                'config' .
-                DIRECTORY_SEPARATOR .
-                'authchain.php' => config_path('authchain.php'),
-            ]
-        );
-
-        $this->publishes(
-            [
-                __DIR__ . '/../../database/migrations/' => database_path('migrations')
-            ],
-            'migrations'
-        );
-
-
-        // Do not load migrations for now ...
-        $this->loadRoutesFrom(__DIR__ . '/../../routes/routes.php');
-
-        $this->loadViewsFrom(__DIR__ . '/../../views/', 'authchain');
-
-        if ($this->app->runningInConsole()) {
-            $this->commands(
-                []
-            );
-        }
 
         $this->app->bind(
             'App\AuthChain\State',
@@ -140,17 +108,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(
-            __DIR__ .
-            DIRECTORY_SEPARATOR .
-            '..' .
-            DIRECTORY_SEPARATOR .
-            '..' .
-            DIRECTORY_SEPARATOR .
-            'config' .
-            DIRECTORY_SEPARATOR .
-            'authchain.php',
-            'authchain'
-        );
+        //
     }
 }

@@ -231,7 +231,7 @@ class Helper
 
             $url = $redirectUris[$uriIndex] . '#' . http_build_query(['state' => (string) $state]);
 
-            $response = response()->view('authchain::redirect', ['url' => $url], 302)->withHeaders(
+            $response = response()->view('authchain.redirect', ['url' => $url], 302)->withHeaders(
                 [
                     'Expires' => 0,
                     'Cache-Control' => 'no-cache, no-store, must-revalidate',
@@ -252,7 +252,7 @@ class Helper
 
             return $response->setContent(
                 view(
-                    'authchain::redirect-parent',
+                    'authchain.redirect-parent',
                     [
                         'settings' => [
                             'location' => $location,
@@ -297,7 +297,7 @@ class Helper
     public static function loadStateFromSession($app, $stateId)
     {
         $state = self::getStateFromSession($stateId);
-        $app->instance('App\AuthChain\State', $state);
+        $app->instance(\App\AuthChain\State::class, $state);
         return $state;
     }
 

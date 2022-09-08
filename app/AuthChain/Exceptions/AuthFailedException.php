@@ -32,7 +32,7 @@ class AuthFailedException extends Exception
             )->setStatusCode(500);
         } else {
             return view(
-                'authchain::error',
+                'authchain.error',
                 [
                 'exception' => $this
                 ]
