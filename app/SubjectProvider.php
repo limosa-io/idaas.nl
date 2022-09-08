@@ -2,9 +2,10 @@
 
 namespace App;
 
-use App\AuthChain\Providers\UserProvider;
+use App\AuthChain\Exceptions\AuthFailedException;
+use Illuminate\Contracts\Auth\Authenticatable;
 
-class SubjectProvider extends UserProvider
+class SubjectProvider implements \Illuminate\Contracts\Auth\UserProvider
 {
     public function retrieveById($identifier)
     {
@@ -12,7 +13,27 @@ class SubjectProvider extends UserProvider
         if (strpos($identifier, 'client_') !== false) {
             return Client::with('roles')->find(substr($identifier, 7));
         } else {
-            return parent::retrieveById($identifier);
+            return resolve(SubjectRepositoryInterface::class)->get($identifier);
         }
+    }
+
+    public function retrieveByToken($identifier, $token)
+    {
+        throw new AuthFailedException('Not implemented');
+    }
+
+    public function updateRememberToken(Authenticatable $user, $token)
+    {
+        throw new AuthFailedException('updateRememberToken is not supported');
+    }
+
+    public function retrieveByCredentials(array $credentials)
+    {
+        throw new AuthFailedException('retrieveByCredentials is not supported');
+    }
+
+    public function validateCredentials(Authenticatable $user, array $credentials)
+    {
+        throw new AuthFailedException('validateCredentials is not supported');
     }
 }

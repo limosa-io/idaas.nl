@@ -10,7 +10,6 @@ use App\Repository\LinkRepository;
 use App\Repository\UserRepository;
 use App\Repository\RemoteServiceProviderConfigRepository;
 use App\Repository\HostedIdentityProviderConfigRepository;
-use App\Http\AuthChainCompleteProcessor;
 use App\Repository\AuthLevelRepository;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
@@ -107,7 +106,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton('App\AuthChain\Repository\LinkRepositoryInterface', LinkRepository::class);
         $this->app->singleton('App\AuthChain\Repository\UserRepositoryInterface', UserRepository::class);
         $this->app->singleton('App\AuthChain\Repository\AuthLevelRepository', AuthLevelRepository::class);
-        $this->app->singleton('App\AuthChain\Http\CompleteProcessorInterface', AuthChainCompleteProcessor::class);
+
         $this->app->singleton(
             'ArieTimmerman\Laravel\SAML\Repository\RemoteServiceProviderConfigRepositoryInterface',
             RemoteServiceProviderConfigRepository::class

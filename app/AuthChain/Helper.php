@@ -12,8 +12,8 @@ use Illuminate\Support\Facades\Log;
 use App\AuthChain\Exceptions\DidPromptException;
 use App\AuthChain\Exceptions\PassiveImpossibleException;
 use App\AuthChain\Session;
-use App\AuthChain\Http\CompleteProcessorInterface;
 use App\AuthChain\Repository\SubjectRepositoryInterface;
+use App\Http\AuthChainCompleteProcessor;
 
 class Helper
 {
@@ -176,7 +176,7 @@ class Helper
 
         // if there is no subject, redirect to the cancel url
         if ($state->getSubject() == null) {
-            return resolve(CompleteProcessorInterface::class)->onCancel($request, $state);
+            return resolve(AuthChainCompleteProcessor::class)->onCancel($request, $state);
         }
 
         $eloquentSubject = resolve(SubjectRepositoryInterface::class)->save($state->getSubject(), $state);
@@ -185,7 +185,7 @@ class Helper
 
         Session::login($eloquentSubject, $state);
 
-        return resolve(CompleteProcessorInterface::class)->onFinish($request, $state, $eloquentSubject);
+        return resolve(AuthChainCompleteProcessor::class)->onFinish($request, $state, $eloquentSubject);
     }
 
     /**

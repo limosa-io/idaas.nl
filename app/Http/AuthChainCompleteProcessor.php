@@ -2,7 +2,6 @@
 
 namespace App\Http;
 
-use App\AuthChain\Http\CompleteProcessorInterface;
 use Illuminate\Http\Request;
 use App\AuthChain\Helper;
 use App\AuthChain\State;
@@ -20,7 +19,7 @@ use Laravel\Passport\Bridge\User;
 use Laravel\Passport\Http\Controllers\ConvertsPsrResponses;
 use App\Subject;
 
-class AuthChainCompleteProcessor implements CompleteProcessorInterface
+class AuthChainCompleteProcessor
 {
     use ConvertsPsrResponses;
 
