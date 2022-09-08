@@ -3,6 +3,7 @@
 namespace App;
 
 use App\AuthChain\Exceptions\AuthFailedException;
+use App\AuthChain\Repository\SubjectRepositoryInterface;
 use Illuminate\Contracts\Auth\Authenticatable;
 
 class SubjectProvider implements \Illuminate\Contracts\Auth\UserProvider
