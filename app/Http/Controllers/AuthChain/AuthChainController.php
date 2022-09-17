@@ -7,6 +7,8 @@ use App\AuthChain\Module\ModuleInterface;
 use App\AuthChain\State;
 use App\AuthChain\Exceptions\AuthFailedException;
 use App\AuthChain\Helper;
+use App\AuthChain\Module\Module;
+use App\AuthModule;
 use Illuminate\Http\Response;
 
 class AuthChainController extends Controller
@@ -78,7 +80,20 @@ class AuthChainController extends Controller
 
         if (!$allowedModules->contains($module)) {
             throw new AuthFailedException(
-                'This is not allowed! Please choose one of: ' . implode(', ', $allowedModules->getIdentifierList())
+                sprintf(
+                    'This module may not follow %s! Please choose one of: %s',
+                    $state->getLastCompletedModule() == null ?
+                    null :
+                    sprintf(
+                        '%s (%s)',
+                        $state->getLastCompletedModule()->name,
+                        $state->getLastCompletedModule()->getIdentifier()
+                    ),
+                    implode(
+                        ', ',
+                        array_map(fn(AuthModule $value) => sprintf("%s (%s)", $value->name, $value->getIdentifier()), $allowedModules->modules)
+                    )
+                )
             );
         }
 

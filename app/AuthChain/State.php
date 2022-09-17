@@ -175,7 +175,7 @@ class State implements \JsonSerializable, Jsonable
     /**
      * Only allow creating State objects using static functions
      */
-    private function __construct()
+    public function __construct()
     {
         $this->moduleResults = new ModuleResultList();
     }
@@ -198,6 +198,7 @@ class State implements \JsonSerializable, Jsonable
     }
 
     /**
+     *
      * @return ModuleResult
      */
     public function getRememberedModuleResult(ModuleInterface $module)
@@ -212,19 +213,21 @@ class State implements \JsonSerializable, Jsonable
             return null;
         }
 
-        foreach ($this->moduleResultsRemembered->toArray() as $remembered) {
-            /* @var Module $remembered  */
-            if ($remembered->getModule()->getIdentifier() == $module->getIdentifier()) {
-                $result = $remembered;
+        if ($this->moduleResultsRemembered != null) {
+            foreach ($this->moduleResultsRemembered->toArray() as $remembered) {
+                /* @var Module $remembered  */
+                if ($remembered->getModule()->getIdentifier() == $module->getIdentifier()) {
+                    $result = $remembered;
 
-                if (
-                    $this->maxAge != null
-                    && $result->getAuthenticationTime()->diff(new \DateTime())->s > $this->maxAge
-                ) {
-                    $result = null;
+                    if (
+                        $this->maxAge != null
+                        && $result->getAuthenticationTime()->diff(new \DateTime())->s > $this->maxAge
+                    ) {
+                        $result = null;
+                    }
+
+                    break;
                 }
-
-                break;
             }
         }
 

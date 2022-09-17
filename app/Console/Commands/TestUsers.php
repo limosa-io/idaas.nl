@@ -13,7 +13,7 @@ class TestUsers extends NewTenant
      *
      * @var string
      */
-    protected $signature = 'test:users';
+    protected $signature = 'tesst:users';
 
     /**
      * The console command description.

@@ -24,7 +24,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
 
         $this->app->bind(
-            'App\AuthChain\State',
+            \App\AuthChain\State::class,
             function ($app) {
                 $state = Helper::getStateFromSession(request()->header('X-StateId'));
 
