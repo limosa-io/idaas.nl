@@ -14,6 +14,7 @@ use App\AuthChain\Exceptions\PassiveImpossibleException;
 use App\AuthChain\Session;
 use App\AuthChain\Repository\SubjectRepositoryInterface;
 use App\Http\AuthChainCompleteProcessor;
+use App\Http\Controllers\AuthChain\StateStorage;
 
 class Helper
 {
@@ -297,7 +298,7 @@ class Helper
 
     public static function saveState(State $state)
     {
-        return resolve(StateStorage::class)->saveState($state);
+        return StateStorage::saveState($state);
     }
 
 
@@ -313,12 +314,12 @@ class Helper
      */
     public static function getStateFromSession($stateId)
     {
-        return resolve(StateStorage::class)->getStateFromSession($stateId);
+        return StateStorage::getStateFromSession($stateId);
     }
 
     public static function deleteState(State $state)
     {
-        resolve(StateStorage::class)->deleteState($state);
+        StateStorage::deleteState($state);
     }
 
     /**

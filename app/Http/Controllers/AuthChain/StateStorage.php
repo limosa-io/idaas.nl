@@ -16,37 +16,41 @@ use App\AuthChain\State;
 use Illuminate\Support\Facades\Redis;
 use App\State as EloquentState;
 
-class StateStorage extends BaseStateStorage
+class StateStorage
 {
-    public function getEloquentClass()
-    {
-        return EloquentState::class;
-    }
-
-    public function saveState(State $state)
+    public static function saveState(State $state)
     {
         if (config('database.redis.enabled')) {
             Redis::set('state:' . $state->getstateId(), $state, 'EX', 3600);
         } else {
-            return parent::saveState($state);
+            return EloquentState::updateOrCreate(
+                [
+                'id' => $state->getstateId()
+                ],
+                [
+                'state' => $state
+                ]
+            );
         }
     }
 
-    public function getStateFromSession($stateId)
+    public static function getStateFromSession($stateId)
     {
         if (config('database.redis.enabled')) {
             return Redis::get('state:' . $stateId);
         } else {
-            return parent::getStateFromSession($stateId);
+            $eloquentState = EloquentState::find($stateId);
+
+            return $eloquentState ? $eloquentState->state : null;
         }
     }
 
-    public function deleteState(State $state)
+    public static function deleteState(State $state)
     {
         if (config('database.redis.enabled')) {
             return Redis::del('state:' . $state->getstateId());
         } else {
-            return parent::deleteState($state);
+            return EloquentState::destroy($state->getstateId());
         }
     }
 }
