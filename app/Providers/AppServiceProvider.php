@@ -155,7 +155,6 @@ class AppServiceProvider extends ServiceProvider
         // );
 
         $this->app->singleton(
-            'App\AuthChain\RememberStorage',
             RememberStorage::class
         );
 
