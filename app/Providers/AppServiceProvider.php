@@ -100,8 +100,6 @@ class AppServiceProvider extends ServiceProvider
 
         //You must use singleton
         $this->app->singleton('App\AuthChain\Repository\ChainRepositoryInterface', ChainRepository::class);
-        $this->app->singleton('App\AuthChain\Repository\SubjectRepositoryInterface', SubjectRepository::class);
-        $this->app->singleton('App\AuthChain\Repository\LinkRepositoryInterface', LinkRepository::class);
         $this->app->singleton('App\AuthChain\Repository\UserRepositoryInterface', UserRepository::class);
         $this->app->singleton('App\AuthChain\Repository\AuthLevelRepository', AuthLevelRepository::class);
 
@@ -127,10 +125,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton('ArieTimmerman\Laravel\SCIMServer\SCIMConfig', SCIMConfig::class);
         $this->app->singleton('ArieTimmerman\Laravel\SAML\SAMLConfig', SAMLConfig::class);
 
-        $this->app->singleton(
-            \App\AuthChain\PolicyDecisionPoint::class,
-            \App\Http\Controllers\AuthChain\PolicyDecisionPoint::class
-        );
+
         $this->app->singleton(
             \App\AuthChain\Repository\ConsentRepository::class,
             \App\Repository\ConsentRepository::class
@@ -183,6 +178,9 @@ class AppServiceProvider extends ServiceProvider
         AuthChain::addType('\App\AuthTypes\Github');
         AuthChain::addType('\App\AuthTypes\Linkedin');
         AuthChain::addType('\App\AuthTypes\Twitter');
+        AuthChain::addType('\App\AuthTypes\Password');
+        AuthChain::addType('\App\AuthTypes\Consent');
+        AuthChain::addType('\App\AuthTypes\Start');
 
         View::composer(
             '*',

@@ -7,24 +7,24 @@
 namespace App\AuthChain\Module;
 
 use App\AuthChain\AuthChain;
-use App\AuthChain\Types\Type;
+use App\AuthTypes\Type;
 use App\AuthChain\AuthLevel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use App\AuthChain\State;
 use App\AuthChain\Object\Eloquent\UserInterface;
 use App\AuthChain\Exceptions\AuthFailedException;
-use App\AuthChain\Repository\LinkRepositoryInterface;
 use App\AuthChain\Repository\UserRepositoryInterface;
 use App\AuthChain\Exceptions\ApiException;
 use App\AuthChain\Object\Eloquent\SubjectInterface;
-use App\AuthChain\PolicyDecisionPoint;
-use App\AuthChain\Types\NullType;
+use App\AuthTypes\NullType;
+use App\Http\Controllers\AuthChain\PolicyDecisionPoint;
+use App\Repository\LinkRepository;
 
 class Module extends Model implements ModuleInterface, \JsonSerializable
 {
     /**
-     * @var App\AuthChain\Types\Type
+     * @var App\AuthTypes\Type
      */
     public $typeObject;
 
@@ -103,7 +103,7 @@ class Module extends Model implements ModuleInterface, \JsonSerializable
 
             if ($user == null && $this->getTypeObject()->shouldCreateUser($this)) {
                 $user = resolve(UserRepositoryInterface::class)->createForSubject($subject);
-                resolve(LinkRepositoryInterface::class)->add($this->getTypeObject(), $subject, $user);
+                resolve(LinkRepository::class)->add($this->getTypeObject(), $subject, $user);
             }
 
             if ($user != null) {
@@ -127,7 +127,7 @@ class Module extends Model implements ModuleInterface, \JsonSerializable
 
         if (
             $result->isCompleted()
-            && ($message = resolve(PolicyDecisionPoint::class)->isAllowed($result->getSubject(), $state)) !== true
+            && ($message = (new PolicyDecisionPoint())->isAllowed($result->getSubject(), $state)) !== true
         ) {
             $result = $this->baseResult()
                 ->setResponse(response(null, 403))
@@ -151,9 +151,9 @@ class Module extends Model implements ModuleInterface, \JsonSerializable
         // If the authentication module somehow already knows the user,
         // no need to do fancy lookups. For example the password module.
         if ($subject->getUserId() != null) {
-            $user = resolve(LinkRepositoryInterface::class)->getUserById($subject->getUserId());
+            $user = resolve(LinkRepository::class)->getUserById($subject->getUserId());
         } else {
-            $user = resolve(LinkRepositoryInterface::class)->getUser($subject);
+            $user = resolve(LinkRepository::class)->getUser($subject);
         }
 
         if ($user == null) {
@@ -163,11 +163,11 @@ class Module extends Model implements ModuleInterface, \JsonSerializable
              * TODO: Only do the following if 'blind linking' is allowed.
              */
             if ($user == null && $fallback != null && $fallback->getUserId() != null) {
-                $user = resolve(LinkRepositoryInterface::class)->getUser($fallback);
+                $user = resolve(LinkRepository::class)->getUser($fallback);
             }
 
             if ($user != null) {
-                resolve(LinkRepositoryInterface::class)->add($this->getTypeObject(), $subject, $user);
+                resolve(LinkRepository::class)->add($this->getTypeObject(), $subject, $user);
             }
         }
 
@@ -311,7 +311,7 @@ class Module extends Model implements ModuleInterface, \JsonSerializable
     /**
      * Get the value of type
      *
-     * @return \App\AuthChain\Types\Type
+     * @return \App\AuthTypes\Type
      */
     public function getTypeObject()
     {

@@ -12,7 +12,7 @@
  * }
  */
 
-namespace App\AuthChain\Types;
+namespace App\AuthTypes;
 
 use App\AuthChain\Module\ModuleResult;
 use Illuminate\Http\Request;

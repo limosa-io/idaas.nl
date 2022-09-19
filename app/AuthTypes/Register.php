@@ -15,7 +15,6 @@ use League\OAuth2\Server\CryptKey;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Signer\Key;
 use App\Repository\KeyRepository;
-use App\AuthChain\Types\AbstractType;
 use App\AuthChain\Helper;
 use App\User;
 use App\AuthChain\Object\Subject;

@@ -3,7 +3,7 @@
 namespace App;
 
 use App\AuthChain\Exceptions\AuthFailedException;
-use App\AuthChain\Repository\SubjectRepositoryInterface;
+use App\Repository\SubjectRepository;
 use Illuminate\Contracts\Auth\Authenticatable;
 
 class SubjectProvider implements \Illuminate\Contracts\Auth\UserProvider
@@ -14,7 +14,7 @@ class SubjectProvider implements \Illuminate\Contracts\Auth\UserProvider
         if (strpos($identifier, 'client_') !== false) {
             return Client::with('roles')->find(substr($identifier, 7));
         } else {
-            return resolve(SubjectRepositoryInterface::class)->get($identifier);
+            return resolve(SubjectRepository::class)->get($identifier);
         }
     }
 

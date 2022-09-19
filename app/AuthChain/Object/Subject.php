@@ -8,12 +8,12 @@
 
 namespace App\AuthChain\Object;
 
-use App\AuthChain\Repository\LinkRepositoryInterface;
 use App\AuthChain\Module\ModuleInterface;
-use App\AuthChain\Types\Type;
+use App\AuthTypes\Type;
 use App\AuthChain\Object\Eloquent\SubjectInterface;
 use Illuminate\Support\Str;
 use App\AuthChain\Module\ModuleResultList;
+use App\Repository\LinkRepository;
 use Illuminate\Support\Facades\Log;
 
 class Subject implements \JsonSerializable, SubjectInterface
@@ -57,9 +57,9 @@ class Subject implements \JsonSerializable, SubjectInterface
         $subject->setTypeIdentifier($type->getIdentifier());
 
         /**
- * @var LinkRepositoryInterface
-*/
-        $linkRepository = resolve(LinkRepositoryInterface::class);
+         * @var LinkRepository
+        */
+        $linkRepository = resolve(LinkRepository::class);
 
         // Type $type, Subject $subject, ?ModuleInterface $module
         $user = $linkRepository->getUser($subject);
@@ -240,7 +240,7 @@ class Subject implements \JsonSerializable, SubjectInterface
 
     public function getUser()
     {
-        return $this->userId ? resolve(LinkRepositoryInterface::class)->getUserById($this->userId) : null;
+        return $this->userId ? resolve(LinkRepository::class)->getUserById($this->userId) : null;
     }
 
     /**

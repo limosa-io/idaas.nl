@@ -7,7 +7,6 @@ use Illuminate\Support\Str;
 use App\AuthChain\Object\Subject as RealSubject;
 use App\AuthChain\Object\AuthenticableTrait;
 use Illuminate\Contracts\Auth\Authenticatable;
-use App\AuthChain\Repository\SubjectRepositoryInterface;
 
 //TODO: Change this to an InterFace. Serialize to UserInfo. Id = userid || merged|subjectid
 class Subject extends Model implements Authenticatable

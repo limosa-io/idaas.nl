@@ -10,11 +10,6 @@ use App\Session\OIDCSession;
 use App\AuthChain\Exceptions\AuthFailedException;
 use App\AuthChain\Helper;
 use App\AuthChain\AuthChain;
-use App\AuthChain\Repository\ChainRepository;
-use App\AuthChain\Repository\UserRepository;
-use App\AuthChain\Repository\LinkRepository;
-use App\AuthChain\Repository\SubjectRepository;
-use App\AuthChain\Http\CompleteProcessor;
 use App\AuthChain\Exceptions\NoStateException;
 use App\Repository\ModuleRepository;
 
@@ -46,15 +41,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         );
 
 
-        $this->app->bindIf('App\AuthChain\Repository\LinkRepositoryInterface', LinkRepository::class);
-        $this->app->bindIf('App\AuthChain\Repository\SubjectRepositoryInterface', SubjectRepository::class);
-
-
         $this->app->singleton('App\AuthChain\AuthChain', AuthChain::class);
-
-        AuthChain::addType('\App\AuthChain\Types\Password');
-        AuthChain::addType('\App\AuthChain\Types\Consent');
-        AuthChain::addType('\App\AuthChain\Types\Start');
 
         /**
          * The module the users chooses to use for authentication

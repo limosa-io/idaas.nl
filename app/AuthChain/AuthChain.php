@@ -11,7 +11,7 @@ use App\AuthChain\Module\Module;
 use Illuminate\Http\Request;
 use App\AuthChain\Module\ModuleInterface;
 use App\AuthChain\Repository\ChainRepositoryInterface;
-use App\AuthChain\Types\Consent;
+use App\AuthTypes\Consent;
 use App\Repository\ChainRepository;
 use App\Repository\ModuleRepository;
 use Illuminate\Support\Facades\Log;

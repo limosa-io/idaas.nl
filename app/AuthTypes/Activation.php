@@ -21,7 +21,6 @@ use Illuminate\Http\Request;
 use App\AuthChain\State;
 use App\AuthChain\Module\ModuleResult;
 use App\AuthChain\Module\ModuleInterface;
-use App\AuthChain\Repository\SubjectRepositoryInterface;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Lcobucci\JWT\Signer\Key;
@@ -30,7 +29,6 @@ use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use App\Repository\KeyRepository;
-use App\AuthChain\Types\AbstractType;
 use App\AuthChain\Helper;
 use App\User;
 use App\AuthChain\Object\Subject;
@@ -38,6 +36,7 @@ use App\AuthChain\Repository\UserRepositoryInterface;
 use App\Exceptions\TokenExpiredException;
 use App\EmailTemplate;
 use App\Mail\StandardMail;
+use App\Repository\SubjectRepository;
 use DateTimeImmutable;
 
 class Activation extends AbstractType
@@ -111,7 +110,7 @@ class Activation extends AbstractType
             ->baseResult()
             ->setCompleted(true)
             ->setSubject(
-                resolve(SubjectRepositoryInterface::class)
+                resolve(SubjectRepository::class)
                 ->with($user->email, $this, $module)
                 ->setTypeIdentifier($this->getIdentifier())
                 ->setUserId($user->id)
@@ -198,7 +197,7 @@ class Activation extends AbstractType
                     ->setResponse(response(['error' => 'User is not found'], 422));
             }
 
-            $subject = resolve(SubjectRepositoryInterface::class)->with($request->input('username'), $this, $module);
+            $subject = resolve(SubjectRepository::class)->with($request->input('username'), $this, $module);
 
             $this->sendEmail($subject, $module, $state);
 

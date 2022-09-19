@@ -2,13 +2,12 @@
 
 namespace App\AuthChain\Types;
 
-use App\AuthChain\Types\Type;
+use App\AuthTypes\Type;
 use Illuminate\Http\Request;
 use App\AuthChain\State;
-use App\AuthChain\Module\Module;
 use App\AuthChain\Module\ModuleInterface;
 use App\AuthChain\Object\Subject;
-use App\AuthChain\Repository\SubjectRepositoryInterface;
+use App\Repository\SubjectRepository;
 
 abstract class AbstractType implements Type
 {
@@ -105,7 +104,7 @@ abstract class AbstractType implements Type
      */
     public function createSubject(?string $identifier, Type $type, ?ModuleInterface $module = null)
     {
-        return resolve(SubjectRepositoryInterface::class)->with($identifier, $type, $module);
+        return resolve(SubjectRepository::class)->with($identifier, $type, $module);
     }
 
     public function shouldCreateUser(ModuleInterface $module)

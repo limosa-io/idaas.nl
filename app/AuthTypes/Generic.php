@@ -2,7 +2,6 @@
 
 namespace App\AuthTypes;
 
-use App\AuthChain\Types\AbstractType;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Http\Request;
 use App\AuthChain\State;

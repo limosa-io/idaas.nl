@@ -13,10 +13,10 @@ use App\AuthChain\Module\ModuleResult;
 use Illuminate\Http\Request;
 use App\AuthChain\Module\ModuleInterface;
 use App\AuthChain\Object\Subject;
-use App\AuthChain\Repository\SubjectRepositoryInterface;
 use App\AuthChain\Repository\AuthLevelRepository;
 use App\AuthChain\AuthLevelInterface;
 use App\AuthChain\Exceptions\ApiException;
+use App\Repository\SubjectRepository;
 
 class State implements \JsonSerializable, Jsonable
 {
@@ -254,10 +254,7 @@ class State implements \JsonSerializable, Jsonable
         return $this;
     }
 
-    /**
-     * @return self
-     */
-    public function newSession()
+    public function newSession(): self
     {
 
         //TODO: Ensure absolute randomness of this state id. Use a secure random generator
@@ -736,7 +733,7 @@ class State implements \JsonSerializable, Jsonable
     public function getSubject()
     {
         // TODO: Cache this?? Is expensive and called a lot
-        return resolve(SubjectRepositoryInterface::class)->fromModuleResults($this->getModuleResults());
+        return resolve(SubjectRepository::class)->fromModuleResults($this->getModuleResults());
     }
 
     /**

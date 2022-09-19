@@ -12,9 +12,9 @@ use Illuminate\Support\Facades\Log;
 use App\AuthChain\Exceptions\DidPromptException;
 use App\AuthChain\Exceptions\PassiveImpossibleException;
 use App\AuthChain\Session;
-use App\AuthChain\Repository\SubjectRepositoryInterface;
 use App\Http\AuthChainCompleteProcessor;
 use App\Http\Controllers\AuthChain\StateStorage;
+use App\Repository\SubjectRepository;
 
 class Helper
 {
@@ -187,7 +187,7 @@ class Helper
             return resolve(AuthChainCompleteProcessor::class)->onCancel($request, $state);
         }
 
-        $eloquentSubject = resolve(SubjectRepositoryInterface::class)->save($state->getSubject(), $state);
+        $eloquentSubject = resolve(SubjectRepository::class)->save($state->getSubject(), $state);
 
         $state->getSubject()->setUuid($eloquentSubject->id);
 

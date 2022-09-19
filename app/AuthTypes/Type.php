@@ -4,7 +4,7 @@
  * A module is of a certain type
  */
 
-namespace App\AuthChain\Types;
+namespace App\AuthTypes;
 
 use Illuminate\Http\Request;
 use App\AuthChain\State;
