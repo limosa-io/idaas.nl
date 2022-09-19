@@ -13,7 +13,6 @@ use Idaas\OpenID\Entities\ClaimEntityInterface;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Laravel\Passport\HasApiTokens;
 use App\AuthChain\Object\Subject as RealSubject;
-use Illuminate\Database\Eloquent\Model;
 
 class Subject extends Model implements SubjectInterface, StatableInterface, Authenticatable
 {

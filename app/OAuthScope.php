@@ -3,8 +3,6 @@
 namespace App;
 
 use App\Model;
-use App\Scopes\TenantTrait;
-use App\Scopes\TenantScope;
 use App\Scopes\SystemScope;
 
 class OAuthScope extends Model
