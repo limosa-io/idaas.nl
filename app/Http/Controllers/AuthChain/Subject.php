@@ -6,7 +6,7 @@
 
 namespace App\Http\Controllers\AuthChain;
 
-use App\AuthChain\Object\Eloquent\Subject as EloquentSubject;
+use App\Subject as AppSubject;
 use Laravel\Passport\Token;
 
 class Subject extends \App\AuthChain\Object\Subject
@@ -20,7 +20,7 @@ class Subject extends \App\AuthChain\Object\Subject
         // $this->getIdentifier()
         $scopes = Token::whereIn(
             'user_id',
-            EloquentSubject::where(
+            AppSubject::where(
                 'identifier',
                 $this->getIdentifier()
             )->get(['id'])->pluck('id')->all()
