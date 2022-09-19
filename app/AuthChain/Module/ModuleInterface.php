@@ -3,7 +3,7 @@
 namespace App\AuthChain\Module;
 
 use Illuminate\Http\Request;
-use App\AuthChain\Types\Type;
+use App\AuthTypes\Type;
 use App\AuthChain\State;
 use App\AuthChain\AuthLevel;
 use Illuminate\Foundation\Console\PackageDiscoverCommand;

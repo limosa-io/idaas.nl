@@ -10,13 +10,8 @@ use App\Session\OIDCSession;
 use App\AuthChain\Exceptions\AuthFailedException;
 use App\AuthChain\Helper;
 use App\AuthChain\AuthChain;
-use App\AuthChain\Repository\ModuleRepository;
-use App\AuthChain\Repository\ChainRepository;
-use App\AuthChain\Repository\UserRepository;
-use App\AuthChain\Repository\LinkRepository;
-use App\AuthChain\Repository\SubjectRepository;
-use App\AuthChain\Http\CompleteProcessor;
 use App\AuthChain\Exceptions\NoStateException;
+use App\Repository\ModuleRepository;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -24,7 +19,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
 
         $this->app->bind(
-            'App\AuthChain\State',
+            \App\AuthChain\State::class,
             function ($app) {
                 $state = Helper::getStateFromSession(request()->header('X-StateId'));
 
@@ -40,26 +35,13 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             }
         );
 
-        $this->app->bindIf(
-            'App\AuthChain\Repository\ModuleRepositoryInterface',
-            ModuleRepository::class
-        );
-
         $this->app->bind(
             \ArieTimmerman\Passport\OIDC\Session::class,
             OIDCSession::class
         );
 
 
-        $this->app->bindIf('App\AuthChain\Repository\LinkRepositoryInterface', LinkRepository::class);
-        $this->app->bindIf('App\AuthChain\Repository\SubjectRepositoryInterface', SubjectRepository::class);
-
-
         $this->app->singleton('App\AuthChain\AuthChain', AuthChain::class);
-
-        AuthChain::addType('\App\AuthChain\Types\Password');
-        AuthChain::addType('\App\AuthChain\Types\Consent');
-        AuthChain::addType('\App\AuthChain\Types\Start');
 
         /**
          * The module the users chooses to use for authentication
@@ -67,7 +49,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $router->bind(
             'module',
             function ($moduleId, $route) {
-                $module = \resolve('App\AuthChain\Repository\ModuleRepositoryInterface')->get($moduleId);
+                $module = \resolve(ModuleRepository::class)->get($moduleId);
 
                 if ($module == null) {
                     throw new AuthFailedException('Unknown module: ' . $moduleId);

@@ -19,7 +19,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 
-class RememberStorage extends \App\AuthChain\RememberStorage
+class RememberStorage
 {
     protected $request;
 

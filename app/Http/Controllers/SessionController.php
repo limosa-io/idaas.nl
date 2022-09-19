@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\AuthChain\RememberStorage;
+use App\Http\Controllers\AuthChain\RememberStorage;
 use Illuminate\Http\Request;
 
 class SessionController extends Controller

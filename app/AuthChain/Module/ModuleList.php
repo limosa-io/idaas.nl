@@ -7,7 +7,7 @@
 namespace App\AuthChain\Module;
 
 use Illuminate\Http\Request;
-use App\AuthChain\Types\Type;
+use App\AuthTypes\Type;
 use App\AuthChain\State;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Facades\Log;

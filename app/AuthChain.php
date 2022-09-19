@@ -18,10 +18,17 @@ class AuthChain extends Model implements ChainInterface
         static::addGlobalScope(new SortChainScope());
     }
 
+    /**
+     * @return \App\AuthChain\Module\Module
+     */
     public function getFrom()
     {
         return $this->from;
     }
+
+    /**
+     * @return \App\AuthChain\Module\Module
+     */
     public function getTo()
     {
         return $this->to;

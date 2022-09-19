@@ -13,10 +13,10 @@ use App\AuthChain\Module\ModuleResult;
 use Illuminate\Http\Request;
 use App\AuthChain\Module\ModuleInterface;
 use App\AuthChain\Object\Subject;
-use App\AuthChain\Repository\SubjectRepositoryInterface;
 use App\AuthChain\Repository\AuthLevelRepository;
 use App\AuthChain\AuthLevelInterface;
 use App\AuthChain\Exceptions\ApiException;
+use App\Repository\SubjectRepository;
 
 class State implements \JsonSerializable, Jsonable
 {
@@ -175,7 +175,7 @@ class State implements \JsonSerializable, Jsonable
     /**
      * Only allow creating State objects using static functions
      */
-    private function __construct()
+    public function __construct()
     {
         $this->moduleResults = new ModuleResultList();
     }
@@ -198,6 +198,7 @@ class State implements \JsonSerializable, Jsonable
     }
 
     /**
+     *
      * @return ModuleResult
      */
     public function getRememberedModuleResult(ModuleInterface $module)
@@ -212,19 +213,21 @@ class State implements \JsonSerializable, Jsonable
             return null;
         }
 
-        foreach ($this->moduleResultsRemembered->toArray() as $remembered) {
-            /* @var Module $remembered  */
-            if ($remembered->getModule()->getIdentifier() == $module->getIdentifier()) {
-                $result = $remembered;
+        if ($this->moduleResultsRemembered != null) {
+            foreach ($this->moduleResultsRemembered->toArray() as $remembered) {
+                /* @var Module $remembered  */
+                if ($remembered->getModule()->getIdentifier() == $module->getIdentifier()) {
+                    $result = $remembered;
 
-                if (
-                    $this->maxAge != null
-                    && $result->getAuthenticationTime()->diff(new \DateTime())->s > $this->maxAge
-                ) {
-                    $result = null;
+                    if (
+                        $this->maxAge != null
+                        && $result->getAuthenticationTime()->diff(new \DateTime())->s > $this->maxAge
+                    ) {
+                        $result = null;
+                    }
+
+                    break;
                 }
-
-                break;
             }
         }
 
@@ -251,10 +254,7 @@ class State implements \JsonSerializable, Jsonable
         return $this;
     }
 
-    /**
-     * @return self
-     */
-    public function newSession()
+    public function newSession(): self
     {
 
         //TODO: Ensure absolute randomness of this state id. Use a secure random generator
@@ -733,7 +733,7 @@ class State implements \JsonSerializable, Jsonable
     public function getSubject()
     {
         // TODO: Cache this?? Is expensive and called a lot
-        return resolve(SubjectRepositoryInterface::class)->fromModuleResults($this->getModuleResults());
+        return resolve(SubjectRepository::class)->fromModuleResults($this->getModuleResults());
     }
 
     /**

@@ -2,24 +2,82 @@
 
 namespace App;
 
+use App\AuthChain\Object\AuthenticableTrait;
 use App\Repository\SubjectRepository;
 use App\Scopes\TenantTrait;
 use App\Stats\StatableInterface;
 use App\Stats\StatableTrait;
 use App\AuthChain\Object\Eloquent\Subject as EloquentSubject;
+use Illuminate\Support\Str;
 use Idaas\OpenID\Entities\ClaimEntityInterface;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Laravel\Passport\HasApiTokens;
+use App\AuthChain\Object\Subject as RealSubject;
 
-class Subject extends EloquentSubject implements SubjectInterface, StatableInterface
+class Subject extends Model implements SubjectInterface, StatableInterface, Authenticatable
 {
     use HasApiTokens;
     use TenantTrait;
     use StatableTrait;
+    use AuthenticableTrait;
 
     protected $user = null;
     protected $userId = null;
 
     protected $roles = null;
+
+    public $incrementing = false;
+    protected $keyType = 'string';
+
+    protected $casts = [
+        'subject' => 'array',
+        'levels' => 'array'
+    ];
+
+    /**
+     * The database table used by the model.
+     *
+     * @var string
+     */
+    protected $table = 'authchain_subjects';
+
+    /**
+     * The guarded attributes on the model.
+     *
+     * @var array
+     */
+    protected $guarded = [];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(
+            function ($model) {
+                if (empty($model->{$model->getKeyName()})) {
+                    $model->{$model->getKeyName()} = (string) Str::orderedUuid();
+                }
+            }
+        );
+    }
+
+    public function getAuthIdentifier()
+    {
+        return $this->id;
+    }
+
+    public function getAuthIdentifierName()
+    {
+        return 'id';
+    }
+
+    /**
+     * @return RealSubject
+     */
+    public function getSubject()
+    {
+        return RealSubject::fromJson($this->subject);
+    }
 
     public function getUser()
     {

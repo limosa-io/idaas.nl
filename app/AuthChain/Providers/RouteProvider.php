@@ -51,71 +51,71 @@ class RouteProvider
                     function () use ($options) {
                         Route::get(
                             '/manage/types',
-                            '\App\AuthChain\Http\Controllers\Manage\TypeController@index'
+                            '\App\Http\Controllers\AuthChain\Manage\TypeController@index'
                         );
 
                         Route::get(
                             '/manage/modules',
-                            '\App\AuthChain\Http\Controllers\Manage\AuthModuleController@index'
+                            '\App\Http\Controllers\AuthChain\Manage\AuthModuleController@index'
                         );
 
                         Route::get(
                             '/manage/modules/{module_id}',
-                            '\App\AuthChain\Http\Controllers\Manage\AuthModuleController@get'
+                            '\App\Http\Controllers\AuthChain\Manage\AuthModuleController@get'
                         );
                         Route::get(
                             '/manage/modules/info/{module_id}',
-                            '\App\AuthChain\Http\Controllers\Manage\AuthModuleController@info'
+                            '\App\Http\Controllers\AuthChain\Manage\AuthModuleController@info'
                         );
 
                         Route::delete(
                             '/manage/modules/{module_id}',
-                            '\App\AuthChain\Http\Controllers\Manage\AuthModuleController@delete'
+                            '\App\Http\Controllers\AuthChain\Manage\AuthModuleController@delete'
                         );
                         Route::put(
                             '/manage/modules/{module_id}',
-                            '\App\AuthChain\Http\Controllers\Manage\AuthModuleController@update'
+                            '\App\Http\Controllers\AuthChain\Manage\AuthModuleController@update'
                         );
 
                         Route::post(
                             '/manage/modules',
-                            '\App\AuthChain\Http\Controllers\Manage\AuthModuleController@create'
+                            '\App\Http\Controllers\AuthChain\Manage\AuthModuleController@create'
                         );
 
                         Route::get(
                             '/manage/chain',
-                            '\App\AuthChain\Http\Controllers\Manage\ChainController@index'
+                            '\App\Http\Controllers\AuthChain\Manage\ChainController@index'
                         );
                         Route::post(
                             '/manage/chain',
-                            '\App\AuthChain\Http\Controllers\Manage\ChainController@add'
+                            '\App\Http\Controllers\AuthChain\Manage\ChainController@add'
                         );
                         Route::delete(
                             '/manage/chain/{chain_id}',
-                            '\App\AuthChain\Http\Controllers\Manage\ChainController@delete'
+                            '\App\Http\Controllers\AuthChain\Manage\ChainController@delete'
                         );
 
 
                         Route::get(
                             '/manage/authlevels',
-                            '\App\AuthChain\Http\Controllers\Manage\AuthLevelController@index'
+                            '\App\Http\Controllers\AuthChain\Manage\AuthLevelController@index'
                         );
                         Route::get(
                             '/manage/authlevel/{authlevel_id}',
-                            '\App\AuthChain\Http\Controllers\Manage\AuthLevelController@get'
+                            '\App\Http\Controllers\AuthChain\Manage\AuthLevelController@get'
                         );
                         Route::delete(
                             '/manage/authlevel/{authlevel_id}',
-                            '\App\AuthChain\Http\Controllers\Manage\AuthLevelController@delete'
+                            '\App\Http\Controllers\AuthChain\Manage\AuthLevelController@delete'
                         );
 
                         Route::post(
                             '/manage/authlevels',
-                            '\App\AuthChain\Http\Controllers\Manage\AuthLevelController@create'
+                            '\App\Http\Controllers\AuthChain\Manage\AuthLevelController@create'
                         );
                         Route::put(
                             '/manage/authlevel/{authlevel_id}',
-                            '\App\AuthChain\Http\Controllers\Manage\AuthLevelController@update'
+                            '\App\Http\Controllers\AuthChain\Manage\AuthLevelController@update'
                         );
                     }
                 );
@@ -129,17 +129,17 @@ class RouteProvider
             function () {
                 Route::get(
                     '/redirect/{module}/{state}',
-                    '\App\AuthChain\Http\Controllers\AuthChainController@redirect'
+                    '\App\Http\Controllers\AuthChain\AuthChainController@redirect'
                 );
 
                 // web routes
                 Route::get(
                     '/complete',
-                    '\App\AuthChain\Http\Controllers\AuthChainController@complete'
+                    '\App\Http\Controllers\AuthChain\AuthChainController@complete'
                 )->name('authchain.complete.get');
                 Route::post(
                     '/complete',
-                    '\App\AuthChain\Http\Controllers\AuthChainController@complete'
+                    '\App\Http\Controllers\AuthChain\AuthChainController@complete'
                 )->name('authchain.complete');
             }
         );
@@ -155,7 +155,7 @@ class RouteProvider
                  */
                 Route::get(
                     '/authresponse/{state}',
-                    '\App\AuthChain\Http\Controllers\AuthChainController@getAuthResponse'
+                    '\App\Http\Controllers\AuthChain\AuthChainController@getAuthResponse'
                 );
 
                 /**
@@ -164,20 +164,20 @@ class RouteProvider
 
                 Route::options(
                     '/{module}/{state}',
-                    '\App\AuthChain\Http\Controllers\AuthChainController@processOptions'
+                    '\App\Http\Controllers\AuthChain\AuthChainController@processOptions'
                 );
                 Route::get(
                     '/{module}/{state}',
-                    '\App\AuthChain\Http\Controllers\AuthChainController@process'
+                    '\App\Http\Controllers\AuthChain\AuthChainController@process'
                 );
 
                 Route::post(
                     '/{module}',
-                    '\App\AuthChain\Http\Controllers\AuthChainController@process'
+                    '\App\Http\Controllers\AuthChain\AuthChainController@process'
                 )->name('chainProcessor');
 
                 Route::fallback(
-                    '\App\AuthChain\Http\Controllers\AuthChainController@notFound'
+                    '\App\Http\Controllers\AuthChain\AuthChainController@notFound'
                 );
             }
         );

@@ -7,6 +7,7 @@ use App\AuthChain\Events\Authenticated;
 use Illuminate\Http\Request;
 use App\AuthChain\Events\LoggedOut;
 use Illuminate\Support\Facades\Crypt;
+use App\Http\Controllers\AuthChain\RememberStorage;
 
 class Session
 {

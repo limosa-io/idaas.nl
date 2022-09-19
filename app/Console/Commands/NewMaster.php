@@ -18,12 +18,12 @@ use App\AuthTypes\OpenIDConnect;
 use App\Client;
 use App\OpenIDKey;
 use App\Repository\KeyRepository;
-use App\AuthChain\Types\Start;
+use App\AuthTypes\Start;
 use App\AuthChain;
 use Illuminate\Support\Facades\Hash;
 use App\User;
 use App\Http\Controllers\MailTemplateController;
-use App\AuthChain\Types\Password;
+use App\AuthTypes\Password;
 
 class NewMaster extends NewTenant
 {

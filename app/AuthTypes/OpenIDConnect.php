@@ -6,11 +6,10 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\AuthChain\State;
 use App\AuthChain\Module\ModuleInterface;
-use App\AuthChain\Repository\SubjectRepositoryInterface;
-use App\AuthChain\Types\AbstractType;
 use App\AuthChain\Helper;
 use GuzzleHttp\Exception\RequestException;
 use App\AuthChain\Module\Message;
+use App\Repository\SubjectRepository;
 
 class OpenIDConnect extends AbstractType
 {
@@ -127,7 +126,7 @@ class OpenIDConnect extends AbstractType
                 $module->baseResult()
                     ->setCompleted(true)
                     ->setSubject(
-                        resolve(SubjectRepositoryInterface::class)
+                        resolve(SubjectRepository::class)
                             ->with(
                                 $userinfo['sub'],
                                 $this,

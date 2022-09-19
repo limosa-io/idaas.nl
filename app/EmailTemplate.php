@@ -119,8 +119,6 @@ class EmailTemplate extends Model
                 'parent' => $this->parent->body
             ];
 
-            // die($this->parent->body);
-
             $template = '{{<parent}}' . $template . '{{/parent}}';
         }
 

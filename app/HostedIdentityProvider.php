@@ -4,8 +4,6 @@ namespace App;
 
 use App\Model;
 use ArieTimmerman\Laravel\SAML\SAML2\Entity\HostedIdentityProviderConfigInterface;
-use App\Scopes\TenantTrait;
-use Illuminate\Support\Str;
 
 class HostedIdentityProvider extends Model implements HostedIdentityProviderConfigInterface
 {

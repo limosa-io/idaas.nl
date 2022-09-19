@@ -10,18 +10,18 @@ use Gliph\Graph\DirectedAdjacencyList;
 use App\AuthChain\Module\Module;
 use Illuminate\Http\Request;
 use App\AuthChain\Module\ModuleInterface;
-use App\AuthChain\Types\Consent;
+use App\AuthChain\Repository\ChainRepositoryInterface;
+use App\AuthTypes\Consent;
+use App\Repository\ChainRepository;
+use App\Repository\ModuleRepository;
 use Illuminate\Support\Facades\Log;
 
 class AuthChain
 {
     protected static $t = null;
 
-    /**
-     * @var DirectedAdjacencyList
-     */
-    protected $directedAdjacencyList;
     protected $modules;
+    protected $chain;
 
     /**
      * List of supported types
@@ -45,21 +45,21 @@ class AuthChain
         return $this->consentModule;
     }
 
-    public static function buildGraph()
+    public function init(Request $request, State $state)
     {
-        $directedAdjacencyList = new DirectedAdjacencyList();
-
         $modules = [];
+        $this->chain = [];
 
-        foreach (resolve('App\AuthChain\Repository\ModuleRepositoryInterface')->all() as $module) {
+        foreach (resolve(ModuleRepository::class)->all() as $module) {
             $modules[$module->getIdentifier()] = $module;
-            $directedAdjacencyList->ensureVertex($module);
+
+            $module->init($request, $state);
         }
 
-        $from = [];
-        $to = [];
 
-        $chainElements = resolve('App\AuthChain\Repository\ChainRepositoryInterface')->all();
+        /** @var ChainRepository */
+        $chainRepository = resolve(ChainRepositoryInterface::class);
+        $chainElements = $chainRepository->all();
 
         if (count($chainElements) == 0) {
             throw new \Exception('No authentication chain defined');
@@ -76,42 +76,18 @@ class AuthChain
                 continue;
             }
 
+            $this->chain[] = [
+                $modules[$c->getFrom()],
+                $modules[$c->getTo()]
+            ];
 
-            $directedAdjacencyList->ensureArc($modules[$c->getFrom()], $modules[$c->getTo()]);
-            $from[] = $c->getFrom();
-            $to[] = $c->getTo();
+            Log::debug(sprintf('From: %s (%s). To: %s (%s)', $modules[$c->getFrom()]->name, $c->getFrom(), $modules[$c->getTo()]->name, $c->getTo()));
         }
 
-        return $directedAdjacencyList;
-    }
+        $this->modules = $modules;
 
-    public function init(Request $request, State $state)
-    {
-        $directedAdjacencyList = self::buildGraph();
-
-        $modules =  iterator_to_array($directedAdjacencyList->vertices());
-
-        $this->setDirectedAdjacencyList($directedAdjacencyList);
-
-        foreach ($modules as &$module) {
-            $module->init($request, $state);
-        }
-
-        $this->setModules($modules);
 
         return true;
-    }
-
-    /**
-     * Set the value of directedAdjacencyList
-     *
-     * @return self
-     */
-    public function setDirectedAdjacencyList(DirectedAdjacencyList $directedAdjacencyList)
-    {
-        $this->directedAdjacencyList = $directedAdjacencyList;
-
-        return $this;
     }
 
     /**
@@ -136,12 +112,20 @@ class AuthChain
         return $this;
     }
 
-    public function getPredecessorsOf(ModuleInterface $module)
+    /**
+     * @return ModuleInterface[]
+     */
+    public function getPredecessorsOf(ModuleInterface $module): array
     {
         $result = [];
 
-        foreach ($this->directedAdjacencyList->predecessorsOf($module) as $predecessor) {
-            $result[] = $predecessor;
+        foreach ($this->chain as $chain_link) {
+            $from = $chain_link[0];
+            $to = $chain_link[1];
+
+            if ($module->getIdentifier() == $to->getIdentifier()) {
+                $result[] = $from;
+            }
         }
 
         return $result;
@@ -151,8 +135,13 @@ class AuthChain
     {
         $result = [];
 
-        foreach ($this->directedAdjacencyList->successorsOf($module) as $succesor) {
-            $result[] = $succesor;
+        foreach ($this->chain as $chain_link) {
+            $from = $chain_link[0];
+            $to = $chain_link[1];
+
+            if ($module->getIdentifier() == $from->getIdentifier()) {
+                $result[] = $to;
+            }
         }
 
         return $result;
@@ -171,19 +160,42 @@ class AuthChain
             return [];
         }
 
-
         if ($module == null) {
+            // Every module could be the successor
             return $this->getModules();
         }
+
 
         try {
             foreach ($this->getSuccessorsOf($module) as $s) {
                 $result[] = $s;
 
-                $result = $this->getAllSuccessorsOf($s, $result);
+                foreach ($this->getAllSuccessorsOf($s) as $s2) {
+                    $result[] = $s2;
+                }
+
+                // $result = $this->getAllSuccessorsOf($s, $result);
             }
         } catch (\Exception $e) {
             //TODO: fix this
+        }
+
+        return $result;
+    }
+
+    public function getStartingSteps($passive = false)
+    {
+        $result = [];
+
+        $starting_points = collect($this->chain)->map(fn($value) => $value[0]);
+        $to_points = collect($this->chain)->map(fn($value) => $value[1]);
+
+        foreach ($starting_points as $s) {
+            if (!$to_points->contains(fn($value) => $value->getIdentifier() == $s->getIdentifier())) {
+                if (!collect($result)->contains(fn($v) => $v->getIdentifier() == $s->getIdentifier())) {
+                    $result[] = $s;
+                }
+            }
         }
 
         return $result;
@@ -199,45 +211,33 @@ class AuthChain
     {
         $result = [];
 
-        $predecessors = $this->getPredecessorsOf($to);
-
-        if (count($predecessors) == 0 || ($from != null && in_array($from, $predecessors))) {
-            if (!$passive || ($to->isPassive() || $to->remembered())) {
-                $result[] = $to;
-            }
+        if ($from == null) {
+            return $this->getStartingSteps($passive);
         }
 
-        foreach ($predecessors as $pre) {
-            if ($pre == $from) {
-                continue;
+        // the result is one of the following
+        $succesors = $this->getSuccessorsOf($from);
+
+        Log::debug(sprintf("Er zijn %d succesors", count($succesors)));
+
+
+        foreach ($succesors as $succesor) {
+            $allSuccessors = $this->getAllSuccessorsOf($succesor);
+
+            Log::debug(sprintf("Er zijn %d allSuccessors", count($allSuccessors)));
+
+            if (
+                collect($allSuccessors)->contains(fn ($value, $key) => $value->getIdentifier() == $to->getIdentifier())
+            ) {
+                if (!$passive || ($to->isPassive() || $to->remembered())) {
+                    $result[] = $succesor;
+                }
             }
 
-            Log::debug(
-                sprintf(
-                    '%s (%s) has predecessor %s (%s)',
-                    $to ? $to->name : 'null',
-                    $to ? $to->getIdentifier() : 'null',
-                    $pre->name,
-                    $pre->getIdentifier()
-                )
-            );
-
-            $next = $this->getNextSteps($from, $pre, $passive);
-
-            foreach ($next as $n) {
-                Log::debug(
-                    sprintf(
-                        '%s (%s) is a next step to %s (%s)',
-                        $n->name,
-                        $n->getIdentifier(),
-                        $pre->name,
-                        $pre->getIdentifier()
-                    )
-                );
-            }
-
-            if (count($next) > 0) {
-                \array_push($result, ...$next);
+            if ($succesor->getIdentifier() == $to->getIdentifier()) {
+                if (!$passive || ($to->isPassive() || $to->remembered())) {
+                    $result[] = $succesor;
+                }
             }
         }
 

@@ -6,12 +6,11 @@
 
 namespace App\Http\Controllers\AuthChain;
 
-use App\AuthChain\PolicyDecisionPoint as BasePolicyDecisionPoint;
 use App\AuthChain\State;
 use App\AuthChain\Object\Subject;
 use App\Client;
 
-class PolicyDecisionPoint extends BasePolicyDecisionPoint
+class PolicyDecisionPoint
 {
     public function isAllowed(?Subject $subject, State $state)
     {

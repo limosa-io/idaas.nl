@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\AuthChain\State;
 use App\AuthChain\Module\ModuleResult;
 use App\AuthChain\Module\ModuleInterface;
-use App\AuthChain\Repository\SubjectRepositoryInterface;
 use Illuminate\Support\Facades\Mail;
 use Lcobucci\JWT\Parser;
 use DateTimeImmutable;
@@ -15,7 +14,6 @@ use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use App\Repository\KeyRepository;
-use App\AuthChain\Types\AbstractType;
 use App\AuthChain\Helper;
 use App\User;
 use App\Mail\StandardMail;
@@ -24,6 +22,7 @@ use App\AuthChain\Repository\UserRepositoryInterface;
 use App\Exceptions\TokenExpiredException;
 use App\EmailTemplate;
 use App\AuthChain\Exceptions\AuthFailedException;
+use App\Repository\SubjectRepository;
 
 class Passwordless extends AbstractType
 {
@@ -95,7 +94,7 @@ class Passwordless extends AbstractType
             ->baseResult()
             ->setCompleted(true)
             ->setSubject(
-                resolve(SubjectRepositoryInterface::class)
+                resolve(SubjectRepository::class)
                 ->with($user->email, $this, $module)
                 ->setTypeIdentifier(
                     $this->getIdentifier()

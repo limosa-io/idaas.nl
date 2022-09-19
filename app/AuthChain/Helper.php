@@ -12,8 +12,9 @@ use Illuminate\Support\Facades\Log;
 use App\AuthChain\Exceptions\DidPromptException;
 use App\AuthChain\Exceptions\PassiveImpossibleException;
 use App\AuthChain\Session;
-use App\AuthChain\Http\CompleteProcessorInterface;
-use App\AuthChain\Repository\SubjectRepositoryInterface;
+use App\Http\AuthChainCompleteProcessor;
+use App\Http\Controllers\AuthChain\StateStorage;
+use App\Repository\SubjectRepository;
 
 class Helper
 {
@@ -33,7 +34,7 @@ class Helper
      *
      * @param  AuthLevel[] $desiredAuthLevel
      * @param  string      $comparison
-     * @param  Module      $start            The starting point
+     * @param  Module      $start            The last completed module. This may be null
      * @return ModuleList
      */
     public static function getModulesThatLeadsTo(
@@ -49,7 +50,7 @@ class Helper
 
         $destinations = [];
 
-        /* @var $authChain App\AuthChain\AuthChain */
+        /** @var \App\AuthChain\AuthChain */
         $authChain = resolve(AuthChain::class);
 
         $destinationCandidates = $authChain->getAllSuccessorsOf($start);
@@ -62,6 +63,8 @@ class Helper
             )
         );
 
+        // First find destination candidates.
+        // I.e. if the chain is A => B => C, A is the start module, C may be a destination candidate
         foreach ($destinationCandidates as $module) {
             if ($module->enabled && $module->provides($desiredAuthLevel, $comparison)) {
                 if ($passive) {
@@ -90,10 +93,11 @@ class Helper
                     Log::debug(sprintf('%s (%s) is not enabled', $module->name, $module->getIdentifier()));
                 } else {
                     Log::debug(sprintf(
-                        '%s (%s) does not provided the required authentication level: %s',
+                        '%s (%s) does not provided the required authentication level: %s (it provides: %s)',
                         $module->name,
                         $module->getIdentifier(),
-                        json_encode($desiredAuthLevel)
+                        json_encode($desiredAuthLevel),
+                        json_encode($module->getLevels())
                     ));
                 }
             }
@@ -112,9 +116,13 @@ class Helper
 
         $nextSteps = [];
 
+        // Given the destinations, find the next steps.
+        // If C is the destination, this may be B in case A is the last completed module (in A => B => C)
         foreach ($destinations as $destination) {
-            Log::debug(sprintf('check next steps to %s (%s)', $destination->name, $destination->getIdentifier()));
-            foreach ($authChain->getNextSteps($start, $destination, $passive) as $n) {
+            Log::debug(sprintf('check next steps from %s (%s)  to %s (%s)', $start != null ? $start->name : 'null', $start != null ? $start->getIdentifier() : 'null', $destination->name, $destination->getIdentifier()));
+            $next = $authChain->getNextSteps($start, $destination, $passive);
+            Log::debug(sprintf("Er zijn %d next steps", count($next)));
+            foreach ($next as $n) {
                 //TODO: Do NOT add if $n exists in
                 $skip = false;
                 foreach ($state->getModuleResults()->toArray() as $result) {
@@ -176,16 +184,16 @@ class Helper
 
         // if there is no subject, redirect to the cancel url
         if ($state->getSubject() == null) {
-            return resolve(CompleteProcessorInterface::class)->onCancel($request, $state);
+            return resolve(AuthChainCompleteProcessor::class)->onCancel($request, $state);
         }
 
-        $eloquentSubject = resolve(SubjectRepositoryInterface::class)->save($state->getSubject(), $state);
+        $eloquentSubject = resolve(SubjectRepository::class)->save($state->getSubject(), $state);
 
         $state->getSubject()->setUuid($eloquentSubject->id);
 
         Session::login($eloquentSubject, $state);
 
-        return resolve(CompleteProcessorInterface::class)->onFinish($request, $state, $eloquentSubject);
+        return resolve(AuthChainCompleteProcessor::class)->onFinish($request, $state, $eloquentSubject);
     }
 
     /**
@@ -290,7 +298,7 @@ class Helper
 
     public static function saveState(State $state)
     {
-        return resolve(StateStorage::class)->saveState($state);
+        return StateStorage::saveState($state);
     }
 
 
@@ -306,12 +314,12 @@ class Helper
      */
     public static function getStateFromSession($stateId)
     {
-        return resolve(StateStorage::class)->getStateFromSession($stateId);
+        return StateStorage::getStateFromSession($stateId);
     }
 
     public static function deleteState(State $state)
     {
-        resolve(StateStorage::class)->deleteState($state);
+        StateStorage::deleteState($state);
     }
 
     /**
