@@ -21,12 +21,12 @@ class AuthLevel extends Model implements AuthLevelInterface
     /**
      * Returns a string reporesentation of the level
      */
-    public function getLevel()
+    public function getLevel(): string
     {
         return $this->level;
     }
 
-    public function setLevel($level)
+    public function setLevel($level): self
     {
         $this->level = $level;
 
@@ -36,12 +36,12 @@ class AuthLevel extends Model implements AuthLevelInterface
     /**
      * Returns a string representation of the type
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
-    public function setType($type)
+    public function setType($type): self
     {
         $this->type = $type;
 
@@ -51,7 +51,7 @@ class AuthLevel extends Model implements AuthLevelInterface
     /**
      * Convers a json object to the AuthLevel
      */
-    public static function fromJsonObject($json)
+    public static function fromJsonObject($json): self
     {
         $result = [];
 
@@ -80,7 +80,7 @@ class AuthLevel extends Model implements AuthLevelInterface
         ];
     }
 
-    public function equals(?AuthLevelInterface $authLevel)
+    public function equals(?AuthLevelInterface $authLevel): bool
     {
         if ($authLevel == null) {
             return false;
