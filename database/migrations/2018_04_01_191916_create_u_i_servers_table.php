@@ -16,12 +16,12 @@ class CreateUIServersTable extends Migration
         Schema::create('u_i_servers', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('tenant_id')->index();
-            
+
             $table->string('url', 200)->index();
             $table->string('name', 100)->nullable();
 
             $table->boolean('default')->default(false);
-            
+
             $table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
 
             $table->timestamps();
