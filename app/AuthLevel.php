@@ -109,12 +109,12 @@ class AuthLevel extends Model implements AuthLevelInterface
 
     public function modules()
     {
-        return $this->belongsToMany('\App\AuthModule', 'authmodule_authlevel');
+        return $this->belongsToMany(AuthModule::class, 'authmodule_authlevel');
     }
 
     public function provider()
     {
-        return $this->belongsTo('App\OpenIDProvider', 'provider_id');
+        return $this->belongsTo(OpenIDProvider::class, 'provider_id');
     }
 
     public function __toString()

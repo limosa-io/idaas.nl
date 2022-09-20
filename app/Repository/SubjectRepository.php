@@ -13,10 +13,6 @@ use App\AuthChain\State;
 
 class SubjectRepository
 {
-    public function getSubjectClass()
-    {
-        return Subject::class;
-    }
 
     public function getEloquentSubjectClass()
     {
@@ -57,7 +53,7 @@ class SubjectRepository
 
     public function fromModuleResults(?ModuleResultList $moduleResultList)
     {
-        return $this->getSubjectClass()::fromModuleResults($moduleResultList);
+        return Subject::fromModuleResults($moduleResultList);
     }
 
     public function with(?string $identifier, Type $type, ?ModuleInterface $module = null)

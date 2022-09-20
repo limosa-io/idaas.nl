@@ -5,9 +5,9 @@ namespace App\AuthChain\Module;
 use App\AuthChain\AuthLevel;
 use Symfony\Component\HttpFoundation\Cookie;
 use Illuminate\Http\Response;
-use App\AuthChain\Repository\AuthLevelRepository;
 use App\AuthChain\Object\Eloquent\SubjectInterface;
 use App\AuthChain\Object\Subject;
+use App\Repository\AuthLevelRepository;
 use App\Repository\ModuleRepository;
 
 class ModuleResult implements \JsonSerializable

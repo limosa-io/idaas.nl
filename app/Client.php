@@ -32,31 +32,31 @@ class Client extends IdaasClient implements SubjectInterface, Authenticatable, S
     public function defaultAcrValues()
     {
         return $this->belongsToMany(
-            '\App\AuthLevel',
+            AuthLevel::class,
             'client_authlevel',
             'client_id',
             'auth_level_id'
-        )->wherePivot('tenant_id', resolve('App\Tenant')->id)->using('App\TenantPivot');
+        )->wherePivot('tenant_id', resolve(Tenant::class)->id)->using(TenantPivot::class);
     }
 
     public function roles()
     {
         return $this->belongsToMany(
-            '\App\Role',
+            Role::class,
             'client_role',
             'client_id',
             'role_id'
-        )->wherePivot('tenant_id', resolve('App\Tenant')->id)->using('App\TenantPivot');
+        )->wherePivot('tenant_id', resolve(Tenant::class)->id)->using(TenantPivot::class);
     }
 
     public function groups()
     {
         return $this->belongsToMany(
-            '\App\Group',
+            Group::class,
             'client_group',
             'client_id',
             'group_id'
-        )->wherePivot('tenant_id', resolve('App\Tenant')->id)->using('App\TenantPivot');
+        )->wherePivot('tenant_id', resolve(Tenant::class)->id)->using(TenantPivot::class);
     }
 
     public function getRoles()

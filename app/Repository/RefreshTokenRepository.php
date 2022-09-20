@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Tenant;
 use Laravel\Passport\Events\RefreshTokenCreated;
 use Laravel\Passport\RefreshTokenRepository as LaravelRefreshTokenRepository;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
@@ -19,7 +20,7 @@ class RefreshTokenRepository extends LaravelRefreshTokenRepository
             'access_token_id' => $accessTokenId = $refreshTokenEntity->getAccessToken()->getIdentifier(),
             'revoked' => false,
             'expires_at' => $refreshTokenEntity->getExpiryDateTime(),
-            'tenant_id' => resolve('App\Tenant')->id
+            'tenant_id' => resolve(Tenant::class)->id
             ]
         );
 
@@ -32,7 +33,7 @@ class RefreshTokenRepository extends LaravelRefreshTokenRepository
     public function revokeRefreshToken($tokenId)
     {
         $this->database->table('oauth_refresh_tokens')
-            ->where('tenant_id', resolve('App\Tenant')->id)->where('id', $tokenId)->update(['revoked' => true]);
+            ->where('tenant_id', resolve(Tenant::class)->id)->where('id', $tokenId)->update(['revoked' => true]);
     }
 
     /**
@@ -41,7 +42,7 @@ class RefreshTokenRepository extends LaravelRefreshTokenRepository
     public function isRefreshTokenRevoked($tokenId)
     {
         $refreshToken = $this->database->table('oauth_refresh_tokens')
-            ->where('tenant_id', resolve('App\Tenant')->id)->where('id', $tokenId)->first();
+            ->where('tenant_id', resolve(Tenant::class)->id)->where('id', $tokenId)->first();
 
         if ($refreshToken === null || $refreshToken->revoked) {
             return true;

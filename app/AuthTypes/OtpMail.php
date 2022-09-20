@@ -9,10 +9,10 @@ use App\AuthChain\Module\ModuleInterface;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\StandardMail;
 use App\AuthChain\Object\Subject;
-use App\AuthChain\Repository\UserRepositoryInterface;
 use App\EmailTemplate;
 use App\User;
 use App\Repository\SubjectRepository;
+use App\Repository\UserRepository;
 use ParagonIE\ConstantTime\Base32;
 
 class OtpMail extends AbstractType
@@ -110,7 +110,7 @@ class OtpMail extends AbstractType
                 )
             );
         } else {
-            $user = resolve(UserRepositoryInterface::class)->findByIdentifier($request->input('username'));
+            $user = resolve(UserRepository::class)->findByIdentifier($request->input('username'));
 
             if ($user == null) {
                 return (new ModuleResult())

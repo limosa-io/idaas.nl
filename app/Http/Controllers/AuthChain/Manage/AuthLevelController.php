@@ -4,11 +4,7 @@ namespace App\Http\Controllers\AuthChain\Manage;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthChain\Controller;
-use App\AuthChain\Repository\ModuleRepository;
-use App\AuthChain\Module\Module;
-use App\AuthChain\Module\ModuleInterface;
-use App\AuthChain\AuthChain;
-use App\AuthChain\Repository\AuthLevelRepository;
+use App\Repository\AuthLevelRepository;
 
 class AuthLevelController extends Controller
 {

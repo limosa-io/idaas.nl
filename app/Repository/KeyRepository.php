@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\OpenIDKey;
 use Illuminate\Support\Facades\Cache;
 use App\Exceptions\NoKeyException;
+use App\Tenant;
 use Idaas\OpenID\CryptKey;
 use Idaas\Passport\KeyRepository as IdaasKeyRepository;
 use Idaas\Passport\Model\Client;
@@ -14,7 +15,7 @@ class KeyRepository extends IdaasKeyRepository
     public function getPrivateKey()
     {
         return Cache::remember(
-            sprintf('key:%s', resolve('App\Tenant')->id),
+            sprintf('key:%s', resolve(Tenant::class)->id),
             10,
             function () {
                 $primary = OpenIDKey::where('active', true)->first();
@@ -33,7 +34,7 @@ class KeyRepository extends IdaasKeyRepository
     public function getPublicKey()
     {
         return Cache::remember(
-            sprintf('key:pub:%s', resolve('App\Tenant')->id),
+            sprintf('key:pub:%s', resolve(Tenant::class)->id),
             10,
             function () {
                 $primary = OpenIDKey::where('active', true)->first();

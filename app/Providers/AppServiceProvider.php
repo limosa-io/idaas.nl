@@ -100,8 +100,9 @@ class AppServiceProvider extends ServiceProvider
 
         //You must use singleton
         $this->app->singleton('App\AuthChain\Repository\ChainRepositoryInterface', ChainRepository::class);
-        $this->app->singleton('App\AuthChain\Repository\UserRepositoryInterface', UserRepository::class);
-        $this->app->singleton('App\AuthChain\Repository\AuthLevelRepository', AuthLevelRepository::class);
+        $this->app->singleton(UserRepository::class);
+
+        $this->app->singleton(AuthLevelRepository::class);
 
         $this->app->singleton(
             'ArieTimmerman\Laravel\SAML\Repository\RemoteServiceProviderConfigRepositoryInterface',

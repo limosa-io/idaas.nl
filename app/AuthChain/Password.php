@@ -18,8 +18,8 @@ use App\AuthChain\Module\ModuleResult;
 use Illuminate\Http\Request;
 use App\AuthChain\State;
 use App\AuthChain\Module\ModuleInterface;
-use App\AuthChain\Repository\UserRepositoryInterface;
 use App\AuthChain\Object\Subject;
+use App\Repository\UserRepository;
 
 class Password extends AbstractType
 {
@@ -63,7 +63,7 @@ class Password extends AbstractType
             return $remembered->setPrompted(false);
         } elseif (
             (
-                $user = resolve(UserRepositoryInterface::class)->findByIdentifier($username)
+                $user = resolve(UserRepository::class)->findByIdentifier($username)
             ) != null && app('hash')->check($password, $user->password)
         ) {
             $r = $module->baseResult()->setSubject(

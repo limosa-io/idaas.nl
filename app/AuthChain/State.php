@@ -13,9 +13,9 @@ use App\AuthChain\Module\ModuleResult;
 use Illuminate\Http\Request;
 use App\AuthChain\Module\ModuleInterface;
 use App\AuthChain\Object\Subject;
-use App\AuthChain\Repository\AuthLevelRepository;
 use App\AuthChain\AuthLevelInterface;
 use App\AuthChain\Exceptions\ApiException;
+use App\Repository\AuthLevelRepository;
 use App\Repository\SubjectRepository;
 
 class State implements \JsonSerializable, Jsonable
