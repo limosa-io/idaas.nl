@@ -4,11 +4,8 @@ namespace App\Http\Controllers\AuthChain\Manage;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthChain\Controller;
-use App\AuthChain\Module\Module;
-use App\AuthChain\Module\ModuleInterface;
-use App\AuthChain\Repository\ChainRepository;
-use App\AuthChain\Repository\ChainRepositoryInterface;
-use App\AuthChain\AuthChain;
+
+use App\Repository\ChainRepository;
 use App\Repository\ModuleRepository;
 
 class ChainController extends Controller
@@ -58,7 +55,7 @@ class ChainController extends Controller
                 //     return $fail('The chain must start with the "Start" module!');
                 // }
 
-                if (resolve(ChainRepositoryInterface::class)->exists(request('from'), request('to'))) {
+                if (resolve(ChainRepository::class)->exists(request('from'), request('to'))) {
                     return $fail('This link already exists!');
                 }
             }]
@@ -70,12 +67,12 @@ class ChainController extends Controller
     /**
      *
      */
-    public function index(ChainRepositoryInterface $repository)
+    public function index(ChainRepository $repository)
     {
         return $repository->all();
     }
 
-    public function add(ChainRepositoryInterface $repository, Request $request)
+    public function add(ChainRepository $repository, Request $request)
     {
         $data = $this->validate($request, $this->getValidations());
         // TODO: calculate position
@@ -83,12 +80,12 @@ class ChainController extends Controller
         return $repository->add($data['from'], $data['to'], $position);
     }
 
-    public function get(ChainRepositoryInterface $repository, $chainId)
+    public function get(ChainRepository $repository, $chainId)
     {
         return $repository->get($chainId);
     }
 
-    public function delete(ChainRepositoryInterface $repository, $chainId)
+    public function delete(ChainRepository $repository, $chainId)
     {
         //TODO: Check if exists
         return $repository->delete($repository->get($chainId));

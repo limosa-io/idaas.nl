@@ -10,7 +10,7 @@ use App\AuthChain\Module\ModuleResult;
 use Illuminate\Http\Request;
 use App\AuthChain\State;
 use App\AuthChain\Module\ModuleInterface;
-use App\AuthChain\Repository\ConsentRepository;
+use App\Repository\ConsentRepository;
 
 class Consent extends AbstractType
 {
