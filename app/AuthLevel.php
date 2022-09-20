@@ -51,7 +51,7 @@ class AuthLevel extends Model implements AuthLevelInterface
     /**
      * Convers a json object to the AuthLevel
      */
-    public static function fromJsonObject($json): self
+    public static function fromJsonObject($json): array|null
     {
         $result = [];
 
