@@ -2,11 +2,10 @@
 
 namespace App\Repository;
 
-use App\AuthChain\Repository\ChainRepositoryInterface;
 use App\AuthChain;
 use App\AuthChain\Module\ChainInterface;
 
-class ChainRepository implements ChainRepositoryInterface
+class ChainRepository
 {
     public function all()
     {

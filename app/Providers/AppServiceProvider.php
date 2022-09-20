@@ -99,9 +99,10 @@ class AppServiceProvider extends ServiceProvider
         Token::observe(TokenObserver::class);
 
         //You must use singleton
-        $this->app->singleton('App\AuthChain\Repository\ChainRepositoryInterface', ChainRepository::class);
-        $this->app->singleton('App\AuthChain\Repository\UserRepositoryInterface', UserRepository::class);
-        $this->app->singleton('App\AuthChain\Repository\AuthLevelRepository', AuthLevelRepository::class);
+        $this->app->singleton(ChainRepository::class);
+        $this->app->singleton(UserRepository::class);
+
+        $this->app->singleton(AuthLevelRepository::class);
 
         $this->app->singleton(
             'ArieTimmerman\Laravel\SAML\Repository\RemoteServiceProviderConfigRepositoryInterface',
@@ -127,7 +128,6 @@ class AppServiceProvider extends ServiceProvider
 
 
         $this->app->singleton(
-            \App\AuthChain\Repository\ConsentRepository::class,
             \App\Repository\ConsentRepository::class
         );
 

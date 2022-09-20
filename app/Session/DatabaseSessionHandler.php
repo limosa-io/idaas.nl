@@ -7,6 +7,7 @@
 
 namespace App\Session;
 
+use App\Tenant;
 use Illuminate\Session\DatabaseSessionHandler as BaseDatabaseSessionHandler;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
@@ -16,14 +17,14 @@ class DatabaseSessionHandler extends BaseDatabaseSessionHandler
 {
     protected function getQuery()
     {
-        return $this->connection->table($this->table)->where('tenant_id', resolve('App\Tenant')->id);
+        return $this->connection->table($this->table)->where('tenant_id', resolve(Tenant::class)->id);
     }
 
     protected function getDefaultPayload($data)
     {
         $result = parent::getDefaultPayload($data);
 
-        $result['tenant_id'] = resolve('App\Tenant')->id;
+        $result['tenant_id'] = resolve(Tenant::class)->id;
 
         return $result;
     }

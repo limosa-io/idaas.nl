@@ -2,8 +2,6 @@
 
 namespace App\AuthChain\Module;
 
-use Illuminate\Http\Request;
-use App\AuthTypes\Type;
 
 class ModuleResultList implements \JsonSerializable, \ArrayAccess
 {

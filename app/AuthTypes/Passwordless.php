@@ -18,11 +18,11 @@ use App\AuthChain\Helper;
 use App\User;
 use App\Mail\StandardMail;
 use App\AuthChain\Object\Subject;
-use App\AuthChain\Repository\UserRepositoryInterface;
 use App\Exceptions\TokenExpiredException;
 use App\EmailTemplate;
 use App\AuthChain\Exceptions\AuthFailedException;
 use App\Repository\SubjectRepository;
+use App\Repository\UserRepository;
 
 class Passwordless extends AbstractType
 {
@@ -152,7 +152,7 @@ class Passwordless extends AbstractType
 
             return $module->baseResult()->setCompleted(false)->setResponse(response([]));
         } else {
-            $user = resolve(UserRepositoryInterface::class)->findByIdentifier($request->input('username'));
+            $user = resolve(UserRepository::class)->findByIdentifier($request->input('username'));
 
             if ($user == null) {
                 return (new ModuleResult())

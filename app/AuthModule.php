@@ -79,9 +79,9 @@ class AuthModule extends Module
     public function authLevels()
     {
         return $this->belongsToMany(
-            '\App\AuthLevel',
+            AuthLevel::class,
             'authmodule_authlevel'
-        )->wherePivot('tenant_id', resolve('App\Tenant')->id)->using('App\TenantPivot');
+        )->wherePivot('tenant_id', resolve(Tenant::class)->id)->using(TenantPivot::class);
     }
 
     public function getLevels()

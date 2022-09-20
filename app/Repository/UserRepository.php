@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use App\AuthChain\Repository\UserRepositoryInterface;
 use App\User;
 use App\AuthChain\Object\Eloquent\SubjectInterface;
 use ArieTimmerman\Laravel\SCIMServer\Http\Controllers\ResourceController;
@@ -10,7 +9,7 @@ use App\CloudFunctionHelper;
 use App\CloudFunction;
 use ArieTimmerman\Laravel\SCIMServer\ResourceType;
 
-class UserRepository implements UserRepositoryInterface
+class UserRepository
 {
     public function createForSubject(SubjectInterface $subject)
     {

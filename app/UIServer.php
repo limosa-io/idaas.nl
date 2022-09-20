@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * See CreateUIServersTable
+ */
+
 namespace App;
 
 use App\Model;

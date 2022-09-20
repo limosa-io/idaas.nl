@@ -30,11 +30,11 @@ use App\Repository\KeyRepository;
 use App\AuthChain\Helper;
 use App\User;
 use App\AuthChain\Object\Subject;
-use App\AuthChain\Repository\UserRepositoryInterface;
 use App\Exceptions\TokenExpiredException;
 use App\EmailTemplate;
 use App\Mail\StandardMail;
 use App\Repository\SubjectRepository;
+use App\Repository\UserRepository;
 use DateTimeImmutable;
 
 class PasswordForgotten extends AbstractType
@@ -183,7 +183,7 @@ class PasswordForgotten extends AbstractType
 
             return $module->baseResult()->setCompleted(false)->setResponse(response([]));
         } else {
-            $user = resolve(UserRepositoryInterface::class)->findByIdentifier($request->input('username'));
+            $user = resolve(UserRepository::class)->findByIdentifier($request->input('username'));
 
             if ($user == null) {
                 return (new ModuleResult())

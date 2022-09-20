@@ -14,12 +14,12 @@ use Illuminate\Http\Request;
 use App\AuthChain\State;
 use App\AuthChain\Object\Eloquent\UserInterface;
 use App\AuthChain\Exceptions\AuthFailedException;
-use App\AuthChain\Repository\UserRepositoryInterface;
 use App\AuthChain\Exceptions\ApiException;
 use App\AuthChain\Object\Eloquent\SubjectInterface;
 use App\AuthTypes\NullType;
 use App\Http\Controllers\AuthChain\PolicyDecisionPoint;
 use App\Repository\LinkRepository;
+use App\Repository\UserRepository;
 
 class Module extends Model implements ModuleInterface, \JsonSerializable
 {
@@ -102,7 +102,7 @@ class Module extends Model implements ModuleInterface, \JsonSerializable
             );
 
             if ($user == null && $this->getTypeObject()->shouldCreateUser($this)) {
-                $user = resolve(UserRepositoryInterface::class)->createForSubject($subject);
+                $user = resolve(UserRepository::class)->createForSubject($subject);
                 resolve(LinkRepository::class)->add($this->getTypeObject(), $subject, $user);
             }
 
@@ -157,7 +157,7 @@ class Module extends Model implements ModuleInterface, \JsonSerializable
         }
 
         if ($user == null) {
-            $user = resolve(UserRepositoryInterface::class)->findForSubject($subject);
+            $user = resolve(UserRepository::class)->findForSubject($subject);
 
             /**
              * TODO: Only do the following if 'blind linking' is allowed.
