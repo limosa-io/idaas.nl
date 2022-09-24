@@ -1,3 +1,5 @@
+/public/build
+/public/build
 /node_modules
 /public/hot
 /public/storage
@@ -970,3 +972,4 @@ tools/php-cs-fixer/vendor/symfony/string/Slugger/AsciiSlugger.php
 tools/php-cs-fixer/vendor/symfony/string/Slugger/SluggerInterface.php
 .php-cs-fixer.cache
 run.sh
+node_modules

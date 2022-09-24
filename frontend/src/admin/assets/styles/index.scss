@@ -5,8 +5,8 @@ $theme-colors: (
 
 $modal-lg: 1600px !default;
 
-@import "~bootstrap/scss/bootstrap";
-@import "~bootstrap-vue/dist/bootstrap-vue";
+@import "node_modules/bootstrap/scss/bootstrap";
+// @import "~bootstrap-vue/dist/bootstrap-vue";
 
 @import 'spec/settings/index';
 @import 'spec/tools/index';
@@ -15,8 +15,8 @@ $modal-lg: 1600px !default;
 @import './vendor/themify-icons';
 @import './vendor/vue-multiselect.min.css';
 
-@import "~noty/src/noty.scss";
-@import "~noty/src/themes/mint.scss";
+@import "node_modules/noty/src/noty.scss";
+@import "node_modules/noty/src/themes/mint.scss";
 
 .was-validated .form-control:invalid, .form-control.is-invalid, .was-validated .custom-select:invalid, .custom-select.is-invalid{
     border-color: #f44336!important;

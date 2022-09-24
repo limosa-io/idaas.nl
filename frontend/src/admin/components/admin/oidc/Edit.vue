@@ -546,7 +546,7 @@ TODO: Consider adding list of allowed 'audiences'
 import Vue from "vue";
 import { getDecodedAccesstoken } from "@/admin/helpers.js";
 
-import Picker from "../userinterface/Picker";
+import Picker from "../userinterface/Picker.vue";
 
 export default {
   components: {

@@ -257,7 +257,7 @@
 <script>
 export default {
   components: {
-    Picker: () => import("./Picker"),
+    Picker: () => import("./Picker.vue"),
     codemirror: resolve =>
       import(
         /* webpackChunkName: "vue-codemirror" */ "../../lib/codemirror.js"

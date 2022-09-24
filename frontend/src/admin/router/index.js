@@ -1,81 +1,81 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import CompleteLogin from '../components/CompleteLogin'
-import InitLogin from '../components/InitLogin'
-import InitLogout from '../components/InitLogout'
-import Admin from '../components/Admin'
-import Tenants from '../components/Tenants'
+import CompleteLogin from '../components/CompleteLogin.vue'
+import InitLogin from '../components/InitLogin.vue'
+import InitLogout from '../components/InitLogout.vue'
+import Admin from '../components/Admin.vue'
+import Tenants from '../components/Tenants.vue'
 
-import Tester from '../components/Tester'
-import Error from '../components/Error'
+import Tester from '../components/Tester.vue'
+import Error from '../components/Error.vue'
 
-import Logout from '../components/Logout'
+import Logout from '../components/Logout.vue'
 
-import Help from '../components/admin/Help'
+import Help from '../components/admin/Help.vue'
 
-import SAML from '../components/admin/SAML'
-import ListSAML from '../components/admin/saml/List'
-import EditSAML from '../components/admin/saml/Edit'
-import NewSAML from '../components/admin/saml/New'
-import SettingsSAML from '../components/admin/saml/Settings'
-import GeneralSettingsSAML from '../components/admin/saml/settings/General'
-import ImportSAML from '../components/admin/saml/Import'
+import SAML from '../components/admin/SAML.vue'
+import ListSAML from '../components/admin/saml/List.vue'
+import EditSAML from '../components/admin/saml/Edit.vue'
+import NewSAML from '../components/admin/saml/New.vue'
+import SettingsSAML from '../components/admin/saml/Settings.vue'
+import GeneralSettingsSAML from '../components/admin/saml/settings/General.vue'
+import ImportSAML from '../components/admin/saml/Import.vue'
 
-const OIDC = () => import(/* webpackPrefetch: true *//* webpackChunkName: "oidc" */ '../components/admin/OIDC')
-const NewOIDC = () => import(/* webpackPrefetch: true *//* webpackChunkName: "oidc" */ '../components/admin/oidc/New')
-const EditOIDC = () => import(/* webpackPrefetch: true *//* webpackChunkName: "oidc" */ '../components/admin/oidc/Edit')
-const ListOIDC = () => import(/* webpackPrefetch: true *//* webpackChunkName: "oidc" */ '../components/admin/oidc/List')
-const SettingsOIDC = () => import(/* webpackPrefetch: true *//* webpackChunkName: "oidc" */ '../components/admin/oidc/Settings')
-const TestOIDC = () => import(/* webpackPrefetch: true *//* webpackChunkName: "oidc" */ '../components/admin/oidc/Test')
-const GeneralSettingsOIDC = () => import(/* webpackPrefetch: true *//* webpackChunkName: "oidc" */ '../components/admin/oidc/settings/General')
-const ScopesSettingsOIDC = () => import(/* webpackPrefetch: true *//* webpackChunkName: "oidc" */ '../components/admin/oidc/settings/Scopes')
+const OIDC = () => import(/* webpackPrefetch: true *//* webpackChunkName: "oidc" */ '../components/admin/OIDC.vue')
+const NewOIDC = () => import(/* webpackPrefetch: true *//* webpackChunkName: "oidc" */ '../components/admin/oidc/New.vue')
+const EditOIDC = () => import(/* webpackPrefetch: true *//* webpackChunkName: "oidc" */ '../components/admin/oidc/Edit.vue')
+const ListOIDC = () => import(/* webpackPrefetch: true *//* webpackChunkName: "oidc" */ '../components/admin/oidc/List.vue')
+const SettingsOIDC = () => import(/* webpackPrefetch: true *//* webpackChunkName: "oidc" */ '../components/admin/oidc/Settings.vue')
+const TestOIDC = () => import(/* webpackPrefetch: true *//* webpackChunkName: "oidc" */ '../components/admin/oidc/Test.vue')
+const GeneralSettingsOIDC = () => import(/* webpackPrefetch: true *//* webpackChunkName: "oidc" */ '../components/admin/oidc/settings/General.vue')
+const ScopesSettingsOIDC = () => import(/* webpackPrefetch: true *//* webpackChunkName: "oidc" */ '../components/admin/oidc/settings/Scopes.vue')
 
-const PageNotFound = () => import(/* webpackPrefetch: true *//* webpackChunkName: "pageNotFound" */ '../components/PageNotFound')
+const PageNotFound = () => import(/* webpackPrefetch: true *//* webpackChunkName: "pageNotFound" */ '../components/PageNotFound.vue')
 
-import KeysSettingsOIDC from '../components/admin/oidc/settings/Keys'
-import ClaimsSettingsOIDC from '../components/admin/oidc/settings/Claims'
-import LevelsSettingsOIDC from '../components/admin/oidc/settings/Levels'
+import KeysSettingsOIDC from '../components/admin/oidc/settings/Keys.vue'
+import ClaimsSettingsOIDC from '../components/admin/oidc/settings/Claims.vue'
+import LevelsSettingsOIDC from '../components/admin/oidc/settings/Levels.vue'
 
-import Users from '../components/admin/Users'
-import ListUser from '../components/admin/users/List'
-import NewUser from '../components/admin/users/New'
-import EditUser from '../components/admin/users/Edit'
+import Users from '../components/admin/Users.vue'
+import ListUser from '../components/admin/users/List.vue'
+import NewUser from '../components/admin/users/New.vue'
+import EditUser from '../components/admin/users/Edit.vue'
 
-import Groups from '../components/admin/Groups'
-import ListGroup from '../components/admin/groups/List'
-import NewGroup from '../components/admin/groups/New'
-import EditGroup from '../components/admin/groups/Edit'
+import Groups from '../components/admin/Groups.vue'
+import ListGroup from '../components/admin/groups/List.vue'
+import NewGroup from '../components/admin/groups/New.vue'
+import EditGroup from '../components/admin/groups/Edit.vue'
 
-import Registration from '../components/admin/Registration'
+import Registration from '../components/admin/Registration.vue'
 
-import Email from '../components/admin/Email'
-import ListEmail from '../components/admin/email/List'
-import EditEmail from '../components/admin/email/Edit'
-import Authentication from '../components/admin/Authentication'
-import AuthenticationList from '../components/admin/authentication/List'
-import AuthenticationNew from '../components/admin/authentication/New'
-import AuthenticationEdit from '../components/admin/authentication/Edit'
+import Email from '../components/admin/Email.vue'
+import ListEmail from '../components/admin/email/List.vue'
+import EditEmail from '../components/admin/email/Edit.vue'
+import Authentication from '../components/admin/Authentication.vue'
+import AuthenticationList from '../components/admin/authentication/List.vue'
+import AuthenticationNew from '../components/admin/authentication/New.vue'
+import AuthenticationEdit from '../components/admin/authentication/Edit.vue'
 
-import UserInterface from '../components/admin/UserInterface'
-import UserInterfaceDesign from '../components/admin/userinterface/Design'
-import UserInterfaceMedia from '../components/admin/userinterface/Media'
-import UserInterfaceServers from '../components/admin/userinterface/Servers'
+import UserInterface from '../components/admin/UserInterface.vue'
+import UserInterfaceDesign from '../components/admin/userinterface/Design.vue'
+import UserInterfaceMedia from '../components/admin/userinterface/Media.vue'
+import UserInterfaceServers from '../components/admin/userinterface/Servers.vue'
 
-import Rules from '../components/admin/Rules'
-import RulesList from '../components/admin/rules/List'
-import RulesEdit from '../components/admin/rules/Edit'
+import Rules from '../components/admin/Rules.vue'
+import RulesList from '../components/admin/rules/List.vue'
+import RulesEdit from '../components/admin/rules/Edit.vue'
 
-import Sessions from '../components/admin/Sessions'
-import ListSessions from '../components/admin/sessions/Sessions'
-import ListTokens from '../components/admin/sessions/Tokens'
-import ListSubjects from '../components/admin/sessions/Subjects'
+import Sessions from '../components/admin/Sessions.vue'
+import ListSessions from '../components/admin/sessions/Sessions.vue'
+import ListTokens from '../components/admin/sessions/Tokens.vue'
+import ListSubjects from '../components/admin/sessions/Subjects.vue'
 
-import Internationalization from '../components/admin/Internationalization'
+import Internationalization from '../components/admin/Internationalization.vue'
 import InternationalizationList from '../components/admin/internationalization/List.vue'
 import InternationalizationEdit from '../components/admin/internationalization/Edit.vue'
 
-import Webhook from '../components/admin/Webhook'
+import Webhook from '../components/admin/Webhook.vue'
 
 Vue.use(Router);
 
@@ -102,7 +102,7 @@ export default new Router({
         {
           path: '/',
           name: 'dashboard',
-          component: () => import('../components/admin/Dashboard'),
+          component: () => import('../components/admin/Dashboard.vue'),
           style: {
             icon: 'c-blue-500 ti-home'
           },

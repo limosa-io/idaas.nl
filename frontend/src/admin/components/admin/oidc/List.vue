@@ -101,7 +101,7 @@ Manage your OpenID Connect applications.
 <script>
 import Vue from "vue";
 import { getDecodedAccesstoken } from "@/admin/helpers.js";
-import PopupDemoApplication from './demo/PopupDemoApplication'
+import PopupDemoApplication from './demo/PopupDemoApplication.vue'
 
 export default {
 

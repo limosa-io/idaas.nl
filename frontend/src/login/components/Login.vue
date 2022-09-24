@@ -89,7 +89,7 @@ import {BDropdown, BDropdownItem} from "bootstrap-vue";
 
 import { switchLanguage } from "@/login/i18n.js";
 
-const queryString = require("query-string");
+import queryString from 'query-string';
 
 var groupBy = function(xs, key) {
   return xs.reduce(function(rv, x) {
@@ -409,7 +409,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "~bootstrap/scss/bootstrap";
+@import "node_modules/bootstrap/scss/bootstrap";
 
 body .language-selector.btn-group {
   .btn-primary:focus,

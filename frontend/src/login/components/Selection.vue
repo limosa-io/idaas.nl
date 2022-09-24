@@ -84,25 +84,47 @@
 
 
 <script>
-import socialGroup from './SocialGroup'
-import defaultGroup from './DefaultModuleGroup'
-import registerGroup from './RegisterGroup'
+import socialGroup from './SocialGroup.vue'
+import defaultGroup from './DefaultModuleGroup.vue'
+import registerGroup from './RegisterGroup.vue'
 
 import store from './store';
 
+import activation from './modules/activation.vue'
+import consent from './modules/consent.vue'
+import facebook from './modules/facebook.vue'
+import google from './modules/google.vue'
+import linkedin from './modules/linkedin.vue'
+import openIDConnect from './modules/openIDConnect.vue'
+import otpMail from './modules/otpMail.vue'
+import password from './modules/password.vue'
+import passwordForgotten from './modules/passwordForgotten.vue'
+import passwordless from './modules/passwordless.vue'
+import register from './modules/register.vue'
+import sms from './modules/sms.vue'
+import totp from './modules/totp.vue'
+
+
 import Vue from 'vue';
 
-const modules = {};
-
-const r = require.context('./modules/', false, /\.vue$/);
-
-for(var m of r.keys()){
-  modules[m.substring(2,m.length-4)] = r(m).default;
-}
-
-modules.socialGroup = socialGroup;
-modules.defaultGroup = defaultGroup;
-modules.registerGroup = registerGroup;
+const modules = {
+  socialGroup,
+  defaultGroup,
+  registerGroup,
+  activation,
+  consent,
+  facebook,
+  google,
+  linkedin,
+  openIDConnect,
+  otpMail,
+  password,
+  passwordForgotten,
+  passwordless,
+  register,
+  sms,
+  totp
+};
 
 export default {
   props: ['next', 'authRequest', 'customerstyle'],
