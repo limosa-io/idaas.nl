@@ -9,14 +9,14 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 import App from './App.vue'
-import Login from './components/Login'
-import Selection from './components/Selection'
-import Logout from './components/Logout'
-import Error from './components/Error'
+import Login from './components/Login.vue'
+import Selection from './components/Selection.vue'
+import Logout from './components/Logout.vue'
+import Error from './components/Error.vue'
 import store from './components/store';
 import {i18n} from './i18n'
 
-import Session from './components/Session'
+import Session from './components/Session.vue'
 
 Vue.use(VueRouter)
 
@@ -57,7 +57,7 @@ const routes = [
       path: ':hash?/register/:module?',
       name: 'login.register',
       component: () =>
-        import ('./components/Register')
+        import ('./components/Register.vue')
     },
 
     {

@@ -503,7 +503,7 @@ img.cropped{
 
 <script>
 import Vue from 'vue';
-import Picker from "../userinterface/Picker";
+import Picker from "../userinterface/Picker.vue";
 
 export default {
   

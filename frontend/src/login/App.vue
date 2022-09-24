@@ -43,7 +43,7 @@ export default {
 
 <style lang="scss">
 
-@import "~bootstrap/scss/bootstrap";
+@import "node_modules/bootstrap/scss/bootstrap";
 
 .pre-wrap{
   white-space: pre-wrap;

@@ -1,3 +1,5 @@
+/public/build
+/public/build
 /node_modules
 /public/hot
 /public/storage
@@ -14,8 +16,6 @@ yarn-error.log
 /public
 bootstrap/cache
 pgdata
-resources/views/admin.blade.php
-resources/views/login.blade.php
 .phpunit.result.cache
 public/js/chunk*.js
 .env.*
@@ -970,3 +970,4 @@ tools/php-cs-fixer/vendor/symfony/string/Slugger/AsciiSlugger.php
 tools/php-cs-fixer/vendor/symfony/string/Slugger/SluggerInterface.php
 .php-cs-fixer.cache
 run.sh
+node_modules

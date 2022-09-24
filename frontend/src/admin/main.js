@@ -1,16 +1,13 @@
-import '@babel/polyfill'
 import './public-path';
 import Vue from 'vue'
 import VueResource from 'vue-resource';
-import App from './App'
+import App from './App.vue'
 import router from './router'
 import { BModal } from 'bootstrap-vue'
-import bModalDirective from 'bootstrap-vue/esm/directives/modal/modal'
+import { VBModal } from 'bootstrap-vue'
 import {VBTooltip, BPagination} from 'bootstrap-vue';
 import {BFormGroup} from './bootstrap-vue'
 import state from './components/state.js'
-
-// import bBdage from 'bootstrap-vue/esm/directives/modal/modal'
 
 Vue.use(VueResource);
 
@@ -28,7 +25,7 @@ Vue.component(
   'b-modal', BModal
 );
 
-Vue.directive('b-modal', bModalDirective);
+Vue.directive('b-modal', VBModal);
 Vue.component('b-form-group', BFormGroup); 
 Vue.component('b-form-select', (resolve) => import(/* webpackChunkName: "vue-bootstrap" */ './bootstrap-vue').then((m) => { resolve(m.BFormSelect); }));
 

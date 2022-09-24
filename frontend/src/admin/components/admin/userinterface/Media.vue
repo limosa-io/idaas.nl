@@ -22,7 +22,7 @@
 export default {
 
   components: {
-    Picker: () => import('./Picker')
+    Picker: () => import('./Picker.vue')
   },
 
   data(){
