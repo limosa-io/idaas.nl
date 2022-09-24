@@ -16,8 +16,6 @@ yarn-error.log
 /public
 bootstrap/cache
 pgdata
-resources/views/admin.blade.php
-resources/views/login.blade.php
 .phpunit.result.cache
 public/js/chunk*.js
 .env.*
