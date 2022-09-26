@@ -4,7 +4,6 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-import './public-path';
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 

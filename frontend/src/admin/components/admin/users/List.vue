@@ -10,8 +10,6 @@
     <div class="col-md-12">
       <div class="bgc-white bd bdrs-3 pl-3 pr-3 pb-3 pt-2 mt-2" v-show="loaded">
 
-        <!-- <h4 class="c-grey-900 mt-2">All Users</h4> -->
-
         <div class="d-flex flex-row justify-content-between">
           <div>
             <form class="form-inline">
