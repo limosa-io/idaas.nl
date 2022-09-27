@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\AuthChain;
-use App\AuthChain\Module\Chain;
 
 class ChainRepository
 {
