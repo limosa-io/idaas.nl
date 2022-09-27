@@ -6,12 +6,11 @@
 
 namespace App\AuthTypes;
 
-use Illuminate\Http\Request;
+use App\AuthChain\ModuleInterface;
+use App\AuthChain\ModuleResult;
 use App\AuthChain\State;
-use App\AuthChain\Module\Module;
-use App\AuthChain\Module\ModuleInterface;
-use App\AuthChain\Module\ModuleResult;
-use App\AuthChain\Object\Subject;
+use App\AuthChain\Subject;
+use Illuminate\Http\Request;
 
 interface Type
 {
@@ -25,7 +24,7 @@ interface Type
     /**
      * Execute. Returns
      *
-     * @return App\AuthChain\Module\ModuleResult
+     * @return App\AuthChain\ModuleResult
      */
     public function process(Request $request, State $state, ModuleInterface $module);
 

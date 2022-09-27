@@ -7,9 +7,9 @@
 namespace App\AuthChain;
 
 use Gliph\Graph\DirectedAdjacencyList;
-use App\AuthChain\Module\Module;
+use App\AuthChain\Module;
 use Illuminate\Http\Request;
-use App\AuthChain\Module\ModuleInterface;
+use App\AuthChain\ModuleInterface;
 use App\AuthTypes\Consent;
 use App\Repository\ChainRepository;
 use App\Repository\ModuleRepository;

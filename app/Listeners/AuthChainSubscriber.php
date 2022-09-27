@@ -2,15 +2,15 @@
 
 namespace App\Listeners;
 
+use App\AuthLevel;
+use App\Events\Authenticated;
+use App\Events\LoggedOut;
+use App\Http\Controllers\AuthChain\RememberStorage;
+use App\Stats\Statter;
+use App\TenantSetting;
+use App\Token;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
-use App\AuthChain\Events\Authenticated;
-use App\Stats\Statter;
-use App\AuthChain\Events\LoggedOut;
-use App\Token;
-use App\Http\Controllers\AuthChain\RememberStorage;
-use App\TenantSetting;
-use App\AuthLevel;
 
 class AuthChainSubscriber
 {
@@ -75,12 +75,12 @@ class AuthChainSubscriber
     public function subscribe($events)
     {
         $events->listen(
-            'App\AuthChain\Events\Authenticated',
+            'App\Events\Authenticated',
             'App\Listeners\AuthChainSubscriber@onAuthenticated'
         );
 
         $events->listen(
-            'App\AuthChain\Events\LoggedOut',
+            'App\Events\LoggedOut',
             'App\Listeners\AuthChainSubscriber@onLoggedOut'
         );
     }

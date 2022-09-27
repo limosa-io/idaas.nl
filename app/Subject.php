@@ -2,24 +2,22 @@
 
 namespace App;
 
-use App\AuthChain\Object\AuthenticableTrait;
+use App\AuthChain\Subject as RealSubject;
+use App\Exceptions\AuthFailedException;
 use App\Repository\SubjectRepository;
 use App\Scopes\TenantTrait;
 use App\Stats\StatableInterface;
 use App\Stats\StatableTrait;
-use App\AuthChain\Object\Eloquent\Subject as EloquentSubject;
-use Illuminate\Support\Str;
 use Idaas\OpenID\Entities\ClaimEntityInterface;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Support\Str;
 use Laravel\Passport\HasApiTokens;
-use App\AuthChain\Object\Subject as RealSubject;
 
 class Subject extends Model implements SubjectInterface, StatableInterface, Authenticatable
 {
     use HasApiTokens;
     use TenantTrait;
     use StatableTrait;
-    use AuthenticableTrait;
 
     protected $user = null;
     protected $userId = null;
@@ -332,5 +330,46 @@ class Subject extends Model implements SubjectInterface, StatableInterface, Auth
     public function findForPassport($identifier)
     {
         return resolve(SubjectRepository::class)->get($identifier);
+    }
+
+    /**
+     * Get the password for the user.
+     *
+     * @return string
+     */
+    public function getAuthPassword()
+    {
+      throw new AuthFailedException('getAuthPassword is not supported');
+    }
+
+    /**
+     * Get the token value for the "remember me" session.
+     *
+     * @return string
+     */
+    public function getRememberToken()
+    {
+      return 'remember_token';
+    }
+
+    /**
+     * Set the token value for the "remember me" session.
+     *
+     * @param  string $value
+     * @return void
+     */
+    public function setRememberToken($value)
+    {
+      throw new AuthFailedException('setRememberToken is not supported');
+    }
+
+    /**
+     * Get the column name for the "remember me" token.
+     *
+     * @return string
+     */
+    public function getRememberTokenName()
+    {
+      throw new AuthFailedException('getRememberTokenName is not supported');
     }
 }

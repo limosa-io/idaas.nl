@@ -2,16 +2,16 @@
 
 namespace App\Repository;
 
-use App\User;
-use App\AuthChain\Object\Eloquent\SubjectInterface;
-use ArieTimmerman\Laravel\SCIMServer\Http\Controllers\ResourceController;
-use App\CloudFunctionHelper;
+use App\AuthChain\Subject;
 use App\CloudFunction;
+use App\CloudFunctionHelper;
+use App\User;
+use ArieTimmerman\Laravel\SCIMServer\Http\Controllers\ResourceController;
 use ArieTimmerman\Laravel\SCIMServer\ResourceType;
 
 class UserRepository
 {
-    public function createForSubject(SubjectInterface $subject)
+    public function createForSubject(Subject $subject)
     {
         $user = null;
 
@@ -56,7 +56,7 @@ class UserRepository
         return $user;
     }
 
-    public function findForSubject(SubjectInterface $subject)
+    public function findForSubject(Subject $subject)
     {
         return User::where('email', strtolower($subject->getEmail()))->first();
     }

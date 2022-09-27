@@ -6,17 +6,16 @@
 
 namespace App\AuthChain;
 
-use Illuminate\Contracts\Support\Jsonable;
-use Illuminate\Support\Str;
-use App\AuthChain\Module\ModuleResultList;
-use App\AuthChain\Module\ModuleResult;
-use Illuminate\Http\Request;
-use App\AuthChain\Module\ModuleInterface;
-use App\AuthChain\Object\Subject;
-use App\AuthChain\AuthLevelInterface;
-use App\AuthChain\Exceptions\ApiException;
+use App\AuthChain\ModuleInterface;
+use App\AuthChain\ModuleResult;
+use App\AuthChain\ModuleResultList;
+use App\AuthLevel;
+use App\Exceptions\ApiException;
 use App\Repository\AuthLevelRepository;
 use App\Repository\SubjectRepository;
+use Illuminate\Contracts\Support\Jsonable;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class State implements \JsonSerializable, Jsonable
 {
@@ -286,7 +285,10 @@ class State implements \JsonSerializable, Jsonable
                     $levels[] = $l;
                 }
 
-                $levels[] = new AuthLevel(null, $r->getModule()->getIdentifier());
+                $levels[] = new AuthLevel([
+                    'type' => null,
+                    'level' => $r->getModule()->getIdentifier()
+                ]);
             }
         }
 
@@ -453,7 +455,7 @@ class State implements \JsonSerializable, Jsonable
     {
         if ($requiredAuthLevel == null || is_array($requiredAuthLevel)) {
             $this->requiredAuthLevel = $requiredAuthLevel;
-        } elseif ($requiredAuthLevel instanceof AuthLevelInterface) {
+        } elseif ($requiredAuthLevel instanceof AuthLevel) {
             $this->requiredAuthLevel = [$requiredAuthLevel];
         } else {
             throw new ApiException('Invalid parameter');

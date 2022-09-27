@@ -12,10 +12,10 @@
 
 namespace App\AuthTypes;
 
-use App\AuthChain\Module\ModuleResult;
+use App\AuthChain\ModuleResult;
 use Illuminate\Http\Request;
 use App\AuthChain\State;
-use App\AuthChain\Module\ModuleInterface;
+use App\AuthChain\ModuleInterface;
 
 class Start extends AbstractType
 {

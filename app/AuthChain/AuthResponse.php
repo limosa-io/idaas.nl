@@ -2,8 +2,8 @@
 
 namespace App\AuthChain;
 
-use App\AuthChain\Module\ModuleList;
-use App\AuthChain\Module\ModuleResult;
+use App\AuthChain\ModuleList;
+use App\AuthChain\ModuleResult;
 
 class AuthResponse implements \JsonSerializable
 {

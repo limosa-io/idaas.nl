@@ -2,12 +2,12 @@
 
 namespace App\AuthChain;
 
-use Illuminate\Contracts\Auth\Authenticatable;
-use App\AuthChain\Events\Authenticated;
-use Illuminate\Http\Request;
-use App\AuthChain\Events\LoggedOut;
-use Illuminate\Support\Facades\Crypt;
+use App\Events\Authenticated;
+use App\Events\LoggedOut;
 use App\Http\Controllers\AuthChain\RememberStorage;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 
 class Session
 {

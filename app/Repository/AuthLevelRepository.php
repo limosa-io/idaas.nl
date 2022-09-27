@@ -3,15 +3,14 @@
 namespace App\Repository;
 
 use App\AuthLevel;
-use Illuminate\Database\Eloquent\Model;
-use App\AuthChain\Exceptions\ApiException;
-use App\AuthChain\AuthLevelInterface;
+use App\Exceptions\ApiException;
 use App\OpenIDProvider;
+use Illuminate\Database\Eloquent\Model;
 
 class AuthLevelRepository
 {
     /**
-     * @return AuthLevelInterface[]
+     * @return AuthLevel[]
      */
     public function all()
     {
@@ -24,7 +23,7 @@ class AuthLevelRepository
     }
 
     /**
-     * @return AuthLevelInterface
+     * @return AuthLevel
      */
     public function get($id)
     {
@@ -33,7 +32,7 @@ class AuthLevelRepository
 
 
     /**
-     * @return AuthLevelInterface
+     * @return AuthLevel
      */
     public function add($level, $type)
     {
@@ -48,9 +47,9 @@ class AuthLevelRepository
     }
 
     /**
-     * @return AuthLevelInterface
+     * @return AuthLevel
      */
-    public function save(AuthLevelInterface $authLevel)
+    public function save(AuthLevel $authLevel)
     {
         if ($authLevel instanceof Model) {
             $authLevel->save();
@@ -62,7 +61,7 @@ class AuthLevelRepository
     /**
      *
      */
-    public function delete(AuthLevelInterface $authLevel)
+    public function delete(AuthLevel $authLevel)
     {
         if ($authLevel instanceof Model) {
             $authLevel->delete();

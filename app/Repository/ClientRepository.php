@@ -3,13 +3,13 @@
 namespace App\Repository;
 
 use App\Client;
-use Illuminate\Http\Request;
-use App\AuthChain\Exceptions\ApiException;
-use App\Scopes\TenantScope;
-use App\Role;
-use App\Group;
+use App\Exceptions\ApiException;
 use App\Exceptions\NoClientException;
+use App\Group;
+use App\Role;
+use App\Scopes\TenantScope;
 use Idaas\Passport\ClientRepository as IdaasClientRepository;
+use Illuminate\Http\Request;
 
 class ClientRepository extends IdaasClientRepository
 {

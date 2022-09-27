@@ -2,12 +2,11 @@
 
 namespace App\Repository;
 
-use App\Link;
-use App\AuthChain\Module\ModuleInterface;
+use App\AuthChain\ModuleInterface;
+use App\AuthChain\Subject;
 use App\AuthTypes\Type;
-use App\AuthChain\Object\Eloquent\UserInterface;
+use App\Link;
 use App\User;
-use App\AuthChain\Object\Eloquent\SubjectInterface;
 
 class LinkRepository
 {
@@ -16,7 +15,7 @@ class LinkRepository
         return User::find($userId);
     }
 
-    public function getUser(SubjectInterface $subject, $moduleExact = false)
+    public function getUser(Subject $subject, $moduleExact = false)
     {
         if ($subject->getUserId() != null) {
             //TODO: Load the user directly. Problem is that the user class is unknown here
@@ -36,7 +35,7 @@ class LinkRepository
         }
     }
 
-    public function add(Type $type, SubjectInterface $subject, UserInterface $user, ?ModuleInterface $module = null)
+    public function add(Type $type, Subject $subject, User $user, ?ModuleInterface $module = null)
     {
         $link = Link::create(
             [

@@ -6,7 +6,7 @@ use App\Model;
 use App\AuthChain\AuthChain;
 use App\Scopes\SystemScope;
 use App\Scopes\TenantTrait;
-use App\AuthChain\Module\Module;
+use App\AuthChain\Module;
 use Illuminate\Support\Str;
 
 class AuthModule extends Module

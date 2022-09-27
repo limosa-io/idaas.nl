@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\AuthChain;
-use App\AuthChain\Module\ChainInterface;
 
 class ChainRepository
 {
@@ -22,7 +21,7 @@ class ChainRepository
         return AuthChain::where(['from' => $from, 'to' => $to])->exists();
     }
 
-    public function add($from, $to, $treePosition)
+    public function add($from, $to, $treePosition): AuthChain
     {
         $authChain = new AuthChain();
         $authChain->from = $from;
@@ -34,10 +33,8 @@ class ChainRepository
         return $authChain;
     }
 
-    public function delete(ChainInterface $chain)
+    public function delete(AuthChain $chain): void
     {
-        if ($chain instanceof AuthChain) {
-            $chain->delete();
-        }
+        $chain->delete();
     }
 }

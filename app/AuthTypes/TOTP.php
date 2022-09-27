@@ -2,10 +2,10 @@
 
 namespace App\AuthTypes;
 
-use Illuminate\Http\Request;
+use App\AuthChain\ModuleInterface;
 use App\AuthChain\State;
-use App\AuthChain\Object\Subject;
-use App\AuthChain\Module\ModuleInterface;
+use App\AuthChain\Subject;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use OTPHP\TOTP as BaseTOTP;
 use ParagonIE\ConstantTime\Base32;

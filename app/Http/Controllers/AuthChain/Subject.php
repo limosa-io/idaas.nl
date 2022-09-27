@@ -9,7 +9,7 @@ namespace App\Http\Controllers\AuthChain;
 use App\Subject as AppSubject;
 use Laravel\Passport\Token;
 
-class Subject extends \App\AuthChain\Object\Subject
+class Subject extends \App\AuthChain\Subject
 {
     public function getApprovedScopes(?string $appId)
     {

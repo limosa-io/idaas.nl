@@ -5,10 +5,10 @@ namespace App\AuthTypes;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\AuthChain\State;
-use App\AuthChain\Module\ModuleInterface;
+use App\AuthChain\ModuleInterface;
 use App\AuthChain\Helper;
 use GuzzleHttp\Exception\RequestException;
-use App\AuthChain\Module\Message;
+use App\AuthChain\Message;
 use App\Repository\SubjectRepository;
 
 class OpenIDConnect extends AbstractType

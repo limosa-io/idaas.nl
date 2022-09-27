@@ -6,8 +6,8 @@ use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Http\Request;
 use App\AuthChain\State;
 use App\AuthChain\Helper;
-use App\AuthChain\Module\ModuleInterface;
-use App\AuthChain\Module\Message;
+use App\AuthChain\ModuleInterface;
+use App\AuthChain\Message;
 
 abstract class Generic extends AbstractType
 {

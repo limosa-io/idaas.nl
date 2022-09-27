@@ -2,19 +2,18 @@
 
 namespace App\AuthChain;
 
-use App\AuthChain\Exceptions\AuthFailedException;
-use App\AuthChain\Module\ModuleList;
-use App\AuthChain\Module\Module;
-use App\AuthChain\Module\ModuleInterface;
-use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Support\Facades\Log;
-use App\AuthChain\Exceptions\DidPromptException;
-use App\AuthChain\Exceptions\PassiveImpossibleException;
-use App\AuthChain\Session;
+use App\AuthChain\Module;
+use App\AuthChain\ModuleInterface;
+use App\AuthChain\ModuleList;
+use App\Exceptions\AuthFailedException;
+use App\Exceptions\DidPromptException;
+use App\Exceptions\PassiveImpossibleException;
 use App\Http\AuthChainCompleteProcessor;
 use App\Http\Controllers\AuthChain\StateStorage;
 use App\Repository\SubjectRepository;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpFoundation\Response;
 
 class Helper
 {

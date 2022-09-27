@@ -2,11 +2,11 @@
 
 namespace App\AuthTypes;
 
-use Illuminate\Http\Request;
+use App\AuthChain\ModuleInterface;
 use App\AuthChain\State;
-use App\AuthChain\Module\ModuleInterface;
-use App\AuthChain\Object\Subject;
+use App\AuthChain\Subject;
 use App\Repository\SubjectRepository;
+use Illuminate\Http\Request;
 
 abstract class AbstractType implements Type
 {

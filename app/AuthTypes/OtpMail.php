@@ -2,17 +2,17 @@
 
 namespace App\AuthTypes;
 
-use Illuminate\Http\Request;
+use App\AuthChain\ModuleInterface;
+use App\AuthChain\ModuleResult;
 use App\AuthChain\State;
-use App\AuthChain\Module\ModuleResult;
-use App\AuthChain\Module\ModuleInterface;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\StandardMail;
-use App\AuthChain\Object\Subject;
+use App\AuthChain\Subject;
 use App\EmailTemplate;
-use App\User;
+use App\Mail\StandardMail;
 use App\Repository\SubjectRepository;
 use App\Repository\UserRepository;
+use App\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use ParagonIE\ConstantTime\Base32;
 
 class OtpMail extends AbstractType

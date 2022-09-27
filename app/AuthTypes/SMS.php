@@ -2,13 +2,11 @@
 
 namespace App\AuthTypes;
 
-use Illuminate\Http\Request;
+use App\AuthChain\ModuleInterface;
 use App\AuthChain\State;
-use App\AuthChain\Exceptions\AuthFailedException;
-use App\AuthChain\Module\Module;
-use App\AuthChain\Module\ModuleResult;
-use App\AuthChain\Module\ModuleInterface;
-use App\AuthChain\Object\Subject;
+use App\AuthChain\Subject;
+use App\Exceptions\AuthFailedException;
+use Illuminate\Http\Request;
 
 class SMS extends AbstractType
 {
@@ -38,7 +36,7 @@ class SMS extends AbstractType
     /**
      * Execute. Returns
      *
-     * @return App\AuthChain\Module\ModuleResult
+     * @return App\AuthChain\ModuleResult
      */
     public function process(Request $request, State $state, ModuleInterface $module)
     {

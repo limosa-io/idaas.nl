@@ -2,27 +2,26 @@
 
 namespace App\AuthTypes;
 
-use Illuminate\Http\Request;
-use App\AuthChain\State;
-use App\AuthChain\Module\ModuleResult;
-use App\AuthChain\Module\ModuleInterface;
-use Illuminate\Support\Facades\Mail;
-use Lcobucci\JWT\Parser;
-use DateTimeImmutable;
-use Lcobucci\JWT\Validation\Constraint\SignedWith;
-use Lcobucci\JWT\Signer\Rsa\Sha256;
-use Lcobucci\JWT\Configuration;
-use Lcobucci\JWT\Signer\Key\InMemory;
-use App\Repository\KeyRepository;
 use App\AuthChain\Helper;
-use App\User;
-use App\Mail\StandardMail;
-use App\AuthChain\Object\Subject;
-use App\Exceptions\TokenExpiredException;
+use App\AuthChain\ModuleInterface;
+use App\AuthChain\ModuleResult;
+use App\AuthChain\State;
+use App\AuthChain\Subject;
 use App\EmailTemplate;
-use App\AuthChain\Exceptions\AuthFailedException;
+use App\Exceptions\AuthFailedException;
+use App\Exceptions\TokenExpiredException;
+use App\Mail\StandardMail;
+use App\Repository\KeyRepository;
 use App\Repository\SubjectRepository;
 use App\Repository\UserRepository;
+use App\User;
+use DateTimeImmutable;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\Signer\Key\InMemory;
+use Lcobucci\JWT\Signer\Rsa\Sha256;
+use Lcobucci\JWT\Validation\Constraint\SignedWith;
 
 class Passwordless extends AbstractType
 {

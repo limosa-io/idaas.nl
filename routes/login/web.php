@@ -1,5 +1,6 @@
 <?php
 
+use App\Providers\AuthRouteProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -39,7 +40,7 @@ Route::group(['domain' => '{tenant}.' . config('app.domain')], function () {
 
     Route::get('/oidc/callback', '\App\AuthTypes\OpenIDConnect@processCallback')->name('ice.login.openid');
 
-    \App\AuthChain\Providers\RouteProvider::routesWeb();
+    AuthRouteProvider::routesWeb();
 
     \ArieTimmerman\Laravel\SAML\RouteProvider::routes();
 

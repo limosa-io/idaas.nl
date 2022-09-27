@@ -14,12 +14,12 @@
 
 namespace App\AuthTypes;
 
-use App\AuthChain\Module\ModuleResult;
-use Illuminate\Http\Request;
+use App\AuthChain\ModuleInterface;
+use App\AuthChain\ModuleResult;
 use App\AuthChain\State;
-use App\AuthChain\Module\ModuleInterface;
-use App\AuthChain\Object\Subject;
+use App\AuthChain\Subject;
 use App\Repository\UserRepository;
+use Illuminate\Http\Request;
 
 class Password extends AbstractType
 {

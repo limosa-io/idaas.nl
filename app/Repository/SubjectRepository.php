@@ -5,10 +5,9 @@ namespace App\Repository;
 use App\Scopes\TenantScope;
 use App\Http\Controllers\AuthChain\Subject;
 use App\Subject as EloquentSubject;
-use App\AuthChain\Module\ModuleInterface;
+use App\AuthChain\ModuleInterface;
 use App\AuthTypes\Type;
-use App\AuthChain\Object\Eloquent\SubjectInterface;
-use App\AuthChain\Module\ModuleResultList;
+use App\AuthChain\ModuleResultList;
 use App\AuthChain\State;
 
 class SubjectRepository
@@ -29,7 +28,7 @@ class SubjectRepository
      *
      * @inherited
      */
-    public function save(SubjectInterface $subject, State $state)
+    public function save(Subject $subject, State $state)
     {
 
         $eloquentSubject = ($this->getEloquentSubjectClass())::firstOrCreate(

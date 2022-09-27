@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\AuthChain\Exceptions\AuthFailedException;
+use App\Exceptions\AuthFailedException;
 use App\Repository\SubjectRepository;
 use Illuminate\Contracts\Auth\Authenticatable;
 
