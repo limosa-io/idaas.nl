@@ -6,15 +6,16 @@
  * It has an identifier, a type identifier, a set of attributes, and optionally a user id.
  */
 
-namespace App\AuthChain\Object;
+namespace App\AuthChain;
 
 use App\AuthChain\Module\ModuleInterface;
-use App\AuthTypes\Type;
-use App\AuthChain\Object\Eloquent\SubjectInterface;
-use Illuminate\Support\Str;
 use App\AuthChain\Module\ModuleResultList;
+use App\AuthChain\Object\App;
+use App\AuthChain\Object\Eloquent\SubjectInterface;
+use App\AuthTypes\Type;
 use App\Repository\LinkRepository;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class Subject implements \JsonSerializable
 {

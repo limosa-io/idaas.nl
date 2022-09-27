@@ -7,7 +7,7 @@
 namespace App\Http\Controllers\AuthChain;
 
 use App\AuthChain\State;
-use App\AuthChain\Object\Subject;
+use App\AuthChain\Subject;
 use App\Client;
 
 class PolicyDecisionPoint

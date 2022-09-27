@@ -9,7 +9,6 @@ namespace App\AuthChain;
 use App\AuthChain\Module\ModuleInterface;
 use App\AuthChain\Module\ModuleResult;
 use App\AuthChain\Module\ModuleResultList;
-use App\AuthChain\Object\Subject;
 use App\AuthLevel;
 use App\Exceptions\ApiException;
 use App\Repository\AuthLevelRepository;

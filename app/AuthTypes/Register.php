@@ -2,24 +2,14 @@
 
 namespace App\AuthTypes;
 
-use Illuminate\Support\Facades\Log;
-use Illuminate\Http\Request;
-use App\AuthChain\State;
-use App\AuthChain\Module\ModuleResult;
-use App\AuthChain\Module\Module;
 use App\AuthChain\Module\ModuleInterface;
-use App\OpenIDProvider;
-use Lcobucci\JWT\Builder;
-use Lcobucci\JWT\Parser;
-use League\OAuth2\Server\CryptKey;
-use Lcobucci\JWT\Signer\Rsa\Sha256;
-use Lcobucci\JWT\Signer\Key;
-use App\Repository\KeyRepository;
-use App\AuthChain\Helper;
-use App\User;
-use App\AuthChain\Object\Subject;
-use Illuminate\Support\Facades\Crypt;
+use App\AuthChain\Module\ModuleResult;
+use App\AuthChain\State;
+use App\AuthChain\Subject;
 use App\TenantSetting;
+use App\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 
 class Register extends AbstractType
 {

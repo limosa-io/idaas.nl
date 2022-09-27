@@ -2,7 +2,7 @@
 
 namespace App\AuthTypes;
 
-use App\AuthChain\Object\Subject;
+use App\AuthChain\Subject;
 use Laravel\Socialite\Contracts\User;
 
 class SocialSubject extends Subject

@@ -2,10 +2,10 @@
 
 namespace App\Repository;
 
-use App\AuthChain\Object\Subject;
-use App\Link;
 use App\AuthChain\Module\ModuleInterface;
+use App\AuthChain\Subject;
 use App\AuthTypes\Type;
+use App\Link;
 use App\User;
 
 class LinkRepository

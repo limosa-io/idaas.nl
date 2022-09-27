@@ -2,11 +2,11 @@
 
 namespace App\Repository;
 
-use App\User;
-use App\AuthChain\Object\Subject;
-use ArieTimmerman\Laravel\SCIMServer\Http\Controllers\ResourceController;
-use App\CloudFunctionHelper;
+use App\AuthChain\Subject;
 use App\CloudFunction;
+use App\CloudFunctionHelper;
+use App\User;
+use ArieTimmerman\Laravel\SCIMServer\Http\Controllers\ResourceController;
 use ArieTimmerman\Laravel\SCIMServer\ResourceType;
 
 class UserRepository

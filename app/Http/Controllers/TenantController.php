@@ -6,11 +6,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Tenant;
 use App\Console\Commands\NewTenant;
-use Illuminate\Support\Facades\Auth;
 use App\Role;
+use App\Tenant;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TenantController extends Controller
 {
@@ -45,7 +45,7 @@ class TenantController extends Controller
 
     public function destroy($id)
     {
-        /** @var \App\AuthChain\Object\Subject */
+        /** @var \App\AuthChain\Subject */
         $subject = Auth::user();
         if (Role::whereIn('id', $subject->getRoles())->pluck('tenant_id')->contains($id)) {
             return Tenant::destroy($id);

@@ -3,11 +3,11 @@
 namespace App\AuthChain\Module;
 
 use App\AuthChain\AuthLevel;
-use Symfony\Component\HttpFoundation\Cookie;
-use Illuminate\Http\Response;
-use App\AuthChain\Object\Subject;
+use App\AuthChain\Subject;
 use App\Repository\AuthLevelRepository;
 use App\Repository\ModuleRepository;
+use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Cookie;
 
 class ModuleResult implements \JsonSerializable
 {
@@ -102,7 +102,7 @@ class ModuleResult implements \JsonSerializable
     /**
      * Get the value of subject
      *
-     * @return \App\AuthChain\Object\Subject
+     * @return \App\AuthChain\Subject
      */
     public function getSubject()
     {

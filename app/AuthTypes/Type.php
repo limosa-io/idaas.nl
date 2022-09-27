@@ -6,12 +6,11 @@
 
 namespace App\AuthTypes;
 
-use Illuminate\Http\Request;
-use App\AuthChain\State;
-use App\AuthChain\Module\Module;
 use App\AuthChain\Module\ModuleInterface;
 use App\AuthChain\Module\ModuleResult;
-use App\AuthChain\Object\Subject;
+use App\AuthChain\State;
+use App\AuthChain\Subject;
+use Illuminate\Http\Request;
 
 interface Type
 {

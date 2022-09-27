@@ -7,8 +7,8 @@
 namespace App\AuthChain\Module;
 
 use App\AuthChain\AuthChain;
-use App\AuthChain\Object\Subject;
 use App\AuthChain\State;
+use App\AuthChain\Subject;
 use App\AuthLevel;
 use App\AuthTypes\NullType;
 use App\AuthTypes\Type;
