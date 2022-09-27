@@ -5,9 +5,9 @@ namespace App\Repository;
 use App\Scopes\TenantScope;
 use App\Http\Controllers\AuthChain\Subject;
 use App\Subject as EloquentSubject;
-use App\AuthChain\Module\ModuleInterface;
+use App\AuthChain\ModuleInterface;
 use App\AuthTypes\Type;
-use App\AuthChain\Module\ModuleResultList;
+use App\AuthChain\ModuleResultList;
 use App\AuthChain\State;
 
 class SubjectRepository

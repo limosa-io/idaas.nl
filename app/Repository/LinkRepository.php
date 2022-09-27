@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\AuthChain\Module\ModuleInterface;
+use App\AuthChain\ModuleInterface;
 use App\AuthChain\Subject;
 use App\AuthTypes\Type;
 use App\Link;

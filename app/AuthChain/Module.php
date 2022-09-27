@@ -4,7 +4,7 @@
  * A module is a configured type.
  */
 
-namespace App\AuthChain\Module;
+namespace App\AuthChain;
 
 use App\AuthChain\AuthChain;
 use App\AuthChain\State;
@@ -91,7 +91,7 @@ class Module extends Model implements ModuleInterface, \JsonSerializable
     {
 
         /**
-         * @var \App\AuthChain\Module\ModuleResult
+         * @var \App\AuthChain\ModuleResult
          */
         $result = $this->getTypeObject()->process($request, $state, $this);
 
@@ -177,7 +177,7 @@ class Module extends Model implements ModuleInterface, \JsonSerializable
     /**
      * Ensures the default authentication levels are set, as well as a reference to the module
      *
-     * @return \App\AuthChain\Module\ModuleResult
+     * @return \App\AuthChain\ModuleResult
      */
     public function baseResult()
     {

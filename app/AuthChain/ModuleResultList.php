@@ -1,6 +1,6 @@
 <?php
 
-namespace App\AuthChain\Module;
+namespace App\AuthChain;
 
 
 class ModuleResultList implements \JsonSerializable, \ArrayAccess

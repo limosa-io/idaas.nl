@@ -9,12 +9,12 @@
 namespace App\Http\Controllers\AuthChain;
 
 use App\AuthChain\State;
-use App\AuthChain\Module\ModuleResult;
+use App\AuthChain\ModuleResult;
 use App\ModuleResult as EloquentModuleResult;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
-use App\AuthChain\Module\ModuleResultList;
+use App\AuthChain\ModuleResultList;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Str;
 use Carbon\Carbon;

@@ -2,8 +2,8 @@
 
 namespace App\Repository;
 
-use App\AuthChain\Module\Module;
-use App\AuthChain\Module\ModuleInterface;
+use App\AuthChain\Module;
+use App\AuthChain\ModuleInterface;
 use App\AuthLevel;
 use App\AuthModule;
 use App\AuthTypes\Consent;

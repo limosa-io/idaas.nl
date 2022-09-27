@@ -8,8 +8,8 @@
 
 namespace App\AuthChain;
 
-use App\AuthChain\Module\ModuleInterface;
-use App\AuthChain\Module\ModuleResultList;
+use App\AuthChain\ModuleInterface;
+use App\AuthChain\ModuleResultList;
 use App\AuthChain\Object\App;
 use App\AuthChain\Object\Eloquent\SubjectInterface;
 use App\AuthTypes\Type;
@@ -82,7 +82,7 @@ class Subject implements \JsonSerializable
         $hasSubject = false;
 
         /**
-         * @var App\AuthChain\Module\ModuleResult
+         * @var App\AuthChain\ModuleResult
          */
         $firstSubject = null;
 

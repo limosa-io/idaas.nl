@@ -1,6 +1,6 @@
 <?php
 
-namespace App\AuthChain\Module;
+namespace App\AuthChain;
 
 use App\AuthChain\AuthLevel;
 use App\AuthChain\Subject;
@@ -26,7 +26,7 @@ class ModuleResult implements \JsonSerializable
     protected $authenticationTime;
 
     /**
-     * @var App\AuthChain\Module\Module
+     * @var App\AuthChain\Module
      */
     protected $module;
 

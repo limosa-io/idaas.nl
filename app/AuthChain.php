@@ -15,7 +15,7 @@ class AuthChain extends Model
     }
 
     /**
-     * @return \App\AuthChain\Module\Module
+     * @return \App\AuthChain\Module
      */
     public function getFrom()
     {
@@ -23,7 +23,7 @@ class AuthChain extends Model
     }
 
     /**
-     * @return \App\AuthChain\Module\Module
+     * @return \App\AuthChain\Module
      */
     public function getTo()
     {

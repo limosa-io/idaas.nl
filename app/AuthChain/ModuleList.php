@@ -4,7 +4,7 @@
  * A module is a configured type.
  */
 
-namespace App\AuthChain\Module;
+namespace App\AuthChain;
 
 use Illuminate\Http\Request;
 use App\AuthTypes\Type;
@@ -70,7 +70,7 @@ class ModuleList implements \JsonSerializable, \ArrayAccess, \Countable
          *
          */
         foreach ($this->modules as $module) {
-            /* @var $module \App\AuthChain\Module\ModuleInterface */
+            /* @var $module \App\AuthChain\ModuleInterface */
 
             if ($module->enabled && !$module->skippable) {
                 Log::debug('Module: ' . $module->getIdentifier() . ' is not skippable');

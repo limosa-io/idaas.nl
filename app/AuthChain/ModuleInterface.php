@@ -1,6 +1,6 @@
 <?php
 
-namespace App\AuthChain\Module;
+namespace App\AuthChain;
 
 use Illuminate\Http\Request;
 use App\AuthTypes\Type;

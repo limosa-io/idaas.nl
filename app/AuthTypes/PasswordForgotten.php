@@ -17,8 +17,8 @@ Requires
 namespace App\AuthTypes;
 
 use App\AuthChain\Helper;
-use App\AuthChain\Module\ModuleInterface;
-use App\AuthChain\Module\ModuleResult;
+use App\AuthChain\ModuleInterface;
+use App\AuthChain\ModuleResult;
 use App\AuthChain\State;
 use App\AuthChain\Subject;
 use App\EmailTemplate;

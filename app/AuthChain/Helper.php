@@ -2,9 +2,9 @@
 
 namespace App\AuthChain;
 
-use App\AuthChain\Module\Module;
-use App\AuthChain\Module\ModuleInterface;
-use App\AuthChain\Module\ModuleList;
+use App\AuthChain\Module;
+use App\AuthChain\ModuleInterface;
+use App\AuthChain\ModuleList;
 use App\Exceptions\AuthFailedException;
 use App\Exceptions\DidPromptException;
 use App\Exceptions\PassiveImpossibleException;

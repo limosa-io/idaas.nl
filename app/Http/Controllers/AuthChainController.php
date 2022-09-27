@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\AuthChain\Helper;
-use App\AuthChain\Module\ModuleInterface;
+use App\AuthChain\ModuleInterface;
 use App\AuthChain\State;
 use App\AuthModule;
 use App\Exceptions\AuthFailedException;

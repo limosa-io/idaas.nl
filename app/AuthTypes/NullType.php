@@ -4,7 +4,7 @@ namespace App\AuthTypes;
 
 use Illuminate\Http\Request;
 use App\AuthChain\State;
-use App\AuthChain\Module\ModuleInterface;
+use App\AuthChain\ModuleInterface;
 
 class NullType extends AbstractType
 {
