@@ -29,7 +29,7 @@ return [
     'env' => env('APP_ENV', 'production'),
 
     /*
-     * Group required by an user in order to allow creating groups 
+     * Group required by an user in order to allow creating groups
      */
 
     'tenant_control_group' => env('TENANT_CONTROL_GROUP'),
@@ -176,7 +176,7 @@ return [
 
         // TODO: might not be needed
         App\Providers\PassportServiceProvider::class,
-        
+
         Illuminate\View\ViewServiceProvider::class,
 
         /*
@@ -190,7 +190,7 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        App\AuthChain\Providers\ServiceProvider::class
+        App\Providers\AuthChainServiceProvider::class
 
     ],
 

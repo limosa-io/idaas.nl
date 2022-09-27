@@ -4,7 +4,7 @@
  * Laravel service provider for registering the routes and publishing the configuration.
  */
 
-namespace App\AuthChain\Providers;
+namespace App\Providers;
 
 use App\AuthChain\AuthChain;
 use App\AuthChain\Helper;
@@ -13,7 +13,7 @@ use App\Exceptions\NoStateException;
 use App\Repository\ModuleRepository;
 use App\Session\OIDCSession;
 
-class ServiceProvider extends \Illuminate\Support\ServiceProvider
+class AuthChainServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     public function boot(\Illuminate\Routing\Router $router)
     {
