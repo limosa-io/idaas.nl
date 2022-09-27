@@ -6,7 +6,6 @@ use App\AuthChain\Object\Subject;
 use App\Link;
 use App\AuthChain\Module\ModuleInterface;
 use App\AuthTypes\Type;
-use App\AuthChain\Object\Eloquent\UserInterface;
 use App\User;
 
 class LinkRepository
@@ -36,7 +35,7 @@ class LinkRepository
         }
     }
 
-    public function add(Type $type, Subject $subject, UserInterface $user, ?ModuleInterface $module = null)
+    public function add(Type $type, Subject $subject, User $user, ?ModuleInterface $module = null)
     {
         $link = Link::create(
             [

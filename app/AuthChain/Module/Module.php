@@ -7,7 +7,6 @@
 namespace App\AuthChain\Module;
 
 use App\AuthChain\AuthChain;
-use App\AuthChain\Object\Eloquent\UserInterface;
 use App\AuthChain\Object\Subject;
 use App\AuthChain\State;
 use App\AuthLevel;
@@ -18,6 +17,7 @@ use App\Exceptions\AuthFailedException;
 use App\Http\Controllers\AuthChain\PolicyDecisionPoint;
 use App\Repository\LinkRepository;
 use App\Repository\UserRepository;
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
@@ -141,7 +141,7 @@ class Module extends Model implements ModuleInterface, \JsonSerializable
      * Find a (stored) user for the retrieved subject.
      * If provided, the fallback subject is assumed to be the user if no other user is found.
      *
-     * @return UserInterface
+     * @return User
      */
     public function findNewMatchingUser(Subject $subject, Subject $fallback = null)
     {

@@ -4,14 +4,13 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use App\AuthChain\Object\Eloquent\UserInterface;
 use Illuminate\Support\Str;
 use App\Scopes\TenantTrait;
 use App\Stats\StatableInterface;
 use App\Stats\StatableTrait;
 use Laravel\Passport\HasApiTokens;
 
-class User extends Authenticatable implements UserInterface, StatableInterface
+class User extends Authenticatable implements StatableInterface
 {
     use Notifiable;
     use HasApiTokens;
