@@ -4,7 +4,6 @@ namespace App;
 
 use App\AuthChain\Helper;
 use App\AuthChain\State;
-use App\AuthChain\AuthLevel;
 use App\AuthChain\UIServer;
 use App\AuthChain\Session;
 use App\Http\Controllers\HomeController;

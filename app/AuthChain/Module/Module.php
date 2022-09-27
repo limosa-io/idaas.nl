@@ -8,7 +8,6 @@ namespace App\AuthChain\Module;
 
 use App\AuthChain\AuthChain;
 use App\AuthTypes\Type;
-use App\AuthChain\AuthLevel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use App\AuthChain\State;
@@ -16,6 +15,7 @@ use App\AuthChain\Object\Eloquent\UserInterface;
 use App\AuthChain\Exceptions\AuthFailedException;
 use App\AuthChain\Exceptions\ApiException;
 use App\AuthChain\Object\Eloquent\SubjectInterface;
+use App\AuthLevel;
 use App\AuthTypes\NullType;
 use App\Http\Controllers\AuthChain\PolicyDecisionPoint;
 use App\Repository\LinkRepository;
@@ -349,7 +349,10 @@ class Module extends Model implements ModuleInterface, \JsonSerializable
 
         $levels = [];
         foreach (($config['levels'] ?? []) as $type => $level) {
-            $levels[] = new AuthLevel($type, $level);
+            $levels[] = new AuthLevel([
+                'type' => $type,
+                'level' => $level
+            ]);
         }
 
         $m->setLevels($levels);

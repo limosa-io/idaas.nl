@@ -5,9 +5,6 @@ namespace App\AuthChain\Module;
 use Illuminate\Http\Request;
 use App\AuthTypes\Type;
 use App\AuthChain\State;
-use App\AuthChain\AuthLevel;
-use Illuminate\Foundation\Console\PackageDiscoverCommand;
-use App\AuthChain\Exceptions\AuthFailedException;
 
 interface ModuleInterface
 {
@@ -21,12 +18,12 @@ interface ModuleInterface
     public function init(Request $request, State $state);
 
     /**
-     * @return AuthLevel[]
+     * @return \App\AuthLevel[]
      */
     public function getLevels();
 
     /**
-     * @param $levels AuthLevel[]
+     * @param $levels \App\AuthLevel[]
      */
     public function setLevels(array $levels);
 

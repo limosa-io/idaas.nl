@@ -15,6 +15,7 @@ use App\AuthChain\Module\ModuleInterface;
 use App\AuthChain\Object\Subject;
 use App\AuthChain\AuthLevelInterface;
 use App\AuthChain\Exceptions\ApiException;
+use App\AuthLevel;
 use App\Repository\AuthLevelRepository;
 use App\Repository\SubjectRepository;
 
@@ -286,7 +287,10 @@ class State implements \JsonSerializable, Jsonable
                     $levels[] = $l;
                 }
 
-                $levels[] = new AuthLevel(null, $r->getModule()->getIdentifier());
+                $levels[] = new AuthLevel([
+                    'type' => null,
+                    'level' => $r->getModule()->getIdentifier()
+                ]);
             }
         }
 

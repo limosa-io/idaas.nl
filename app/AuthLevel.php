@@ -18,6 +18,9 @@ class AuthLevel extends Model implements AuthLevelInterface
 
     protected $hidden = ['provider_id', 'type', 'tenant_id'];
 
+    public const TYPE_OIDC = 'oidc';
+    public const TYPE_SAML = 'saml';
+
     /**
      * Returns a string reporesentation of the level
      */
@@ -104,7 +107,7 @@ class AuthLevel extends Model implements AuthLevelInterface
 
     public function getIdentifier()
     {
-        return $this->id;
+        return $this->type . ':' . $this->value;
     }
 
     public function modules()
@@ -120,5 +123,59 @@ class AuthLevel extends Model implements AuthLevelInterface
     public function __toString()
     {
         return $this->id;
+    }
+
+    public static function oidc($level)
+    {
+        if ($level == null || (is_array($level) && count($level) == 0)) {
+            return null;
+        }
+
+        return new self([
+            'type' => self::TYPE_OIDC,
+            'level' => $level
+        ]);
+    }
+
+    public static function oidcAll(?array $level)
+    {
+        if ($level == null || count($level) == 0) {
+            return null;
+        }
+
+        $result = [];
+
+        foreach ($level as $l) {
+            if (($r = self::oidc($l)) != null) {
+                $result[] = $r;
+            }
+        }
+
+        return $result;
+    }
+
+    public static function samlAll(?array $level)
+    {
+        if ($level == null || count($level) == 0) {
+            return null;
+        }
+
+        $result = [];
+
+        foreach ($level as $l) {
+            if (($r = self::saml($l)) != null) {
+                $result[] = $r;
+            }
+        }
+
+        return $result;
+    }
+
+    public static function saml($level)
+    {
+        return new self([
+            'type' => self::TYPE_SAML,
+            'level' => $level
+        ]);
     }
 }
