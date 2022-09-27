@@ -1,8 +1,7 @@
 <?php
 
-namespace App\AuthChain\Exceptions;
+namespace App\Exceptions;
 
-use App\AuthChain\Helper;
 use Exception;
 
 class NoStateException extends Exception

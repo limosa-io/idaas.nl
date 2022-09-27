@@ -2,7 +2,7 @@
 
 namespace App\AuthChain\Object;
 
-use App\AuthChain\Exceptions\AuthFailedException;
+use App\Exceptions\AuthFailedException;
 
 trait AuthenticableTrait
 {

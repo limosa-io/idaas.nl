@@ -6,12 +6,12 @@
 
 namespace App\AuthChain\Providers;
 
-use App\Session\OIDCSession;
-use App\AuthChain\Exceptions\AuthFailedException;
-use App\AuthChain\Helper;
 use App\AuthChain\AuthChain;
-use App\AuthChain\Exceptions\NoStateException;
+use App\AuthChain\Helper;
+use App\Exceptions\AuthFailedException;
+use App\Exceptions\NoStateException;
 use App\Repository\ModuleRepository;
+use App\Session\OIDCSession;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {

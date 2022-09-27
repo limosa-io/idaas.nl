@@ -6,18 +6,17 @@
 
 namespace App\AuthChain;
 
-use Illuminate\Contracts\Support\Jsonable;
-use Illuminate\Support\Str;
-use App\AuthChain\Module\ModuleResultList;
-use App\AuthChain\Module\ModuleResult;
-use Illuminate\Http\Request;
 use App\AuthChain\Module\ModuleInterface;
+use App\AuthChain\Module\ModuleResult;
+use App\AuthChain\Module\ModuleResultList;
 use App\AuthChain\Object\Subject;
-use App\AuthChain\AuthLevelInterface;
-use App\AuthChain\Exceptions\ApiException;
 use App\AuthLevel;
+use App\Exceptions\ApiException;
 use App\Repository\AuthLevelRepository;
 use App\Repository\SubjectRepository;
+use Illuminate\Contracts\Support\Jsonable;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class State implements \JsonSerializable, Jsonable
 {

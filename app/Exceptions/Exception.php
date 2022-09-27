@@ -1,6 +1,6 @@
 <?php
 
-namespace App\AuthChain\Exceptions;
+namespace App\Exceptions;
 
 interface Exception
 {

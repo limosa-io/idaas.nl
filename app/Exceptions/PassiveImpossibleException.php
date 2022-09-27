@@ -1,8 +1,6 @@
 <?php
 
-namespace App\AuthChain\Exceptions;
-
-use App\AuthChain\Helper;
+namespace App\Exceptions;
 
 class PassiveImpossibleException extends AuthFailedException
 {

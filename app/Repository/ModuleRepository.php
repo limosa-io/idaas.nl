@@ -2,13 +2,13 @@
 
 namespace App\Repository;
 
-use App\AuthModule;
-use App\AuthChain\Exceptions\ApiException;
-use App\AuthTypes\Type;
-use App\AuthChain\Module\ModuleInterface;
 use App\AuthChain\Module\Module;
-use App\AuthTypes\Consent;
+use App\AuthChain\Module\ModuleInterface;
 use App\AuthLevel;
+use App\AuthModule;
+use App\AuthTypes\Consent;
+use App\AuthTypes\Type;
+use App\Exceptions\ApiException;
 use App\OpenIDProvider;
 
 class ModuleRepository

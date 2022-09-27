@@ -2,13 +2,11 @@
 
 namespace App\AuthTypes;
 
-use Illuminate\Http\Request;
-use App\AuthChain\State;
-use App\AuthChain\Exceptions\AuthFailedException;
-use App\AuthChain\Module\Module;
-use App\AuthChain\Module\ModuleResult;
 use App\AuthChain\Module\ModuleInterface;
 use App\AuthChain\Object\Subject;
+use App\AuthChain\State;
+use App\Exceptions\AuthFailedException;
+use Illuminate\Http\Request;
 
 class SMS extends AbstractType
 {

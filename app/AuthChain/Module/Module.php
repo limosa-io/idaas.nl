@@ -7,19 +7,19 @@
 namespace App\AuthChain\Module;
 
 use App\AuthChain\AuthChain;
-use App\AuthTypes\Type;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
-use App\AuthChain\State;
-use App\AuthChain\Object\Eloquent\UserInterface;
-use App\AuthChain\Exceptions\AuthFailedException;
-use App\AuthChain\Exceptions\ApiException;
 use App\AuthChain\Object\Eloquent\SubjectInterface;
+use App\AuthChain\Object\Eloquent\UserInterface;
+use App\AuthChain\State;
 use App\AuthLevel;
 use App\AuthTypes\NullType;
+use App\AuthTypes\Type;
+use App\Exceptions\ApiException;
+use App\Exceptions\AuthFailedException;
 use App\Http\Controllers\AuthChain\PolicyDecisionPoint;
 use App\Repository\LinkRepository;
 use App\Repository\UserRepository;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 
 class Module extends Model implements ModuleInterface, \JsonSerializable
 {

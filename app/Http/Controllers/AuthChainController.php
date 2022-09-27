@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\AuthChain\Helper;
 use App\AuthChain\Module\ModuleInterface;
 use App\AuthChain\State;
-use App\AuthChain\Exceptions\AuthFailedException;
-use App\AuthChain\Helper;
 use App\AuthModule;
+use App\Exceptions\AuthFailedException;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class AuthChainController extends Controller

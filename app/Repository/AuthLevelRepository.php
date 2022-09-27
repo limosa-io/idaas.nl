@@ -2,11 +2,11 @@
 
 namespace App\Repository;
 
-use App\AuthLevel;
-use Illuminate\Database\Eloquent\Model;
-use App\AuthChain\Exceptions\ApiException;
 use App\AuthChain\AuthLevelInterface;
+use App\AuthLevel;
+use App\Exceptions\ApiException;
 use App\OpenIDProvider;
+use Illuminate\Database\Eloquent\Model;
 
 class AuthLevelRepository
 {
