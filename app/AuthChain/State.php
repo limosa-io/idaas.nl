@@ -456,7 +456,7 @@ class State implements \JsonSerializable, Jsonable
     {
         if ($requiredAuthLevel == null || is_array($requiredAuthLevel)) {
             $this->requiredAuthLevel = $requiredAuthLevel;
-        } elseif ($requiredAuthLevel instanceof AuthLevelInterface) {
+        } elseif ($requiredAuthLevel instanceof AuthLevel) {
             $this->requiredAuthLevel = [$requiredAuthLevel];
         } else {
             throw new ApiException('Invalid parameter');

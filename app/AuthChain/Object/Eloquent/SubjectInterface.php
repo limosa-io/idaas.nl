@@ -2,8 +2,6 @@
 
 namespace App\AuthChain\Object\Eloquent;
 
-use Illuminate\Contracts\Auth\Authenticatable;
-
 interface SubjectInterface
 {
     public function toUserInfo();

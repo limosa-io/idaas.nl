@@ -3,11 +3,8 @@
 namespace App;
 
 use App\Model;
-use Illuminate\Contracts\Auth\Authenticatable;
-use App\AuthChain\AuthLevelInterface;
-use App\Scopes\TenantTrait;
 
-class AuthLevel extends Model implements AuthLevelInterface
+class AuthLevel extends Model
 {
     /**
      * The database table used by the model.
@@ -83,7 +80,7 @@ class AuthLevel extends Model implements AuthLevelInterface
         ];
     }
 
-    public function equals(?AuthLevelInterface $authLevel): bool
+    public function equals(?AuthLevel $authLevel): bool
     {
         if ($authLevel == null) {
             return false;
@@ -92,7 +89,7 @@ class AuthLevel extends Model implements AuthLevelInterface
         return $this->getType() == $authLevel->getType() && $this->getLevel() == $authLevel->getLevel();
     }
 
-    public function compare(?AuthLevelInterface $authLevel)
+    public function compare(?AuthLevel $authLevel)
     {
         $result = -1;
 

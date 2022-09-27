@@ -17,13 +17,13 @@ Requires
 
 namespace App\AuthTypes;
 
+use DateTime;
 use Illuminate\Http\Request;
 use App\AuthChain\State;
 use App\AuthChain\Module\ModuleResult;
 use App\AuthChain\Module\ModuleInterface;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer\Key\InMemory;
@@ -44,7 +44,7 @@ class Activation extends AbstractType
     /**
      * This module can work as a first-factor, or as a second-factor in case the subject has a mail address
      */
-    public function isEnabled(?Subject $subject)
+    public function isEnabled(?Subject $subject): bool
     {
         return $subject == null || $subject->getEmail('email') != null;
     }
@@ -54,7 +54,7 @@ class Activation extends AbstractType
         return null;
     }
 
-    public function getDefaultName()
+    public function getDefaultName(): string
     {
         return "Activation";
     }
@@ -221,8 +221,8 @@ class Activation extends AbstractType
             ->withHeader('sub', $identifier)
             ->permittedFor(url('/'))
             // TODO: make expiration time configurable
-            ->expiresAt(\DateTimeImmutable::createFromMutable((new \DateTime('+7200 seconds'))))
-            ->issuedAt(new \DateTimeImmutable())
+            ->expiresAt(DateTimeImmutable::createFromMutable((new DateTime('+7200 seconds'))))
+            ->issuedAt(new DateTimeImmutable())
             ->withClaim('state', (string) $state);
 
         return $token->getToken($config->signer(), $config->signingKey());
