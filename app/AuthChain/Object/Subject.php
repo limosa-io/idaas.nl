@@ -16,7 +16,7 @@ use App\AuthChain\Module\ModuleResultList;
 use App\Repository\LinkRepository;
 use Illuminate\Support\Facades\Log;
 
-class Subject implements \JsonSerializable, SubjectInterface
+class Subject implements \JsonSerializable
 {
     public const ATTRIBUTE_EMAIL = 'email';
     public const ATTRIBUTE_MOBILE = 'mobile';

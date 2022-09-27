@@ -5,7 +5,6 @@ namespace App\AuthChain\Module;
 use App\AuthChain\AuthLevel;
 use Symfony\Component\HttpFoundation\Cookie;
 use Illuminate\Http\Response;
-use App\AuthChain\Object\Eloquent\SubjectInterface;
 use App\AuthChain\Object\Subject;
 use App\Repository\AuthLevelRepository;
 use App\Repository\ModuleRepository;
@@ -13,7 +12,7 @@ use App\Repository\ModuleRepository;
 class ModuleResult implements \JsonSerializable
 {
     /**
-     * @var App\AuthChain\Object\SubjectInterface
+     * @var App\AuthChain\Object\Subject
      */
     protected $subject;
 
@@ -95,7 +94,7 @@ class ModuleResult implements \JsonSerializable
     /**
      * @return self
      */
-    public static function withSubject(SubjectInterface $subject)
+    public static function withSubject(Subject $subject)
     {
         return (new self())->setSubject($subject);
     }
@@ -103,7 +102,7 @@ class ModuleResult implements \JsonSerializable
     /**
      * Get the value of subject
      *
-     * @return \App\AuthChain\Object\Eloquent\SubjectInterface
+     * @return \App\AuthChain\Object\Subject
      */
     public function getSubject()
     {
@@ -115,7 +114,7 @@ class ModuleResult implements \JsonSerializable
      *
      * @return self
      */
-    public function setSubject(?SubjectInterface $subject)
+    public function setSubject(?Subject $subject)
     {
         $this->subject = $subject;
 

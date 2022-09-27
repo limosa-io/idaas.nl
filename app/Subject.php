@@ -7,7 +7,6 @@ use App\Repository\SubjectRepository;
 use App\Scopes\TenantTrait;
 use App\Stats\StatableInterface;
 use App\Stats\StatableTrait;
-use App\AuthChain\Object\Eloquent\Subject as EloquentSubject;
 use Illuminate\Support\Str;
 use Idaas\OpenID\Entities\ClaimEntityInterface;
 use Illuminate\Contracts\Auth\Authenticatable;

@@ -7,8 +7,8 @@
 namespace App\AuthChain\Module;
 
 use App\AuthChain\AuthChain;
-use App\AuthChain\Object\Eloquent\SubjectInterface;
 use App\AuthChain\Object\Eloquent\UserInterface;
+use App\AuthChain\Object\Subject;
 use App\AuthChain\State;
 use App\AuthLevel;
 use App\AuthTypes\NullType;
@@ -143,7 +143,7 @@ class Module extends Model implements ModuleInterface, \JsonSerializable
      *
      * @return UserInterface
      */
-    public function findNewMatchingUser(SubjectInterface $subject, SubjectInterface $fallback = null)
+    public function findNewMatchingUser(Subject $subject, Subject $fallback = null)
     {
         //TODO: introduce  some kind of correlation logic
         $user = null;
