@@ -1,14 +1,10 @@
 <?php
 
-Route::group(['domain'=>'{tenant}.' . config('app.domain')], function ()
-{
-    
-    \App\AuthChain\Providers\RouteProvider::routesApi();
+use App\Providers\AuthRouteProvider;
+use Illuminate\Support\Facades\Route;
 
-
-    Route::get('/language/{locale}','LanguageController@get');
-
-    Route::get('/uiSettings','TenantSettingController@uiSettings');
-
-
+Route::group(['domain' => '{tenant}.' . config('app.domain')], function () {
+    AuthRouteProvider::routesApi();
+    Route::get('/language/{locale}', 'LanguageController@get');
+    Route::get('/uiSettings', 'TenantSettingController@uiSettings');
 });
