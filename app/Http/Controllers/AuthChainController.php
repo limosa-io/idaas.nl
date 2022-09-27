@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\AuthChain;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\AuthChain\Module\ModuleInterface;
 use App\AuthChain\State;
 use App\AuthChain\Exceptions\AuthFailedException;
 use App\AuthChain\Helper;
-use App\AuthChain\Module\Module;
 use App\AuthModule;
 use Illuminate\Http\Response;
 

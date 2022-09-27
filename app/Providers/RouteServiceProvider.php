@@ -41,7 +41,7 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::middleware(['api'])->domain('{tenant}.manage.' . config('app.domain'))->group(
             function () {
-                \App\AuthChain\Providers\RouteProvider::manageRoutes();
+                AuthRouteProvider::manageRoutes();
             }
         );
 
@@ -87,7 +87,7 @@ class RouteServiceProvider extends ServiceProvider
 
                 Route::get(
                     '/hotp_secret_generator',
-                    '\App\Http\Controllers\AuthChain\ManageTOTPController@generateSecuret'
+                    '\App\Http\Controllers\ManageTOTPController@generateSecuret'
                 );
 
                 Route::post('/updateEmail', 'App\Http\Controllers\SCIMMeController@updateEmail');

@@ -6,9 +6,8 @@
  * This in turn must be stored using regular SCIM.
  */
 
-namespace App\Http\Controllers\AuthChain;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\AuthTypes\TOTP;
 
 class ManageTOTPController extends Controller

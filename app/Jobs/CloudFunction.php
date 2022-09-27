@@ -7,14 +7,8 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use App\TenantSetting;
 use App\CloudFunction as CloudFunctionModel;
 use App\CloudFunctionHelper;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
-use App\EmailTemplate;
-use App\Mail\StandardMail;
-use Ramsey\Uuid\Uuid;
 
 class CloudFunction implements ShouldQueue
 {

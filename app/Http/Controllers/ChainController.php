@@ -1,10 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\AuthChain\Manage;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\AuthChain\Controller;
-
 use App\Repository\ChainRepository;
 use App\Repository\ModuleRepository;
 

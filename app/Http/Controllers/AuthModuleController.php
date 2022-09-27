@@ -1,14 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\AuthChain\Manage;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\AuthChain\Controller;
-use App\AuthChain\Module\Module;
-use App\AuthChain\Module\ModuleInterface;
 use App\AuthChain\AuthChain;
 use App\Repository\ModuleRepository;
-use Illuminate\Support\Facades\Auth;
 
 class AuthModuleController extends Controller
 {
