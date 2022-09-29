@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: mailhog
+  name: mailhog
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: mailhog
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/sail: "true"
+        io.kompose.service: mailhog
+    spec:
+      containers:
+        - image: mailhog/mailhog:latest
+          name: mailhog
+          ports:
+            - containerPort: 1025
+            - containerPort: 8025
+          resources: {}
+      restartPolicy: Always
+status: {}

@@ -1,0 +1,48 @@
+apiVersion: v1
+data:
+  APP_DEBUG: "true"
+  APP_DOMAIN: notidaas.nl
+  APP_ENV: testing
+  APP_KEY: base64:hay4OYMqWKj5nNCqY199P421I0xkvmLJYGvVuqR9sNA=
+  APP_LOG_LEVEL: debug
+  APP_NAME: notidaas.nl
+  CACHE_DRIVER: array
+  DB_CONNECTION: pgsql
+  DB_DATABASE: laravel
+  DB_HOST: pgsql
+  DB_PASSWORD: password
+  DB_PORT: "5432"
+  DB_USERNAME: laravel
+  FACEBOOK_CLIENT_ID: '...'
+  FACEBOOK_CLIENT_SECRET: '...'
+  IBM_OPENWHISK_ENABLED: "false"
+  MAIL_DRIVER: smtp
+  MAIL_ENCRYPTION: "null"
+  MAIL_FROM_ADDRESS: no-reply@mail.notidaas.nl
+  MAIL_FROM_NAME: notidaas.nl
+  MAIL_HOST: mailhog
+  MAIL_PORT: "1025"
+  QUEUE_DRIVER: sync
+  REDIS_ENABLED: "false"
+  REDIS_HOST: redis
+  REDIS_PASSWORD: "null"
+  REDIS_PORT: "6379"
+  S3_AWS_ACCESS_KEY_ID: sail
+  S3_AWS_BUCKET: idaas
+  S3_AWS_DIRECTORY: uploads
+  S3_AWS_REGION: us-east-1
+  S3_AWS_SECRET_ACCESS_KEY: password
+  S3_AWS_VERSION: latest
+  S3_ENDPOINT: http://minio.notidaas.nl:9000
+  SAIL_XDEBUG_MODE: develop,none
+  SESSION_DRIVER: file
+  SESSION_LIFETIME: "120"
+  WWWGROUP: "1000"
+  WWWUSER: "1000"
+  XDEBUG_TRIGGER: XDEBUG_TRIGGER
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: laravel-test-env-demo
+  name: env-demo
