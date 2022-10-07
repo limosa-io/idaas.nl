@@ -25,17 +25,19 @@ spec:
         io.kompose.network/sail: "true"
         io.kompose.service: pgsql
     spec:
+      securityContext:
+        runAsUser: 70
       containers:
         - env:
-            - name: PGPASSWORD
-              value: secret
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
             - name: POSTGRES_DB
               value: laravel
             - name: POSTGRES_PASSWORD
-              value: secret
+              value: password
             - name: POSTGRES_USER
               value: laravel
-          image: timescale/timescaledb:2.5.1-pg13
+          image: timescale/timescaledb:2.8.1-pg14-oss
           livenessProbe:
             exec:
               command:
@@ -52,8 +54,9 @@ spec:
             - containerPort: 5432
           resources: {}
           volumeMounts:
-            - mountPath: /var/lib/postgresql/data
+            - mountPath: /var/lib/postgresql/data:z
               name: sail-pgsql
+              readOnly: false
       restartPolicy: Always
       volumes:
         - name: sail-pgsql
