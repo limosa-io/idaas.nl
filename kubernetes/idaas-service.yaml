@@ -6,8 +6,8 @@ metadata:
     kompose.version: 1.26.0 (40646f47)
   creationTimestamp: null
   labels:
-    io.kompose.service: laravel-test
-  name: laravel-test
+    io.kompose.service: idaas
+  name: idaas
 spec:
   type: NodePort
   ports:
@@ -15,6 +15,6 @@ spec:
       nodePort: 80
       targetPort: 80
   selector:
-    io.kompose.service: laravel-test
+    io.kompose.service: idaas
 status:
   loadBalancer: {}

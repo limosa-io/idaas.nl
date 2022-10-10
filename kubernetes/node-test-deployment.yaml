@@ -41,10 +41,10 @@ spec:
           resources: {}
           volumeMounts:
             - mountPath: /var/www/html
-              name: laravel-test-claim0
+              name: idaas-claim0
       restartPolicy: Always
       volumes:
-        - name: laravel-test-claim0
+        - name: idaas-claim0
           persistentVolumeClaim:
-            claimName: test-pvc
+            claimName: idaas-pvc
 status: {}
