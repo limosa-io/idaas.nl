@@ -25,3 +25,31 @@ docker run --rm \
 ./vendor/bin/sail artisan migrate
 ./vendor/bin/sail artisan tenant:master login youremail@example.com
 ~~~
+
+## Kubernetes
+
+An example Kubernetes configuration can be found in `./kubernetes/`.
+
+In order to start the Kubernetes cluster in minikube, run the following.
+
+~~~
+# Start minikube and 
+minikube start --mount-string="$(pwd):/var/www/html" --mount --extra-config=apiserver.service-node-port-range=80-30000
+# Build the docker images
+env $(cat .env.demo | xargs) docker-compose build laravel.test node.test
+# Apply the configuration
+minikube kubectl apply -- -f ./kubernetes/
+# Expose all services
+minikube service --all
+# Open a Socks5 proxy
+ssh -i ~/.minikube/machines/minikube/id_rsa -D 8080 docker@$(minikube ip)
+~~~
+
+Use whatever method to open a shell in a pod of the `idaas` service and run the following.
+
+~~~
+php artisan migrate
+php artisan tenant:master login youremail@example.com
+~~~
+
+Now configure your browser to use `localhost:8080` as a SOCKS5 proxy and browse to `login.notidaas.nl`.

@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: node-test
+  name: node-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: node-test
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/sail: "true"
+        io.kompose.service: node-test
+    spec:
+      containers:
+        - command:
+            - npm
+            - run
+            - dev
+          envFrom:
+            - configMapRef:
+                name: env-demo
+          image: idaas_node_nl
+          imagePullPolicy: Never
+          name: node-test
+          ports:
+            - containerPort: 5173
+          resources: {}
+          volumeMounts:
+            - mountPath: /var/www/html
+              name: idaas-claim0
+      restartPolicy: Always
+      volumes:
+        - name: idaas-claim0
+          persistentVolumeClaim:
+            claimName: idaas-pvc
+status: {}

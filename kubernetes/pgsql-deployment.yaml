@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: pgsql
+  name: pgsql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: pgsql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/sail: "true"
+        io.kompose.service: pgsql
+    spec:
+      securityContext:
+        runAsUser: 70
+      containers:
+        - env:
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+            - name: POSTGRES_DB
+              value: laravel
+            - name: POSTGRES_PASSWORD
+              value: password
+            - name: POSTGRES_USER
+              value: laravel
+          image: timescale/timescaledb:2.8.1-pg14-oss
+          livenessProbe:
+            exec:
+              command:
+                - pg_isready
+                - -q
+                - -d
+                - ""
+                - -U
+                - ""
+            failureThreshold: 3
+            timeoutSeconds: 5
+          name: pgsql
+          ports:
+            - containerPort: 5432
+          resources: {}
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data:z
+              name: sail-pgsql
+              readOnly: false
+      restartPolicy: Always
+      volumes:
+        - name: sail-pgsql
+          persistentVolumeClaim:
+            claimName: sail-pgsql
+status: {}

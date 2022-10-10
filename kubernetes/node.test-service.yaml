@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: node-test
+  name: node-test
+spec:
+  type: NodePort
+  ports:
+    - name: "5173"
+      port: 5173
+      nodePort: 5173
+      targetPort: 5173
+  selector:
+    io.kompose.service: node-test
+status:
+  loadBalancer: {}
