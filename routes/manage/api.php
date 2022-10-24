@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,16 +19,15 @@ use Illuminate\Http\Request;
 //     return $request->user();
 // });
 
-Route::group(['domain' => '{tenant}.manage.' . config('app.domain') ], function ()
-{
+Route::group(['domain' => '{tenant}.manage.' . config('app.domain') ], function () {
 
     Route::get('/ping', '\App\Http\Controllers\Manage\HomeController@ping')->name('ice.ping');
-        
+
     //require scope: manage:users
     \ArieTimmerman\Laravel\SCIMServer\RouteProvider::routes();
 
     \ArieTimmerman\Laravel\SAML\RouteProvider::routesManage();
-    
+
     Route::get('oAuthScope/mapping', 'OAuthScopeController@mapping');
     Route::resource('oAuthScope', 'OAuthScopeController')->only([
         'index', 'store', 'update', 'destroy'
@@ -48,21 +48,21 @@ Route::group(['domain' => '{tenant}.manage.' . config('app.domain') ], function 
         'index', 'store', 'destroy', 'update'
     ]);
 
-    Route::post('openidKey/createGenerated','OpenIDKeyController@createGenerated');
+    Route::post('openidKey/createGenerated', 'OpenIDKeyController@createGenerated');
 
     Route::get('/routes', 'GetRoutes@index');
-    
+
     Route::delete('/tenants/{id}', 'TenantController@destroy'); // ->middleware('can:manageOther:App\Tenant')
 
     Route::post('/cloudFunctions/invoke/{cloudFunction}', 'CloudFunctionController@invoke');
-    
+
     Route::resource('cloudFunctions', 'CloudFunctionController')->only([
         'index', 'store', 'show', 'update', 'destroy'
     ]);
 
     Route::post('/tokens/revoke', 'TokenController@revoke');
     Route::get('/tokens', 'TokenController@index');
-    
+
     Route::delete('/moduleResults/{moduleResultId}', 'ModuleResultController@delete');
     Route::get('/moduleResults', 'ModuleResultController@index');
 
@@ -75,7 +75,7 @@ Route::group(['domain' => '{tenant}.manage.' . config('app.domain') ], function 
 
     Route::post('/s3sign', 'UploadController@s3sign');
 
-    Route::put('settings/bulk','TenantSettingController@updateMany');
+    Route::put('settings/bulk', 'TenantSettingController@updateMany');
     Route::resource('settings', 'TenantSettingController')->only([
         'index', 'store', 'show', 'update', 'destroy'
     ]);
@@ -89,4 +89,8 @@ Route::group(['domain' => '{tenant}.manage.' . config('app.domain') ], function 
         'index', 'store', 'show', 'update', 'destroy'
     ]);
 
+    Route::put('/git', 'GitController@update');
+    Route::get('/git', 'GitController@settings');
+    Route::get('/git/pull', 'GitController@pull');
+    Route::put('/git/push', 'GitController@push');
 });
