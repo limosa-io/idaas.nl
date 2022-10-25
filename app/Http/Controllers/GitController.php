@@ -8,9 +8,11 @@ use App\Client as AppClient;
 use App\CloudFunction;
 use App\EmailTemplate;
 use App\Git;
+use App\Providers\AppServiceProvider;
 use App\SAMLConfig;
 use App\TenantSetting;
 use App\Translation;
+use App\UIServer;
 use Exception;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
@@ -154,14 +156,25 @@ class GitController extends Controller
 
     public function pull()
     {
+
+
         $files = $this->getFiles();
 
         foreach ($files as $path => $file) {
-            // TODO; should be contains
-            if (str_starts_with($file['path'], 'authmodule/')) {
+            $first = collect(self::TYPES_TO_SYNC)->first(fn($value) =>
+                str_starts_with($file['path'], strtolower((new \ReflectionClass($value))->getShortName()) . '/'));
+
+            if ($first != null) {
                 $json_decode = json_decode(base64_decode($file['content']), true);
-                /** @var AuthModule */
-                $object = AuthModule::find($json_decode['id']);
+
+                if (!array_key_exists(app($first)->getKeyName(), $json_decode)) {
+                    return $json_decode;
+                }
+
+                /** @var \Illuminate\Database\Eloquent\Model */
+                $object = $first::find(
+                    $json_decode[app($first)->getKeyName()]
+                );
                 $object->fill($json_decode);
                 $object->save();
             }
