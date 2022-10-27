@@ -1,27 +1,24 @@
 # For more information: https://laravel.com/docs/sail
 version: '3'
 services:
-    laravel.test:
-        env_file:
-            - .env.demo
+    php-fpm:
         build:
-            context: ./vendor/laravel/sail/runtimes/8.1
-            dockerfile: Dockerfile
-            args:
-                WWWGROUP: '${WWWGROUP}'
-        image: idaas_nl
+            context: .
+            dockerfile: ./docker/php/Dockerfile
+        env_file:
+                - .env.demo
         extra_hosts:
-            - 'host.docker.internal:host-gateway'
-        ports:
-            - '${APP_PORT:-80}:80'
+                - 'host.docker.internal:host-gateway'
+        volumes:
+            - .:/var/www/
+            - storage:/var/www/storage/framework/views
         environment:
-            PHP_CLI_SERVER_WORKERS: 10
+            PHP_CLI_SERVER_WORKERS: 20
+            LOG_CHANNEL: stderr
             WWWUSER: '${WWWUSER}'
             LARAVEL_SAIL: 1
             XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
             XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
-        volumes:
-            - '.:/var/www/html'
         networks:
             - sail
         depends_on:
@@ -29,6 +26,20 @@ services:
             - redis
             - minio
             - node.test
+    nginx:
+        image: nginx-idaas
+        build: .
+        ports:
+            - '${APP_PORT:-80}:80'
+        environment:
+            - NGINX_HOST=foobar.com
+            - NGINX_PORT=80
+        volumes:
+            - .:/var/www/
+        depends_on:
+            - php-fpm
+        networks:
+            - sail
     node.test:
         env_file:
             - .env.demo
@@ -120,6 +131,8 @@ networks:
     sail:
         driver: bridge
 volumes:
+    storage:
+        driver: local
     sail-pgsql:
         driver: local
     sail-redis:
