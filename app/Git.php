@@ -13,7 +13,9 @@ class Git extends Model
     use TenantTrait;
 
     protected $casts = [
-        'settings' => AsArrayObject::class
+        'settings' => AsArrayObject::class,
+        'pull_start_time' => 'datetime',
+        'push_start_time' => 'datetime'
     ];
 
     protected $attributes = [

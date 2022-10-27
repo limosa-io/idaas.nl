@@ -54,22 +54,32 @@ class GitController extends Controller
 
             $existing = $this->getFiles();
 
+            $git->push_start_time = now();
+            $git->save();
+
             foreach (self::TYPES_TO_SYNC as $type) {
                 $objects = $type::all()->values();
                 foreach ($objects as $object) {
                     $type = strtolower((new \ReflectionClass($object))->getShortName());
                     $file = $object->id;
 
+                    // The authentication module does not return the configuration by default as it is used by public API's
+                    if ($object instanceof AuthModule) {
+                        $object->withConfig();
+                    }
+
                     $body = [
-                        "owner" => "arietimmerman",
-                        "repo" => "idaas-config",
+                        "owner" => $git->settings['owner'],
+                        "repo" => $git->settings['repo'],
                         "path" => sprintf('/%s/%s.yaml', $type, $file),
                         "message" => "Sync",
                         "committer" => [
                         "name" => "Idaas Syncer",
                         "email" => "no-reply@idaas.nl"
                         ],
-                        "content" => base64_encode(json_encode($object, JSON_PRETTY_PRINT))
+                        "content" => base64_encode(
+                            json_encode($object, JSON_PRETTY_PRINT)
+                        )
                     ];
 
                     $path = sprintf('%s/%s.yaml', $type, $file);
@@ -79,18 +89,21 @@ class GitController extends Controller
                     }
 
                     if (!array_key_exists($path, $existing) || base64_decode($existing[$path]['content']) != base64_decode($body['content'])) {
-                        $response = $guzzle->put(sprintf('https://api.github.com/repos/arietimmerman/idaas-config/contents/%s', $path), [
-                        RequestOptions::HEADERS => [
-                        'Authorization' => 'Bearer ' . $git->settings['token'],
-                        'Accept' => 'application/vnd.github+json'
-                        ],
-                        RequestOptions::BODY => json_encode(
-                            $body
-                        )
+                        $guzzle->put(sprintf('https://api.github.com/repos/%s/%s/contents/%s', $git->settings['owner'], $git->settings['repo'], $path), [
+                            RequestOptions::HEADERS => [
+                            'Authorization' => 'Bearer ' . $git->settings['token'],
+                            'Accept' => 'application/vnd.github+json'
+                            ],
+                            RequestOptions::BODY => json_encode(
+                                $body
+                            )
                         ]);
                     }
                 }
             }
+
+            $git->push_start_time = null;
+            $git->save();
         }
     }
 
@@ -106,7 +119,7 @@ class GitController extends Controller
         $guzzle = new Client();
 
         $response = $guzzle->get(
-            sprintf('https://api.github.com/repos/arietimmerman/idaas-config/contents/%s', $path),
+            sprintf('https://api.github.com/repos/%s/%s/contents/%s', $git->settings['owner'], $git->settings['repo'], $path),
             [
                 RequestOptions::HEADERS => [
                     'Authorization' => 'Bearer ' . $git->settings['token'],
@@ -149,14 +162,14 @@ class GitController extends Controller
             }
         }
 
-        // TODO: updating existing
-
         return $result;
     }
 
     public function pull()
     {
-
+        $git = $this->settings();
+        $git->pull_start_time = now();
+        $git->save();
 
         $files = $this->getFiles();
 
@@ -179,6 +192,9 @@ class GitController extends Controller
                 $object->save();
             }
         }
+
+        $git->pull_start_time = now();
+        $git->save();
     }
 
     public function settings(): Git

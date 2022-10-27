@@ -21,6 +21,12 @@ return new class extends Migration
             $table->string('type');
             $table->string('settings')->nullable();
 
+            // when null, pull is done
+            $table->dateTime('pull_start_time')->nullable();
+
+            // when null, push is done
+            $table->dateTime('push_start_time')->nullable();
+
             $table->timestamps();
         });
     }
