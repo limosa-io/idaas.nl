@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid">
-    <h4 class="c-grey-900 mt-1 mb-3">Registration</h4>
+    <h4 class="c-grey-900 mt-1 mb-3">Sync your configuration to a git repository</h4>
 
     <div class="row" v-if="loaded">
       <div class="col-md-12">
@@ -123,7 +123,7 @@
           </form>
         </div>
 
-        <div class="bgc-white bd bdrs-3 p-3 mt-2">
+        <div class="bgc-white bd bdrs-3 p-3 mt-2" v-if="git.settings.repository != null && git.settings.repository != ''">
           <form
             class="needs-validation"
             novalidate

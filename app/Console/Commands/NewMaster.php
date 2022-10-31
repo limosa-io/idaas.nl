@@ -32,7 +32,7 @@ class NewMaster extends NewTenant
      *
      * @var string
      */
-    protected $signature = 'tenant:master {subdomain : Subdomain} {admin : Admin}';
+    protected $signature = 'tenant:master {subdomain : Subdomain} {admin : Admin} {password?}';
 
     /**
      * The console command description.
@@ -60,12 +60,13 @@ class NewMaster extends NewTenant
     {
         if ($this->validateInput()) {
             $username = $this->argument('admin');
+            $password = $this->argument('password');
             self::createTenant(
                 $this->argument('subdomain'),
                 null,
                 true,
-                function () use ($username) {
-                    return $this->ensureUser($username);
+                function () use ($username, $password) {
+                    return $this->ensureUser($username, $password);
                 }
             );
         }

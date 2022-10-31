@@ -118,7 +118,7 @@
                 :exact="true"
                 active-class="active"
               >
-                <i class="ti-user mr-2"></i>
+                <i class=" ti-exchange-vertical mr-2"></i>
                 <span>Sync</span>
               </router-link>
             </li>
