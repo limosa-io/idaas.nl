@@ -39,7 +39,7 @@ class NewTenant extends Command
      *
      * @var string
      */
-    protected $signature = 'tenant:new {subdomain} {admin}';
+    protected $signature = 'tenant:new {subdomain} {admin} {password?}';
 
     /**
      * The console command description.
@@ -67,12 +67,13 @@ class NewTenant extends Command
     {
         if ($this->validateInput()) {
             $username = $this->argument('admin');
+            $password = $this->argument('password');
             self::createTenant(
                 $this->argument('subdomain'),
                 null,
                 false,
-                function () use ($username) {
-                    return $this->ensureUser($username);
+                function () use ($username, $password) {
+                    return $this->ensureUser($username, $password);
                 }
             );
         } else {
@@ -80,7 +81,7 @@ class NewTenant extends Command
         }
     }
 
-    public function ensureUser($admin)
+    public function ensureUser($admin, $password = null)
     {
         $user = User::withOutGlobalScope(TenantScope::class)->where(
             [
@@ -93,7 +94,7 @@ class NewTenant extends Command
         )->first();
 
         if ($user == null) {
-            $password = Str::random(10);
+            $password = $password ?? Str::random(10);
 
             $user = User::create(
                 [

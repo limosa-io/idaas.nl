@@ -109,6 +109,20 @@
                 <span>Profile</span>
               </router-link>
             </li>
+
+            <li role="separator" class="divider"></li>
+            <li class="pt-3 pb-3">
+              <router-link
+                :to="{ name: 'git'}"
+                class="c-grey-700"
+                :exact="true"
+                active-class="active"
+              >
+                <i class=" ti-exchange-vertical mr-2"></i>
+                <span>Sync</span>
+              </router-link>
+            </li>
+            
             <li role="separator" class="divider"></li>
             <li class="pt-3 pb-3">
               <a class="c-grey-700" @click.stop href="https://my.idaas.nl">

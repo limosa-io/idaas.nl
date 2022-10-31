@@ -288,6 +288,8 @@ class Module extends Model implements ModuleInterface, \JsonSerializable
 
             'enabled' => $this->enabled,
             'skippable' => $this->skippable,
+
+            // These attributes are not writeable
             'passive' => $this->isPassive(),
             'levels' => $this->getLevels()
         ];

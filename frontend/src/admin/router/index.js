@@ -113,6 +113,20 @@ export default new Router({
         },
 
         {
+          path: '/git',
+          name: 'git',
+          hide: true,
+          component: () => import('../components/admin/Git.vue'),
+          style: {
+            icon: 'c-blue-500 ti-home'
+          },
+
+          meta: {
+            label: 'Git'
+          },
+        },
+
+        {
           path: '/oidc',
           component: OIDC,
           
