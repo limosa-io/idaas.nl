@@ -4,6 +4,16 @@
 
     <div class="row" v-if="loaded">
       <div class="col-md-12">
+        <div class="card border-danger mb-3 mt-3">
+          <div class="card-header">This is experimental functionality</div>
+          <div class="card-body text-danger">
+            <p class="card-text">
+              Most importantly: always use a private repository as application
+              secrets are exposed.
+            </p>
+          </div>
+        </div>
+
         <div class="bgc-white bd bdrs-3 p-3 mt-2">
           <form
             class="needs-validation"
@@ -13,7 +23,7 @@
           >
             <div class="form-row">
               <label for="levels" class="col-md-3 col-form-label"
-                >Attributes for create</label
+                >Git provider</label
               >
               <div class="col-md-9">
                 <select v-model="git.type" class="form-control" id="group">
@@ -108,11 +118,34 @@
                 <button type="submit" class="btn btn-primary">
                   Save Changes
                 </button>
+              </div>
+            </div>
+          </form>
+        </div>
 
+        <div class="bgc-white bd bdrs-3 p-3 mt-2">
+          <form
+            class="needs-validation"
+            novalidate
+            :class="{ 'was-validated': wasValidated }"
+            v-on:submit.prevent="onSubmit"
+          >
+            <div class="form-row">
+              <label for="levels" class="col-md-3 col-form-label"
+                >Pull changes</label
+              >
+              <div class="col-md-9">
                 <button type="button" class="btn btn-secondary" @click="pull">
                   Pull
                 </button>
+              </div>
+            </div>
 
+            <div class="form-row mt-3">
+              <label for="levels" class="col-md-3 col-form-label"
+                >Push changes</label
+              >
+              <div class="col-md-9">
                 <button type="button" class="btn btn-secondary" @click="push">
                   Push
                 </button>
@@ -152,16 +185,13 @@ export default {
   },
 
   methods: {
-    pull(){
+    pull() {
       this.$http.get(this.$murl("api/git/pull"));
     },
 
-    push(){
+    push() {
       this.$http.put(this.$murl("api/git/push"));
     },
-
-    
-
 
     onSubmit(event) {
       if (event.target.checkValidity()) {

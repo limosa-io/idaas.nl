@@ -8,7 +8,8 @@ use App\Client as AppClient;
 use App\CloudFunction;
 use App\EmailTemplate;
 use App\Git;
-use App\Providers\AppServiceProvider;
+use App\HostedIdentityProvider;
+use App\RemoteServiceProvider;
 use App\SAMLConfig;
 use App\TenantSetting;
 use App\Translation;
@@ -30,9 +31,9 @@ class GitController extends Controller
         AuthModule::class,
         TenantSetting::class,
         EmailTemplate::class,
+        RemoteServiceProvider::class,
+        HostedIdentityProvider::class,
         UIServer::class,
-        AppServiceProvider::class,
-        SAMLConfig::class,
         CloudFunction::class,
         Translation::class
     ];
@@ -70,7 +71,7 @@ class GitController extends Controller
 
                     $body = [
                         "owner" => $git->settings['owner'],
-                        "repo" => $git->settings['repo'],
+                        "repo" => $git->settings['repository'],
                         "path" => sprintf('/%s/%s.yaml', $type, $file),
                         "message" => "Sync",
                         "committer" => [
@@ -89,7 +90,7 @@ class GitController extends Controller
                     }
 
                     if (!array_key_exists($path, $existing) || base64_decode($existing[$path]['content']) != base64_decode($body['content'])) {
-                        $guzzle->put(sprintf('https://api.github.com/repos/%s/%s/contents/%s', $git->settings['owner'], $git->settings['repo'], $path), [
+                        $guzzle->put(sprintf('https://api.github.com/repos/%s/%s/contents/%s', $git->settings['owner'], $git->settings['repository'], $path), [
                             RequestOptions::HEADERS => [
                             'Authorization' => 'Bearer ' . $git->settings['token'],
                             'Accept' => 'application/vnd.github+json'
@@ -119,7 +120,7 @@ class GitController extends Controller
         $guzzle = new Client();
 
         $response = $guzzle->get(
-            sprintf('https://api.github.com/repos/%s/%s/contents/%s', $git->settings['owner'], $git->settings['repo'], $path),
+            sprintf('https://api.github.com/repos/%s/%s/contents/%s', $git->settings['owner'], $git->settings['repository'], $path),
             [
                 RequestOptions::HEADERS => [
                     'Authorization' => 'Bearer ' . $git->settings['token'],
@@ -145,7 +146,7 @@ class GitController extends Controller
         $contents = $this->getContents('');
 
         if (!is_array($contents)) {
-            throw new Exception("This is not a folder");
+           // throw new Exception("This is not a folder");
         }
 
         foreach ($contents as $directory) {
