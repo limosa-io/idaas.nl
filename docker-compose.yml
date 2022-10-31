@@ -1,7 +1,7 @@
 # For more information: https://laravel.com/docs/sail
 version: '3'
 services:
-    php-fpm:
+    php-fpm: &php-fpm
         build:
             context: .
             dockerfile: ./docker/php/Dockerfile
@@ -26,6 +26,17 @@ services:
             - redis
             - minio
             - node.test
+    php-fpm-migrate:
+        <<: *php-fpm
+        restart: "no"
+        command: >
+            sh -c "
+                php -r \"copy('https://getcomposer.org/installer', 'composer-setup.php');\" &&
+                php composer-setup.php &&
+                ./composer.phar install --ignore-platform-reqs &&
+                php artisan migrate &&
+                php artisan tenant:master login admin@login.notidaas.nl changeit"
+        working_dir: /var/www
     nginx:
         image: nginx-idaas
         build: .

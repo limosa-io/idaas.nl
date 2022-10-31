@@ -14,17 +14,10 @@ Run the commands listed below and access your tenant via http://login.notidaas.n
 _Note:_ `notidaas.nl` is a special domain. This domain and all subdomains point to localhost.
 
 ~~~
-source .env.demo
-docker run --rm \
-    -u "$(id -u):$(id -g)" \
-    -v $(pwd):/var/www/html \
-    -w /var/www/html \
-    laravelsail/php81-composer:latest \
-    composer install --ignore-platform-reqs
-./vendor/bin/sail up -d
-./vendor/bin/sail artisan migrate
-./vendor/bin/sail artisan tenant:master login youremail@example.com
+docker-compose up
 ~~~
+
+After a minute or so, visit http://login.notidaas.nl and login with `admin@login.notidaas.nl` and password `changeit`.
 
 ## Kubernetes
 
