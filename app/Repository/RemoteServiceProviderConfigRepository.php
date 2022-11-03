@@ -4,15 +4,21 @@ namespace App\Repository;
 
 use ArieTimmerman\Laravel\SAML\Repository\RemoteServiceProviderConfigRepositoryInterface;
 use App\RemoteServiceProvider;
+use ArieTimmerman\Laravel\SAML\Repository\RemoteServiceProviderConfigRepository as RepositoryRemoteServiceProviderConfigRepository;
 
-class RemoteServiceProviderConfigRepository implements RemoteServiceProviderConfigRepositoryInterface
+class RemoteServiceProviderConfigRepository extends RepositoryRemoteServiceProviderConfigRepository
 {
+    public function __construct()
+    {
+        $this->rules['groups'] = 'nullable|array';
+    }
+
     /**
      * @return RemoteServiceProviderConfigInterface[]
      */
     public function all()
     {
-        return RemoteServiceProvider::all();
+        return RemoteServiceProvider::with('groups')->get();
     }
 
     /**
@@ -20,14 +26,14 @@ class RemoteServiceProviderConfigRepository implements RemoteServiceProviderConf
      */
     public function get($id)
     {
-        $result = RemoteServiceProvider::where('entityid', $id)->first();
+        $result = RemoteServiceProvider::with('groups')->where('entityid', $id)->first();
 
         return $result;
     }
 
     public function getById($id)
     {
-        return RemoteServiceProvider::find($id);
+        return RemoteServiceProvider::with('groups')->find($id);
     }
 
     public function patch(string $id, array $remoteServiceProviderConfigArray)
@@ -52,6 +58,9 @@ class RemoteServiceProviderConfigRepository implements RemoteServiceProviderConf
         $remoteServiceProvider->wantSignedLogoutRequest = $remoteServiceProviderConfigArray['wantSignedLogoutRequest'] ?? false;
 
         $remoteServiceProvider->save();
+
+        $groups = collect($remoteServiceProviderConfigArray['groups'])->pluck('value')->all();
+        $remoteServiceProvider->groups()->sync($groups);
 
         return $remoteServiceProvider;
     }

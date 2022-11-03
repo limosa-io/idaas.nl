@@ -34,7 +34,7 @@ class HostedIdentityProvider extends Model implements HostedIdentityProviderConf
     public function toSimpleSAMLArray()
     {
         return [
-            'entityId' => $this->id,
+            'entityId' => 'urn:' . $this->id,
 
             // what authentication context level for single-sign on cases
             'PreviousSession' => $this->previousSession ?? 'urn:oasis:names:tc:SAML:2.0:ac:classes:PreviousSession',

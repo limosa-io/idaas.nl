@@ -6,7 +6,7 @@ use App\Model;
 use ArieTimmerman\Laravel\SAML\SAML2\Entity\RemoteServiceProviderConfigInterface;
 use App\Scopes\TenantTrait;
 
-class RemoteServiceProvider extends Model implements RemoteServiceProviderConfigInterface
+class RemoteServiceProvider extends Model implements RemoteServiceProviderConfigInterface, ApplicationInterface
 {
     protected $casts = [
         'assertionConsumerService' => 'array',
@@ -57,5 +57,15 @@ class RemoteServiceProvider extends Model implements RemoteServiceProviderConfig
     {
         //not implemented
         return null;
+    }
+
+    public function groups()
+    {
+        return $this->belongsToMany(
+            Group::class,
+            'serviceprovider_group',
+            'serviceprovider_id',
+            'group_id'
+        )->wherePivot('tenant_id', resolve(Tenant::class)->id)->using(TenantPivot::class);
     }
 }

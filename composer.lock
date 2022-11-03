@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "arietimmerman/laravel-saml",
-            "version": "v0.5.5",
+            "version": "v0.5.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/arietimmerman/laravel-saml.git",
-                "reference": "4a43c51f8f40b62d61f34bf58dc48d1444def9bc"
+                "reference": "613afbf5f089b5b5cd20859a5a177a971803f348"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/arietimmerman/laravel-saml/zipball/4a43c51f8f40b62d61f34bf58dc48d1444def9bc",
-                "reference": "4a43c51f8f40b62d61f34bf58dc48d1444def9bc",
+                "url": "https://api.github.com/repos/arietimmerman/laravel-saml/zipball/613afbf5f089b5b5cd20859a5a177a971803f348",
+                "reference": "613afbf5f089b5b5cd20859a5a177a971803f348",
                 "shasum": ""
             },
             "require": {
@@ -70,9 +70,9 @@
             "description": "Laravel Package for creating a SAML identity provider",
             "support": {
                 "issues": "https://github.com/arietimmerman/laravel-saml/issues",
-                "source": "https://github.com/arietimmerman/laravel-saml/tree/v0.5.5"
+                "source": "https://github.com/arietimmerman/laravel-saml/tree/v0.5.6"
             },
-            "time": "2022-11-01T19:44:30+00:00"
+            "time": "2022-11-03T20:26:10+00:00"
         },
         {
             "name": "arietimmerman/laravel-scim-server",

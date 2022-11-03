@@ -9,7 +9,7 @@ use App\Stats\StatableTrait;
 use Idaas\Passport\Model\Client as IdaasClient;
 use Laravel\Passport\HasApiTokens;
 
-class Client extends IdaasClient implements SubjectInterface, Authenticatable, StatableInterface
+class Client extends IdaasClient implements SubjectInterface, Authenticatable, StatableInterface, ApplicationInterface
 {
     use TenantTrait;
     use HasApiTokens;
