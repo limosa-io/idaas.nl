@@ -125,6 +125,34 @@
 
   </b-form-group>
 
+
+  <h6 class="c-grey-900">Restrictions</h6>
+
+        <p>Restrict access to this application based on assigned groups.</p>
+
+        <div class="form-row">
+          <div class="col-md-3">Groups</div>
+          <div class="col">
+            <multiselect
+              id="roles"
+              v-if="groups && groups.length > 0"
+              v-model="serviceprovider.groups"
+              track-by="value"
+              :customLabel="( {name} ) => (name)"
+              :options="groups || []"
+              :searchable="false"
+              :close-on-select="true"
+              :show-labels="true"
+              :multiple="true"
+              placeholder="Pick a value"
+            ></multiselect>
+            <p v-else>
+              You don't have any groups configured.
+              <router-link tag="a" class to="/groups">Create a group.</router-link>
+            </p>
+          </div>
+        </div>
+
   <button type="submit" class="btn btn-primary">Save</button>
   <button type="button" @click="$router.go(-1)" class="btn btn-secondary ml-1">Back</button>
 
@@ -158,7 +186,9 @@ export default {
 
       serviceprovider: null,
 
-      redirect_uris_string: null
+      redirect_uris_string: null,
+
+      groups: [],
 
     }
   },
@@ -181,6 +211,15 @@ export default {
       this.wasValidated = true;
 
 
+    });
+
+    this.$http.get(this.$murl("api/scim/v2/Groups")).then(response => {
+      for (var v of response.data.Resources) {
+        this.groups.push({
+          value: v.id,
+          name: v["urn:ietf:params:scim:schemas:core:2.0:Group"].name
+        });
+      }
     });
 
   },

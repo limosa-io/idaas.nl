@@ -8,6 +8,7 @@ use App\AuthChain\UIServer;
 use ArieTimmerman\Laravel\SAML\SAML2\State\SamlState;
 use App\AuthChain\Session;
 use Illuminate\Support\Facades\URL;
+use SAML2\AuthnRequest;
 
 class SAMLConfig extends \ArieTimmerman\Laravel\SAML\SAMLConfig
 {
@@ -23,8 +24,9 @@ class SAMLConfig extends \ArieTimmerman\Laravel\SAML\SAMLConfig
 
     public function doAuthenticationResponse(SamlState $samlState)
     {
-        /** @var SAML2\AuthnRequest */
+        /** @var \SAML2\AuthnRequest */
         $request = $samlState->getRequest();
+        $providerId = $request->getIssuer()->getValue();
         $isPassive = $request->getIsPassive();
         $isForce = $request->getForceAuthn();
         $requestedAuthnContext = $request->getRequestedAuthnContext() ?? [];
@@ -46,12 +48,12 @@ class SAMLConfig extends \ArieTimmerman\Laravel\SAML\SAMLConfig
         // This removes the need from storing the state in a session ...
         app()->instance(State::class, $state);
 
-        //route('ssourl.continue')
         return Helper::getAuthResponseAsRedirect(
             request(),
             $state
             // ->setRequiredAuthLevel(AuthLevel::samlAll($requestedAuthnContext))
                 ->setPrompt($isForce)
+                ->setAppId($providerId)
                 ->setPassive($isPassive)
                 ->setUiServer($uiServer)
                 ->setOnFinishUrl(route('ssourl.continue'))

@@ -22,7 +22,8 @@ class Consent extends AbstractType
 
         $approved = [];
 
-        if ($subject != null && $state->appId != null) {
+        // TODO: consider using another attribute (not appid) for SAML service providers
+        if ($subject != null && $state->appId != null && \Ramsey\Uuid\Uuid::isValid($state->appId)) {
             $approved = $subject->getApprovedScopes($state->appId);
         }
 
