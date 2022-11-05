@@ -1,5 +1,5 @@
 <?php
-
+// TODO: implement
 namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
@@ -26,6 +26,7 @@ class CloudFunction implements ShouldQueue
 
     public function __construct(CloudFunctionModel $cloudFunction, $parameters)
     {
+        // TODO: use dedicated queue that runs jobs in serial
         $this->cloudFunctionId = $cloudFunction->id;
         $this->parameters = $parameters;
     }

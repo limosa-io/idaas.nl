@@ -42,15 +42,7 @@ class CloudFunction extends Model
 
     public function getDeployableCode()
     {
-        $result = preg_replace(
-            '/\/\/ start user code.*?\/\/ end user code/s',
-            $this->code,
-            file_get_contents(resource_path('serverless/template.js'))
-        );
-
-        $result = str_replace('[cloud_function_id]', $this->id, $result);
-
-        return $result;
+        return $this->code;
     }
 
     protected static function boot()

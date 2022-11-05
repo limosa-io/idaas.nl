@@ -82,6 +82,8 @@ class CloudFunctionController extends Controller
         $cloudFunction->forceFill($this->withDefaults($request->validate($this->getValidations())));
         $cloudFunction->save();
 
+        CloudFunctionHelper::deploy($cloudFunction);
+
         return $cloudFunction;
     }
 

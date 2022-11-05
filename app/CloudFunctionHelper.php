@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\StandardMail;
 use ArieTimmerman\Laravel\SCIMServer\Helper;
 use ArieTimmerman\Laravel\SCIMServer\ResourceType;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\Uuid;
 
 class CloudFunctionHelper
@@ -33,83 +35,65 @@ class CloudFunctionHelper
         $response = null;
         $guzzle = new Client();
 
-        if ($cloudFunction->is_sequence) {
-            $all = CloudFunction::where(
-                'type',
-                $cloudFunction->type
-            )->where('active', true)->where('is_sequence', false)->orderBy('order')->get()->each(
-                function ($item, $key) {
-                    // always deploy, if the sequence needs to be deployed, most likely the rules need to be as well
-                    self::deploy($item);
-                }
-            )->map(
-                function ($item, $key) {
-                    return '_/' . $item->name;
-                }
-            );
+        // check: https://console.bluemix.net/apidocs/functions
+        //TODO: set timeout on Guzzle client to 12 seconds?? What if timeout occurs? Continue?
+        $guzzle = new Client();
 
-            $sequence = CloudFunction::firstOrCreate(
-                ['type' => $cloudFunction->type, 'is_sequence' => true],
-                ['display_name' => sprintf('sequence_%s', $cloudFunction->type)]
-            );
+        // /home/arie/git/ice-complete/ice/resources/serverless/digitalocean/example
 
-            $response = $guzzle->request(
-                'PUT',
-                self::getActionUrl($sequence),
-                [
-                    RequestOptions::HEADERS => [
-                        'Authorization' => 'Basic ' . \base64_encode(config('serverless.openwhisk_api_key'))
-                    ],
-                    RequestOptions::JSON => [
+        // File::copyDirectory(resource_path('serverless/digitalocean'), '/tmp/');
 
-                        "annotations" => [],
+        $zip = new \ZipArchive();
 
-                        "exec" => [
-
-                            "kind" => "sequence",
-
-                            "components" => $all->all()
-                        ]
-
-                    ]
-                ]
-            );
-        } else {
-            // check: https://console.bluemix.net/apidocs/functions
-            //TODO: set timeout on Guzzle client to 12 seconds?? What if timeout occurs? Continue?
-            $guzzle = new Client();
-
-            $response = $guzzle->request(
-                'PUT',
-                self::getActionUrl($cloudFunction),
-                [
-                    RequestOptions::HEADERS => [
-                        'Authorization' => 'Basic ' . \base64_encode(config('serverless.openwhisk_api_key'))
-                    ],
-                    RequestOptions::JSON => [
-
-                        "namespace" => "_",
-
-                        "exec" => [
-
-                            "kind" => "nodejs:10",
-                            "binary" => false,
-                            "code" => $cloudFunction->getDeployableCode(),
-
-                            "components" => [
-                                // action names
-                            ]
-                        ],
-
-                        "limits" => [
-                            "timeout" => 6000, // in miliseconds,
-                            "memory" => 128, // in MB
-                            "logs" => 10, // in MB
-                        ],
-                    ]
-                ]
-            );
+        if ($zip->open('/dev/shm/test.zip', \ZipArchive::CREATE) !== true) {
+            throw new \RuntimeException('Cannot open memory');
         }
+
+        $path = resource_path('serverless/digitalocean');
+
+        $files = File::allFiles($path);
+        foreach ($files as $path) {
+            $zip->addFile($path, $path->getFilename());
+        }
+
+        //serverless/example123
+        $zip->addFromString('packages/sample/hello/hello.js', $cloudFunction->getDeployableCode());
+        $zip->close();
+
+
+        $contents = file_get_contents('/dev/shm/test.zip');
+        $result = base64_encode($contents);
+
+        $response = $guzzle->request(
+            'PUT',
+            self::getActionUrl($cloudFunction),
+            [
+                RequestOptions::HEADERS => [
+                    'Authorization' => 'Basic ' . \base64_encode(config('serverless.openwhisk_api_key'))
+                ],
+                RequestOptions::JSON => [
+
+                    "namespace" => "_",
+
+                    "exec" => [
+
+                        "kind" => "nodejs:16",
+                        "binary" => true,
+                        "code" => $result,
+
+                        "components" => [
+                            // action names
+                        ]
+                    ],
+
+                    "limits" => [
+                        "timeout" => 6000, // in miliseconds,
+                        "memory" => 128, // in MB
+                        "logs" => 10, // in MB
+                    ],
+                ]
+            ]
+        );
 
         return $response;
     }
