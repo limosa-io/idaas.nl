@@ -155,7 +155,7 @@ class OpenWhiskHandler implements HandlerInterface
                 }
 
                 if ($response->getStatusCode() == '404') {
-                    self::deploy($cloudFunction);
+                    $this->deploy($cloudFunction);
                     $triedDeployment = true;
                 } elseif ($response->getStatusCode() == '502') {
                     throw new CloudFunctionException((string) $response->getBody());
