@@ -9,20 +9,6 @@ function main({
   variables
 }) {
 
-  // Try attributes 'emails', 'activate', 'roles', etc.
-  if(attributeChanged(before, after, 'emails')){
-    callback(
-      [
-        // Uncomment the line below and change the email template id and to-address
-        // new Email(variables.emailTemplate0.id).to('example@maildu.de'),
-      ]
-    );
-  }else{
-    callback(
-      [
-        // do nothing, but still invoke the callback-function. Elsewise, the script will never end (well... it will timeout)
-      ]
-    );
-  }
+  // do something
 
 }

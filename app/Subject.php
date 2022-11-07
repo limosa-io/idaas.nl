@@ -286,18 +286,7 @@ class Subject extends Model implements SubjectInterface, StatableInterface, Auth
                 ]
             );
 
-            $results = $cloudResult['results'] ?? [];
-
-            // TODO: rechtstreeks $cloudResult gebruiken. Niet 'attributes'
-            $attributes = array_merge(
-                ...collect($cloudResult['results'])->map(
-                    function ($value) {
-                        return $value['attributes'] ?? [];
-                    }
-                )->all()
-            );
-
-            $result = array_merge($result, $attributes);
+            $result = array_merge($result, $cloudResult);
         }
 
         $result['acr'] = $this->levels;

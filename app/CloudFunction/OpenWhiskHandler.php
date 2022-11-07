@@ -43,7 +43,7 @@ class OpenWhiskHandler implements HandlerInterface
             $zip->addFile($path, ltrim($path->getRelativePath() . '/' . $path->getFilename(), '/'));
         }
 
-        $zip->addFromString('packages/idaas/script/main.js', $cloudFunction->code . "\n");
+        $zip->addFromString('main.js', $cloudFunction->code);
         $zip->close();
 
         $contents = file_get_contents('/dev/shm/test.zip');
