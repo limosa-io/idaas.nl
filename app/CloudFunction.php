@@ -40,11 +40,6 @@ class CloudFunction extends Model
         return CloudFunctionHelper::invoke($this, $parameters);
     }
 
-    public function getDeployableCode()
-    {
-        return $this->code;
-    }
-
     protected static function boot()
     {
         parent::boot();

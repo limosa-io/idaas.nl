@@ -1,15 +1,15 @@
 parameters: {}
 environment: {}
 packages:
-    - name: sample
+    - name: idaas
       shared: false
       environment: {}
       parameters: {}
       annotations: {}
       functions:
-        - name: hello
+        - name: script
           binary: false
-          main: ""
+          main: "main.js"
           runtime: nodejs:default
           web: true
           websecure: false

@@ -8,6 +8,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\CloudFunction as CloudFunctionModel;
+use App\CloudFunction\HandlerInterface;
 use App\CloudFunctionHelper;
 
 class CloudFunction implements ShouldQueue
@@ -32,11 +33,11 @@ class CloudFunction implements ShouldQueue
 
     public function handle()
     {
-        $result = CloudFunctionHelper::invoke(
+        /** @var HandlerInterface */
+        $handler = resolve(HandlerInterface::class);
+        $handler->invoke(
             CloudFunctionModel::find($this->cloudFunctionId),
             $this->parameters
         );
-
-        CloudFunctionHelper::handle($result);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 // TODO: implement
 namespace App\Jobs;
 
@@ -8,9 +9,13 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\CloudFunction as CloudFunctionModel;
+use App\CloudFunction\HandlerInterface;
 use App\CloudFunctionHelper;
+use GuzzleHttp\Client;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
-class CloudFunction implements ShouldQueue
+class CloudFunctionDeploy implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
@@ -22,22 +27,20 @@ class CloudFunction implements ShouldQueue
 
 
     protected $cloudFunctionId;
-    protected $parameters;
 
-    public function __construct(CloudFunctionModel $cloudFunction, $parameters)
+    public function __construct(CloudFunctionModel $cloudFunction)
     {
         // TODO: use dedicated queue that runs jobs in serial
+        // $this->onQueue('serial');
         $this->cloudFunctionId = $cloudFunction->id;
-        $this->parameters = $parameters;
     }
 
     public function handle()
     {
-        $result = CloudFunctionHelper::invoke(
-            CloudFunctionModel::find($this->cloudFunctionId),
-            $this->parameters
+        /** @var HandlerInterface */
+        $handler = resolve(HandlerInterface::class);
+        $handler->deploy(
+            CloudFunctionModel::find($this->cloudFunctionId)
         );
-
-        CloudFunctionHelper::handle($result);
     }
 }

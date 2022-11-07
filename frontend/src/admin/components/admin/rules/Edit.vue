@@ -406,7 +406,7 @@ export default {
           JSON.parse(this.input)
         )
         .then(response => {
-          this.output = JSON.stringify(response.data.results, null, 2);
+          this.output = JSON.stringify(response.data, null, 2);
           this.error = null;
         })
         .catch(response => {

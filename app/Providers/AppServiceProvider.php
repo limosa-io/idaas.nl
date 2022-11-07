@@ -20,6 +20,9 @@ use App\Session\DatabaseSessionHandler;
 use Illuminate\Database\ConnectionInterface;
 use App\AuthTypes\OpenIDConnect;
 use App\AuthTypes\OtpMail;
+use App\CloudFunction\DigitalOceanHandler;
+use App\CloudFunction\HandlerInterface;
+use App\CloudFunction\OpenWhiskHandler;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\AuthChain\StateStorage;
 use App\SCIMConfig;
@@ -40,6 +43,7 @@ use App\Repository\ProviderRepository;
 use App\Repository\TokenRepository;
 use App\Session\OIDCSession;
 use App\TokenCache;
+use Exception;
 use Idaas\OpenID\Repositories\UserRepositoryInterface;
 use Idaas\Passport\ProviderRepository as PassportProviderRepository;
 use Laravel\Passport\Passport;
@@ -96,12 +100,18 @@ class AppServiceProvider extends ServiceProvider
             }
         }
 
+        if (config('serverless.driver') != null) {
+            $this->app->singleton(HandlerInterface::class, match (config('serverless.driver')) {
+                'openwhisk' => OpenWhiskHandler::class,
+                'digitalocean' => DigitalOceanHandler::class,
+                default => throw new Exception('Invalid serverless.driver specified')
+            });
+        }
+
         Token::observe(TokenObserver::class);
 
-        //You must use singleton
         $this->app->singleton(ChainRepository::class);
         $this->app->singleton(UserRepository::class);
-
         $this->app->singleton(AuthLevelRepository::class);
 
         $this->app->singleton(
@@ -119,6 +129,7 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(PassportProviderRepository::class, ProviderRepository::class);
 
+        // TOOD: dit de reden dat clients niet goed opslaan?
         // $this->app->singleton(BridgeClientRepository::class, ClientRepository::class);
 
 
@@ -137,12 +148,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(\Laravel\Passport\TokenRepository::class, TokenRepository::class);
         $this->app->singleton(\Idaas\Passport\Bridge\ClaimRepository::class, ClaimRepository::class);
         $this->app->singleton(\LAravel\Passport\Bridge\UserRepository::class, UserRepository::class);
-
-        // TODO: delete AuthCodeRepository.php
-        // $this->app->singleton(
-        //     \Laravel\Passport\Bridge\AuthCodeRepository::class,
-        //     \App\Repository\AuthCodeRepository::class
-        // );
 
         // $this->app->singleton(
         //     \Laravel\Passport\Bridge\RefreshTokenRepository::class,

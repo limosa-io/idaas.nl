@@ -9,8 +9,11 @@
 namespace App\Http\Controllers;
 
 use App\CloudFunction;
+use App\CloudFunction\HandlerInterface;
 use Illuminate\Http\Request;
 use App\CloudFunctionHelper;
+use App\Jobs\CloudFunction as JobsCloudFunction;
+use App\Jobs\CloudFunctionDeploy;
 
 class CloudFunctionController extends Controller
 {
@@ -63,11 +66,12 @@ class CloudFunctionController extends Controller
 
     public function invoke(Request $request, CloudFunction $cloudFunction)
     {
-        $result = CloudFunctionHelper::invoke($cloudFunction, $request->input());
-
-        CloudFunctionHelper::handle($result);
-
-        return $result;
+        /** @var HandlerInterface */
+        $handler = resolve(HandlerInterface::class);
+        return $handler->invoke(
+            CloudFunction::find($cloudFunction->id),
+            $request->input()
+        );
     }
 
     /**
@@ -82,7 +86,7 @@ class CloudFunctionController extends Controller
         $cloudFunction->forceFill($this->withDefaults($request->validate($this->getValidations())));
         $cloudFunction->save();
 
-        CloudFunctionHelper::deploy($cloudFunction);
+        CloudFunctionDeploy::dispatch($cloudFunction);
 
         return $cloudFunction;
     }
