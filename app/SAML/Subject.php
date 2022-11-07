@@ -20,6 +20,7 @@ class Subject extends SAMLSubject
 
     public function getAttributes(\SAML2\AuthnRequest $authnRequest)
     {
+        // TODO: implement this in order to return more attributes. By invoking the cloud function...
         return [
             'user_id' => $this->subject->getUserId()
         ];
