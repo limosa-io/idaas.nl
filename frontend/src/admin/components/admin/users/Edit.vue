@@ -587,7 +587,7 @@ export default {
 
 
     //TODO: Ensure you get all roles, always. Yet, limit attributes returned
-    this.$http.get(this.$murl('api/scim/v2/Roles?count=100')).then(response => {
+    this.$http.get(this.$murl('api/scim/v2/Roles?count=250')).then(response => {
 
       for (var v of response.data.Resources) {
         this.roles.push({
