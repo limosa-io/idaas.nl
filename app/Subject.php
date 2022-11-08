@@ -270,9 +270,7 @@ class Subject extends Model implements SubjectInterface, StatableInterface, Auth
         if (
             config('serverless.openwhisk_enabled') &&
             (
-                $cloudFunction = CloudFunction::where('is_sequence', true)
-                    ->where('type', CloudFunction::TYPE_ATTRIBUTE)
-                    ->first()
+                $cloudFunction = CloudFunction::where('type', CloudFunction::TYPE_ATTRIBUTE)->first()
             ) != null
         ) {
             $cloudResult = CloudFunctionHelper::invoke(
