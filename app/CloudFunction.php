@@ -40,19 +40,6 @@ class CloudFunction extends Model
         return CloudFunctionHelper::invoke($this, $parameters);
     }
 
-    public function getDeployableCode()
-    {
-        $result = preg_replace(
-            '/\/\/ start user code.*?\/\/ end user code/s',
-            $this->code,
-            file_get_contents(resource_path('serverless/template.js'))
-        );
-
-        $result = str_replace('[cloud_function_id]', $this->id, $result);
-
-        return $result;
-    }
-
     protected static function boot()
     {
         parent::boot();

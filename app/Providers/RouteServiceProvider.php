@@ -69,6 +69,11 @@ class RouteServiceProvider extends ServiceProvider
             function ($router) {
                 $router->forAuthorization();
                 $router->forOIDCClients();
+
+                Route::middleware('api')->put(
+                    '/connect/register/{client_id}',
+                    '\App\Http\Controllers\Manage\ClientController@update'
+                )->name('oidc.manage.client.replace');
             },
             ['middleware' => ['web'], 'domain' => '{tenant}.' . config('app.domain')]
         );

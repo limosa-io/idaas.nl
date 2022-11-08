@@ -17,7 +17,7 @@ class CreateOidcClientsTable extends Migration
 
             $table->uuid('client_id')->primary();
             $table->uuid('tenant_id');
-            
+
             // TODO: not used??
             $table->uuid('user_id')->index()->nullable();
             $table->string('name');
@@ -26,7 +26,7 @@ class CreateOidcClientsTable extends Migration
             $table->string('secret', 100);
 
             $table->text('redirect_uris')->nullable();
-            
+
             $table->text('post_logout_redirect_uris')->nullable();
 
             $table->boolean('personal_access_client');
@@ -49,20 +49,20 @@ class CreateOidcClientsTable extends Migration
             $table->string('tos_uri')->nullable();
 
             $table->string('token_endpoint_auth_method')->default('client_secret_post');
-            
+
             $table->string('jwks_uri')->nullable();
             $table->text('jwks')->nullable();
-            
+
             $table->string('default_max_age')->nullable();
             $table->text('default_acr_values')->nullable();
 
             $table->string('default_prompt')->nullable();
-            
+
             $table->boolean('default_prompt_allow_override')->default(true);
             $table->boolean('default_acr_values_allow_override')->default(true);
 
             $table->string('require_auth_time')->nullable();
-            
+
             $table->string('initiate_login_uri')->nullable();
 
             $table->boolean('trusted')->default(false);
@@ -73,11 +73,6 @@ class CreateOidcClientsTable extends Migration
             $table->foreign('user_interface')->references('id')->on('u_i_servers');
 
             $table->unique(['tenant_id', 'client_id']);
-
-            // CREATE INDEX idx_test on "Test" USING GIN ("Column1");
-            // DB::statement('ALTER TABLE mytable MODIFY mycolumn  LONGTEXT;');
-
-            
         });
     }
 

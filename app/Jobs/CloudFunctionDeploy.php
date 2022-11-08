@@ -10,7 +10,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use App\CloudFunction as CloudFunctionModel;
 use App\CloudFunction\HandlerInterface;
 
-class CloudFunction implements ShouldQueue
+class CloudFunctionDeploy implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
@@ -22,21 +22,20 @@ class CloudFunction implements ShouldQueue
 
 
     protected $cloudFunctionId;
-    protected $parameters;
 
-    public function __construct(CloudFunctionModel $cloudFunction, $parameters)
+    public function __construct(CloudFunctionModel $cloudFunction)
     {
+        // TODO: use dedicated queue that runs jobs in serial
+        // $this->onQueue('serial');
         $this->cloudFunctionId = $cloudFunction->id;
-        $this->parameters = $parameters;
     }
 
     public function handle()
     {
         /** @var HandlerInterface */
         $handler = resolve(HandlerInterface::class);
-        $handler->invoke(
-            CloudFunctionModel::find($this->cloudFunctionId),
-            $this->parameters
+        $handler->deploy(
+            CloudFunctionModel::find($this->cloudFunctionId)
         );
     }
 }

@@ -8,6 +8,7 @@ use App\Repository\SubjectRepository;
 use App\Scopes\TenantTrait;
 use App\Stats\StatableInterface;
 use App\Stats\StatableTrait;
+use Exception;
 use Idaas\OpenID\Entities\ClaimEntityInterface;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Str;
@@ -270,33 +271,24 @@ class Subject extends Model implements SubjectInterface, StatableInterface, Auth
         if (
             config('serverless.openwhisk_enabled') &&
             (
-                $cloudFunction = CloudFunction::where('is_sequence', true)
-                    ->where('type', CloudFunction::TYPE_ATTRIBUTE)
-                    ->first()
+                $cloudFunction = CloudFunction::where('type', CloudFunction::TYPE_ATTRIBUTE)->first()
             ) != null
         ) {
-            $cloudResult = CloudFunctionHelper::invoke(
-                $cloudFunction,
-                [
+            try {
+                $cloudResult = CloudFunctionHelper::invoke(
+                    $cloudFunction,
+                    [
                     'subject' => $this->subject,
                     'context' => [
                         'attributes' => $attributes,
                         'scopes' => $scopes
                     ]
-                ]
-            );
-
-            $results = $cloudResult['results'] ?? [];
-
-            $attributes = array_merge(
-                ...collect($cloudResult['results'])->map(
-                    function ($value) {
-                        return $value['attributes'] ?? [];
-                    }
-                )->all()
-            );
-
-            $result = array_merge($result, $attributes);
+                    ]
+                );
+                $result = array_merge($result, $cloudResult);
+            } catch (Exception $e) {
+                // TODO: implement some kind of exception handler
+            }
         }
 
         $result['acr'] = $this->levels;
@@ -339,7 +331,7 @@ class Subject extends Model implements SubjectInterface, StatableInterface, Auth
      */
     public function getAuthPassword()
     {
-      throw new AuthFailedException('getAuthPassword is not supported');
+        throw new AuthFailedException('getAuthPassword is not supported');
     }
 
     /**
@@ -349,7 +341,7 @@ class Subject extends Model implements SubjectInterface, StatableInterface, Auth
      */
     public function getRememberToken()
     {
-      return 'remember_token';
+        return 'remember_token';
     }
 
     /**
@@ -360,7 +352,7 @@ class Subject extends Model implements SubjectInterface, StatableInterface, Auth
      */
     public function setRememberToken($value)
     {
-      throw new AuthFailedException('setRememberToken is not supported');
+        throw new AuthFailedException('setRememberToken is not supported');
     }
 
     /**
@@ -370,6 +362,6 @@ class Subject extends Model implements SubjectInterface, StatableInterface, Auth
      */
     public function getRememberTokenName()
     {
-      throw new AuthFailedException('getRememberTokenName is not supported');
+        throw new AuthFailedException('getRememberTokenName is not supported');
     }
 }

@@ -17,7 +17,7 @@ class CreateRolesTable extends Migration
             $table->uuid('id')->primary();
 
             $table->uuid('tenant_id')->index();
-            
+
             // display version
             $table->string('display');
             $table->string('type')->nullable();

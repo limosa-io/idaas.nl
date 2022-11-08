@@ -5,16 +5,8 @@ function ({
   callback,
   variables
 }) {
-
-  callback(
-
-    {
-      attributes: {
-        subject: subject,
-        context: context
-      }
-    }
-    
-  );
-
+  return {
+    subject: subject,
+    context: context
+  }
 }

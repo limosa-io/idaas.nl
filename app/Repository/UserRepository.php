@@ -16,6 +16,7 @@ class UserRepository
         $user = null;
 
         if (config('serverless.openwhisk_enabled')) {
+            // TODO: this is currently not in use, is it??
             $cloudFunction = CloudFunction::where('type', 'jit')->first();
 
             if ($cloudFunction != null) {

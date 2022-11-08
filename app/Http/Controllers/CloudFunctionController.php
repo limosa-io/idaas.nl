@@ -9,8 +9,10 @@
 namespace App\Http\Controllers;
 
 use App\CloudFunction;
+use App\CloudFunction\HandlerInterface;
+use App\Http\Controllers\OAuth\ClientWithoutCredentialsGrant;
 use Illuminate\Http\Request;
-use App\CloudFunctionHelper;
+use App\Jobs\CloudFunctionDeploy;
 
 class CloudFunctionController extends Controller
 {
@@ -63,11 +65,12 @@ class CloudFunctionController extends Controller
 
     public function invoke(Request $request, CloudFunction $cloudFunction)
     {
-        $result = CloudFunctionHelper::invoke($cloudFunction, $request->input());
-
-        CloudFunctionHelper::handle($result);
-
-        return $result;
+        /** @var HandlerInterface */
+        $handler = resolve(HandlerInterface::class);
+        return $handler->invoke(
+            CloudFunction::find($cloudFunction->id),
+            $request->input()
+        );
     }
 
     /**
@@ -81,6 +84,8 @@ class CloudFunctionController extends Controller
     {
         $cloudFunction->forceFill($this->withDefaults($request->validate($this->getValidations())));
         $cloudFunction->save();
+
+        CloudFunctionDeploy::dispatch($cloudFunction);
 
         return $cloudFunction;
     }
