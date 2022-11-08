@@ -24,7 +24,6 @@ use App\CloudFunction\DigitalOceanHandler;
 use App\CloudFunction\HandlerInterface;
 use App\CloudFunction\OpenWhiskHandler;
 use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\AuthChain\StateStorage;
 use App\SCIMConfig;
 use App\SAMLConfig;
 use App\Tenant;
@@ -37,6 +36,7 @@ use Illuminate\Support\Facades\View;
 use App\Http\Controllers\Controller;
 use App\PassportConfig;
 use App\Repository\ClaimRepository;
+use App\Repository\ClientRepository as RepositoryClientRepository;
 use App\Repository\KeyRepository;
 use App\Repository\OIDCUserRepository;
 use App\Repository\ProviderRepository;
@@ -130,7 +130,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(PassportProviderRepository::class, ProviderRepository::class);
 
         // TOOD: dit de reden dat clients niet goed opslaan?
-        // $this->app->singleton(BridgeClientRepository::class, ClientRepository::class);
+        $this->app->singleton(\Laravel\Passport\ClientRepository::class, RepositoryClientRepository::class);
 
 
         $this->app->singleton('ArieTimmerman\Laravel\SCIMServer\PolicyDecisionPoint', PolicyDecisionPoint::class);

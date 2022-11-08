@@ -1,6 +1,5 @@
 <?php
 
-// TODO: implement
 namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
@@ -10,10 +9,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\CloudFunction as CloudFunctionModel;
 use App\CloudFunction\HandlerInterface;
-use App\CloudFunctionHelper;
-use GuzzleHttp\Client;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
 
 class CloudFunctionDeploy implements ShouldQueue
 {

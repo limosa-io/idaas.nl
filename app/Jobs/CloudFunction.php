@@ -9,7 +9,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\CloudFunction as CloudFunctionModel;
 use App\CloudFunction\HandlerInterface;
-use App\CloudFunctionHelper;
 
 class CloudFunction implements ShouldQueue
 {
