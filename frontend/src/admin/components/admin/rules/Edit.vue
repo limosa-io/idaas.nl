@@ -75,10 +75,6 @@
                 <span slot="noResult">Oops! No elements found. Consider changing the search query.</span>
               </multiselect>
 
-              <small id="display_name_help" class="form-text text-muted">
-                Use https to ensure the confidentially of the transmitted
-                data.
-              </small>
             </div>
 
             <button class="btn btn-primary mt-3">Save</button>
@@ -353,6 +349,7 @@ export default {
           })
       ]).then(r => {
         this.variableOptions = r;
+
 
         this.isLoading = false;
       });

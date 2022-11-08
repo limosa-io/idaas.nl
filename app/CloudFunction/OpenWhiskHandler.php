@@ -120,6 +120,11 @@ class OpenWhiskHandler implements HandlerInterface
             )->toArray();
         }
 
+        // TODO: implement something that allows passing in access tokens to the serverless function
+        // $grant = new ClientWithoutCredentialsGrant(resolve('App\Tenant')->client_id);
+        // $token = $grant->getToken();
+        // return (string) $token;
+
         $actionUrl = sprintf(
             'https://%s/api/v1/namespaces/_/actions/%s?blocking=true&result=true',
             config('serverless.openwhisk_host'),

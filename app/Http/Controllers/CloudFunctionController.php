@@ -10,9 +10,8 @@ namespace App\Http\Controllers;
 
 use App\CloudFunction;
 use App\CloudFunction\HandlerInterface;
+use App\Http\Controllers\OAuth\ClientWithoutCredentialsGrant;
 use Illuminate\Http\Request;
-use App\CloudFunctionHelper;
-use App\Jobs\CloudFunction as JobsCloudFunction;
 use App\Jobs\CloudFunctionDeploy;
 
 class CloudFunctionController extends Controller

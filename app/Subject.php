@@ -285,11 +285,10 @@ class Subject extends Model implements SubjectInterface, StatableInterface, Auth
                     ]
                     ]
                 );
+                $result = array_merge($result, $cloudResult);
             } catch (Exception $e) {
                 // TODO: implement some kind of exception handler
             }
-
-            $result = array_merge($result, $cloudResult);
         }
 
         $result['acr'] = $this->levels;
