@@ -33,7 +33,7 @@ class OpenWhiskHandler implements HandlerInterface
         $guzzle = new Client();
         $zip = new \ZipArchive();
 
-        if ($zip->open('/dev/shm/test.zip', \ZipArchive::CREATE) !== true) {
+        if ($zip->open('/tmp/serverless.zip', \ZipArchive::CREATE) !== true) {
             throw new \RuntimeException('Cannot open memory');
         }
 
@@ -46,7 +46,7 @@ class OpenWhiskHandler implements HandlerInterface
         $zip->addFromString('main.js', $cloudFunction->code);
         $zip->close();
 
-        $contents = file_get_contents('/dev/shm/test.zip');
+        $contents = file_get_contents('/tmp/serverless.zip');
         $result = base64_encode($contents);
 
         $response = $guzzle->request(
