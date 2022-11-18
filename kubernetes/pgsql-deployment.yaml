@@ -37,7 +37,7 @@ spec:
               value: password
             - name: POSTGRES_USER
               value: laravel
-          image: timescale/timescaledb:2.8.1-pg14-oss
+          image: postgres:15.1
           livenessProbe:
             exec:
               command:
