@@ -11,6 +11,7 @@ namespace App\Http\Controllers;
 use App\Client;
 use App\User;
 use App\Token;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class StatController extends Controller
@@ -26,7 +27,7 @@ class StatController extends Controller
             ->where('tenant_id', resolve('App\Tenant')->id)
             ->where('key', 'operation')
             ->where('value', 'ArieTimmerman\Laravel\SCIMServer\Events\Create')
-            ->where('time', '>', $daysAgo)
+            ->where('created_at', '>', $daysAgo)
             ->count();
 
         return [
@@ -39,26 +40,21 @@ class StatController extends Controller
 
     public function loginsPerDay30Days()
     {
-        $results = DB::table('hourly_logins')
-            ->select(DB::raw("to_char(date_trunc('day',time),'YYYY-MM-DD') as d"), DB::raw('count(*) as total'))
-            ->where('tenant_id', resolve('App\Tenant')->id)
-            ->whereRaw("time > (now() - INTERVAL '30 days')")
-            ->groupBy('d')
-            ->orderBy('d', 'asc')
-            ->get();
 
-        $results = $results->mapWithKeys(
-            function ($item) {
-                return [$item->d => intVal($item->total)];
-            }
-        );
 
-        for ($i = -29; $i <= 0; $i++) {
-            $date = date('Y-m-d', strtotime(sprintf("%d days", $i)));
-            if (!isset($results[$date])) {
-                $results[$date] = 0;
-            }
-        }
+        $results = DB::table('stats')
+            ->select(['hours', DB::raw('count(*)')])
+            ->where('hours', '>', intval((time() / 3600) - (30 * 24)))
+            ->groupBy('hours')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'date' => Carbon::createFromTimestamp($item->hours)->format('Y-m-d')
+                ];
+            })->groupBy('date')->map(function ($item) {
+                return count($item);
+            });
+
 
         $values = $results->all();
         ksort($values);
