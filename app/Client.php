@@ -25,6 +25,12 @@ class Client extends IdaasClient implements SubjectInterface, Authenticatable, S
         'revoked'
     ];
 
+    protected $attributes = [
+        'personal_access_client' => false,
+        'password_client' => false,
+        'revoked' => false,
+    ];
+
     protected $with = [];
 
     protected $primaryKey = 'client_id';
