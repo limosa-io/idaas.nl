@@ -72,7 +72,6 @@ services:
             WWWUSER: '${WWWUSER}'
         volumes:
             - '.:/var/www/html'
-            - /home/arie/git/ice-complete/laravel-saml:/var/www/html/vendor/arietimmerman/laravel-saml
         networks:
             - sail
         entrypoint: npm run dev
