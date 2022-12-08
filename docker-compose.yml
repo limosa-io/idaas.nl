@@ -35,7 +35,8 @@ services:
                 php composer-setup.php &&
                 ./composer.phar install --ignore-platform-reqs &&
                 php artisan migrate &&
-                php artisan tenant:master login admin@login.notidaas.nl changeit"
+                php artisan tenant:master login admin@login.notidaas.nl changeit &&
+                echo \"\$$c = \\App\\Client::updateOrCreate(['name' => 'My Idaas'], ['public' => 'public', 'secret' => \\Illuminate\\Support\\Str::random(40), 'redirect_uris' => ['http://my.notidaas.nl/callback', 'http://my.notidaas.nl/linking'], 'post_logout_redirect_uris'=>['http://my.notidaas.nl/post_logout']]); \$$c->client_id = '00000000-0000-0000-0000-000000000000'; \$$c->save();\"|php artisan tinker"
         working_dir: /var/www
     nginx:
         image: nginx-idaas
@@ -53,6 +54,7 @@ services:
             sail:
                 aliases:
                     - login.notidaas.nl
+                    - my.notidaas.nl
     node.test:
         env_file:
             - .env.demo
@@ -70,9 +72,23 @@ services:
             WWWUSER: '${WWWUSER}'
         volumes:
             - '.:/var/www/html'
+            - /home/arie/git/ice-complete/laravel-saml:/var/www/html/vendor/arietimmerman/laravel-saml
         networks:
             - sail
         entrypoint: npm run dev
+    node.my-idaas:
+        build:
+            context: ./my.idaas.nl
+            dockerfile: Dockerfile
+        env_file:
+            - .env.demo
+        image: node-my-idaas
+        ports:
+            - '5174:5173'
+        volumes:
+            - './my.idaas.nl:/usr/app'
+        networks:
+            - sail
     pgsql:
         image: 'postgres:15.1'
         ports:
