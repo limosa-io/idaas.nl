@@ -1,5 +1,8 @@
 FROM php:8.1-fpm-alpine
 
+# install linux headers package
+RUN apk add --update linux-headers
+
 RUN \
     apk add --no-cache $PHPIZE_DEPS su-exec postgresql-dev tidyhtml tidyhtml-dev git libpng-dev libjpeg-turbo-dev freetype-dev tar libzip-dev zip && \
     pecl install xdebug && \
