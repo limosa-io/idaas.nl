@@ -45,13 +45,11 @@
         </form>
       </b-modal>
 
-      <router-link
-        tag="button"
-        class="btn btn-md btn-primary float-right"
+      <Button
         to="/authentication/add"
       >
         Add Module
-      </router-link>
+      </Button>
     </template>
 
     <template v-slot:body>

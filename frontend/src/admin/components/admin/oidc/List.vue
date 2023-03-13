@@ -19,11 +19,10 @@
         >
       </b-dropdown>
 
-      <router-link
-        tag="button"
-        class="btn btn-md btn-primary float-right mr-2"
+      <Button
+        class="mr-2"
         to="/applications/oidc/add"
-        >Add Application</router-link
+        >Add Application</Button
       >
 
       <button
