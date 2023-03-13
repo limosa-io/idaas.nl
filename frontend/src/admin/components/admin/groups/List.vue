@@ -1,9 +1,9 @@
 
 <template>
   <div class="container-fluid">
-    <router-link tag="button" class="btn btn-md btn-primary float-right" to="/groups/add">
+    <Button to="/groups/add">
           Add Group
-        </router-link>
+        </Button>
     <h4 class="c-grey-900 mt-1 mb-3">Groups</h4>
 
 <div class="row">

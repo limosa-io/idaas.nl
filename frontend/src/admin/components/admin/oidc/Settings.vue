@@ -9,23 +9,7 @@
       General
     </router-link>
   </li>
-
-  <!--
-
-  <li class="nav-item">
-    <router-link :to="{name: 'oidc.settings.levels'}" class="nav-link" :exact="true" active-class="active">
-      Levels
-    </router-link>
-  </li>
-
-  -->
-
-  <!-- <li class="nav-item">
-    <router-link :to="{name: 'oidc.settings.claims'}" class="nav-link" :exact="true" active-class="active">
-      Claims
-    </router-link>
-  </li> -->
-
+  
   <li class="nav-item">
     <router-link :to="{name: 'oidc.settings.scopes'}" class="nav-link" :exact="true" active-class="active">
       Scopes
