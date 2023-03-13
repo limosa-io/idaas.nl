@@ -5,23 +5,21 @@ TODO: Allow marking client as 'trusted' => should lead to auto consenting scopes
 TODO: Allow marking scopes as 'required', client will fail if no consented
 TODO: Consider adding list of allowed 'audiences'
   -->
-  <div class="container-fluid" v-if="client">
-    <b-modal hide-footer size="lg" ref="pickerModal" id="pickerModal" title="Select an image">
-      <Picker v-on:picked="picked" :picker="true" />
-    </b-modal>
 
-    <h4 class="c-grey-900 mt-2">
-      Edit
-      <em>{{ client.client_name }}</em>
-    </h4>
+  <Main v-if="client" :title="`Edit ${client.client_name}`">
+    <template v-slot:header>
+      <b-modal hide-footer size="lg" ref="pickerModal" id="pickerModal" title="Select an image">
+        <Picker v-on:picked="picked" :picker="true" />
+      </b-modal>
 
-    <div
-      v-if="client.client_id == currentClientId"
-      class="alert alert-danger"
-      role="alert"
-    >The management APIs depend on this client for functioning. Only edit the properties if you know what you are doing.</div>
+      <div
+        v-if="client.client_id == currentClientId"
+        class="alert alert-danger"
+        role="alert"
+      >The management APIs depend on this client for functioning. Only edit the properties if you know what you are doing.</div>
+    </template>
 
-    <div class="bgc-white bd bdrs-3 p-3 mt-3">
+    <template v-slot:body>
       <form
         :class="{'was-validated': wasValidated}"
         v-if="client"
@@ -528,9 +526,10 @@ TODO: Consider adding list of allowed 'audiences'
         <button type="button" @click="$router.go(-1)" class="btn btn-secondary ml-1">Back</button>
       </form>
 
-    </div>
+    </template>
 
-    <div class="card border-danger mb-3 mt-3" v-if="client && client.client_id != currentClientId">
+    <template v-slot:footer>
+      <div class="card border-danger mb-3 mt-3" v-if="client && client.client_id != currentClientId">
       <div class="card-header">Danger Zone</div>
       <div class="card-body text-danger">
         <p
@@ -539,18 +538,22 @@ TODO: Consider adding list of allowed 'audiences'
         <button type="button" class="btn btn-danger" @click="deleteObject(client)">Delete</button>
       </div>
     </div>
-  </div>
+    </template>
+
+
+  </Main>
 </template>
 
 <script>
 import Vue from "vue";
 import { getDecodedAccesstoken } from "@/admin/helpers.js";
-
 import Picker from "../userinterface/Picker.vue";
+import Main from "@/admin/components/general/Main.vue";
 
 export default {
   components: {
-    Picker
+    Picker,
+    Main
   },
 
   data() {

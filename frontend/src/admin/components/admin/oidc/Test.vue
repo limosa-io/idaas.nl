@@ -84,24 +84,6 @@
         </div>
       </div>
 
-      <!--
-      <div class="form-group row">
-        <label for="max_age" class="col-md-3 col-form-label">Max Age</label>
-        <div class="col">
-          <input type="number" class="form-control" id="max_age" placeholder="max_age" v-model="requestParameters.max_age">
-        </div>
-      </div>
-
--->
-      <!--
-     <div class="form-group row">
-        <label for="max_age" class="col-md-3 col-form-label">Max Age</label>
-        <div class="col">
-          <input type="number" class="form-control" id="max_age" placeholder="max_age" v-model="parameters.max_age">
-        </div>
-      </div>
--->
-
       <div class="row">
         <div class="col-3">
 

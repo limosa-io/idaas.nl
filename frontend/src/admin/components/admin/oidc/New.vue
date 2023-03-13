@@ -1,9 +1,8 @@
 
 <template>
-  <div>
-    <h2 class="c-grey-900 mt-1 mb-3">New client</h2>
+  <Main title="New client">
 
-    <div class="bgc-white bd bdrs-3 p-3 mt-2">
+    <template v-slot:body>
       <form
         class="needs-validation"
         novalidate
@@ -31,11 +30,6 @@
 
           <div v-if="!errors.client_name" class="invalid-feedback">This is a required field.</div>
 
-          <!--
-    <p id="clientNameHelpBlock" class="form-text text-muted">
-      The client name must be unique
-    </p>
-          -->
         </div>
 
         <b-form-group label="What type of client would you like to add?">
@@ -53,13 +47,19 @@
 
         <button type="submit" class="btn btn-primary mt-1" :disabled="loading">Add Application</button>
       </form>
-    </div>
-  </div>
+    </template>
+  </Main>
 </template>
 
 
 <script>
+import Main from "@/admin/components/general/Main.vue";
+
 export default {
+  components:{
+    Main
+  },
+
   data() {
     return {
       errors: {},
