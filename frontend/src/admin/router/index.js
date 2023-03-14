@@ -12,8 +12,6 @@ import Error from '../components/Error.vue'
 
 import Logout from '../components/Logout.vue'
 
-import Help from '../components/admin/Help.vue'
-
 import SAML from '../components/admin/SAML.vue'
 import ListSAML from '../components/admin/saml/List.vue'
 import EditSAML from '../components/admin/saml/Edit.vue'

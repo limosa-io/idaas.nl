@@ -7,6 +7,8 @@ import { VBModal } from 'bootstrap-vue'
 import {VBTooltip, BPagination} from 'bootstrap-vue';
 import {BFormGroup} from './bootstrap-vue'
 import state from './components/state.js'
+import Button from "@/admin/components/general/Button.vue";
+import Main from "@/admin/components/general/Main.vue";
 
 Vue.use(VueResource);
 
@@ -22,6 +24,14 @@ Vue.component(
 
 Vue.component(
   'b-modal', BModal
+);
+
+Vue.component(
+  'Button', Button
+);
+
+Vue.component(
+  'Main', Main
 );
 
 Vue.directive('b-modal', VBModal);

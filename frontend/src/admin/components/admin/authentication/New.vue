@@ -1,6 +1,5 @@
 
 <template>
-    
 <div>
   <h3 class="c-grey-900">Add a new authentication module</h3>
 

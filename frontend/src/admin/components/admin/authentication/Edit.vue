@@ -8,8 +8,6 @@
 
   <template v-slot:body>
 
-        <h4 class="c-grey-900 mt-2 mb-0"> {{ module.name }}</h4>
-
         <div class="mt-2 mb-3 alert alert-warning d-flex justify-content-between align-items-center" v-if="alert" role="alert">
           {{ alert.text }}
           <button v-if="alert.link" @click="$router.push(alert.link)" type="button" class="btn btn-xs btn-dark align-right">Configure</button>
@@ -193,8 +191,6 @@ export default {
     });
 
     this.$http.get(this.$murl('authchain/v2/manage/modules/' + this.$route.params.module_id)).then(response => {
-
-      var keys = Object.keys(this.$options.components);
 
       this.module = response.data;
 
