@@ -147,7 +147,7 @@ import activation from './modules/Activation.vue';
 import passwordForgotten from './modules/PasswordForgotten.vue';
 import openidconnect from './modules/OpenIDConnect.vue';
 import register from './modules/Register.vue';
-import fido from './modules/Fido.vue';
+// import fido from './modules/Fido.vue';
 
 export default {
 
@@ -283,7 +283,7 @@ export default {
     openidconnect,
     register,
     otpMail,
-    fido
+    // fido
   }
 
 }
