@@ -109,12 +109,10 @@ import Vue from "vue";
 // /home/arie/git/ice-complete/ice/frontend/src/admin/components/general/Main.vue
 import { getDecodedAccesstoken } from "@/admin/helpers.js";
 import PopupDemoApplication from "./demo/PopupDemoApplication.vue";
-import Main from "@/admin/components/general/Main.vue";
 
 export default {
   components: {
-    PopupDemoApplication,
-    Main,
+    PopupDemoApplication
   },
 
   data() {

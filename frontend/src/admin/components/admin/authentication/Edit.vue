@@ -1,13 +1,12 @@
 
 <template>
-<div class="container-fluid" v-if="module">
-  <h4 class="c-grey-900 mt-2">Edit <em>{{ module.name }}</em></h4>
+<Main :title="`Edit ${module.name}`" v-if="module">
 
-  <div v-if="userinfo != null && userinfo.acr.includes(module.id)" class="alert alert-danger" role="alert">You have used this authentication module to log in for this session. Ensure you know what you are doing when editing this module. You risk locking yourself out.</div>
+  <template v-slot:header>
+    <div v-if="userinfo != null && userinfo.acr.includes(module.id)" class="alert alert-danger" role="alert">You have used this authentication module to log in for this session. Ensure you know what you are doing when editing this module. You risk locking yourself out.</div>
+  </template>
 
-  <div class="row">
-    <div class="col-md-12">
-      <div v-if="module" class="bgc-white bd bdrs-3 p-3 mt-2">
+  <template v-slot:body>
 
         <h4 class="c-grey-900 mt-2 mb-0"> {{ module.name }}</h4>
 
@@ -95,12 +94,12 @@
 
           <div v-show="showAdvanced" class="mt-3">
 
-            <b-form-group horizontal :label-cols="3" breakpoint="md" description="A script executed before using the module."
-              label="Init Script" label-for="initScript">
+            <!-- <b-form-group horizontal :label-cols="3" breakpoint="md" description="A script executed before using the module."
+              label="Init Script" label-for="initScript">-->
               <!-- <b-form-textarea id="initScript" v-model="module.initScript" placeholder="Optional script" class="mt-3" :rows="3" :max-rows="6">
               </b-form-textarea> -->
 
-            </b-form-group>
+            <!-- </b-form-group> -->
             <!-- <b-form-textarea id="afterScript" v-model="module.afterScript" placeholder="Optional script" class="mt-3" :rows="3" :max-rows="6">
               </b-form-textarea> -->
 
@@ -120,10 +119,9 @@
 
         </form>
 
-      </div>
-    </div>
-  </div>
+  </template>
 
+  <template v-slot:footer>
   <div class="card border-danger mb-3 mt-3" v-if="!module.system && userinfo != null && !userinfo.acr.includes(module.id)">
     <div class="card-header">Danger Zone</div>
     <div class="card-body text-danger">
@@ -131,9 +129,10 @@
       <button type="button" class="btn btn-danger" @click="deleteModule(module)">Delete</button>
     </div>
   </div>
-  
-</div>
+</template>
 
+</Main>
+  
 </template>
 
 
@@ -148,6 +147,7 @@ import activation from './modules/Activation.vue';
 import passwordForgotten from './modules/PasswordForgotten.vue';
 import openidconnect from './modules/OpenIDConnect.vue';
 import register from './modules/Register.vue';
+// import fido from './modules/Fido.vue';
 
 export default {
 
@@ -282,7 +282,8 @@ export default {
     activation,
     openidconnect,
     register,
-    otpMail
+    otpMail,
+    // fido
   }
 
 }
