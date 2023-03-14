@@ -153,45 +153,6 @@ img.cropped{
 
         <form class="needs-validation" novalidate :class="{'was-validated': wasValidated}" v-on:submit.prevent="onSubmit">
 
-          <!-- TODO: Add Image Input, create data url -->
-
-          <!-- <div class="form-row mb-3">
-
-            <div class="col-md-3">
-              Picture
-            </div>
-
-            <div class="col">
-
-              <div class="imageupload" v-show="showupload">
-
-                <vue-croppie ref="imageupload" :enableResize="false" :showZoomer="true" :boundary="{ width: '100%', height: 100 }"
-                  :mouseWheelZoom="false" :viewport="{ width: 100, height: 100 }" @update="update" :enableOrientation="true">
-                </vue-croppie>
-
-                <button type="button" class="crop" @click="crop">
-                  <span>crop</span>
-                </button>
-
-              </div>
-
-              <div class="headerimage" v-if="!showupload">
-                <label class="" ondragover="return false">
-                  <img v-show="profileImage.value" v-bind:src="profileImage.value ? profileImage.value : null" class="loaded"
-                    width="100">
-                  <input v-show="profileImage.value == null" @change="readFile" type="file" accept="image/*" />
-                </label>
-              </div>
-
-              <button v-if="profileImage.value" class="btn btn-danger" type="button" @click="profileImage.value = null">Delete
-                Image</button>
-
-
-
-            </div>
-
-          </div> -->
-
             <div class="form-group form-row">
           <label class="col-3" for="logo_uri">Picture</label>
 
