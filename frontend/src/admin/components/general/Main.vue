@@ -8,6 +8,7 @@
       <div class="col-md-12">
         <div class="bgc-white bd bdrs-3 p-3 mt-2">
           <slot name="body"></slot>
+          <slot></slot>
         </div>
       </div>
     </div>

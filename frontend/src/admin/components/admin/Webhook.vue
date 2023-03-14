@@ -1,33 +1,31 @@
 <template>
-  <Main title="Webhook">
-    <template v-slot:body v-if="settings">
-      <p>
-        A webhook allows you to receive user events - creates, updates and
-        deletions - in a near real-time manner. It is not only useful for
-        logging purposes, but also to populate SIEM systems or for user data
-        synchronization.
-      </p>
+  <Main title="Webhook" v-if="settings">
+    <p>
+      A webhook allows you to receive user events - creates, updates and
+      deletions - in a near real-time manner. It is not only useful for
+      logging purposes, but also to populate SIEM systems or for user data
+      synchronization.
+    </p>
 
-      <form @submit.prevent="onSubmit">
-        <div class="form-group">
-          <label for="url">Webhook url</label>
-          <input
-            type="url"
-            v-model.trim="settings.webhook_url"
-            class="form-control"
-            id="url"
-            aria-describedby="urlHelp"
-            placeholder="https://..."
-          />
-          <small id="urlHelp" class="form-text text-muted"
-            >Use https to ensure the confidentially of the transmitted
-            data.</small
-          >
-        </div>
+    <form @submit.prevent="onSubmit">
+      <div class="form-group">
+        <label for="url">Webhook url</label>
+        <input
+          type="url"
+          v-model.trim="settings.webhook_url"
+          class="form-control"
+          id="url"
+          aria-describedby="urlHelp"
+          placeholder="https://..."
+        />
+        <small id="urlHelp" class="form-text text-muted"
+          >Use https to ensure the confidentially of the transmitted
+          data.</small
+        >
+      </div>
 
-        <button type="submit" class="btn btn-primary">Save</button>
-      </form>
-    </template>
+      <button type="submit" class="btn btn-primary">Save</button>
+    </form>
   </Main>
 </template>
 

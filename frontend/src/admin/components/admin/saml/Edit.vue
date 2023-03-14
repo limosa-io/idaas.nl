@@ -159,13 +159,9 @@
 </form>
 </div>
 
-<div class="card border-danger mb-3 mt-3" v-if="serviceprovider">
-    <div class="card-header">Danger Zone</div>
-    <div class="card-body text-danger">
-      <p class="card-text">Clicking the button below will delete this SAML service provider. This cannot be undone.</p>
+  <Danger body="Clicking the button below will delete this SAML service provider. This cannot be undone." v-if="serviceprovider">
       <button type="button" class="btn btn-danger" @click="deleteObject(serviceprovider)">Delete</button>
-    </div>
-  </div>
+  </Danger>
 
 </div>
 

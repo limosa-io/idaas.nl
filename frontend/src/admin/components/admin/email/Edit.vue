@@ -75,13 +75,9 @@
   </div>
 
 
-  <div class="card border-danger mb-3 mt-3" v-if="object && !object.default">
-    <div class="card-header">Danger Zone</div>
-    <div class="card-body text-danger">
-      <p class="card-text">Clicking the button below will delete this application. This cannot be undone.</p>
-      <button type="button" class="btn btn-danger" @click="deleteObject(object)">Delete</button>
-    </div>
-  </div>
+  <Danger v-if="object && !object.default" body="Clicking the button below will delete this application. This cannot be undone.">
+    <button type="button" class="btn btn-danger" @click="deleteObject(object)">Delete</button>
+  </Danger>
 
 </div>
 
