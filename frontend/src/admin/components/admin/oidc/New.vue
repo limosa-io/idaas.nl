@@ -53,12 +53,8 @@
 
 
 <script>
-import Main from "@/admin/components/general/Main.vue";
 
 export default {
-  components:{
-    Main
-  },
 
   data() {
     return {
