@@ -76,20 +76,21 @@ class AuthModuleController extends Controller
 
         $request->merge(['name' => $module->name]);
 
-        return $this->update($repository, $request, $module->getIdentifier(), true);
+        return $this->update($repository, $request, $module->getIdentifier(), true, true);
     }
 
-    public function update(ModuleRepository $repository, Request $request, $authModuleId, $keepLevels = false)
+    public function update(ModuleRepository $repository, Request $request, $authModuleId, $keepLevels = false, $skipValidation = false)
     {
         $validations = $this->validations;
 
         $data = $this->validate($request, $validations);
 
         $module = $repository->get($authModuleId);
-        ;
 
         //re-run validations for module specific validations
-        $validations = $validations + $module->getTypeObject()->getConfigValidation();
+        if (!$skipValidation) {
+            $validations = $validations + $module->getTypeObject()->getConfigValidation();
+        }
         $data = $this->validate($request, $validations);
 
         $module->enabled = $data['enabled'];

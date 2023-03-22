@@ -82,34 +82,6 @@
 
             </div>
             <div class="col">
-              <button @click="showAdvanced = !showAdvanced" type="button" class="btn btn-sm btn-link pl-0">
-                <span v-if="!showAdvanced">Show Advanced Options</span>
-                <span v-else>Hide Advanced Options</span>
-              </button>
-            </div>
-
-          </div>
-
-          <div v-show="showAdvanced" class="mt-3">
-
-            <!-- <b-form-group horizontal :label-cols="3" breakpoint="md" description="A script executed before using the module."
-              label="Init Script" label-for="initScript">-->
-              <!-- <b-form-textarea id="initScript" v-model="module.initScript" placeholder="Optional script" class="mt-3" :rows="3" :max-rows="6">
-              </b-form-textarea> -->
-
-            <!-- </b-form-group> -->
-            <!-- <b-form-textarea id="afterScript" v-model="module.afterScript" placeholder="Optional script" class="mt-3" :rows="3" :max-rows="6">
-              </b-form-textarea> -->
-
-            <!-- </b-form-group> -->
-
-          </div>
-
-          <div class="form-row">
-            <div class="col-md-3">
-
-            </div>
-            <div class="col">
               <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
             </div>
 
@@ -143,7 +115,7 @@ import passwordless from './modules/Passwordless.vue';
 import otpMail from './modules/OtpMail.vue';
 import activation from './modules/Activation.vue';
 import passwordForgotten from './modules/PasswordForgotten.vue';
-import openidconnect from './modules/OpenIDConnect.vue';
+import openIDConnect from './modules/OpenIDConnect.vue';
 import register from './modules/Register.vue';
 // import fido from './modules/Fido.vue';
 
@@ -193,6 +165,8 @@ export default {
     this.$http.get(this.$murl('authchain/v2/manage/modules/' + this.$route.params.module_id)).then(response => {
 
       this.module = response.data;
+
+      console.log(JSON.stringify(this.module));
 
       this.module.config = this.module.config || {};
       this.module.public_config = this.module.public_config || {};
@@ -276,7 +250,7 @@ export default {
     passwordless,
     passwordForgotten,
     activation,
-    openidconnect,
+    openIDConnect,
     register,
     otpMail,
     // fido
