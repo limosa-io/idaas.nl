@@ -20,13 +20,10 @@
         </form>
       </b-modal>
 
-      <!-- <h4 class="c-grey-900 mt-2">Servers</h4> -->
-
       <button
         @click="$refs.newModel.show();"
         type="button"
-        class="btn btn-primary btn-sm float-right"
-      >Add Server</button>
+        class="btn btn-primary btn-sm float-right">Add Server</button>
       <p>Manage your UIs. You can connect each application to its own UI. By default, applications will make use of the default login ui.</p>
 
       <table class="table table-hover table-striped">

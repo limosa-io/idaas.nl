@@ -83,13 +83,7 @@
     </template>
 
     <template v-slot:footer>
-      <div class="card border-danger mb-3 mt-3">
-        <div class="card-header">Danger Zone</div>
-        <div class="card-body text-danger">
-          <p class="card-text">
-            Clicking the button below will delete this group. This cannot be
-            undone.
-          </p>
+      <Danger body="Clicking the button below will delete this group. This cannot be undone.">
           <button
             type="button"
             class="btn btn-danger"
@@ -97,8 +91,7 @@
           >
             Delete
           </button>
-        </div>
-      </div>
+      </Danger>
     </template></Main
   >
 </template>

@@ -1,16 +1,8 @@
 <template>
   <Main title="Sync your configuration to a git repository">
     <template v-slot:body v-if="loaded">
-      <div class="card border-danger mb-3 mt-3">
-        <div class="card-header">This is experimental functionality</div>
-        <div class="card-body text-danger">
-          <p class="card-text">
-            Most importantly: always use a private repository as application
-            secrets are exposed.
-          </p>
-        </div>
-      </div>
-
+      <Danger header="This is experimental functionality" body="Most importantly: always use a private repository as application secrets are exposed." />
+      
       <div class="bgc-white bd bdrs-3 p-3 mt-2">
         <form
           class="needs-validation"

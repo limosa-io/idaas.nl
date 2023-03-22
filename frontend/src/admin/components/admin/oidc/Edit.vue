@@ -529,15 +529,9 @@ TODO: Consider adding list of allowed 'audiences'
     </template>
 
     <template v-slot:footer>
-      <div class="card border-danger mb-3 mt-3" v-if="client && client.client_id != currentClientId">
-      <div class="card-header">Danger Zone</div>
-      <div class="card-body text-danger">
-        <p
-          class="card-text"
-        >Clicking the button below will delete this application. This cannot be undone.</p>
+      <Danger body="Clicking the button below will delete this application. This cannot be undone." v-if="client && client.client_id != currentClientId">
         <button type="button" class="btn btn-danger" @click="deleteObject(client)">Delete</button>
-      </div>
-    </div>
+      </Danger>
     </template>
 
 

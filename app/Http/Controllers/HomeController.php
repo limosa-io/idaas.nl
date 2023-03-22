@@ -45,14 +45,6 @@ class HomeController extends Controller
             ]
         );
 
-        // With Vue development/webpack server, it will make use of eval and unsafe-inline without nonce.
-        // Therefore, only enable this for production
-
-        // phpcs:ignore Generic.Files.LineLength.TooLong
-        // $response = $response->header('Content-Security-Policy', 'default-src \'self\'; img-src *; style-src \'self\' \'unsafe-inline\'; script-src \'self\' \'unsafe-inline\' \'nonce-' . Controller::nonce() . '\'; frame-ancestors ' . route('ice.manage.home',[
-        //     'tenant'=>$tenant->subdomain
-        // ]) . ' ;');;
-
         if ($request->input('designer')) {
             $response = $response->header(
                 'Content-Security-Policy',

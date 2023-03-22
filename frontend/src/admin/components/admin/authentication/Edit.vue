@@ -92,13 +92,11 @@
   </template>
 
   <template v-slot:footer>
-  <div class="card border-danger mb-3 mt-3" v-if="!module.system && userinfo != null && !userinfo.acr.includes(module.id)">
-    <div class="card-header">Danger Zone</div>
-    <div class="card-body text-danger">
-      <p class="card-text">Clicking the button below will delete this module. This cannot be undone.</p>
+
+    <Danger v-if="!module.system && userinfo != null && !userinfo.acr.includes(module.id)" body="Clicking the button below will delete this module. This cannot be undone">
       <button type="button" class="btn btn-danger" @click="deleteModule(module)">Delete</button>
-    </div>
-  </div>
+    </Danger>
+
 </template>
 
 </Main>
