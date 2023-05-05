@@ -74,6 +74,7 @@
 import Vue from 'vue';
 import VueResource from 'vue-resource';
 import { VBModal } from 'bootstrap-vue'
+import { BModal } from 'bootstrap-vue'
 
 import settings from '../../settings';
 
@@ -107,7 +108,7 @@ Vue.use(VueResource);
 export default {
 
     components: {
-        'b-modal': VBModal
+        'b-modal': BModal
     },
 
     data() {
