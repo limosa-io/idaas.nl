@@ -200,7 +200,7 @@ class State implements \JsonSerializable, Jsonable
      *
      * @return ModuleResult
      */
-    public function getRememberedModuleResult(ModuleInterface $module)
+    public function getRememberedModuleResult(ModuleInterface $module): ModuleResult|null
     {
         $result = null;
 

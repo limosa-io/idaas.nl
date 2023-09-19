@@ -14,9 +14,6 @@ class CreateAuthChainSubjectLinksTable extends Migration
     public function up()
     {
 
-        /**
-         * Storage is needed for OIDC because of the UserInfo endpoint. Storing all information in the access token is sub optimal
-         */
         Schema::create('authchain_subject_links', function (Blueprint $table) {
             $table->increments('id');
             $table->uuid('tenant_id')->index();
@@ -25,7 +22,7 @@ class CreateAuthChainSubjectLinksTable extends Migration
 
             $table->string('subject_type', 100);
             $table->uuid('subject_module')->nullable();
-            
+
             // Refers to identifier in authchain_subjects
             $table->string('subject_id', 100);
 

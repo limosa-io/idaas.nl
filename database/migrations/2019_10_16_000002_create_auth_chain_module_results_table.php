@@ -14,10 +14,6 @@ class CreateAuthChainModuleResultsTable extends Migration
     public function up()
     {
 
-        /**
-         * Storage is needed for OIDC because of the UserInfo endpoint. Storing all information in the access token is sub optimal
-         */
-
         //if (!Schema::hasTable('authchain_ui_settings'))
         Schema::create('module_results', function (Blueprint $table) {
             $table->uuid('id')->primary();

@@ -16,9 +16,6 @@ class CreateAuthChainStatesTable extends Migration
     public function up()
     {
 
-        /**
-         * Storage is needed for OIDC because of the UserInfo endpoint. Storing all information in the access token is sub optimal
-         */
         Schema::create('authchain_states', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
@@ -29,7 +26,7 @@ class CreateAuthChainStatesTable extends Migration
             $table->timestamps();
 
             $table->index(['tenant_id', 'id']);
-            
+
         });
     }
 
