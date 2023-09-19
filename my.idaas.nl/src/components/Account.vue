@@ -158,7 +158,7 @@ export default {
             };
 
         });
-        console.log(import.meta.env);
+        
         this.$http
             .get(settings.scim_endpoint, {
                 headers: {
@@ -168,7 +168,6 @@ export default {
             .then(response => {
 
                 this.loaded = true;
-                console.log('Loaded user ...');
 
                 let user = response.data;
 
@@ -190,6 +189,7 @@ export default {
 
             })
             .catch(error => {
+                this.loaded = true;
                 if (error.status == 403) {
                     noty("You don't have sufficient permissions", "error");
                 }

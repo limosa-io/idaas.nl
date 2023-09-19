@@ -29,7 +29,10 @@ class TenantPolicy
             'subject:can_manage:' . $subject->id . ':' . $current,
             10,
             function () use ($subject) {
-                return Role::whereIn('id', $subject->getRoles())->exists();
+                return Role::whereIn(
+                    'id',
+                    $subject->getRoles()
+                )->exists();
             }
         );
     }
