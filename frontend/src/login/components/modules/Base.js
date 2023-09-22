@@ -7,7 +7,8 @@ export default {
 
   data() {
     return {
-      urlActive: false
+      urlActive: false,
+      loading: false,
     }
   },
 
@@ -51,6 +52,14 @@ export default {
 
     overview() {
       this.$store.commit('activeModule', null);
+    },
+
+    request(data){
+      this.loading = true;
+      return this.$ice(this.module, this.authRequest, data).then(result => {
+        this.loading = false;
+        return result;
+      });
     }
 
   }

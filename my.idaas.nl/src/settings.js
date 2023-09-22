@@ -15,6 +15,10 @@ export default {
 
     end_session_endpoint: import.meta.env.VITE_END_SESSION_ENDPOINT,
     hotp_generator_endpoint: import.meta.env.VITE_HOTP_GENERATOR_ENDPOINT,
+    fido_get_create_arguments_endpoint: import.meta.env.VITE_FIDO_GET_CREATE_ARGUMENTS_ENDPOINT,
+    fido_register_endpoint: import.meta.env.VITE_FIDO_REGISTER_ENDPOINT,
+    fido_list_keys_endpoint: import.meta.env.VITE_FIDO_LIST_KEYS_ENDPOINT,
+    fido_endpoint: import.meta.env.VITE_FIDO_ENDPOINT,
 
     session_target_origin: import.meta.env.VITE_SESSION_TARGET_ORIGIN
 

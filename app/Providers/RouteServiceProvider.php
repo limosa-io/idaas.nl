@@ -95,6 +95,26 @@ class RouteServiceProvider extends ServiceProvider
                     '\App\Http\Controllers\ManageTOTPController@generateSecuret'
                 );
 
+                Route::get(
+                    '/fido_get_create_arguments',
+                    '\App\Http\Controllers\ManageFidoController@getCreateArguments'
+                );
+
+                Route::get(
+                    '/fido_list_keys',
+                    '\App\Http\Controllers\ManageFidoController@listFidoKeys'
+                );
+
+                Route::delete(
+                    '/fido/{fidoKey}',
+                    '\App\Http\Controllers\ManageFidoController@delete'
+                );
+
+                Route::post(
+                    '/fido_register',
+                    '\App\Http\Controllers\ManageFidoController@register'
+                );
+
                 Route::post('/updateEmail', 'App\Http\Controllers\SCIMMeController@updateEmail');
 
                 Route::resource('tenants', 'App\Http\Controllers\TenantController')->only(

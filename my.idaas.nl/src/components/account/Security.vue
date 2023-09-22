@@ -55,8 +55,48 @@
 
         </div>
 
-    </div>
+        </div>
 
+        <div class="row mt-3">
+
+        <div class="col-md-3">
+            Security keys
+        </div>
+
+        <div class="col-md-9">
+
+            
+            <table class="table table-striped" v-if="fido_keys">
+                <thead>
+                    <tr>
+                        <th scope="col">Date</th>
+
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr v-for="(key,index) in fido_keys" :key="index">
+                        <td>{{ new Date(key.created_at*1000).toLocaleDateString("en-US") }}</td>
+                        <td style="width:100px;">
+                            <a href="#" @click.prevent="deleteFidoKey(key)" class="card-link">Delete</a>
+                        </td>
+                    </tr>
+
+                    <tr v-if="fido_keys.length == 0">
+                        <td colspan="3">You have not added a FIDO key yet</td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+            <button class="btn btn-secondary" type="button" @click="enableFido">Add Security key</button>
+
+
+
+        </div>
+
+    </div>
 </div>
 
 </template>
@@ -70,6 +110,15 @@ import {
     noty
 } from "../../util";
 
+function arrayBufferToBase64(buffer) {
+    let binary = '';
+    let bytes = new Uint8Array(buffer);
+    let len = bytes.byteLength;
+    for (let i = 0; i < len; i++) {
+        binary += String.fromCharCode( bytes[ i ] );
+    }
+    return window.btoa(binary);
+}
 
 export default {
 
@@ -77,6 +126,7 @@ export default {
         return {
             otpSecret: null,
             qrcode: null,
+            fido_keys: null
         }
     },
 
@@ -93,7 +143,118 @@ export default {
 
     },
 
+    mounted(){
+        this.loadFidoKeys();
+    },
+
     methods: {
+
+        recursiveBase64StrToArrayBuffer: function (obj) {
+            let prefix = '=?BINARY?B?';
+            let suffix = '?=';
+            if (typeof obj === 'object') {
+                for (let key in obj) {
+                    if (typeof obj[key] === 'string') {
+                        let str = obj[key];
+                        if (str.substring(0, prefix.length) === prefix && str.substring(str.length - suffix.length) === suffix) {
+                            str = str.substring(prefix.length, str.length - suffix.length);
+
+                            let binary_string = window.atob(str);
+                            let len = binary_string.length;
+                            let bytes = new Uint8Array(len);
+                            for (let i = 0; i < len; i++)        {
+                                bytes[i] = binary_string.charCodeAt(i);
+                            }
+                            obj[key] = bytes.buffer;
+                        }
+                    } else {
+                        this.recursiveBase64StrToArrayBuffer(obj[key]);
+                    }
+                }
+            }
+        },
+
+        createRegistration: async function(createArgs, challenge) {
+            try {
+
+                // check browser support
+                if (!window.fetch || !navigator.credentials || !navigator.credentials.create) {
+                    throw new Error('Browser not supported.');
+                }
+
+                // error handling
+                if (createArgs.success === false) {
+                    throw new Error(createArgs.msg || 'unknown error occured');
+                }
+
+                // replace binary base64 data with ArrayBuffer. a other way to do this
+                // is the reviver function of JSON.parse()
+                this.recursiveBase64StrToArrayBuffer(createArgs);
+
+                // create credentials
+                const cred = await navigator.credentials.create(createArgs);
+
+                // create object
+                const authenticatorAttestationResponse = {
+                    transports: cred.response.getTransports  ? cred.response.getTransports() : null,
+                    clientDataJSON: cred.response.clientDataJSON  ? arrayBufferToBase64(cred.response.clientDataJSON) : null,
+                    attestationObject: cred.response.attestationObject ? arrayBufferToBase64(cred.response.attestationObject) : null
+                };
+
+                const authenticatorAttestationServerResponse = await this.$http.post(
+                    settings.fido_register_endpoint,
+                    authenticatorAttestationResponse,
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${this.$store.state.accessToken}`,
+                            'x-challenge': challenge
+                        }
+                    }
+                );
+
+                this.loadFidoKeys();
+
+                // prompt server response
+                if (authenticatorAttestationServerResponse.success) {
+                    // do nothing
+                } else {
+                    throw new Error(authenticatorAttestationServerResponse.msg);
+                }
+
+            } catch (err) {
+                throw err;
+            }
+        },
+
+        enableFido(){
+            this.$http.get(settings.fido_get_create_arguments_endpoint, {
+                headers: {
+                    'Authorization': `Bearer ${this.$store.state.accessToken}`
+                }
+            }).then(response => {
+                this.createRegistration(response.data, response.headers.get('x-challenge')); 
+            });
+        },
+
+        loadFidoKeys(){
+            this.$http.get(settings.fido_list_keys_endpoint, {
+                headers: {
+                    'Authorization': `Bearer ${this.$store.state.accessToken}`
+                }
+            }).then(data => {
+                this.fido_keys = data.body;
+            });
+        },
+
+        deleteFidoKey(key){
+            this.$http.delete(settings.fido_endpoint + '/' + key.id, {
+                headers: {
+                    'Authorization': `Bearer ${this.$store.state.accessToken}`
+                }
+            }).then(data => {
+                this.fido_keys.splice(this.fido_keys.indexOf(key), 1);
+            });
+        },
 
         disableTOTP(){
 
