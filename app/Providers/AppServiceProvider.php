@@ -176,7 +176,6 @@ class AppServiceProvider extends ServiceProvider
         AuthChain::addType(TOTP::class);
         AuthChain::addType(OpenIDConnect::class);
         AuthChain::addType(Passwordless::class);
-        AuthChain::addType(Anonymous::class);
         AuthChain::addType('\App\AuthTypes\Activation');
         AuthChain::addType('\App\AuthTypes\PasswordForgotten');
         AuthChain::addType('\App\AuthTypes\Register');
