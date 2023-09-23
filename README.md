@@ -11,7 +11,7 @@ Idaas.nl is a true multi-tenant solution. It is design to scale out and provides
 
 Run the commands listed below and access your tenant via http://login.notidaas.nl
 
-_Note:_ `notidaas.nl` is a special domain. This domain and all subdomains point to localhost.
+_Note:_ `notidaas.nl` is a special domain. This domain and all subdomains point to localhost. You'll need to create a local (trusted) certificate. Below you'll find how.
 
 ~~~
 docker-compose up
@@ -46,3 +46,13 @@ php artisan tenant:master login youremail@example.com
 ~~~
 
 Now configure your browser to use `localhost:8080` as a SOCKS5 proxy and browse to `login.notidaas.nl`.
+
+## Certificates
+
+`mkcert` is a simple tool for making locally-trusted development certificates. It requires no configuration. 
+
+~~~
+# from this project's root folder
+mkcert -install
+mkcert --key-file ./nginx/_wildcard.notidaas.nl-key.pem  --cert-file ./nginx/_wildcard.notidaas.nl.pem *.notidaas.nl *.manage.notidaas.nl
+~~~
