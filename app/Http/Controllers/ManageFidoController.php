@@ -10,8 +10,7 @@ class ManageFidoController extends Controller
 {
     protected function getWebAuth(): WebAuthn
     {
-        // TODO: this should be based on the actual urls used by my.idaas.nl and login.idaas.nl
-        return new WebAuthn('notidaas.nl', 'notidaas.nl');
+        return new WebAuthn(config('app.domain'), config('app.domain'));
     }
 
     public function getCreateArguments(Request $request)

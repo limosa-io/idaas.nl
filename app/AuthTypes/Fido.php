@@ -11,15 +11,6 @@ use lbuchs\WebAuthn\WebAuthn;
 
 class Fido extends AbstractType
 {
-    public function isPassive()
-    {
-        return false;
-    }
-
-    public function init(Request $request, State $state, ModuleInterface $module)
-    {
-    }
-
     public function getDefaultName()
     {
         return "FIDO 2";
@@ -27,16 +18,12 @@ class Fido extends AbstractType
 
     protected function getWebAuth(): WebAuthn
     {
-        // TODO: this should be based on the actual urls used by my.idaas.nl and login.idaas.nl
-        return new WebAuthn('notidaas.nl', 'notidaas.nl');
+        return new WebAuthn(config('app.domain'), config('app.domain'));
     }
 
-    /**
-     * This module can work as a first-factor, or as a second-factor in case the subject has a mail address
-     */
     public function isEnabled(?Subject $subject)
     {
-        return $subject != null;
+        return $subject != null && $subject->getUser() != null && $subject->getUser()->fidoKeys()->first() != null;
     }
 
     public function process(Request $request, State $state, ModuleInterface $module)
@@ -72,7 +59,6 @@ class Fido extends AbstractType
             $challenge = \lbuchs\WebAuthn\Binary\ByteBuffer::fromHex($request->input('challenge'));
             $credentialPublicKey = $state->getSubject()->getUser()->fidoKeys()->where('credential_id', $response['id'])->first()->credential_public_key;
 
-
             if ($credentialPublicKey === null) {
                 throw new Exception('Public Key for credential ID not found!');
             }
@@ -81,8 +67,6 @@ class Fido extends AbstractType
             $webAuth->processGet($clientDataJSON, $authenticatorData, $signature, $credentialPublicKey, $challenge, null);
 
             return $module->baseResult()->setCompleted(true);
-        } else {
-            return $module->baseResult()->setCompleted(false)->setResponse(response([]));
         }
     }
 }
