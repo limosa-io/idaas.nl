@@ -100,6 +100,7 @@ import otpMail from './modules/otpMail.vue'
 import password from './modules/password.vue'
 import passwordForgotten from './modules/passwordForgotten.vue'
 import passwordless from './modules/passwordless.vue'
+import fido from './modules/fido.vue'
 import register from './modules/register.vue'
 import sms from './modules/sms.vue'
 import totp from './modules/totp.vue'
@@ -123,7 +124,8 @@ const modules = {
   passwordless,
   register,
   sms,
-  totp
+  totp,
+  fido
 };
 
 export default {

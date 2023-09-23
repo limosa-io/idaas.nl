@@ -32,7 +32,7 @@ class TenantController extends Controller
 
     public function getMyTenants()
     {
-        /** @var \App\AuthChain\Object */
+        /** @var \App\Subject */
         $user = Auth::user();
         return Tenant::whereIn('id', Role::whereIn('id', $user->getRoles())->pluck('tenant_id'));
     }
@@ -61,7 +61,10 @@ class TenantController extends Controller
 
         $data = $this->validate($request, $validations);
 
-        $tenant = NewTenant::createTenant($data['subdomain'], $request->user()->getUser());
+        $tenant = NewTenant::createTenant(
+            $data['subdomain'],
+            $request->user()->getUser()
+        );
 
         return null;
     }

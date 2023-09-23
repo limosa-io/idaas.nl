@@ -8,8 +8,8 @@ use Illuminate\Contracts\Encryption\DecryptException;
 
 class AllowCORS
 {
-    public $headers = 'Content-Type, X-AuthRequest, Authorization';
-    public $exposeHeaders = 'x-scim-proof-of-creation';
+    public $headers = 'Content-Type, X-AuthRequest, Authorization, x-challenge';
+    public $exposeHeaders = 'x-scim-proof-of-creation, x-challenge';
 
     /**
      * Create a new middleware instance.

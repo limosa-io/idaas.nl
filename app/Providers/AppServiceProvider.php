@@ -14,12 +14,15 @@ use App\Repository\AuthLevelRepository;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use App\AuthChain\AuthChain;
+use App\AuthTypes\Anonymous;
+use App\AuthTypes\Fido;
 use App\AuthTypes\TOTP;
 use App\Scim\PolicyDecisionPoint;
 use App\Session\DatabaseSessionHandler;
 use Illuminate\Database\ConnectionInterface;
 use App\AuthTypes\OpenIDConnect;
 use App\AuthTypes\OtpMail;
+use App\AuthTypes\Passwordless;
 use App\CloudFunction\DigitalOceanHandler;
 use App\CloudFunction\HandlerInterface;
 use App\CloudFunction\OpenWhiskHandler;
@@ -172,7 +175,7 @@ class AppServiceProvider extends ServiceProvider
         // allowed types
         AuthChain::addType(TOTP::class);
         AuthChain::addType(OpenIDConnect::class);
-        AuthChain::addType('\App\AuthTypes\Passwordless');
+        AuthChain::addType(Passwordless::class);
         AuthChain::addType('\App\AuthTypes\Activation');
         AuthChain::addType('\App\AuthTypes\PasswordForgotten');
         AuthChain::addType('\App\AuthTypes\Register');
@@ -186,6 +189,7 @@ class AppServiceProvider extends ServiceProvider
         AuthChain::addType('\App\AuthTypes\Password');
         AuthChain::addType('\App\AuthTypes\Consent');
         AuthChain::addType('\App\AuthTypes\Start');
+        AuthChain::addType(Fido::class);
 
         View::composer(
             '*',

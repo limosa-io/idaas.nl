@@ -109,13 +109,13 @@
 import password from './modules/Password.vue';
 import facebook from './modules/Facebook.vue';
 import linkedin from './modules/Linkedin.vue';
+import fido from './modules/Fido.vue'
 import passwordless from './modules/Passwordless.vue';
 import otpMail from './modules/OtpMail.vue';
 import activation from './modules/Activation.vue';
 import passwordForgotten from './modules/PasswordForgotten.vue';
 import openIDConnect from './modules/OpenIDConnect.vue';
 import register from './modules/Register.vue';
-// import fido from './modules/Fido.vue';
 
 export default {
 
@@ -251,7 +251,7 @@ export default {
     openIDConnect,
     register,
     otpMail,
-    // fido
+    fido
   }
 
 }

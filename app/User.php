@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use App\Scopes\TenantTrait;
 use App\Stats\StatableInterface;
 use App\Stats\StatableTrait;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable implements StatableInterface
@@ -80,6 +81,11 @@ class User extends Authenticatable implements StatableInterface
     {
         return $this->belongsToMany('App\Group')
             ->wherePivot('tenant_id', resolve('App\Tenant')->id)->using('App\TenantPivot');
+    }
+
+    public function fidoKeys(): HasMany
+    {
+        return $this->hasMany(FidoKey::class);
     }
 
     public function getId()
