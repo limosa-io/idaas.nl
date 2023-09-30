@@ -5,8 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 //TODO: Return clients, apis, users, whatever, based on 'scope'??
-Route::group(['domain' => '{tenant}.' . config('app.domain')], function () {
-
+Route::group(['domain' => '{tenant}.'.config('app.domain')], function () {
 
     //TODO: should return sessions
     Route::get('/sessions', 'SessionController@index')->name('ice.login.sessions');

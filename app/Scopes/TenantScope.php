@@ -2,19 +2,16 @@
 
 namespace App\Scopes;
 
-use Illuminate\Database\Eloquent\Scope;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
 use App\Role;
-use App\Tenant;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Scope;
 
 class TenantScope implements Scope
 {
     /**
      * Apply the scope to a given Eloquent query builder.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder $builder
-     * @param  \Illuminate\Database\Eloquent\Model   $model
      * @return void
      */
     public function apply(Builder $builder, Model $model)
@@ -23,7 +20,7 @@ class TenantScope implements Scope
         if (resolve('App\Tenant') == null && app()->runningInConsole()) {
         } elseif (resolve('App\Tenant')->master && $model instanceof Role) {
         } else {
-            $builder->where($model->getTable() . '.tenant_id', '=', resolve('App\Tenant')->id);
+            $builder->where($model->getTable().'.tenant_id', '=', resolve('App\Tenant')->id);
         }
     }
 }

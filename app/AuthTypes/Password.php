@@ -31,12 +31,13 @@ class Password extends AbstractType
     public function init(Request $request, State $state, ModuleInterface $module)
     {
         $this->remembered = $state->getRememberedModuleResult($module) != null;
+
         return $this;
     }
 
     public function getDefaultName()
     {
-        return "Password log in";
+        return 'Password log in';
     }
 
     public function isEnabled(?Subject $subject)
@@ -69,7 +70,7 @@ class Password extends AbstractType
                 $this->createSubject($username, $this, $module)->setUserId($user->id)
             )->complete()->setPrompted(true);
 
-            if (!$remember) {
+            if (! $remember) {
                 $r->setRememberAlways(false);
                 $r->setRememberForSession(false);
             }
@@ -79,9 +80,9 @@ class Password extends AbstractType
             return $module->baseResult()->setResponse(
                 response(
                     [
-                    'error' => 'Username or password incorrect',
-                    'module' => $module->getIdentifier(),
-                    'remembered' => ($state->getRememberedModuleResult($module) != null)
+                        'error' => 'Username or password incorrect',
+                        'module' => $module->getIdentifier(),
+                        'remembered' => ($state->getRememberedModuleResult($module) != null),
                     ]
                 )->setStatusCode(422)
             );

@@ -8,6 +8,7 @@ use Exception;
 class AuthFailedException extends Exception
 {
     protected $state;
+
     protected $module;
 
     /*
@@ -25,16 +26,16 @@ class AuthFailedException extends Exception
         if ($request->wantsJson()) {
             return response(
                 [
-                'errors' => [
-                    $this->getMessage()
-                ]
+                    'errors' => [
+                        $this->getMessage(),
+                    ],
                 ]
             )->setStatusCode(500);
         } else {
             return view(
                 'authchain.error',
                 [
-                'exception' => $this
+                    'exception' => $this,
                 ]
             );
         }

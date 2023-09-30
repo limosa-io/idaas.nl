@@ -24,7 +24,7 @@ class TOTP extends AbstractType
 
     public function getDefaultName()
     {
-        return "One-Time Password";
+        return 'One-Time Password';
     }
 
     /**
@@ -48,7 +48,8 @@ class TOTP extends AbstractType
 
         $result = $subject != null && $subject->getAttributeAllowUser('otp_secret') != null;
 
-        Log::debug('TOTP enabled?: ' . ($result ? 'enabled' : 'disabled'));
+        Log::debug('TOTP enabled?: '.($result ? 'enabled' : 'disabled'));
+
         return $result;
     }
 
@@ -84,7 +85,7 @@ class TOTP extends AbstractType
             return $module->baseResult()->setCompleted(false)->setResponse(
                 response(
                     [
-                    'message' => 'Only usable as second factor'
+                        'message' => 'Only usable as second factor',
                     ]
                 )
             );
@@ -94,7 +95,7 @@ class TOTP extends AbstractType
             return $module->baseResult()->setCompleted(false)->setResponse(
                 response(
                     [
-                    'message' => 'Only usable for subjects connected to a user'
+                        'message' => 'Only usable for subjects connected to a user',
                     ]
                 )
             );
@@ -104,7 +105,7 @@ class TOTP extends AbstractType
             return $module->baseResult()->setCompleted(false)->setResponse(
                 response(
                     [
-                    'message' => 'You don\'t have configured this module'
+                        'message' => 'You don\'t have configured this module',
                     ]
                 )
             );
@@ -126,7 +127,7 @@ class TOTP extends AbstractType
             return $module->baseResult()->setCompleted(false)->setResponse(
                 response(
                     [
-                    'error' => 'The provided code is incorrect.'
+                        'error' => 'The provided code is incorrect.',
                     ],
                     422
                 )

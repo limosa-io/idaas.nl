@@ -2,14 +2,14 @@
 
 namespace App\AuthTypes;
 
-use Illuminate\Support\Facades\Log;
-use Illuminate\Http\Request;
-use App\AuthChain\State;
-use App\AuthChain\ModuleInterface;
 use App\AuthChain\Helper;
-use GuzzleHttp\Exception\RequestException;
 use App\AuthChain\Message;
+use App\AuthChain\ModuleInterface;
+use App\AuthChain\State;
 use App\Repository\SubjectRepository;
+use GuzzleHttp\Exception\RequestException;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class OpenIDConnect extends AbstractType
 {
@@ -37,14 +37,14 @@ class OpenIDConnect extends AbstractType
 
     public function getDefaultName()
     {
-        return "OpenID Connect";
+        return 'OpenID Connect';
     }
 
     public function getPublicConfigKeys()
     {
         return [
             'button_color',
-            'button_text'
+            'button_text',
         ];
     }
 
@@ -54,7 +54,7 @@ class OpenIDConnect extends AbstractType
     public function getInfo()
     {
         return [
-            'callback' => route('ice.login.openid')
+            'callback' => route('ice.login.openid'),
         ];
     }
 
@@ -86,7 +86,7 @@ class OpenIDConnect extends AbstractType
         $guzzle = new \GuzzleHttp\Client(
             [
                 'verify' => false,
-                'handler' => self::$handler
+                'handler' => self::$handler,
             ]
         );
 
@@ -102,7 +102,7 @@ class OpenIDConnect extends AbstractType
                         'redirect_uri' => route('ice.login.openid'),
                         'client_id' => $config['client_id'],
                         'client_secret' => $config['client_secret'],
-                    ]
+                    ],
                 ]
             );
 
@@ -114,8 +114,8 @@ class OpenIDConnect extends AbstractType
                 $config['userinfo_endpoint'],
                 [
                     'headers' => [
-                        'Authorization' => 'Bearer ' . $accessToken
-                    ]
+                        'Authorization' => 'Bearer '.$accessToken,
+                    ],
                 ]
             );
 
@@ -159,14 +159,14 @@ class OpenIDConnect extends AbstractType
             'client_id' => $config['client_id'],
             'scope' => $config['scopes'],
             'redirect_uri' => route('ice.login.openid'),
-            'state' => encrypt(['state' => (string) $state, 'url' => 'https://test123.nl'])
+            'state' => encrypt(['state' => (string) $state, 'url' => 'https://test123.nl']),
         ];
 
-        if ($state->needsPrompt() && !$state->getModuleResults()->hasPrompted()) {
+        if ($state->needsPrompt() && ! $state->getModuleResults()->hasPrompted()) {
             $parameters['prompt'] = 'login';
         }
 
-        $url = $config['authorization_endpoint'] . '?' . http_build_query($parameters);
+        $url = $config['authorization_endpoint'].'?'.http_build_query($parameters);
 
         return $url;
     }
@@ -194,7 +194,7 @@ class OpenIDConnect extends AbstractType
             return $module->baseResult()->setResponse(
                 response(
                     [
-                        'url' => $url
+                        'url' => $url,
                     ]
                 )
             )->setCompleted(false);

@@ -10,10 +10,10 @@ namespace App\Http\Controllers\Manage;
 
 use App\Group;
 use App\Role;
-use Idaas\Passport\ClientController as PassportClientController;
-use Illuminate\Http\Request;
-use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Idaas\Passport\Bridge\ClientRepository;
+use Idaas\Passport\ClientController as PassportClientController;
+use Illuminate\Contracts\Validation\Factory as ValidationFactory;
+use Illuminate\Http\Request;
 
 class ClientController extends PassportClientController
 {
@@ -29,7 +29,7 @@ class ClientController extends PassportClientController
         $this->validations['roles.*.value'] =
             function ($attribute, $value, $fail) {
                 if (Role::find($value) == null) {
-                    return $fail($attribute . ' is not a valid role.');
+                    return $fail($attribute.' is not a valid role.');
                 }
             };
 
@@ -37,7 +37,7 @@ class ClientController extends PassportClientController
         $this->validations['groups.*.value'] =
             function ($attribute, $value, $fail) {
                 if (Group::find($value) == null) {
-                    return $fail($attribute . ' is not a valid group.');
+                    return $fail($attribute.' is not a valid group.');
                 }
             };
     }
@@ -62,7 +62,7 @@ class ClientController extends PassportClientController
 
     public function update(Request $request, $clientId)
     {
-        $client =  $this->clients->findForManagement($clientId);
+        $client = $this->clients->findForManagement($clientId);
 
         $validations = $this->validations;
 

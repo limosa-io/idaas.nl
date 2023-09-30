@@ -13,7 +13,7 @@ class Fido extends AbstractType
 {
     public function getDefaultName()
     {
-        return "FIDO 2";
+        return 'FIDO 2';
     }
 
     protected function getWebAuth(): WebAuthn
@@ -41,7 +41,7 @@ class Fido extends AbstractType
                 response(
                     [
                         'arguments' => $webAuth->getGetArgs($credentialIds, 20),
-                        'challenge' => $webAuth->getChallenge()->getHex()
+                        'challenge' => $webAuth->getChallenge()->getHex(),
                     ]
                 )
             )->setCompleted(false);

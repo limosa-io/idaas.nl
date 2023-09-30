@@ -7,12 +7,9 @@
 namespace App\AuthChain;
 
 use Illuminate\Http\Request;
-use App\AuthTypes\Type;
-use App\AuthChain\State;
-use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Facades\Log;
 
-class ModuleList implements \JsonSerializable, \ArrayAccess, \Countable
+class ModuleList implements \ArrayAccess, \Countable, \JsonSerializable
 {
     public $modules = [];
 
@@ -52,8 +49,8 @@ class ModuleList implements \JsonSerializable, \ArrayAccess, \Countable
     {
         foreach ($this->modules as $module) {
             /**
- * @var ModuleInterface $module
-*/
+             * @var ModuleInterface $module
+             */
             $module->init($request, $state);
         }
 
@@ -66,23 +63,21 @@ class ModuleList implements \JsonSerializable, \ArrayAccess, \Countable
     public function maySkipAll()
     {
         $allSkippable = true;
-        /**
-         *
-         */
+
         foreach ($this->modules as $module) {
             /* @var $module \App\AuthChain\ModuleInterface */
 
-            if ($module->enabled && !$module->skippable) {
-                Log::debug('Module: ' . $module->getIdentifier() . ' is not skippable');
-                Log::debug('Remembered: ' . ($module->remembered() ? 'true' : 'false'));
-                Log::debug('Enabled: ' . ($module->enabled ? 'true' : 'false'));
-                Log::debug('isSkippable: ' . ($module->skippable ? 'true' : 'false'));
+            if ($module->enabled && ! $module->skippable) {
+                Log::debug('Module: '.$module->getIdentifier().' is not skippable');
+                Log::debug('Remembered: '.($module->remembered() ? 'true' : 'false'));
+                Log::debug('Enabled: '.($module->enabled ? 'true' : 'false'));
+                Log::debug('isSkippable: '.($module->skippable ? 'true' : 'false'));
 
                 $allSkippable = false;
             }
         }
 
-        Log::debug('maySkipAll: ' . ($allSkippable ? 'true' : 'false'));
+        Log::debug('maySkipAll: '.($allSkippable ? 'true' : 'false'));
 
         return $allSkippable;
     }
@@ -121,8 +116,8 @@ class ModuleList implements \JsonSerializable, \ArrayAccess, \Countable
 
         foreach ($this->modules as $module) {
             /**
- * @var $module ModuleInterface
-*/
+             * @var $module ModuleInterface
+             */
             $identifiers[] = $module->getIdentifier();
         }
 
@@ -141,7 +136,6 @@ class ModuleList implements \JsonSerializable, \ArrayAccess, \Countable
             }
         );
     }
-
 
     /**
      * Get the value of modules

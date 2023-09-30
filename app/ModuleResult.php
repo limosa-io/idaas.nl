@@ -2,12 +2,10 @@
 
 namespace App;
 
-use App\Model;
-
 class ModuleResult extends Model
 {
     protected $casts = [
-        'session' => 'boolean'
+        'session' => 'boolean',
     ];
 
     protected $dates = [

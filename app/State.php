@@ -2,15 +2,16 @@
 
 namespace App;
 
+use App\AuthChain\State as RealState;
 use App\Scopes\TenantTrait;
 use Illuminate\Database\Eloquent\Model;
-use App\AuthChain\State as RealState;
 
 class State extends Model
 {
     use TenantTrait;
 
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     /**

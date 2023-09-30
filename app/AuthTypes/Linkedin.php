@@ -13,6 +13,6 @@ class Linkedin extends Generic
 
     public function getDefaultName()
     {
-        return "LinkedIn";
+        return 'LinkedIn';
     }
 }

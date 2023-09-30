@@ -2,7 +2,6 @@
 
 namespace App;
 
-use App\Model;
 use App\Scopes\SortChainScope;
 
 class AuthChain extends Model

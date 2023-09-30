@@ -26,7 +26,7 @@ class AuthChainSubscriber
                     $token->revoke();
                 }
             } else {
-                Log::debug('Could not find token: ' . $accessToken);
+                Log::debug('Could not find token: '.$accessToken);
             }
         }
 
@@ -41,8 +41,8 @@ class AuthChainSubscriber
          */
         Log::debug('received log in event!');
 
-        if ($event->state->getSubject() != null &&  ($user = $event->state->getSubject()->getUser()) != null) {
-            if (!$user->active) {
+        if ($event->state->getSubject() != null && ($user = $event->state->getSubject()->getUser()) != null) {
+            if (! $user->active) {
                 $setting = TenantSetting::where('key', 'registration.level_active')->first();
 
                 $level = $setting != null ?
@@ -70,7 +70,7 @@ class AuthChainSubscriber
     /**
      * Register the listeners for the subscriber.
      *
-     * @param \Illuminate\Events\Dispatcher $events
+     * @param  \Illuminate\Events\Dispatcher  $events
      */
     public function subscribe($events)
     {

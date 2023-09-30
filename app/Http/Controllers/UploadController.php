@@ -6,8 +6,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Aws\S3\S3Client;
+use Illuminate\Http\Request;
 
 class UploadController extends Controller
 {
@@ -20,12 +20,12 @@ class UploadController extends Controller
             'version' => 'latest',
             'region' => config('s3.aws_region'),
             'credentials' => [
-                'key'    => config('s3.aws_access_key_id'),
+                'key' => config('s3.aws_access_key_id'),
                 'secret' => config('s3.aws_secret_access_key'),
             ],
         ];
 
-        if (!empty(config('s3.endpoint'))) {
+        if (! empty(config('s3.endpoint'))) {
             $config['endpoint'] = config('s3.endpoint');
         }
 
@@ -35,9 +35,9 @@ class UploadController extends Controller
             'PutObject',
             [
                 'Bucket' => config('s3.aws_bucket'),
-                'Key' => config('s3.aws_directory') .
-                    "/" . resolve('App\Tenant')->id .
-                    '/' . $request->input('filename'),
+                'Key' => config('s3.aws_directory').
+                    '/'.resolve('App\Tenant')->id.
+                    '/'.$request->input('filename'),
                 'ACL' => 'public-read',
                 'ContentType' => $request->input('contentType'),
                 'Body' => '',

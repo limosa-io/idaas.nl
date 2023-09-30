@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\ModuleResult;
+use Illuminate\Http\Request;
 
 class ModuleResultController extends Controller
 {
@@ -11,15 +11,15 @@ class ModuleResultController extends Controller
     {
         $request->validate(
             [
-            'size' => 'nullable|integer|min:1|max:100',
-            'query' => 'nullable|min:0|max:100'
+                'size' => 'nullable|integer|min:1|max:100',
+                'query' => 'nullable|min:0|max:100',
             ]
         );
 
         $query = ModuleResult::with(
             ['user' => function ($query) {
                 $query->select('id', 'name', 'email');
-            },'subject','module']
+            }, 'subject', 'module']
         );
 
         if ($request->input('user_id')) {
@@ -38,11 +38,11 @@ class ModuleResultController extends Controller
                     $query->where(
                         'email',
                         'like',
-                        '%' . $request->input('query') . '%'
+                        '%'.$request->input('query').'%'
                     )->orWhere(
                         'name',
                         'like',
-                        '%' . $request->input('query') . '%'
+                        '%'.$request->input('query').'%'
                     );
                 }
             )->orWhereHas(
@@ -51,7 +51,7 @@ class ModuleResultController extends Controller
                     $query->where(
                         'identifier',
                         'like',
-                        '%' . $request->input('query') . '%'
+                        '%'.$request->input('query').'%'
                     );
                 }
             );
@@ -66,6 +66,6 @@ class ModuleResultController extends Controller
 
         $moduleResult->delete();
 
-        return "";
+        return '';
     }
 }

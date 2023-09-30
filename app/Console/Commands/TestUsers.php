@@ -2,9 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\Tenant;
 use Faker\Generator as Faker;
+use Illuminate\Console\Command;
 
 class TestUsers extends NewTenant
 {
@@ -32,11 +31,11 @@ class TestUsers extends NewTenant
         parent::__construct();
     }
 
-
     protected function clean($var)
     {
-        return str_replace(["\""], [""], $var);
+        return str_replace(['"'], [''], $var);
     }
+
     /**
      * Execute the console command.
      *
@@ -53,7 +52,7 @@ class TestUsers extends NewTenant
         while ($i < 3000) {
             fputcsv(
                 $out,
-                array($this->clean($faker->username),$this->clean($faker->password),$this->clean($faker->email))
+                [$this->clean($faker->username), $this->clean($faker->password), $this->clean($faker->email)]
             );
             $i++;
         }

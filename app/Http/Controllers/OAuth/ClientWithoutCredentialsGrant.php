@@ -8,8 +8,8 @@ use DateInterval;
 use Exception;
 use Idaas\Passport\Bridge\ClientRepository;
 use League\OAuth2\Server\Grant\AbstractGrant;
-use Psr\Http\Message\ServerRequestInterface;
 use League\OAuth2\Server\ResponseTypes\ResponseTypeInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class ClientWithoutCredentialsGrant extends AbstractGrant
 {
@@ -51,6 +51,6 @@ class ClientWithoutCredentialsGrant extends AbstractGrant
 
     public function respondToAccessTokenRequest(ServerRequestInterface $request, ResponseTypeInterface $responseType, DateInterval $accessTokenTTL)
     {
-        throw new Exception("Not implemented");
+        throw new Exception('Not implemented');
     }
 }

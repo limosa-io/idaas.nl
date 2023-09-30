@@ -15,8 +15,8 @@ class TokenController extends Controller
     {
         $request->validate(
             [
-            'size' => 'nullable|integer|min:1|max:100',
-            'query' => 'nullable|min:0|max:100'
+                'size' => 'nullable|integer|min:1|max:100',
+                'query' => 'nullable|min:0|max:100',
             ]
         );
 
@@ -42,11 +42,11 @@ class TokenController extends Controller
                     $query->where(
                         'email',
                         'like',
-                        '%' . $request->input('query') . '%'
+                        '%'.$request->input('query').'%'
                     )->orWhere(
                         'name',
                         'like',
-                        '%' . $request->input('query') . '%'
+                        '%'.$request->input('query').'%'
                     );
                 }
             )->orWhereHas(
@@ -55,7 +55,7 @@ class TokenController extends Controller
                     $query->where(
                         'identifier',
                         'like',
-                        '%' . $request->input('query') . '%'
+                        '%'.$request->input('query').'%'
                     );
                 }
             );

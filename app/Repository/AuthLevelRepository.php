@@ -30,7 +30,6 @@ class AuthLevelRepository
         return AuthLevel::findOrFail($id);
     }
 
-
     /**
      * @return AuthLevel
      */
@@ -58,9 +57,6 @@ class AuthLevelRepository
         }
     }
 
-    /**
-     *
-     */
     public function delete(AuthLevel $authLevel)
     {
         if ($authLevel instanceof Model) {

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 class GetRoutes extends Controller
@@ -16,7 +15,7 @@ class GetRoutes extends Controller
             $result[] = [
                 'uri' => $route->uri,
                 'methods' => $route->methods,
-                'domain' => $route->action['domain'] ?? null
+                'domain' => $route->action['domain'] ?? null,
             ];
         }
 

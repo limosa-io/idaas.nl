@@ -53,7 +53,7 @@ class ManageFidoController extends Controller
 
         $createArgs = $webAuth->getGetArgs(
             [
-                'credential-id'
+                'credential-id',
             ],
         );
 
@@ -92,7 +92,7 @@ class ManageFidoController extends Controller
 
         $user->fidoKeys()->create([
             'credential_id' => base64_encode($data->credentialId),
-            'credential_public_key' => $data->credentialPublicKey
+            'credential_public_key' => $data->credentialPublicKey,
         ]);
 
         return json_encode($data);

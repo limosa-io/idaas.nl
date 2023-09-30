@@ -14,12 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
 // });
 
-Route::group(['domain' => '{tenant}.manage.' . config('app.domain') ], function () {
+Route::group(['domain' => '{tenant}.manage.'.config('app.domain')], function () {
 
     Route::get('/ping', '\App\Http\Controllers\Manage\HomeController@ping')->name('ice.ping');
 
@@ -30,22 +29,22 @@ Route::group(['domain' => '{tenant}.manage.' . config('app.domain') ], function 
 
     Route::get('oAuthScope/mapping', 'OAuthScopeController@mapping');
     Route::resource('oAuthScope', 'OAuthScopeController')->only([
-        'index', 'store', 'update', 'destroy'
+        'index', 'store', 'update', 'destroy',
     ]);
 
     Route::post('/preview_mail_template/{mail_template}', 'MailTemplateController@preview');
     Route::resource('mail_template', 'MailTemplateController')->only([
-        'index', 'store', 'show', 'update', 'destroy'
+        'index', 'store', 'show', 'update', 'destroy',
     ]);
 
     Route::resource('mediaItems', 'MediaItemController')->only([
-        'index', 'store', 'show', 'destroy'
+        'index', 'store', 'show', 'destroy',
     ]);
 
     Route::get('/example_client', 'MediaItemController@getExampleClient');
 
     Route::resource('openidKey', 'OpenIDKeyController')->only([
-        'index', 'store', 'destroy', 'update'
+        'index', 'store', 'destroy', 'update',
     ]);
 
     Route::post('openidKey/createGenerated', 'OpenIDKeyController@createGenerated');
@@ -57,7 +56,7 @@ Route::group(['domain' => '{tenant}.manage.' . config('app.domain') ], function 
     Route::post('/cloudFunctions/invoke/{cloudFunction}', 'CloudFunctionController@invoke');
 
     Route::resource('cloudFunctions', 'CloudFunctionController')->only([
-        'index', 'store', 'show', 'update', 'destroy'
+        'index', 'store', 'show', 'update', 'destroy',
     ]);
 
     Route::post('/tokens/revoke', 'TokenController@revoke');
@@ -77,7 +76,7 @@ Route::group(['domain' => '{tenant}.manage.' . config('app.domain') ], function 
 
     Route::put('settings/bulk', 'TenantSettingController@updateMany');
     Route::resource('settings', 'TenantSettingController')->only([
-        'index', 'store', 'show', 'update', 'destroy'
+        'index', 'store', 'show', 'update', 'destroy',
     ]);
 
     Route::post('/initTest', '\App\Http\Controllers\OAuth\AuthorizationController@initTest')->name('authorize_init_test');
@@ -86,7 +85,7 @@ Route::group(['domain' => '{tenant}.manage.' . config('app.domain') ], function 
     Route::get('/export', 'ImportController@export');
 
     Route::resource('uiServers', 'UIServerController')->only([
-        'index', 'store', 'show', 'update', 'destroy'
+        'index', 'store', 'show', 'update', 'destroy',
     ]);
 
     Route::put('/git', 'GitController@update');

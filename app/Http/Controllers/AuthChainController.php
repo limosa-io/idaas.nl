@@ -17,7 +17,7 @@ class AuthChainController extends Controller
         $origin = $request->header('Origin');
 
         //check if $request header $request->header('Origin') is present! and allowed!
-        if (empty($origin) || !in_array($origin, $state->uiServer->getOrigins())) {
+        if (empty($origin) || ! in_array($origin, $state->uiServer->getOrigins())) {
             throw new AuthFailedException(
                 sprintf(
                     'Origin "%s" is not allowed. Expected one of: %s',
@@ -77,7 +77,7 @@ class AuthChainController extends Controller
             $state->getLastCompletedModule()
         );
 
-        if (!$allowedModules->contains($module)) {
+        if (! $allowedModules->contains($module)) {
             throw new AuthFailedException(
                 sprintf(
                     'This module may not follow %s! Please choose one of: %s',
@@ -90,7 +90,7 @@ class AuthChainController extends Controller
                     ),
                     implode(
                         ', ',
-                        array_map(fn(AuthModule $value) => sprintf("%s (%s)", $value->name, $value->getIdentifier()), $allowedModules->modules)
+                        array_map(fn (AuthModule $value) => sprintf('%s (%s)', $value->name, $value->getIdentifier()), $allowedModules->modules)
                     )
                 )
             );

@@ -7,23 +7,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Role;
-use App\OAuthScope;
-use App\OpenIDProvider;
-use App\Tenant;
-use App\AuthLevel;
-use App\Http\Controllers\OpenIDKeyController;
-use App\AuthModule;
-use App\AuthTypes\OpenIDConnect;
-use App\Client;
-use App\OpenIDKey;
-use App\Repository\KeyRepository;
-use App\AuthTypes\Start;
-use App\AuthChain;
-use Illuminate\Support\Facades\Hash;
-use App\User;
-use App\Http\Controllers\MailTemplateController;
-use App\AuthTypes\Password;
 
 class NewMaster extends NewTenant
 {

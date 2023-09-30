@@ -2,8 +2,7 @@
 
 namespace App\AuthChain;
 
-
-class ModuleResultList implements \JsonSerializable, \ArrayAccess
+class ModuleResultList implements \ArrayAccess, \JsonSerializable
 {
     /**
      * @var ModuleResult[]
@@ -111,7 +110,7 @@ class ModuleResultList implements \JsonSerializable, \ArrayAccess
         $result = new ModuleResultList();
 
         foreach ($this->moduleResults as $moduleResult) {
-            if ($moduleResult->isCompleted() && !$moduleResult->rememberAlways && $moduleResult->rememberForSession) {
+            if ($moduleResult->isCompleted() && ! $moduleResult->rememberAlways && $moduleResult->rememberForSession) {
                 $result[] = $moduleResult;
             }
         }
@@ -148,7 +147,7 @@ class ModuleResultList implements \JsonSerializable, \ArrayAccess
                 }
             }
 
-            if (!$ignore) {
+            if (! $ignore) {
                 $this->moduleResults[] = $moduleResult;
             }
         }

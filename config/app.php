@@ -64,7 +64,6 @@ return [
 
     'throttle' => env('APP_THROTTLE', true),
 
-
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
@@ -190,7 +189,7 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        App\Providers\AuthChainServiceProvider::class
+        App\Providers\AuthChainServiceProvider::class,
 
     ],
 

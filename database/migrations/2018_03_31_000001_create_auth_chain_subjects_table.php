@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateAuthChainSubjectsTable extends Migration
 {
@@ -21,7 +21,7 @@ class CreateAuthChainSubjectsTable extends Migration
             $table->uuid('id')->primary();
 
             // Identifier is something like 'password|123'
-            $table->string('identifier',100);
+            $table->string('identifier', 100);
             $table->text('subject')->nullable();
 
             $table->uuid('user_id')->nullable();
@@ -36,7 +36,7 @@ class CreateAuthChainSubjectsTable extends Migration
             $table->uuid('tenant_id')->index();
             $table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
 
-            $table->index(['tenant_id','id']);
+            $table->index(['tenant_id', 'id']);
         });
     }
 

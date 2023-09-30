@@ -7,6 +7,7 @@ use Exception;
 class NoStateException extends Exception
 {
     protected $state;
+
     protected $module;
 
     /*
@@ -17,16 +18,16 @@ class NoStateException extends Exception
         if ($request->wantsJson()) {
             return response(
                 [
-                'errors' => [
-                    $this->getMessage()
-                ]
+                    'errors' => [
+                        $this->getMessage(),
+                    ],
                 ]
             )->setStatusCode(404);
         } else {
             return view(
                 'authchain.error',
                 [
-                'exception' => $this
+                    'exception' => $this,
                 ]
             );
         }

@@ -3,11 +3,11 @@
 namespace App\Console\Commands;
 
 use App\AuthCode;
-use Illuminate\Console\Command;
-use App\Token;
-use Carbon\Carbon;
 use App\ModuleResult;
 use App\Subject;
+use App\Token;
+use Carbon\Carbon;
+use Illuminate\Console\Command;
 
 class CollectGarbarge extends Command
 {

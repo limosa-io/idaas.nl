@@ -7,13 +7,6 @@
 namespace App;
 
 use App\CloudFunction\HandlerInterface;
-use GuzzleHttp\Client;
-use GuzzleHttp\RequestOptions;
-use GuzzleHttp\Exception\RequestException;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\StandardMail;
-use Ramsey\Uuid\Uuid;
 
 class CloudFunctionHelper
 {
@@ -21,6 +14,7 @@ class CloudFunctionHelper
     {
         /** @var HandlerInterface */
         $handler = resolve(HandlerInterface::class);
+
         return $handler->invoke(
             CloudFunction::find($cloudFunction->id),
             $parameters

@@ -9,9 +9,6 @@ namespace App\Session;
 
 use App\Tenant;
 use Illuminate\Session\DatabaseSessionHandler as BaseDatabaseSessionHandler;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Arr;
 
 class DatabaseSessionHandler extends BaseDatabaseSessionHandler
 {

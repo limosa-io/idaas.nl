@@ -2,9 +2,6 @@
 
 namespace App;
 
-use App\Model;
-use App\Scopes\TenantTrait;
-
 class Group extends Model
 {
     public function members()

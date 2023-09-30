@@ -5,9 +5,11 @@ namespace App\AuthChain;
 class Message implements \JsonSerializable
 {
     public $message;
+
     public $type;
 
     public const TYPE_INFO = 'info';
+
     public const TYPE_ERROR = 'error';
 
     private function __construct($message, $type)
@@ -45,7 +47,7 @@ class Message implements \JsonSerializable
     {
         return [
             'type' => $this->type,
-            'message' => $this->message
+            'message' => $this->message,
         ];
     }
 }

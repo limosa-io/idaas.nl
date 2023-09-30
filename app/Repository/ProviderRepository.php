@@ -2,11 +2,11 @@
 
 namespace App\Repository;
 
-use App\OpenIDProvider;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\Request;
 use App\AuthLevel;
+use App\OpenIDProvider;
 use Idaas\Passport\ProviderRepository as IdaasProviderRepository;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ProviderRepository extends IdaasProviderRepository
 {
@@ -14,7 +14,7 @@ class ProviderRepository extends IdaasProviderRepository
 
     public function __construct()
     {
-        $this->validations  = [
+        $this->validations = [
             'liftime_access_token' => 'required|numeric|min:0',
             'liftime_refresh_token' => 'required|numeric|min:0',
             'liftime_id_token' => 'required|numeric|min:0',
@@ -23,7 +23,7 @@ class ProviderRepository extends IdaasProviderRepository
 
             'profile_url_template' => 'nullable',
 
-            'init_url' => 'nullable|url'
+            'init_url' => 'nullable|url',
         ];
     }
 
@@ -54,7 +54,7 @@ class ProviderRepository extends IdaasProviderRepository
 
         foreach ($acrValuesSupported as $value) {
             AuthLevel::firstOrCreate(
-                array('type' => 'oidc', 'level' => $value, 'provider_id' => OpenIDProvider::first()->id)
+                ['type' => 'oidc', 'level' => $value, 'provider_id' => OpenIDProvider::first()->id]
             );
         }
 

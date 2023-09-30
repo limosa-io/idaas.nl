@@ -3,9 +3,9 @@
 namespace App;
 
 use App\AuthChain\Helper;
+use App\AuthChain\Session;
 use App\AuthChain\State;
 use App\AuthChain\UIServer;
-use App\AuthChain\Session;
 use App\Http\Controllers\HomeController;
 use Idaas\OpenID\RequestTypes\AuthenticationRequest;
 use Idaas\Passport\ClientRepository;
@@ -30,11 +30,11 @@ class PassportConfig extends IdaasPassportConfig
         if ($authenticationRequest->getDisplay() == 'popup') {
             $uiServer = new UIServer(
                 [
-                    $parsed['scheme'] . '://' . $parsed['host'],
+                    $parsed['scheme'].'://'.$parsed['host'],
                 ],
                 [
                     $authenticationRequest->getRedirectUri(), // the default
-                    $loginUrl // for the first call
+                    $loginUrl, // for the first call
                 ]
             );
             $index = 1;
@@ -42,10 +42,10 @@ class PassportConfig extends IdaasPassportConfig
             // TODO: Check the configured $client->user_interface. If not null, set that as the userinterface.
             $uiServer = new UIServer(
                 [
-                    $parsed['scheme'] . '://' . $parsed['host']
+                    $parsed['scheme'].'://'.$parsed['host'],
                 ],
                 [
-                    $loginUrl
+                    $loginUrl,
                 ]
             );
         }
@@ -121,7 +121,7 @@ class PassportConfig extends IdaasPassportConfig
             true
         )->header(
             'Content-Security-Policy',
-            'frame-ancestors ' . $frameAncestor . ';'
+            'frame-ancestors '.$frameAncestor.';'
         )->withCookie(
             cookie(HomeController::COOKIE_FRAME_INFO, encrypt($frameAncestor), 20, '/')
         );
@@ -141,14 +141,14 @@ class PassportConfig extends IdaasPassportConfig
                     'post_logout_redirect_uri' => $redirectUri,
                     'response_mode' => $request->input('response_mode', 'query'),
                     'state' => $state,
-                    'valid' => $valid
-                ]
+                    'valid' => $valid,
+                ],
             ],
             $request
         )
             ->header(
                 'Content-Security-Policy',
-                'frame-ancestors ' . $frameAncestor . ';'
+                'frame-ancestors '.$frameAncestor.';'
             )->withCookie(
                 cookie(HomeController::COOKIE_FRAME_INFO, encrypt($frameAncestor), 20, '/')
             );

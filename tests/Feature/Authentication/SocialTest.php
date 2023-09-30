@@ -4,13 +4,14 @@ namespace Tests\Feature\Authentication;
 
 use App\AuthModule;
 use App\AuthTypes\Facebook;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Helper\OpenIDHelper;
+use Tests\TestCase;
 
 class SocialTest extends TestCase
 {
     use RefreshDatabase;
+
     /**
      * A basic test example.
      *
@@ -21,14 +22,14 @@ class SocialTest extends TestCase
 
         AuthModule::firstOrCreate(
             [
-                'name' => (new Facebook)->getDefaultName()
+                'name' => (new Facebook)->getDefaultName(),
             ],
             [
                 'type' => (new Facebook)->getIdentifier(),
                 'config' => [
                     'client_id' => env('FACEBOOK_CLIENT_ID'),
-                    'client_secret' => env('FACEBOOK_CLIENT_SECRET')
-                ]
+                    'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
+                ],
             ]
         );
 
@@ -38,13 +39,13 @@ class SocialTest extends TestCase
                 'trusted' => true,
                 'grant_type' => [
                     'authorization_code',
-                    'implicit'
+                    'implicit',
                 ],
                 'response_types' => [
                     'code',
                     'token',
-                    'id_token'
-                ]
+                    'id_token',
+                ],
             ]
         )
             ->expect('facebook')

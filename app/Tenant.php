@@ -2,22 +2,23 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Http\Middleware\DetectTenant;
 use App\Scopes\TenantScope;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class Tenant extends Model
 {
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     protected $fillable = [
-        'subdomain','master'
+        'subdomain', 'master',
     ];
 
     protected $casts = [
-        'master' => 'boolean'
+        'master' => 'boolean',
     ];
 
     protected $guarded = ['id', 'tenant_id'];
@@ -30,7 +31,7 @@ class Tenant extends Model
 
         static::creating(
             function ($model) {
-                $model->resources_version = 'W/' . Str::random(8);
+                $model->resources_version = 'W/'.Str::random(8);
                 $model->{$model->getKeyName()} = (string) Str::orderedUuid();
             }
         );
@@ -38,7 +39,7 @@ class Tenant extends Model
 
     public function updateVersion()
     {
-        $this->resources_version = 'W/' . Str::random(8);
+        $this->resources_version = 'W/'.Str::random(8);
     }
 
     public function clients()
@@ -61,7 +62,7 @@ class Tenant extends Model
         return route(
             'ice.manage.home',
             [
-            'tenant' => $this->subdomain
+                'tenant' => $this->subdomain,
             ]
         );
     }

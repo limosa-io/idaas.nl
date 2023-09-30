@@ -2,17 +2,15 @@
 
 namespace App\Http\Controllers\OAuth;
 
-use Illuminate\Http\Request;
-use Lcobucci\JWT\Builder;
-use Lcobucci\JWT\Signer\Rsa\Sha256;
-use Lcobucci\JWT\Signer\Key;
 use App\AuthChain\State;
 use Idaas\Passport\ClientRepository;
 use Idaas\Passport\Http\Controllers\AuthorizationController as IdaasAuthorizationController;
 use Idaas\Passport\KeyRepository;
+use Illuminate\Http\Request;
 use Laravel\Passport\TokenRepository;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer\Key\InMemory;
+use Lcobucci\JWT\Signer\Rsa\Sha256;
 
 class AuthorizationController extends IdaasAuthorizationController
 {
@@ -27,13 +25,12 @@ class AuthorizationController extends IdaasAuthorizationController
             $authRequest = $state->data;
         }
 
-        if (!$state->isCompleted()) {
+        if (! $state->isCompleted()) {
             return $this->returnError($authRequest);
         }
 
         return parent::continueAuthorize($authRequest, $request, $clients, $tokens);
     }
-
 
     public function initTest(Request $request)
     {

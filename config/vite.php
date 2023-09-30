@@ -16,7 +16,7 @@ return [
                 'ssr' => 'resources/scripts/ssr.ts',
                 'paths' => [
                     'frontend/src/login/app.js',
-                    'frontend/src/admin/main.js'
+                    'frontend/src/admin/main.js',
 
                 ],
                 'ignore' => '/\\.(d\\.ts|json)$/',
@@ -27,7 +27,7 @@ return [
                 'ping_before_using_manifest' => true,
                 'ping_url' => null,
                 'ping_timeout' => 1,
-                'key' =>    file_get_contents(base_path('nginx/_wildcard.notidaas.nl-key.pem')),
+                'key' => file_get_contents(base_path('nginx/_wildcard.notidaas.nl-key.pem')),
                 'cert' => file_get_contents(base_path('nginx/_wildcard.notidaas.nl.pem')),
             ],
             'build_path' => 'build',

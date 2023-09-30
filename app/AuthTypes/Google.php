@@ -13,6 +13,6 @@ class Google extends Generic
 
     public function getDefaultName()
     {
-        return "Google";
+        return 'Google';
     }
 }

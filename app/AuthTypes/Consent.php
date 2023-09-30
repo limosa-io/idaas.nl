@@ -6,11 +6,11 @@
 
 namespace App\AuthTypes;
 
-use App\AuthChain\ModuleResult;
-use Illuminate\Http\Request;
-use App\AuthChain\State;
 use App\AuthChain\ModuleInterface;
+use App\AuthChain\ModuleResult;
+use App\AuthChain\State;
 use App\Repository\ConsentRepository;
+use Illuminate\Http\Request;
 
 class Consent extends AbstractType
 {
@@ -28,6 +28,7 @@ class Consent extends AbstractType
         }
 
         $result = ($approved + $state->getScopesApproved());
+
         return $result;
     }
 
@@ -55,7 +56,6 @@ class Consent extends AbstractType
                     response(resolve(ConsentRepository::class)->getDescriptions($state->requestedScopes))
                 )->setCompleted(false);
         }
-
 
         return $module
             ->baseResult()

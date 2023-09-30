@@ -2,13 +2,12 @@
 
 namespace App;
 
-use App\Model;
 use Illuminate\Support\Str;
 
 class TenantSetting extends Model
 {
     protected $casts = [
-        'value' => 'array'
+        'value' => 'array',
     ];
 
     public static function getDefaults()
@@ -16,7 +15,7 @@ class TenantSetting extends Model
         return [
             'registration:attributes_create' => ['emails'],
             // See App\Listeners\AuthChainSubscriber
-            'registration:level_active' => AuthLevel::where('level', 'activation')->first()->id
+            'registration:level_active' => AuthLevel::where('level', 'activation')->first()->id,
         ];
     }
 
@@ -26,7 +25,7 @@ class TenantSetting extends Model
 
             'registration:allow' => 'nullable|boolean',
             'registration:allow_active' => 'nullable|boolean',
-            'registration:attributes_create' => ['nullable','array', function ($attribute, $value, $fail) {
+            'registration:attributes_create' => ['nullable', 'array', function ($attribute, $value, $fail) {
                 //TODO: validate if array contains email attribute
             }],
             'registration:attributes_update' => 'nullable|array',
@@ -45,7 +44,7 @@ class TenantSetting extends Model
             'ui:title' => 'nullable',
             'ui:navbar_backgroundColor' => 'nullable',
             'ui:label_display' => 'nullable|in:show,hidden',
-            'ui:languages' => ['nullable','array', function ($attribute, $value, $fail) {
+            'ui:languages' => ['nullable', 'array', function ($attribute, $value, $fail) {
                 if (count($value) !== count(array_unique($value))) {
                     $fail('You have already added this language');
                 }
@@ -55,7 +54,7 @@ class TenantSetting extends Model
             'ui:css' => 'nullable',
 
             // Webhook
-            'webhook:webhook_url' => 'nullable|url'
+            'webhook:webhook_url' => 'nullable|url',
 
         ];
     }
@@ -64,7 +63,7 @@ class TenantSetting extends Model
     {
         return collect(self::getDefaults())->filter(
             function ($value, $key) use ($namespace) {
-                return strpos($key, $namespace . ':') === 0;
+                return strpos($key, $namespace.':') === 0;
             }
         )->mapWithKeys(
             function ($item, $key) {
@@ -74,7 +73,7 @@ class TenantSetting extends Model
             self::when(
                 $namespace,
                 function ($query) use ($namespace) {
-                    return $query->where('key', 'like', $namespace . ':%');
+                    return $query->where('key', 'like', $namespace.':%');
                 }
             )->get()->mapWithKeys(
                 function ($item) {

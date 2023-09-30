@@ -23,8 +23,8 @@ class TenantController extends Controller
                 'required',
                 'regex:/^[a-z]+-?[a-z]+?$/',
                 'min:3',
-                'not_in:www,www1,www2,www3,www4,idaas,mail,ns1,ns2,ns3,ftp,static,cdn'
-            ]
+                'not_in:www,www1,www2,www3,www4,idaas,mail,ns1,ns2,ns3,ftp,static,cdn',
+            ],
         ];
 
         $this->middleware('can:control,App\Tenant');
@@ -34,6 +34,7 @@ class TenantController extends Controller
     {
         /** @var \App\Subject */
         $user = Auth::user();
+
         return Tenant::whereIn('id', Role::whereIn('id', $user->getRoles())->pluck('tenant_id'));
     }
 

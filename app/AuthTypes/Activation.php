@@ -56,7 +56,7 @@ class Activation extends AbstractType
 
     public function getDefaultName(): string
     {
-        return "Activation";
+        return 'Activation';
     }
 
     public function processCallback(Request $request)
@@ -68,10 +68,10 @@ class Activation extends AbstractType
         $config = Configuration::forAsymmetricSigner(
             new Sha256(),
             InMemory::plainText($privateKey->getKeyContents()),
-            InMemory::plainText($publicKey->getKeyContents() . "\n")
+            InMemory::plainText($publicKey->getKeyContents()."\n")
         );
         $config->setValidationConstraints(
-            new SignedWith(new Sha256(), InMemory::plainText($publicKey->getKeyContents() . "\n"))
+            new SignedWith(new Sha256(), InMemory::plainText($publicKey->getKeyContents()."\n"))
         );
 
         $parser = $config->parser();
@@ -83,24 +83,23 @@ class Activation extends AbstractType
             throw new TokenExpiredException('Signature not valid');
         }
 
-
         // 3. check issuer, audience, expiration
         if ($token->isExpired(new DateTimeImmutable())) {
             throw new TokenExpiredException('Activation token expired');
         }
 
         // 4. get user with id equals subject
-        $user = User::findOrFail($token->headers()->get("sub"));
+        $user = User::findOrFail($token->headers()->get('sub'));
 
         // 5. check if last_login_date is the same from the jwt
         $state = Helper::loadStateFromSession(app(), $token->claims()->get('state'));
 
         if ($state == null) {
-            throw new \Exception("Unknown state");
+            throw new \Exception('Unknown state');
         }
 
         if ($state->getIncomplete() == null) {
-            throw new \Exception("Token already in use");
+            throw new \Exception('Token already in use');
         }
 
         $module = $state->getIncomplete()->getModule();
@@ -111,9 +110,9 @@ class Activation extends AbstractType
             ->setCompleted(true)
             ->setSubject(
                 resolve(SubjectRepository::class)
-                ->with($user->email, $this, $module)
-                ->setTypeIdentifier($this->getIdentifier())
-                ->setUserId($user->id)
+                    ->with($user->email, $this, $module)
+                    ->setTypeIdentifier($this->getIdentifier())
+                    ->setUserId($user->id)
             );
 
         $state->addResult($result);
@@ -123,7 +122,7 @@ class Activation extends AbstractType
 
     public function getRedirect(ModuleInterface $module, State $state)
     {
-        $state = (string)$state;
+        $state = (string) $state;
     }
 
     public function sendEmail(Subject $subject, ModuleInterface $module, State $state)
@@ -132,11 +131,11 @@ class Activation extends AbstractType
             new StandardMail(
                 @$module->config['template_id'],
                 [
-                'url' => htmlentities(route('ice.login.activation') . '?token=' . urlencode(
-                    self::getToken($subject->getUserId(), $state)->toString()
-                )),
-                'subject' => $subject,
-                'user' =>  $subject->getUser()
+                    'url' => htmlentities(route('ice.login.activation').'?token='.urlencode(
+                        self::getToken($subject->getUserId(), $state)->toString()
+                    )),
+                    'subject' => $subject,
+                    'user' => $subject->getUser(),
                 ],
                 EmailTemplate::TYPE_ACTIVATION,
                 $subject->getPreferredLanguage()
@@ -158,11 +157,11 @@ class Activation extends AbstractType
                 $user->password = Hash::make($request->input('password'));
                 $user->save();
 
-                return $state->getIncomplete()->setCompleted(true)->setResponse(response([  ]));
+                return $state->getIncomplete()->setCompleted(true)->setResponse(response([]));
             } else {
                 return $state
                     ->getIncomplete()
-                    ->setResponse(response([ 'error' => 'You must provide a password'  ], 400));
+                    ->setResponse(response(['error' => 'You must provide a password'], 400));
             }
         } elseif ($state->getSubject() != null) {
             $subject = $state->getSubject();

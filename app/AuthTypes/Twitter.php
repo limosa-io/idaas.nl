@@ -13,6 +13,6 @@ class Twitter extends Generic
 
     public function getDefaultName()
     {
-        return "Twitter";
+        return 'Twitter';
     }
 }

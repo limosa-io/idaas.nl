@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateAuthChainModuleResultsTable extends Migration
 {
@@ -34,7 +34,7 @@ class CreateAuthChainModuleResultsTable extends Migration
             // the module result
             $table->text('module_result');
 
-            $table->index(['tenant_id','id']);
+            $table->index(['tenant_id', 'id']);
             $table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
 
             $table->dateTime('expires_at')->nullable();

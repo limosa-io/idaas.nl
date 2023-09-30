@@ -10,14 +10,13 @@ use App\EmailTemplate;
 use App\Git;
 use App\HostedIdentityProvider;
 use App\RemoteServiceProvider;
-use App\SAMLConfig;
 use App\TenantSetting;
 use App\Translation;
 use App\UIServer;
 use Exception;
-use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
+use Illuminate\Http\Request;
 
 class GitController extends Controller
 {
@@ -35,14 +34,14 @@ class GitController extends Controller
         HostedIdentityProvider::class,
         UIServer::class,
         CloudFunction::class,
-        Translation::class
+        Translation::class,
     ];
 
     public function __construct()
     {
         $this->validations = [
             'type' => 'in:github,none',
-            'settings' => 'array'
+            'settings' => 'array',
         ];
     }
 
@@ -70,17 +69,17 @@ class GitController extends Controller
                     }
 
                     $body = [
-                        "owner" => $git->settings['owner'],
-                        "repo" => $git->settings['repository'],
-                        "path" => sprintf('/%s/%s.yaml', $type, $file),
-                        "message" => "Sync",
-                        "committer" => [
-                        "name" => "Idaas Syncer",
-                        "email" => "no-reply@idaas.nl"
+                        'owner' => $git->settings['owner'],
+                        'repo' => $git->settings['repository'],
+                        'path' => sprintf('/%s/%s.yaml', $type, $file),
+                        'message' => 'Sync',
+                        'committer' => [
+                            'name' => 'Idaas Syncer',
+                            'email' => 'no-reply@idaas.nl',
                         ],
-                        "content" => base64_encode(
+                        'content' => base64_encode(
                             json_encode($object, JSON_PRETTY_PRINT)
-                        )
+                        ),
                     ];
 
                     $path = sprintf('%s/%s.yaml', $type, $file);
@@ -89,15 +88,15 @@ class GitController extends Controller
                         $body['sha'] = $existing[$path]['sha'];
                     }
 
-                    if (!array_key_exists($path, $existing) || base64_decode($existing[$path]['content']) != base64_decode($body['content'])) {
+                    if (! array_key_exists($path, $existing) || base64_decode($existing[$path]['content']) != base64_decode($body['content'])) {
                         $guzzle->put(sprintf('https://api.github.com/repos/%s/%s/contents/%s', $git->settings['owner'], $git->settings['repository'], $path), [
                             RequestOptions::HEADERS => [
-                            'Authorization' => 'Bearer ' . $git->settings['token'],
-                            'Accept' => 'application/vnd.github+json'
+                                'Authorization' => 'Bearer '.$git->settings['token'],
+                                'Accept' => 'application/vnd.github+json',
                             ],
                             RequestOptions::BODY => json_encode(
                                 $body
-                            )
+                            ),
                         ]);
                     }
                 }
@@ -114,7 +113,7 @@ class GitController extends Controller
         $result = [];
 
         if ($git->type != self::TYPE_GITHUB) {
-            throw new Exception("Unknown git provider");
+            throw new Exception('Unknown git provider');
         }
 
         $guzzle = new Client();
@@ -123,9 +122,9 @@ class GitController extends Controller
             sprintf('https://api.github.com/repos/%s/%s/contents/%s', $git->settings['owner'], $git->settings['repository'], $path),
             [
                 RequestOptions::HEADERS => [
-                    'Authorization' => 'Bearer ' . $git->settings['token'],
-                    'Accept' => 'application/vnd.github+json'
-                ]
+                    'Authorization' => 'Bearer '.$git->settings['token'],
+                    'Accept' => 'application/vnd.github+json',
+                ],
             ]
         );
 
@@ -140,18 +139,18 @@ class GitController extends Controller
         $result = [];
 
         if ($git->type != self::TYPE_GITHUB) {
-            throw new Exception("not supported provider");
+            throw new Exception('not supported provider');
         }
 
         $contents = $this->getContents('');
 
-        if (!is_array($contents)) {
-           // throw new Exception("This is not a folder");
+        if (! is_array($contents)) {
+            // throw new Exception("This is not a folder");
         }
 
         foreach ($contents as $directory) {
             if ($directory['type'] == 'dir') {
-                    $files = $this->getContents($directory['path']);
+                $files = $this->getContents($directory['path']);
 
                 foreach ($files as $file) {
                     $f = $this->getContents($file['path']);
@@ -175,13 +174,12 @@ class GitController extends Controller
         $files = $this->getFiles();
 
         foreach ($files as $path => $file) {
-            $first = collect(self::TYPES_TO_SYNC)->first(fn($value) =>
-                str_starts_with($file['path'], strtolower((new \ReflectionClass($value))->getShortName()) . '/'));
+            $first = collect(self::TYPES_TO_SYNC)->first(fn ($value) => str_starts_with($file['path'], strtolower((new \ReflectionClass($value))->getShortName()).'/'));
 
             if ($first != null) {
                 $json_decode = json_decode(base64_decode($file['content']), true);
 
-                if (!array_key_exists(app($first)->getKeyName(), $json_decode)) {
+                if (! array_key_exists(app($first)->getKeyName(), $json_decode)) {
                     return $json_decode;
                 }
 

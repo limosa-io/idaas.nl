@@ -2,8 +2,8 @@
 
 namespace App\Repository;
 
-use ArieTimmerman\Laravel\SAML\Repository\HostedIdentityProviderConfigRepositoryInterface;
 use App\HostedIdentityProvider;
+use ArieTimmerman\Laravel\SAML\Repository\HostedIdentityProviderConfigRepositoryInterface;
 
 class HostedIdentityProviderConfigRepository implements HostedIdentityProviderConfigRepositoryInterface
 {
@@ -33,7 +33,6 @@ class HostedIdentityProviderConfigRepository implements HostedIdentityProviderCo
         $hostedIdentityProvider->ssoHttpRedirectEnabled = $remoteIdentityProviderConfigArray['ssoHttpRedirectEnabled'];
         $hostedIdentityProvider->sloHttpPostEnabled = $remoteIdentityProviderConfigArray['sloHttpPostEnabled'];
         $hostedIdentityProvider->sloHttpRedirectEnabled = $remoteIdentityProviderConfigArray['sloHttpRedirectEnabled'];
-
 
         $hostedIdentityProvider->keys = $remoteIdentityProviderConfigArray['keys'];
         // phpcs:ignore Generic.Files.LineLength.TooLong

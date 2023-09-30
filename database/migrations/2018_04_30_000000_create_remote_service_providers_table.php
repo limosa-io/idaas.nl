@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateRemoteServiceProvidersTable extends Migration
 {
@@ -14,7 +14,7 @@ class CreateRemoteServiceProvidersTable extends Migration
     public function up()
     {
         Schema::create('remote_service_providers', function (Blueprint $table) {
-            
+
             $table->uuid('id')->primary();
 
             $table->uuid('tenant_id')->index();
@@ -23,7 +23,7 @@ class CreateRemoteServiceProvidersTable extends Migration
 
             $table->string('remoteMetadataUrl')->nullable();
             $table->boolean('sync')->default(false);
-            
+
             // array
             $table->text('assertionConsumerService')->nullable();
 
@@ -40,7 +40,7 @@ class CreateRemoteServiceProvidersTable extends Migration
 
             $table->timestamps();
 
-            $table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');       
+            $table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
         });
     }
 

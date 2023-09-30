@@ -2,17 +2,14 @@
 
 namespace App;
 
-use App\Model;
-use App\Scopes\TenantTrait;
-
 class OpenIDKey extends Model
 {
     protected $hidden = [
-        'private_key'
+        'private_key',
     ];
 
     protected $casts = [
-        'active' => 'boolean'
+        'active' => 'boolean',
     ];
 
     public function provider()

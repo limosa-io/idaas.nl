@@ -6,9 +6,6 @@
 
 namespace App\AuthChain;
 
-use App\AuthChain\ModuleInterface;
-use App\AuthChain\ModuleResult;
-use App\AuthChain\ModuleResultList;
 use App\AuthLevel;
 use App\Exceptions\ApiException;
 use App\Repository\AuthLevelRepository;
@@ -57,7 +54,6 @@ class State implements \JsonSerializable, Jsonable
     public $requestedScopes;
 
     /**
-     *
      * @var string[]
      */
     public $defaultScopes = [];
@@ -196,18 +192,14 @@ class State implements \JsonSerializable, Jsonable
         return $state;
     }
 
-    /**
-     *
-     * @return ModuleResult
-     */
-    public function getRememberedModuleResult(ModuleInterface $module): ModuleResult|null
+    public function getRememberedModuleResult(ModuleInterface $module): ?ModuleResult
     {
         $result = null;
 
         if (
             $module->provides($this->getRequiredAuthLevel())
             && $this->needsPrompt()
-            && !$this->getModuleResults()->hasPrompted()
+            && ! $this->getModuleResults()->hasPrompted()
         ) {
             return null;
         }
@@ -287,7 +279,7 @@ class State implements \JsonSerializable, Jsonable
 
                 $levels[] = new AuthLevel([
                     'type' => null,
-                    'level' => $r->getModule()->getIdentifier()
+                    'level' => $r->getModule()->getIdentifier(),
                 ]);
             }
         }
@@ -399,7 +391,6 @@ class State implements \JsonSerializable, Jsonable
             'lev' => $this->requiredAuthLevel,
             'inc' => $this->incomplete,
 
-
             'oke' => $this->onFinishUrl,
             'nok' => $this->onCancelUrl,
             'ret' => $this->retryUrl,
@@ -447,8 +438,7 @@ class State implements \JsonSerializable, Jsonable
     /**
      * Set the value of requiredAuthLevel
      *
-     * @param AuthLevel $requiredAuthLevel
-     *
+     * @param  AuthLevel  $requiredAuthLevel
      * @return self
      */
     public function setRequiredAuthLevel($requiredAuthLevel = null)
@@ -533,8 +523,7 @@ class State implements \JsonSerializable, Jsonable
     /**
      * Set the value of moduleResults
      *
-     * @param ModuleResult[] $moduleResults
-     *
+     * @param  ModuleResult[]  $moduleResults
      * @return self
      */
     public function setModuleResults(ModuleResultList $moduleResults)
@@ -564,7 +553,6 @@ class State implements \JsonSerializable, Jsonable
     /**
      * Set the value of incomplete
      *
-     * @param ModuleResult $incomplete
      *
      * @return self
      */
@@ -588,7 +576,6 @@ class State implements \JsonSerializable, Jsonable
     /**
      * Set the value of prompt
      *
-     * @param bool $prompt
      *
      * @return self
      */
@@ -602,8 +589,7 @@ class State implements \JsonSerializable, Jsonable
     /**
      * Set the value of prompt
      *
-     * @param bool $prompt
-     *
+     * @param  bool  $prompt
      * @return self
      */
     public function setDisplay(string $display = null)
@@ -616,8 +602,7 @@ class State implements \JsonSerializable, Jsonable
     /**
      * Set the login hint
      *
-     * @param bool $loginHint
-     *
+     * @param  bool  $loginHint
      * @return self
      */
     public function setLoginHint(?string $loginHint)
@@ -647,7 +632,6 @@ class State implements \JsonSerializable, Jsonable
     /**
      * Set the value of passive
      *
-     * @param bool $passive
      *
      * @return self
      */
@@ -680,7 +664,6 @@ class State implements \JsonSerializable, Jsonable
     /**
      * Set the value of uiServer
      *
-     * @param UIServer $uiServer
      *
      * @return self
      */
@@ -690,7 +673,6 @@ class State implements \JsonSerializable, Jsonable
 
         return $this;
     }
-
 
     public function setAppId(?string $appId)
     {
@@ -702,7 +684,6 @@ class State implements \JsonSerializable, Jsonable
     /**
      * Set the value of done
      *
-     * @param bool $done
      *
      * @return self
      */
@@ -767,8 +748,7 @@ class State implements \JsonSerializable, Jsonable
     /**
      * Set the value of requestedScopes
      *
-     * @param string[] $requestedScopes
-     *
+     * @param  string[]  $requestedScopes
      * @return self
      */
     public function setRequestedScopes(array $requestedScopes)
@@ -781,8 +761,7 @@ class State implements \JsonSerializable, Jsonable
     /**
      * Set the value of requestedClaims
      *
-     * @param string[] $requestedClaims
-     *
+     * @param  string[]  $requestedClaims
      * @return self
      */
     public function setRequestedClaims(array $requestedClaims)
@@ -795,7 +774,6 @@ class State implements \JsonSerializable, Jsonable
     /**
      * Set the value of onCancelUrl
      *
-     * @param string $onCancelUrl
      *
      * @return self
      */

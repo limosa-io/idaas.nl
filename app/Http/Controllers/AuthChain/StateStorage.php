@@ -11,24 +11,23 @@
 
 namespace App\Http\Controllers\AuthChain;
 
-use App\AuthChain\StateStorage as BaseStateStorage;
 use App\AuthChain\State;
-use Illuminate\Support\Facades\Redis;
 use App\State as EloquentState;
+use Illuminate\Support\Facades\Redis;
 
 class StateStorage
 {
     public static function saveState(State $state)
     {
         if (config('database.redis.enabled')) {
-            Redis::set('state:' . $state->getstateId(), $state, 'EX', 3600);
+            Redis::set('state:'.$state->getstateId(), $state, 'EX', 3600);
         } else {
             return EloquentState::updateOrCreate(
                 [
-                'id' => $state->getstateId()
+                    'id' => $state->getstateId(),
                 ],
                 [
-                'state' => $state
+                    'state' => $state,
                 ]
             );
         }
@@ -37,7 +36,7 @@ class StateStorage
     public static function getStateFromSession($stateId)
     {
         if (config('database.redis.enabled')) {
-            return Redis::get('state:' . $stateId);
+            return Redis::get('state:'.$stateId);
         } else {
             $eloquentState = EloquentState::find($stateId);
 
@@ -48,7 +47,7 @@ class StateStorage
     public static function deleteState(State $state)
     {
         if (config('database.redis.enabled')) {
-            return Redis::del('state:' . $state->getstateId());
+            return Redis::del('state:'.$state->getstateId());
         } else {
             return EloquentState::destroy($state->getstateId());
         }

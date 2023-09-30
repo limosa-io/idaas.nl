@@ -6,11 +6,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\OpenIDProvider;
-use Illuminate\Support\Facades\Lang;
-use App\Translation;
 use App\Tenant;
+use App\Translation;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Lang;
 
 class LanguageController extends Controller
 {
@@ -24,7 +23,7 @@ class LanguageController extends Controller
         if ($locale != null && file_exists(resource_path("lang/$locale"))) {
             return [
                 'login' => Lang::get('login', [], $locale),
-                'general' => Lang::get('general', [], $locale)
+                'general' => Lang::get('general', [], $locale),
             ];
         } else {
             if ($fallback) {
@@ -39,13 +38,13 @@ class LanguageController extends Controller
     {
         //from https://stackoverflow.com/questions/10424335/php-convert-multidimensional-array-to-2d-array-with-dot-notation-keys
         $ritit = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($array));
-        $result = array();
+        $result = [];
         foreach ($ritit as $leafValue) {
-            $keys = array();
+            $keys = [];
             foreach (range(0, $ritit->getDepth()) as $depth) {
                 $keys[] = $ritit->getSubIterator($depth)->key();
             }
-            $result[ join('.', $keys) ] = $leafValue;
+            $result[implode('.', $keys)] = $leafValue;
         }
 
         return $result;
@@ -69,21 +68,20 @@ class LanguageController extends Controller
             $result->toJson(JSON_FORCE_OBJECT),
             200,
             [
-            'content-type' => 'application/json'
+                'content-type' => 'application/json',
             ]
         );
     }
 
     protected static function setArray(&$array, $keys, $value)
     {
-        $keys = explode(".", $keys);
+        $keys = explode('.', $keys);
         $current = &$array;
         foreach ($keys as $key) {
             $current = &$current[$key];
         }
         $current = $value;
     }
-
 
     public static function getArray(string $locale = null)
     {
@@ -123,17 +121,17 @@ class LanguageController extends Controller
         foreach ($filtered as $key => $value) {
             Translation::updateOrCreate(
                 [
-                'key' => $key,
-                'locale' => $locale
+                    'key' => $key,
+                    'locale' => $locale,
                 ],
                 [
-                'value' => $value
+                    'value' => $value,
                 ]
             );
         }
 
         foreach ($translations as $translation) {
-            if (!in_array($translation->key, array_keys($filtered))) {
+            if (! in_array($translation->key, array_keys($filtered))) {
                 $translation->delete();
             }
         }

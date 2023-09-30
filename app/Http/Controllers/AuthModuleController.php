@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\AuthChain\AuthChain;
 use App\Repository\ModuleRepository;
+use Illuminate\Http\Request;
 
 class AuthModuleController extends Controller
 {
@@ -23,25 +23,22 @@ class AuthModuleController extends Controller
             'remember_lifetime' => 'nullable|integer|min:0',
             // 'levels.*.level' => ['required'],
             // 'levels.*.type' => ['required'],
-            'name'   => 'nullable|min:3',
-            'type'   => ['required', function ($attribute, $value, $fail) {
-                if (!isset(AuthChain::$typeMap[$value])) {
+            'name' => 'nullable|min:3',
+            'type' => ['required', function ($attribute, $value, $fail) {
+                if (! isset(AuthChain::$typeMap[$value])) {
                     return $fail(
-                        $attribute . ' is not a valid type. Allowed are: ' .
+                        $attribute.' is not a valid type. Allowed are: '.
                             implode(', ', array_keys(AuthChain::$typeMap))
                     );
                 }
             }],
-            'config'    => 'nullable|array',
+            'config' => 'nullable|array',
 
-            'group'    => 'nullable|string',
+            'group' => 'nullable|string',
 
         ];
     }
 
-    /**
-     *
-     */
     public function index(ModuleRepository $repository)
     {
         return $repository->all();
@@ -65,7 +62,6 @@ class AuthModuleController extends Controller
         //TODO: Delete chains related to the authModuleId!
     }
 
-
     public function create(ModuleRepository $repository, Request $request)
     {
         $data = $this->validate($request, $this->validations);
@@ -88,7 +84,7 @@ class AuthModuleController extends Controller
         $module = $repository->get($authModuleId);
 
         //re-run validations for module specific validations
-        if (!$skipValidation) {
+        if (! $skipValidation) {
             $validations = $validations + $module->getTypeObject()->getConfigValidation();
         }
         $data = $this->validate($request, $validations);
@@ -102,8 +98,8 @@ class AuthModuleController extends Controller
 
         $module->hide_if_not_requested = $data['hide_if_not_requested'];
 
-        if (!$keepLevels) {
-            $module->syncLevels(($data['levels'] ?? null)  ? collect($data['levels'])->pluck('id')->toArray() : []);
+        if (! $keepLevels) {
+            $module->syncLevels(($data['levels'] ?? null) ? collect($data['levels'])->pluck('id')->toArray() : []);
         }
 
         $module->name = $data['name'];

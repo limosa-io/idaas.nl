@@ -2,12 +2,12 @@
 
 namespace App\Http\Middleware;
 
-use Closure;
-use App\Tenant;
-use Illuminate\Support\Facades\URL;
 use App\Exceptions\NoTenantException;
 use App\Stats\Statter;
+use App\Tenant;
+use Closure;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\URL;
 
 class DetectTenant
 {
@@ -26,10 +26,10 @@ class DetectTenant
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Closure                 $next
-     * @param  mixed                    ...$scopes
+     * @param  \Illuminate\Http\Request  $request
+     * @param  mixed  ...$scopes
      * @return mixed
+     *
      * @throws \Illuminate\Auth\AuthenticationException
      */
     public function handle($request, Closure $next)

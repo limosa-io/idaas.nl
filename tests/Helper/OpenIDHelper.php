@@ -3,32 +3,29 @@
 namespace Tests\Helper;
 
 use Illuminate\Support\Str;
-use Tests\TestCase;
 use Lcobucci\JWT\Configuration;
-use Lcobucci\JWT\UnencryptedToken;
-use Lcobucci\JWT\Signer\Hmac\Sha256;
+use Tests\TestCase;
 
 class OpenIDHelper extends LoginStateHelper
 {
-
     public static function initWithNewClient(TestCase $testCase, array $clientData = [], array $data = [], $cookies = [])
     {
 
         $clientData = array_merge(
             [
-                "client_name" => "test",
-                "application_type" => "web",
+                'client_name' => 'test',
+                'application_type' => 'web',
                 'public' => 'public',
                 'redirect_uris' => [
-                    'https://what.ever.com'
-                ]
+                    'https://what.ever.com',
+                ],
             ],
             $clientData
         );
 
         $data = array_merge(
             [
-                'redirect_uri' => 'https://what.ever.com'
+                'redirect_uri' => 'https://what.ever.com',
             ],
             $data
         );
@@ -37,7 +34,7 @@ class OpenIDHelper extends LoginStateHelper
             'https://master.test.dev/oauth/connect/register',
             $clientData,
             [
-                'Authorization' => sprintf('Bearer %s', $testCase->getAccessToken())
+                'Authorization' => sprintf('Bearer %s', $testCase->getAccessToken()),
             ]
         );
 
@@ -61,12 +58,12 @@ class OpenIDHelper extends LoginStateHelper
                 'nonce' => '1234',
                 'state' => '4567',
                 'client_id' => $clientId,
-                'scope' => ['openid', 'applications:manage']
+                'scope' => ['openid', 'applications:manage'],
             ],
             $data
         );
 
-        if (!is_array($data['scope'])) {
+        if (! is_array($data['scope'])) {
             $data['scope'] = explode(' ', $data['scope']);
         }
 
@@ -75,6 +72,7 @@ class OpenIDHelper extends LoginStateHelper
                 if ($key == 'scope' && is_array($value)) {
                     $value = implode(' ', $value);
                 }
+
                 return sprintf('%s=%s', $key, urlencode($value));
             }
         )->implode('&');
@@ -132,7 +130,7 @@ class OpenIDHelper extends LoginStateHelper
             $this->testCase->assertArrayHasKey('id_token', $result);
 
             $configuration = Configuration::forUnsecuredSigner();
-            
+
             $parser = $configuration->parser();
             $token = $parser->parse($result['id_token']);
 
@@ -159,9 +157,9 @@ class OpenIDHelper extends LoginStateHelper
             'grant_type' => 'authorization_code',
             'code' => $result['code'],
             'redirect_uri' => $this->data['redirect_uri'],
-            'client_id' => $this->data['client_id']
+            'client_id' => $this->data['client_id'],
         ];
-        $response = $this->testCase->post(route('ice.login.ui') . '/token', $data);
+        $response = $this->testCase->post(route('ice.login.ui').'/token', $data);
 
         $response->assertOk();
         $json = $response->json();
@@ -174,7 +172,7 @@ class OpenIDHelper extends LoginStateHelper
         if (in_array('openid', $this->data['scope'])) {
             $this->testCase->assertArrayHasKey('id_token', $json);
             $configuration = Configuration::forUnsecuredSigner();
-            
+
             $parser = $configuration->parser();
             $token = $parser->parse($json['id_token']);
 

@@ -2,20 +2,20 @@
 
 namespace Tests;
 
-use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
-use App\Console\Commands\NewMaster;
-use App\User;
-use Illuminate\Support\Facades\Hash;
-use App\Http\Middleware\DetectTenant;
-use Laravel\Passport\Passport;
-use App\Repository\AccessTokenRepository;
-use DateInterval;
-use App\Repository\KeyRepository;
 use App\Client;
-use Illuminate\Support\Str;
-use App\Subject;
+use App\Console\Commands\NewMaster;
+use App\Http\Middleware\DetectTenant;
 use App\OAuthScope;
+use App\Repository\AccessTokenRepository;
+use App\Repository\KeyRepository;
+use App\Subject;
+use App\User;
+use DateInterval;
 use Idaas\Passport\Bridge\ClientRepository;
+use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Laravel\Passport\Passport;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -35,7 +35,7 @@ abstract class TestCase extends BaseTestCase
                 return User::create(
                     [
                         'email' => 'arietimmerman@gmail.com',
-                        'password' => Hash::make('1234')
+                        'password' => Hash::make('1234'),
                     ]
                 );
             }
@@ -47,7 +47,7 @@ abstract class TestCase extends BaseTestCase
     public function getAccessToken()
     {
         /**
-         * @var AccessTokenRepository 
+         * @var AccessTokenRepository
          */
         $accessTokenRepository = resolve(AccessTokenRepository::class);
 
@@ -74,13 +74,13 @@ abstract class TestCase extends BaseTestCase
         // var_dump($user->id);exit;
         $eloquentSubject = Subject::firstOrCreate(
             [
-                'id' => (string) Str::orderedUuid()
+                'id' => (string) Str::orderedUuid(),
             ],
             [
                 'identifier' => (string) Str::orderedUuid(),
                 'user_id' => $user->id,
                 'subject' => null,
-                'levels' => ['test']
+                'levels' => ['test'],
             ]
         );
 

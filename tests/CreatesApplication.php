@@ -2,9 +2,8 @@
 
 namespace Tests;
 
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Contracts\Console\Kernel;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 
 trait CreatesApplication
 {
@@ -23,7 +22,7 @@ trait CreatesApplication
         $this->clearCache();
 
         Hash::setRounds(4);
-        
+
         return $app;
     }
 
@@ -37,5 +36,4 @@ trait CreatesApplication
             \Illuminate\Support\Facades\Artisan::call($command);
         }
     }
-
 }

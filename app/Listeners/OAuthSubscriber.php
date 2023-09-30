@@ -2,8 +2,8 @@
 
 namespace App\Listeners;
 
-use App\Stats\Statter;
 use App\Client;
+use App\Stats\Statter;
 use Laravel\Passport\Events\AccessTokenCreated;
 use Laravel\Passport\Events\RefreshTokenCreated;
 use Laravel\Passport\Token;
@@ -27,7 +27,7 @@ class OAuthSubscriber
     /**
      * Register the listeners for the subscriber.
      *
-     * @param \Illuminate\Events\Dispatcher $events
+     * @param  \Illuminate\Events\Dispatcher  $events
      */
     public function subscribe($events)
     {

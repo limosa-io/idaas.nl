@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateCloudFunctionsTable extends Migration
 {
@@ -14,9 +14,9 @@ class CreateCloudFunctionsTable extends Migration
     public function up()
     {
         Schema::create('cloud_functions', function (Blueprint $table) {
-            
+
             $table->uuid('id')->primary();
-            
+
             $table->string('type')->index();
 
             $table->string('display_name');
@@ -28,7 +28,7 @@ class CreateCloudFunctionsTable extends Migration
             $table->text('code')->nullable();
 
             $table->text('variables')->nullable();
-            
+
             $table->uuid('tenant_id')->index();
             $table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
 

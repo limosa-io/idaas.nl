@@ -16,11 +16,11 @@ class RefreshTokenRepository extends LaravelRefreshTokenRepository
     {
         $this->database->table('oauth_refresh_tokens')->insert(
             [
-            'id' => $id = $refreshTokenEntity->getIdentifier(),
-            'access_token_id' => $accessTokenId = $refreshTokenEntity->getAccessToken()->getIdentifier(),
-            'revoked' => false,
-            'expires_at' => $refreshTokenEntity->getExpiryDateTime(),
-            'tenant_id' => resolve(Tenant::class)->id
+                'id' => $id = $refreshTokenEntity->getIdentifier(),
+                'access_token_id' => $accessTokenId = $refreshTokenEntity->getAccessToken()->getIdentifier(),
+                'revoked' => false,
+                'expires_at' => $refreshTokenEntity->getExpiryDateTime(),
+                'tenant_id' => resolve(Tenant::class)->id,
             ]
         );
 

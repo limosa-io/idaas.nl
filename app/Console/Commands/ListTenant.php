@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Tenant;
+use Illuminate\Console\Command;
 
 class ListTenant extends NewTenant
 {

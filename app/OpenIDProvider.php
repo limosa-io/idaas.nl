@@ -11,7 +11,7 @@ class OpenIDProvider extends Model implements ProviderInterface
     use TenantTrait;
 
     protected $casts = [
-        'response_types_supported' => 'array'
+        'response_types_supported' => 'array',
     ];
 
     protected $hidden = [
@@ -21,12 +21,12 @@ class OpenIDProvider extends Model implements ProviderInterface
         'created_at',
         'updated_at',
         'tenant_id',
-        'profile_url_template'
+        'profile_url_template',
     ];
 
-    protected $guarded = [ 'id', 'tenant_id' ];
+    protected $guarded = ['id', 'tenant_id'];
 
-    protected $with = [ 'scopesSupported', 'acrValuesSupported' ];
+    protected $with = ['scopesSupported', 'acrValuesSupported'];
 
     public function scopesSupported()
     {
@@ -42,7 +42,7 @@ class OpenIDProvider extends Model implements ProviderInterface
     {
         return [
             'scopes_supported' => array_merge(
-                ['openid','online_access'],
+                ['openid', 'online_access'],
                 $this->scopesSupported->pluck('name')->toArray()
             ),
             'acr_values_supported' => $this->acrValuesSupported()
@@ -78,7 +78,7 @@ class OpenIDProvider extends Model implements ProviderInterface
             'roles',
             'acr',
             'picture',
-            'profile'
+            'profile',
         ];
 
         $result['end_session_endpoint'] = route('oidc.logout', []);
@@ -86,7 +86,7 @@ class OpenIDProvider extends Model implements ProviderInterface
         $result['code_challenge_methods_supported'] = ['S256'];
         $result['introspection_endpoint'] = route('oauth.introspect');
         $result['introspection_endpoint_auth_methods_supported'] = ['client_secret_jwt'];
-        $result['token_endpoint_auth_methods_supported'] = ['none','client_secret_post','client_secret_basic'];
+        $result['token_endpoint_auth_methods_supported'] = ['none', 'client_secret_post', 'client_secret_basic'];
 
         $result['revocation_endpoint'] = route('oauth.revoke');
 

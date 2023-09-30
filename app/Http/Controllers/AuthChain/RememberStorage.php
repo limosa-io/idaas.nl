@@ -8,16 +8,16 @@
 
 namespace App\Http\Controllers\AuthChain;
 
-use App\AuthChain\State;
 use App\AuthChain\ModuleResult;
+use App\AuthChain\ModuleResultList;
+use App\AuthChain\State;
 use App\ModuleResult as EloquentModuleResult;
-use Illuminate\Support\Facades\Session;
+use Carbon\Carbon;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
-use App\AuthChain\ModuleResultList;
-use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
-use Carbon\Carbon;
 
 class RememberStorage
 {
@@ -73,7 +73,7 @@ class RememberStorage
 
         /**
          * @var ModuleResult $r
-        */
+         */
         foreach ($state->getModuleResults()->toArray() as $r) {
             // Save if whaterver has prompted. Else it forgets the first factor ...
             // TODO: Check if "getPrompted()" is a better check than "getSubject"
@@ -91,8 +91,7 @@ class RememberStorage
                 }
 
                 $inserts[] = [
-                    'session_or_cookie_id' =>
-                        $r->rememberForSession ? $sessionId : $cookieId,
+                    'session_or_cookie_id' => $r->rememberForSession ? $sessionId : $cookieId,
                     'session' => $r->rememberForSession,
                     'subject_id' => $subject->id,
                     'user_id' => $state->getSubject()->getUserId(),
@@ -107,7 +106,7 @@ class RememberStorage
 
                     'module_result' => json_encode($r),
 
-                    'expires_at' => $expiresAt
+                    'expires_at' => $expiresAt,
                 ];
 
                 $hasSavedNew = true;
@@ -137,7 +136,7 @@ class RememberStorage
 
                     $query->where('session_or_cookie_id', $sessionId);
 
-                    if (!empty($rememberId)) {
+                    if (! empty($rememberId)) {
                         $query->orWhere('session_or_cookie_id', $rememberId);
                     }
                 }

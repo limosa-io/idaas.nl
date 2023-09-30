@@ -2,10 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Mail\StandardMail;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\StandardMail;
-use App\Mailer;
 
 class SendEmail extends Command
 {
@@ -53,7 +52,7 @@ class SendEmail extends Command
                     'parent' => '
                         Parent! Hello {{$ planet }} 
                         planet{{/ planet }} en nu {{# button }}<button>{{ button }}</button>{{/ button }} 
-                        de footer: {{$ footer }}{{/ footer }}'
+                        de footer: {{$ footer }}{{/ footer }}',
                 ],
             ]
         );
@@ -64,10 +63,9 @@ class SendEmail extends Command
         echo $m->render(
             '{{<parent}}{{$planet}}test 123 !{{/planet }} {{$ footer }}greetings{{/ footer }} {{/ parent }}',
             [
-            'button' => ''
+                'button' => '',
             ]
         );
-
 
         // echo "Done\n";
     }

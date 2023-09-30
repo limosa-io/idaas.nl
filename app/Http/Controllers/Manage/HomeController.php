@@ -8,8 +8,6 @@
 
 namespace App\Http\Controllers\Manage;
 
-use Illuminate\Http\Request;
-
 class HomeController extends \App\Http\Controllers\Controller
 {
     /**

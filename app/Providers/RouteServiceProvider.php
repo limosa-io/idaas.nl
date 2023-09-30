@@ -3,8 +3,8 @@
 namespace App\Providers;
 
 use Idaas\Passport\Passport;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Route;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -39,7 +39,7 @@ class RouteServiceProvider extends ServiceProvider
         $this->mapManageApiRoutes();
         $this->mapManageWebRoutes();
 
-        Route::middleware(['api'])->domain('{tenant}.manage.' . config('app.domain'))->group(
+        Route::middleware(['api'])->domain('{tenant}.manage.'.config('app.domain'))->group(
             function () {
                 AuthRouteProvider::manageRoutes();
             }
@@ -49,7 +49,7 @@ class RouteServiceProvider extends ServiceProvider
             function ($router) {
                 $router->forManagement();
             },
-            ['domain' => '{tenant}.manage.' . config('app.domain')]
+            ['domain' => '{tenant}.manage.'.config('app.domain')]
         );
 
         Route::middleware('api.noauth')->get('/api/logout', 'App\Http\Controllers\LogoutController@logout');
@@ -62,7 +62,7 @@ class RouteServiceProvider extends ServiceProvider
                 $router->forUserinfo();
                 $router->forIntrospect();
             },
-            ['middleware' => ['api.nopolicy'], 'domain' => '{tenant}.' . config('app.domain')]
+            ['middleware' => ['api.nopolicy'], 'domain' => '{tenant}.'.config('app.domain')]
         );
 
         Passport::routes(
@@ -75,7 +75,7 @@ class RouteServiceProvider extends ServiceProvider
                     '\App\Http\Controllers\Manage\ClientController@update'
                 )->name('oidc.manage.client.replace');
             },
-            ['middleware' => ['web'], 'domain' => '{tenant}.' . config('app.domain')]
+            ['middleware' => ['web'], 'domain' => '{tenant}.'.config('app.domain')]
         );
 
         Passport::routes(
@@ -83,10 +83,10 @@ class RouteServiceProvider extends ServiceProvider
                 $router->forWellKnown();
                 $router->forAccessTokens();
             },
-            ['prefix' => '', 'middleware' => ['api.noauth'], 'domain' => '{tenant}.' . config('app.domain')]
+            ['prefix' => '', 'middleware' => ['api.noauth'], 'domain' => '{tenant}.'.config('app.domain')]
         );
 
-        Route::middleware(['api.nopolicy'])->prefix('api')->domain('{tenant}.manage.' . config('app.domain'))->group(
+        Route::middleware(['api.nopolicy'])->prefix('api')->domain('{tenant}.manage.'.config('app.domain'))->group(
             function () {
                 \ArieTimmerman\Laravel\SCIMServer\RouteProvider::meRoutes();
 
@@ -119,13 +119,13 @@ class RouteServiceProvider extends ServiceProvider
 
                 Route::resource('tenants', 'App\Http\Controllers\TenantController')->only(
                     [
-                        'index', 'store', 'update'
+                        'index', 'store', 'update',
                     ]
                 );
             }
         );
 
-        Route::middleware(['api.noauth'])->prefix('api')->domain('{tenant}.manage.' . config('app.domain'))->group(
+        Route::middleware(['api.noauth'])->prefix('api')->domain('{tenant}.manage.'.config('app.domain'))->group(
             function () {
                 Route::post('/scim/v2/Me', 'App\Http\Controllers\SCIMMeController@createMe')->name('scim.me.post');
 

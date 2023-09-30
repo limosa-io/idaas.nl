@@ -44,7 +44,7 @@ abstract class AbstractType implements Type
 
     public function getDefaultName()
     {
-        return "Authentication module";
+        return 'Authentication module';
     }
 
     public function remembered()
@@ -70,6 +70,7 @@ abstract class AbstractType implements Type
     public static function getIdentifier()
     {
         $clazz = substr(get_called_class(), strrpos(get_called_class(), '\\') + 1);
+
         return strtoupper($clazz) == $clazz ? strtolower($clazz) : lcfirst($clazz);
     }
 
@@ -101,7 +102,7 @@ abstract class AbstractType implements Type
     /**
      * @return Subject
      */
-    public function createSubject(?string $identifier, Type $type, ?ModuleInterface $module = null)
+    public function createSubject(?string $identifier, Type $type, ModuleInterface $module = null)
     {
         return resolve(SubjectRepository::class)->with($identifier, $type, $module);
     }

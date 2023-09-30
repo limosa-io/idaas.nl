@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Repository\ChainRepository;
 use App\Repository\ModuleRepository;
+use Illuminate\Http\Request;
 
 class ChainController extends Controller
 {
@@ -17,7 +17,7 @@ class ChainController extends Controller
         $module = resolve(ModuleRepository::class)->get($value);
 
         if ($module == null) {
-            return $fail($attribute . ' is not a valid module.');
+            return $fail($attribute.' is not a valid module.');
         }
     }
 
@@ -56,15 +56,12 @@ class ChainController extends Controller
                 if (resolve(ChainRepository::class)->exists(request('from'), request('to'))) {
                     return $fail('This link already exists!');
                 }
-            }]
+            }],
         ];
 
         return $this->validations;
     }
 
-    /**
-     *
-     */
     public function index(ChainRepository $repository)
     {
         return $repository->all();
@@ -75,6 +72,7 @@ class ChainController extends Controller
         $data = $this->validate($request, $this->getValidations());
         // TODO: calculate position
         $position = 1;
+
         return $repository->add($data['from'], $data['to'], $position);
     }
 

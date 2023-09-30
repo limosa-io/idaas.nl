@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\EmailTemplate;
-use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
 
 class MailTemplateController extends Controller
 {
@@ -19,7 +19,7 @@ class MailTemplateController extends Controller
     public function messages()
     {
         return [
-        'parent_id.self_not_parent' => 'A title is required'
+            'parent_id.self_not_parent' => 'A title is required',
         ];
     }
 
@@ -61,11 +61,10 @@ class MailTemplateController extends Controller
             }
         );
 
-
         $this->validations['parent_id'] = [
             'nullable',
             'exists:email_templates,id',
-            'self_not_parent'
+            'self_not_parent',
         ];
     }
 
@@ -83,13 +82,12 @@ class MailTemplateController extends Controller
      */
     public function index()
     {
-        return EmailTemplate::all(['id','name','subject','default']);
+        return EmailTemplate::all(['id', 'name', 'subject', 'default']);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -110,7 +108,7 @@ class MailTemplateController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -121,8 +119,7 @@ class MailTemplateController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int                      $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -158,8 +155,8 @@ class MailTemplateController extends Controller
                     // phpcs:ignore Generic.Files.LineLength.TooLong
                     ['line' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'],
                     // phpcs:ignore Generic.Files.LineLength.TooLong
-                    ['line' => 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.']
-                ]
+                    ['line' => 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'],
+                ],
             ]
         )];
     }
@@ -167,7 +164,7 @@ class MailTemplateController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

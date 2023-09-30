@@ -36,7 +36,7 @@ class ImportController extends Controller
         return array_filter(
             $array,
             function ($value) {
-                return !is_null($value);
+                return ! is_null($value);
             }
         );
     }
@@ -82,7 +82,7 @@ class ImportController extends Controller
 
             // TODO: Refer to auth level with anchors??
             $module['auth_levels'] = [
-                '*test123'
+                '*test123',
             ];
 
             $authModules[] = $module;
@@ -122,7 +122,7 @@ class ImportController extends Controller
             'authentication_modules' => $authModules,
             'authentication_chain' => $authChains,
             'settings' => $settings,
-            'emails' => $emails
+            'emails' => $emails,
 
         ];
 

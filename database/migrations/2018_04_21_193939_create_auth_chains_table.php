@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateAuthChainsTable extends Migration
 {
@@ -15,7 +15,7 @@ class CreateAuthChainsTable extends Migration
     {
         Schema::create('auth_chains', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            
+
             $table->uuid('tenant_id')->index();
 
             $table->uuid('from');
@@ -29,7 +29,7 @@ class CreateAuthChainsTable extends Migration
             $table->foreign('from')->references('id')->on('auth_modules')->onDelete('cascade');
             $table->foreign('to')->references('id')->on('auth_modules')->onDelete('cascade');
             $table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
-            
+
         });
     }
 

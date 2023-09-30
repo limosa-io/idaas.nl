@@ -2,7 +2,6 @@
 
 namespace App;
 
-use App\Model;
 use ArieTimmerman\Laravel\SAML\SAML2\Entity\HostedIdentityProviderConfigInterface;
 
 class HostedIdentityProvider extends Model implements HostedIdentityProviderConfigInterface
@@ -22,7 +21,7 @@ class HostedIdentityProvider extends Model implements HostedIdentityProviderConf
         'supportedNameIDFormat' => 'array',
 
         'expire' => 'integer',
-        'cacheDuration' => 'integer'
+        'cacheDuration' => 'integer',
 
     ];
 
@@ -34,7 +33,7 @@ class HostedIdentityProvider extends Model implements HostedIdentityProviderConf
     public function toSimpleSAMLArray()
     {
         return [
-            'entityId' => 'urn:' . $this->id,
+            'entityId' => 'urn:'.$this->id,
 
             // what authentication context level for single-sign on cases
             'PreviousSession' => $this->previousSession ?? 'urn:oasis:names:tc:SAML:2.0:ac:classes:PreviousSession',

@@ -2,13 +2,13 @@
 
 namespace Tests\Feature\OIDC;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-
+use Tests\TestCase;
 
 class OpenIDBasicTest extends TestCase
 {
     use RefreshDatabase;
+
     /**
      * A basic test example.
      *
@@ -41,5 +41,4 @@ class OpenIDBasicTest extends TestCase
         $this->assertArrayHasKey('service_documentation', $json);
         $this->assertArrayHasKey('ui_locales_supported', $json);
     }
-    
 }

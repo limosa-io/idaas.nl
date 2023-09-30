@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\OIDC;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Client;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class OpenIDConnectRegisterTest extends TestCase
 {
@@ -15,7 +15,7 @@ class OpenIDConnectRegisterTest extends TestCase
         $response = $this->get(
             '/oauth/connect/register',
             [
-                'Authorization' => sprintf('Bearer %s', $this->getAccessToken())
+                'Authorization' => sprintf('Bearer %s', $this->getAccessToken()),
             ]
         );
 
@@ -27,14 +27,14 @@ class OpenIDConnectRegisterTest extends TestCase
         $response = $this->post(
             '/oauth/connect/register',
             [
-                "client_name" => "test",
-                "application_type" => "web",
+                'client_name' => 'test',
+                'application_type' => 'web',
                 'redirect_uris' => [
-                    'https://what.ever.com'
-                ]
+                    'https://what.ever.com',
+                ],
             ],
             [
-                'Authorization' => sprintf('Bearer %s', $this->getAccessToken())
+                'Authorization' => sprintf('Bearer %s', $this->getAccessToken()),
             ]
         );
 
@@ -52,7 +52,7 @@ class OpenIDConnectRegisterTest extends TestCase
         $response = $this->get(
             '/oauth/connect/register',
             [
-                'Authorization' => sprintf('Bearer %s', $this->getAccessToken())
+                'Authorization' => sprintf('Bearer %s', $this->getAccessToken()),
             ]
         );
 
@@ -70,10 +70,10 @@ class OpenIDConnectRegisterTest extends TestCase
         $first['logo_uri'] = 'https://asdgadgsgads';
 
         $response = $this->put(
-            '/oauth/connect/register/' . $first['client_id'],
+            '/oauth/connect/register/'.$first['client_id'],
             $first,
             [
-                'Authorization' => sprintf('Bearer %s', $this->getAccessToken())
+                'Authorization' => sprintf('Bearer %s', $this->getAccessToken()),
             ]
         );
 
@@ -83,7 +83,7 @@ class OpenIDConnectRegisterTest extends TestCase
         $this->assertEquals($first['logo_uri'], $response->json('logo_uri'));
         $this->assertNotNull(Client::find($first['client_id']));
 
-        $response = $this->delete('oauth/connect/register/' . $first['client_id']);
+        $response = $this->delete('oauth/connect/register/'.$first['client_id']);
 
         $response->assertStatus(200);
 

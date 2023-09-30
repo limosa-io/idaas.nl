@@ -6,14 +6,14 @@
 
 namespace App\Scim;
 
-use ArieTimmerman\Laravel\SCIMServer\PolicyDecisionPoint as BasePolicyDecisionPoint;
-use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\Model;
-use ArieTimmerman\Laravel\SCIMServer\ResourceType;
-use ArieTimmerman\Laravel\SCIMServer\Exceptions\SCIMException;
-use Lcobucci\JWT\Parser;
 use App\TenantSetting;
+use ArieTimmerman\Laravel\SCIMServer\Exceptions\SCIMException;
+use ArieTimmerman\Laravel\SCIMServer\PolicyDecisionPoint as BasePolicyDecisionPoint;
+use ArieTimmerman\Laravel\SCIMServer\ResourceType;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Lcobucci\JWT\Parser;
 
 class PolicyDecisionPoint extends BasePolicyDecisionPoint
 {
@@ -26,17 +26,17 @@ class PolicyDecisionPoint extends BasePolicyDecisionPoint
                 continue;
             }
 
-            if (strrpos($key, ":") !== false) {
-                $short = substr($key, strrpos($key, ":") + 1);
+            if (strrpos($key, ':') !== false) {
+                $short = substr($key, strrpos($key, ':') + 1);
             } else {
                 $short = $key;
             }
 
-            if ($p = strpos($short, ".")) {
+            if ($p = strpos($short, '.')) {
                 $short = substr($short, 0, $p);
             }
 
-            if (!in_array($short, $attributesAllowed)) {
+            if (! in_array($short, $attributesAllowed)) {
                 throw new SCIMException(
                     sprintf(
                         'Attribute "%s" is not allowed for me-endpoint requests. Allowed are: %s',
@@ -57,7 +57,7 @@ class PolicyDecisionPoint extends BasePolicyDecisionPoint
         $isMe = false
     ) {
         // This check relies on the fact that non-ME endpoints require extra authorization (different route middleware)
-        if (!$isMe) {
+        if (! $isMe) {
             return true;
         }
 
@@ -67,7 +67,7 @@ class PolicyDecisionPoint extends BasePolicyDecisionPoint
 
         $registrationSettings = TenantSetting::where('key', 'like', 'registration:%')->get()->mapWithKeys(
             function ($item) {
-                return [ Str::after($item->key, 'registration:') => $item->value];
+                return [Str::after($item->key, 'registration:') => $item->value];
             }
         );
 
@@ -88,7 +88,7 @@ class PolicyDecisionPoint extends BasePolicyDecisionPoint
                 $verified = $parsed->getClaim('verified');
 
                 foreach ($attributes['urn:ietf:params:scim:schemas:core:2.0:User:emails'] as $email) {
-                    if (!isset($verified) || $verified->email != $email['value']) {
+                    if (! isset($verified) || $verified->email != $email['value']) {
                         throw new SCIMException(
                             sprintf(
                                 'The provided email is not allowed for update requests because it was not confirmed'
@@ -97,7 +97,6 @@ class PolicyDecisionPoint extends BasePolicyDecisionPoint
                     }
                 }
             }
-
 
             return true;
         }

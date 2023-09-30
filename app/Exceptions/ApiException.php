@@ -8,7 +8,7 @@ class ApiException extends \Exception implements Exception
     {
         return response(
             [
-            'error_description' => $this->getMessage()
+                'error_description' => $this->getMessage(),
             ],
             500
         );

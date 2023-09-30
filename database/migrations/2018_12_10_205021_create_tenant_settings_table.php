@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateTenantSettingsTable extends Migration
 {
@@ -14,7 +14,7 @@ class CreateTenantSettingsTable extends Migration
     public function up()
     {
         Schema::create('tenant_settings', function (Blueprint $table) {
-            
+
             $table->uuid('id')->primary();
             $table->uuid('tenant_id')->index();
 
@@ -23,7 +23,7 @@ class CreateTenantSettingsTable extends Migration
             $table->string('value')->nullable();
 
             $table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
-            
+
             $table->timestamps();
         });
     }

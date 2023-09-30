@@ -2,13 +2,14 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Helper\OpenIDHelper;
+use Tests\TestCase;
 
 class PasswordlessTest extends TestCase
 {
     use RefreshDatabase;
+
     /**
      * A basic test example.
      *
@@ -19,16 +20,16 @@ class PasswordlessTest extends TestCase
 
         OpenIDHelper::initWithNewClient(
             $this, [
-            'trusted' => true,
-            'grant_type' => [
-                'authorization_code',
-                'implicit'
-            ],
-            'response_types' => [
-                'code',
-                'token',
-                'id_token'
-            ]
+                'trusted' => true,
+                'grant_type' => [
+                    'authorization_code',
+                    'implicit',
+                ],
+                'response_types' => [
+                    'code',
+                    'token',
+                    'id_token',
+                ],
             ]
         )->expect('passwordless')->expectAutoFinish();
 
@@ -38,7 +39,7 @@ class PasswordlessTest extends TestCase
     {
         OpenIDHelper::initWithNewClient(
             $this, [
-            'trusted' => false
+                'trusted' => false,
             ]
         )->expect('passwordless')->expect('consent')->expectFinish()->expectCodeToToken();
     }
@@ -47,18 +48,18 @@ class PasswordlessTest extends TestCase
     {
         OpenIDHelper::initWithNewClient(
             $this, [
-            'trusted' => false,
-            'grant_types' => [
-                'authorization_code',
-                'implicit'
-            ],
-            'response_types' => [
-                'code',
-                'token',
-                'id_token'
-            ]
+                'trusted' => false,
+                'grant_types' => [
+                    'authorization_code',
+                    'implicit',
+                ],
+                'response_types' => [
+                    'code',
+                    'token',
+                    'id_token',
+                ],
             ], [
-            'response_type' => 'token'
+                'response_type' => 'token',
             ]
         )->expect('passwordless')->expect('consent')->expectFinish()->expectToken();
     }
@@ -67,10 +68,9 @@ class PasswordlessTest extends TestCase
     {
         OpenIDHelper::initWithNewClient(
             $this, [
-            'trusted' => false,
-            'scope' => 'roles'
+                'trusted' => false,
+                'scope' => 'roles',
             ]
         )->expect('passwordless')->expect('consent')->expectFinish()->expectCodeToToken();
     }
-
 }

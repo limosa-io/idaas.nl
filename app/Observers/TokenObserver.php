@@ -8,15 +8,15 @@
 
 namespace App\Observers;
 
-use Laravel\Passport\Token;
 use App\TokenCache;
+use Laravel\Passport\Token;
 
 class TokenObserver
 {
     /**
      * Handle the User "updated" event.
      *
-     * @param  \App\User $user
+     * @param  \App\User  $user
      * @return void
      */
     public function updated(Token $token)
@@ -27,7 +27,7 @@ class TokenObserver
     /**
      * Handle the User "deleted" event.
      *
-     * @param  \App\User $user
+     * @param  \App\User  $user
      * @return void
      */
     public function deleted(Token $token)

@@ -29,7 +29,7 @@ class Register extends AbstractType
         return [
             'approval',
             'terms_of_service',
-            'privacy_policy'
+            'privacy_policy',
         ];
     }
 
@@ -45,7 +45,7 @@ class Register extends AbstractType
 
     public function getDefaultName()
     {
-        return "Registration";
+        return 'Registration';
     }
 
     public function process(Request $request, State $state, ModuleInterface $module)
@@ -57,8 +57,8 @@ class Register extends AbstractType
             return $module->baseResult()->setCompleted(false)->setResponse(
                 response(
                     [
-                    'fields' => $first != null ? $first->value : [],
-                    'url' => route('scim.me.post')
+                        'fields' => $first != null ? $first->value : [],
+                        'url' => route('scim.me.post'),
                     ]
                 )
             );
@@ -74,7 +74,7 @@ class Register extends AbstractType
             return (new ModuleResult())->setCompleted(false)->setResponse(response(['error' => 'User is not found']));
         }
 
-        if (!empty($user->last_successful_login_date)) {
+        if (! empty($user->last_successful_login_date)) {
             return (new ModuleResult())
                 ->setCompleted(false)
                 ->setResponse(response(['error' => 'This user has already logged in']));
@@ -84,7 +84,7 @@ class Register extends AbstractType
             ->baseResult()
             ->setCompleted(true)
             ->setSubject((new Subject($user->id))
-            ->setUserId($user->id)
-            ->setTypeIdentifier('register'));
+                ->setUserId($user->id)
+                ->setTypeIdentifier('register'));
     }
 }

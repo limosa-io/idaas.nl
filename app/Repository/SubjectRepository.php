@@ -2,17 +2,16 @@
 
 namespace App\Repository;
 
-use App\Scopes\TenantScope;
-use App\Http\Controllers\AuthChain\Subject;
-use App\Subject as EloquentSubject;
 use App\AuthChain\ModuleInterface;
-use App\AuthTypes\Type;
 use App\AuthChain\ModuleResultList;
 use App\AuthChain\State;
+use App\AuthTypes\Type;
+use App\Http\Controllers\AuthChain\Subject;
+use App\Scopes\TenantScope;
+use App\Subject as EloquentSubject;
 
 class SubjectRepository
 {
-
     public function getEloquentSubjectClass()
     {
         return EloquentSubject::class;
@@ -33,7 +32,7 @@ class SubjectRepository
 
         $eloquentSubject = ($this->getEloquentSubjectClass())::firstOrCreate(
             [
-                'id' => $subject->getUuid()
+                'id' => $subject->getUuid(),
             ],
             [
                 'identifier' => $subject->getIdentifier(),
@@ -43,7 +42,7 @@ class SubjectRepository
                     function ($item, $key) {
                         return $item->getLevel();
                     }
-                )
+                ),
             ]
         );
 
@@ -55,7 +54,7 @@ class SubjectRepository
         return Subject::fromModuleResults($moduleResultList);
     }
 
-    public function with(?string $identifier, Type $type, ?ModuleInterface $module = null)
+    public function with(?string $identifier, Type $type, ModuleInterface $module = null)
     {
         if ($identifier == null) {
             return null;

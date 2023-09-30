@@ -2,13 +2,11 @@
 
 namespace Tests\Helper;
 
-use Tests\TestCase;
-use Lcobucci\JWT\Parser;
 use App\RemoteServiceProvider;
+use Tests\TestCase;
 
 class SAMLHelper extends LoginStateHelper
 {
-
     /**
      * @return SAMLHelper
      */
@@ -17,21 +15,21 @@ class SAMLHelper extends LoginStateHelper
 
         $response = $testCase->post(
             'https://master.manage.test.dev/api/saml/manage/serviceproviders', [
-            "entityid" => "http://localhost:9080/simplesaml/module.php/saml/sp/metadata.php/default-sp",
-            "wantSignedAuthnResponse" => true,
-            "wantSignedAssertions" => true,
-            "wantSignedLogoutResponse" => false,
-            "wantSignedLogoutRequest" => false,
+                'entityid' => 'http://localhost:9080/simplesaml/module.php/saml/sp/metadata.php/default-sp',
+                'wantSignedAuthnResponse' => true,
+                'wantSignedAssertions' => true,
+                'wantSignedLogoutResponse' => false,
+                'wantSignedLogoutRequest' => false,
 
-            "SingleLogoutService" => [
-                ["Binding" => "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect", "Location" => "http://localhost:9080/simplesaml/module.php/saml/sp/saml2-logout.php/default-sp", "index" => "0"]
-            ],
+                'SingleLogoutService' => [
+                    ['Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect', 'Location' => 'http://localhost:9080/simplesaml/module.php/saml/sp/saml2-logout.php/default-sp', 'index' => '0'],
+                ],
 
-            "AssertionConsumerService" => [
-                ["Binding" => "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect", "Location" => "http://localhost:9080/simplesaml/module.php/saml/sp/saml2-acs.php/default-sp", "index" => "0"]
-            ]
+                'AssertionConsumerService' => [
+                    ['Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect', 'Location' => 'http://localhost:9080/simplesaml/module.php/saml/sp/saml2-acs.php/default-sp', 'index' => '0'],
+                ],
             ], [
-            'Authorization' => sprintf('Bearer %s', $testCase->getAccessToken())
+                'Authorization' => sprintf('Bearer %s', $testCase->getAccessToken()),
             ]
         );
         $response->assertStatus(201);
@@ -48,15 +46,15 @@ class SAMLHelper extends LoginStateHelper
     {
         $response = $testCase->post(
             'https://master.test.dev/saml/v2/login', [
-            'SAMLRequest' => base64_encode(
-                <<<SAML
+                'SAMLRequest' => base64_encode(
+                    <<<'SAML'
 <samlp:AuthnRequest xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="_9e08ac832054f79e380c463b7baea30949ff129765" Version="2.0" IssueInstant="2019-07-22T19:05:44Z" Destination="https://master.test.dev/saml/v2/login" AssertionConsumerServiceURL="http://localhost:9080/simplesaml/module.php/saml/sp/saml2-acs.php/default-sp" ProtocolBinding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect">
 <saml:Issuer>http://localhost:9080/simplesaml/module.php/saml/sp/metadata.php/default-sp</saml:Issuer>
 <samlp:NameIDPolicy Format="urn:oasis:names:tc:SAML:2.0:nameid-format:transient" AllowCreate="true" />
 </samlp:AuthnRequest>
 SAML
-            ),
-            'RelayState' => 'relay-state-test'
+                ),
+                'RelayState' => 'relay-state-test',
             ]
         );
 
@@ -73,14 +71,14 @@ SAML
         $response = $this->testCase->post(
             $decoded['info']['fin'],
             [
-                'authRequest' => $decoded['stateId']
+                'authRequest' => $decoded['stateId'],
             ],
             [
             ]
         );
-        
+
         $response->assertStatus(302);
-        
+
         return new self($this->testCase, $response, $this->data);
     }
 
@@ -91,14 +89,14 @@ SAML
         $response = $this->testCase->post(
             $decoded['info']['fin'],
             [
-                'authRequest' => $decoded['stateId']
+                'authRequest' => $decoded['stateId'],
             ],
             [
             ]
         );
-        
+
         $response->assertStatus(200);
-        
+
         $content = $response->baseResponse->getContent();
 
         $this->testCase->assertStringContainsStringIgnoringCase('<form method="post"', $content);
@@ -106,6 +104,4 @@ SAML
 
         return new self($this->testCase, $response, $this->data);
     }
-    
-
 }

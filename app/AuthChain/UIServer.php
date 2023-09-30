@@ -5,6 +5,7 @@ namespace App\AuthChain;
 class UIServer implements \JsonSerializable
 {
     protected $origins = [];
+
     protected $redirectionUrls = [];
 
     public function __construct($origins, $redirectionUrls)
@@ -12,7 +13,6 @@ class UIServer implements \JsonSerializable
         $this->origins = $origins;
         $this->redirectionUrls = $redirectionUrls;
     }
-
 
     /**
      * Get the value of redirectionUrls
@@ -36,7 +36,7 @@ class UIServer implements \JsonSerializable
     {
         return [
             'origins' => $this->origins,
-            'redirectionUrls' => $this->redirectionUrls
+            'redirectionUrls' => $this->redirectionUrls,
         ];
     }
 

@@ -26,7 +26,7 @@ class PolicyDecisionPoint
         if (\Ramsey\Uuid\Uuid::isValid($state->appId)) {
             $application = Client::with('groups')->find($state->appId);
         } else {
-            $application = RemoteServiceProvider::where("entityid", $state->appId)->first();
+            $application = RemoteServiceProvider::where('entityid', $state->appId)->first();
         }
 
         //Check because the app could also be a SAML service provider

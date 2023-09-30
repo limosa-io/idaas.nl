@@ -40,7 +40,6 @@ class AuthChainServiceProvider extends \Illuminate\Support\ServiceProvider
             OIDCSession::class
         );
 
-
         $this->app->singleton('App\AuthChain\AuthChain', AuthChain::class);
 
         /**
@@ -52,7 +51,7 @@ class AuthChainServiceProvider extends \Illuminate\Support\ServiceProvider
                 $module = \resolve(ModuleRepository::class)->get($moduleId);
 
                 if ($module == null) {
-                    throw new AuthFailedException('Unknown module: ' . $moduleId);
+                    throw new AuthFailedException('Unknown module: '.$moduleId);
                 }
 
                 return $module;

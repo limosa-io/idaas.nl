@@ -22,7 +22,7 @@ class ClientRepository extends IdaasClientRepository
     {
         //TODO: sure this is without TenantScope?? Not insecure?
         // phpcs:ignore Generic.Files.LineLength.TooLong
-        $client =  self::$cache[$id] ??  self::$cache[$id] = $this->clientClass::withoutGlobalScope(TenantScope::class)->find($id);
+        $client = self::$cache[$id] ?? self::$cache[$id] = $this->clientClass::withoutGlobalScope(TenantScope::class)->find($id);
 
         if ($client == null) {
             throw new NoClientException();

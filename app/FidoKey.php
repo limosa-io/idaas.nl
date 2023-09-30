@@ -2,9 +2,9 @@
 
 namespace App;
 
+use App\Scopes\TenantTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Scopes\TenantTrait;
 
 class FidoKey extends Model
 {

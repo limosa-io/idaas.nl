@@ -2,9 +2,9 @@
 /**
  * Temporary state storage. Save for the duration of the authentication process ...
  */
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateAuthChainStatesTable extends Migration
 {

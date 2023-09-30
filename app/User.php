@@ -2,28 +2,28 @@
 
 namespace App;
 
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Support\Str;
 use App\Scopes\TenantTrait;
 use App\Stats\StatableInterface;
 use App\Stats\StatableTrait;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable implements StatableInterface
 {
-    use Notifiable;
     use HasApiTokens;
-    use TenantTrait;
+    use Notifiable;
     use StatableTrait;
+    use TenantTrait;
 
     protected $dates = [
         'created_at',
         'updated_at',
         'deleted_at',
         'last_successful_login_date',
-        'birthDate'
+        'birthDate',
     ];
 
     /**
@@ -41,7 +41,7 @@ class User extends Authenticatable implements StatableInterface
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token','picture','otp_secret'
+        'password', 'remember_token', 'picture', 'otp_secret',
     ];
 
     protected $casts = [
@@ -63,6 +63,7 @@ class User extends Authenticatable implements StatableInterface
     }
 
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     public function links()

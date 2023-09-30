@@ -32,3 +32,4 @@ public/css
 public/build
 public/vendor
 my.idaas.nl/dist
+nginx/*.pem

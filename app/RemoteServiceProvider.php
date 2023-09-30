@@ -2,11 +2,9 @@
 
 namespace App;
 
-use App\Model;
 use ArieTimmerman\Laravel\SAML\SAML2\Entity\RemoteServiceProviderConfigInterface;
-use App\Scopes\TenantTrait;
 
-class RemoteServiceProvider extends Model implements RemoteServiceProviderConfigInterface, ApplicationInterface
+class RemoteServiceProvider extends Model implements ApplicationInterface, RemoteServiceProviderConfigInterface
 {
     protected $casts = [
         'assertionConsumerService' => 'array',
@@ -16,10 +14,10 @@ class RemoteServiceProvider extends Model implements RemoteServiceProviderConfig
         'wantSignedAuthnResponse' => 'boolean',
         'wantSignedAssertions' => 'boolean',
         'wantSignedLogoutResponse' => 'boolean',
-        'wantSignedLogoutRequest' => 'boolean'
+        'wantSignedLogoutRequest' => 'boolean',
     ];
 
-    protected $guarded = [ 'id' ];
+    protected $guarded = ['id'];
 
     public function jsonSerialize(): array
     {
@@ -48,7 +46,7 @@ class RemoteServiceProvider extends Model implements RemoteServiceProviderConfig
             'wantSignedAuthnResponse' => $this->wantSignedAuthnResponse,
             'wantSignedAssertions' => $this->wantSignedAssertions,
             'wantSignedLogoutResponse' => $this->wantSignedLogoutResponse,
-            'wantSignedLogoutRequest' => $this->wantSignedLogoutRequest
+            'wantSignedLogoutRequest' => $this->wantSignedLogoutRequest,
 
         ];
     }

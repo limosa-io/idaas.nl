@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use ArieTimmerman\Laravel\SAML\Repository\RemoteServiceProviderConfigRepositoryInterface;
 use App\RemoteServiceProvider;
 use ArieTimmerman\Laravel\SAML\Repository\RemoteServiceProviderConfigRepository as RepositoryRemoteServiceProviderConfigRepository;
 

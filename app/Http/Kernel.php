@@ -2,10 +2,10 @@
 
 namespace App\Http;
 
-use Illuminate\Foundation\Http\Kernel as HttpKernel;
-use App\Http\Middleware\DetectTenant;
 use App\Http\Middleware\CleanupParamaters;
+use App\Http\Middleware\DetectTenant;
 use Idaas\Passport\Middleware\AllowClientCORS;
+use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use Laravel\Passport\Http\Middleware\CheckScopes;
 
 class Kernel extends HttpKernel
@@ -23,7 +23,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\TrustProxies::class,
-        \App\Http\Middleware\AllowCORS::class
+        \App\Http\Middleware\AllowCORS::class,
     ];
 
     protected $middlewarePriority = [
@@ -51,19 +51,19 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             DetectTenant::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            CleanupParamaters::class
+            CleanupParamaters::class,
         ],
 
         'web.nosession' => [
             DetectTenant::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            CleanupParamaters::class
+            CleanupParamaters::class,
         ],
 
         'api' => [
             'api.nopolicy',
             'can:manage,App\Tenant',
-            'scopes:applications:manage'
+            'scopes:applications:manage',
         ],
 
         'api.nopolicy' => [
@@ -72,7 +72,7 @@ class Kernel extends HttpKernel
             'throttle:20000,1',
             DetectTenant::class,
             'bindings',
-            CleanupParamaters::class
+            CleanupParamaters::class,
         ],
 
         'api.noauth' => [
@@ -80,7 +80,7 @@ class Kernel extends HttpKernel
             'throttle:600,1',
             DetectTenant::class,
             'bindings',
-            CleanupParamaters::class
+            CleanupParamaters::class,
         ],
     ];
 
