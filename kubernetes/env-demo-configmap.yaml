@@ -3,7 +3,7 @@ data:
   PHP_CLI_SERVER_WORKERS: "10"
   APP_DEBUG: "true"
   APP_DOMAIN: notidaas.nl
-  APP_URL: http://login.notidaas.nl
+  APP_URL: https://login.notidaas.nl
   APP_ENV: testing
   APP_KEY: base64:hay4OYMqWKj5nNCqY199P421I0xkvmLJYGvVuqR9sNA=
   APP_LOG_LEVEL: debug

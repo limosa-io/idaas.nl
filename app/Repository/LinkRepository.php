@@ -9,8 +9,8 @@ use App\Link;
 use App\User;
 
 class LinkRepository
-{
-    public function getUserById($userId)
+{ 
+    public function getUserById($userId): User
     {
         return User::find($userId);
     }

@@ -14,6 +14,7 @@ use App\AuthChain\Object\App;
 use App\AuthChain\Object\Eloquent\SubjectInterface;
 use App\AuthTypes\Type;
 use App\Repository\LinkRepository;
+use App\User;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -239,7 +240,7 @@ class Subject implements \JsonSerializable
         return $this->uuid;
     }
 
-    public function getUser()
+    public function getUser(): User|null
     {
         return $this->userId ? resolve(LinkRepository::class)->getUserById($this->userId) : null;
     }
