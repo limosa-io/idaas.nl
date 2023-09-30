@@ -2,23 +2,22 @@
 
 namespace App;
 
-use App\Model;
-
 class CloudFunction extends Model
 {
-    public const TYPE_USER_EVENT = "user_event";
-    public const TYPE_ATTRIBUTE = "attribute";
+    public const TYPE_USER_EVENT = 'user_event';
+
+    public const TYPE_ATTRIBUTE = 'attribute';
 
     protected $casts = [
         'active' => 'boolean',
         'is_sequence' => 'boolean',
-        'variables' => 'array'
+        'variables' => 'array',
     ];
 
     protected $dates = [
         'created_at',
         'updated_at',
-        'run_at'
+        'run_at',
     ];
 
     public function getNameAttribute()
@@ -52,7 +51,7 @@ class CloudFunction extends Model
 
         static::deleted(
             function ($model) {
-                if (!$model->is_sequence) {
+                if (! $model->is_sequence) {
                     if (CloudFunction::where(['type' => $model->type, 'is_sequence' => false])->count() == 0) {
                         CloudFunction::where(['type' => $model->type, 'is_sequence' => true])->delete();
                     } else {
@@ -70,11 +69,11 @@ class CloudFunction extends Model
             function ($model) {
                 // if we save the cloud function,
                 // we can only ensure it gets redeployed if the sequence is also marked as needed for redploy
-                if (!$model->is_sequence) {
+                if (! $model->is_sequence) {
                     $cloudFunction = CloudFunction::firstOrNew(
                         [
                             'type' => $model->type,
-                            'is_sequence' => true
+                            'is_sequence' => true,
                         ],
                         [
                             'display_name' => sprintf('sequence_%s', $model->type)]

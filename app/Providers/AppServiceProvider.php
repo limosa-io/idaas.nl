@@ -2,54 +2,50 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use App\Repository\ModuleRepository;
-use App\Repository\ChainRepository;
-use App\Repository\SubjectRepository;
-use App\Repository\LinkRepository;
-use App\Repository\UserRepository;
-use App\Repository\RemoteServiceProviderConfigRepository;
-use App\Repository\HostedIdentityProviderConfigRepository;
-use App\Repository\AuthLevelRepository;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Session;
 use App\AuthChain\AuthChain;
-use App\AuthTypes\Anonymous;
 use App\AuthTypes\Fido;
-use App\AuthTypes\TOTP;
-use App\Scim\PolicyDecisionPoint;
-use App\Session\DatabaseSessionHandler;
-use Illuminate\Database\ConnectionInterface;
 use App\AuthTypes\OpenIDConnect;
 use App\AuthTypes\OtpMail;
 use App\AuthTypes\Passwordless;
+use App\AuthTypes\TOTP;
 use App\CloudFunction\DigitalOceanHandler;
 use App\CloudFunction\HandlerInterface;
 use App\CloudFunction\OpenWhiskHandler;
-use Illuminate\Support\Facades\DB;
-use App\SCIMConfig;
-use App\SAMLConfig;
-use App\Tenant;
 use App\Exceptions\NoTenantException;
-use Laravel\Passport\Token;
-use App\Observers\TokenObserver;
-use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\AuthChain\RememberStorage;
-use Illuminate\Support\Facades\View;
 use App\Http\Controllers\Controller;
+use App\Observers\TokenObserver;
 use App\PassportConfig;
+use App\Repository\AuthLevelRepository;
+use App\Repository\ChainRepository;
 use App\Repository\ClaimRepository;
 use App\Repository\ClientRepository as RepositoryClientRepository;
+use App\Repository\HostedIdentityProviderConfigRepository;
 use App\Repository\KeyRepository;
 use App\Repository\OIDCUserRepository;
 use App\Repository\ProviderRepository;
+use App\Repository\RemoteServiceProviderConfigRepository;
 use App\Repository\TokenRepository;
+use App\Repository\UserRepository;
+use App\SAMLConfig;
+use App\Scim\PolicyDecisionPoint;
+use App\SCIMConfig;
+use App\Session\DatabaseSessionHandler;
 use App\Session\OIDCSession;
+use App\Tenant;
 use App\TokenCache;
 use Exception;
 use Idaas\OpenID\Repositories\UserRepositoryInterface;
 use Idaas\Passport\ProviderRepository as PassportProviderRepository;
+use Illuminate\Database\ConnectionInterface;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
+use Laravel\Passport\Token;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -82,12 +78,12 @@ class AppServiceProvider extends ServiceProvider
 
         $tenant = null;
 
-        if (!app()->runningInConsole()) {
+        if (! app()->runningInConsole()) {
             if (preg_match('/^((?!manage).+?)\./', request()->getHttpHost(), $matches)) {
                 $subdomain = $matches[1];
 
                 $tenant = Cache::remember(
-                    'tenant:' . $subdomain,
+                    'tenant:'.$subdomain,
                     10,
                     function () use ($subdomain) {
                         return Tenant::where('subdomain', $subdomain)->first();
@@ -135,11 +131,9 @@ class AppServiceProvider extends ServiceProvider
         // TOOD: dit de reden dat clients niet goed opslaan?
         $this->app->singleton(\Laravel\Passport\ClientRepository::class, RepositoryClientRepository::class);
 
-
         $this->app->singleton('ArieTimmerman\Laravel\SCIMServer\PolicyDecisionPoint', PolicyDecisionPoint::class);
         $this->app->singleton('ArieTimmerman\Laravel\SCIMServer\SCIMConfig', SCIMConfig::class);
         $this->app->singleton('ArieTimmerman\Laravel\SAML\SAMLConfig', SAMLConfig::class);
-
 
         $this->app->singleton(
             \App\Repository\ConsentRepository::class

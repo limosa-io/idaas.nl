@@ -3,16 +3,15 @@
 namespace App\CloudFunction;
 
 use App\CloudFunction;
-use App\CloudFunction\HandlerInterface;
-use GuzzleHttp\Client;
-use Illuminate\Support\Facades\File;
-use GuzzleHttp\RequestOptions;
-use GuzzleHttp\Exception\RequestException;
 use App\Exceptions\CloudFunctionException;
 use App\Group;
 use App\User;
 use ArieTimmerman\Laravel\SCIMServer\Helper;
 use ArieTimmerman\Laravel\SCIMServer\ResourceType;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\RequestOptions;
+use Illuminate\Support\Facades\File;
 
 class OpenWhiskHandler implements HandlerInterface
 {
@@ -40,7 +39,7 @@ class OpenWhiskHandler implements HandlerInterface
         $path = resource_path('serverless/digitalocean/example');
 
         foreach (File::allFiles($path) as $path) {
-            $zip->addFile($path, ltrim($path->getRelativePath() . '/' . $path->getFilename(), '/'));
+            $zip->addFile($path, ltrim($path->getRelativePath().'/'.$path->getFilename(), '/'));
         }
 
         $zip->addFromString('main.js', $cloudFunction->code);
@@ -54,29 +53,29 @@ class OpenWhiskHandler implements HandlerInterface
             self::getActionUrl($cloudFunction),
             [
                 RequestOptions::HEADERS => [
-                    'Authorization' => 'Basic ' . \base64_encode(config('serverless.openwhisk_api_key'))
+                    'Authorization' => 'Basic '.\base64_encode(config('serverless.openwhisk_api_key')),
                 ],
                 RequestOptions::JSON => [
 
-                    "namespace" => "_",
+                    'namespace' => '_',
 
-                    "exec" => [
+                    'exec' => [
 
-                        "kind" => "nodejs:16",
-                        "binary" => true,
-                        "code" => $result,
+                        'kind' => 'nodejs:16',
+                        'binary' => true,
+                        'code' => $result,
 
-                        "components" => [
+                        'components' => [
                             // action names
-                        ]
+                        ],
                     ],
 
-                    "limits" => [
-                        "timeout" => 6000, // in miliseconds,
-                        "memory" => 128, // in MB
-                        "logs" => 10, // in MB
+                    'limits' => [
+                        'timeout' => 6000, // in miliseconds,
+                        'memory' => 128, // in MB
+                        'logs' => 10, // in MB
                     ],
-                ]
+                ],
             ]
         );
 
@@ -84,6 +83,7 @@ class OpenWhiskHandler implements HandlerInterface
 
         return $response;
     }
+
     public function invoke(CloudFunction $cloudFunction, $arguments)
     {
         if ($cloudFunction->needsDeploy()) {
@@ -100,22 +100,22 @@ class OpenWhiskHandler implements HandlerInterface
                     $result = null;
 
                     switch ($value['type']) {
-                        case "EmailTemplate":
+                        case 'EmailTemplate':
                             $result = $value['id'];
                             break;
-                        case "User":
+                        case 'User':
                             $result = Helper::objectToSCIMArray(User::find($value['id']), ResourceType::user());
                             break;
-                        case "Group":
+                        case 'Group':
                             $result = Helper::objectToSCIMArray(Group::find($value['id']));
                             break;
                     }
 
-                    if (!array_key_exists($value['type'], $counts)) {
+                    if (! array_key_exists($value['type'], $counts)) {
                         $counts[$value['type']] = 0;
                     }
 
-                    return [\lcfirst($value['type']) . ($counts[$value['type']]++) => $result];
+                    return [\lcfirst($value['type']).($counts[$value['type']]++) => $result];
                 }
             )->toArray();
         }
@@ -140,16 +140,15 @@ class OpenWhiskHandler implements HandlerInterface
                     'POST',
                     $actionUrl,
                     [
-                        RequestOptions::HEADERS        => [
-                            'Authorization' => 'Basic ' . \base64_encode(config('serverless.openwhisk_api_key')),
-                            'Content-Type' => 'application/json'
+                        RequestOptions::HEADERS => [
+                            'Authorization' => 'Basic '.\base64_encode(config('serverless.openwhisk_api_key')),
+                            'Content-Type' => 'application/json',
                         ],
 
                         // do NOT force_object, since this convers real arrays (with numeric indexes) to objects
-                        RequestOptions::BODY => json_encode($parameters, JSON_FORCE_OBJECT)
+                        RequestOptions::BODY => json_encode($parameters, JSON_FORCE_OBJECT),
                     ]
                 );
-
 
                 $success = true;
             } catch (RequestException $e) {
@@ -168,7 +167,7 @@ class OpenWhiskHandler implements HandlerInterface
                     throw $e;
                 }
             }
-        } while (!$triedDeployment && !$success);
+        } while (! $triedDeployment && ! $success);
 
         $cloudFunction->run_at = \Carbon\Carbon::now();
         $cloudFunction->save();

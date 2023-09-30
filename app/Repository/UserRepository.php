@@ -23,18 +23,18 @@ class UserRepository
                 $cloudResult = CloudFunctionHelper::invoke(
                     $cloudFunction,
                     [
-                    'subject' => $subject,
-                    'context' => [
+                        'subject' => $subject,
+                        'context' => [
 
-                    ]
+                        ],
                     ]
                 );
 
                 if (isset($cloudResult['user']) && is_array($cloudResult['user'])) {
                     $result = $cloudResult['user'];
 
-                    if (!isset($result['schemas'])) {
-                        $result['schemas'] = ['urn:ietf:params:scim:schemas:core:2.0:User','arietimmerman:ice'];
+                    if (! isset($result['schemas'])) {
+                        $result['schemas'] = ['urn:ietf:params:scim:schemas:core:2.0:User', 'arietimmerman:ice'];
                     }
 
                     $user = ResourceController::createFromSCIM(ResourceType::user(), $result, null, null, true);
@@ -45,9 +45,9 @@ class UserRepository
         if ($user == null) {
             $user = User::create(
                 [
-                'name' => $subject->getEmail(),
-                'email' => $subject->getEmail(),
-                'password' => null,
+                    'name' => $subject->getEmail(),
+                    'email' => $subject->getEmail(),
+                    'password' => null,
                 ]
             );
 

@@ -2,11 +2,11 @@
 
 namespace App\Console;
 
-use Illuminate\Console\Scheduling\Schedule;
-use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Http\Middleware\DetectTenant;
 use App\Tenant;
 use App\Token;
+use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Facades\DB;
 
 class Kernel extends ConsoleKernel
@@ -24,7 +24,6 @@ class Kernel extends ConsoleKernel
     /**
      * Define the application's command schedule.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule $schedule
      * @return void
      */
     protected function schedule(Schedule $schedule)
@@ -64,7 +63,7 @@ class Kernel extends ConsoleKernel
             DetectTenant::activateTenant($tenant);
         }
 
-        $this->load(__DIR__ . '/Commands');
+        $this->load(__DIR__.'/Commands');
 
         $now = date('Y-m-d');
 

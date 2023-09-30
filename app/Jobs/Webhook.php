@@ -2,12 +2,12 @@
 
 namespace App\Jobs;
 
+use App\TenantSetting;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use App\TenantSetting;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 class Webhook implements ShouldQueue
 {
@@ -19,6 +19,7 @@ class Webhook implements ShouldQueue
     public $tries = 3;
 
     protected $model;
+
     protected $action;
 
     protected $settings = null;
@@ -53,7 +54,7 @@ class Webhook implements ShouldQueue
                 'verify' => false,
                 'connect_timeout' => 1.0,
                 'read_timeout' => 1.0,
-                'headers' => ['Content-Type' => 'application/json']
+                'headers' => ['Content-Type' => 'application/json'],
             ]
         );
 
@@ -62,10 +63,10 @@ class Webhook implements ShouldQueue
             'POST',
             self::getWebHookUrl(),
             [
-            \GuzzleHttp\RequestOptions::JSON => [
-                'action' => strtolower(substr($this->action, strrpos($this->action, '\\') + 1)),
-                'model' => json_encode($this->model)
-            ]
+                \GuzzleHttp\RequestOptions::JSON => [
+                    'action' => strtolower(substr($this->action, strrpos($this->action, '\\') + 1)),
+                    'model' => json_encode($this->model),
+                ],
             ]
         );
     }

@@ -37,6 +37,7 @@ class ModuleRepository
         if ($id == 'consent') {
             $consent = Module::withTypeAndConfig(new Consent(), ['id' => 'consent', 'levels' => []]);
             $consent->skippable = false;
+
             return $consent;
         }
 
@@ -56,7 +57,6 @@ class ModuleRepository
 
         return $result->withConfig();
     }
-
 
     /**
      * @return AuthModule
@@ -93,9 +93,9 @@ class ModuleRepository
 
         $authLevel = AuthLevel::firstOrCreate(
             [
-            'provider_id' => OpenIDProvider::first()->id,
-            'level' => $type->getIdentifier(),
-            'type' => 'oidc'
+                'provider_id' => OpenIDProvider::first()->id,
+                'level' => $type->getIdentifier(),
+                'type' => 'oidc',
             ]
         );
 

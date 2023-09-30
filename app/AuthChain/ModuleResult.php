@@ -2,8 +2,6 @@
 
 namespace App\AuthChain;
 
-use App\AuthChain\AuthLevel;
-use App\AuthChain\Subject;
 use App\Repository\AuthLevelRepository;
 use App\Repository\ModuleRepository;
 use Illuminate\Http\Response;
@@ -168,10 +166,10 @@ class ModuleResult implements \JsonSerializable
     public function jsonSerialize(): array
     {
         return [
-            'subject'   => $this->subject,
-            'scopesApproved'   => $this->scopesApproved,
-            'time'      => (string) $this->authenticationTime->format('U'),
-            'module'    => $this->module ? $this->module->getIdentifier() : null,
+            'subject' => $this->subject,
+            'scopesApproved' => $this->scopesApproved,
+            'time' => (string) $this->authenticationTime->format('U'),
+            'module' => $this->module ? $this->module->getIdentifier() : null,
             'moduleState' => $this->moduleState,
             'completed' => $this->completed,
             'rememberAlways' => $this->rememberAlways,
@@ -179,7 +177,7 @@ class ModuleResult implements \JsonSerializable
             'rememberLifetime' => $this->rememberLifetime,
             'levels' => $this->levels,
             'messages' => $this->messages,
-            'prompted' => $this->prompted
+            'prompted' => $this->prompted,
             // 'data' =>  // allow storing custom data
         ];
     }
@@ -215,7 +213,7 @@ class ModuleResult implements \JsonSerializable
         return $result;
     }
 
-    private static function authLevelsFromJson(?array $json = null)
+    private static function authLevelsFromJson(array $json = null)
     {
         $result = [];
 
@@ -259,7 +257,6 @@ class ModuleResult implements \JsonSerializable
                 }
             }
 
-
             if (count($desiredLevel) == 0) {
                 $result = true;
             }
@@ -287,8 +284,7 @@ class ModuleResult implements \JsonSerializable
     /**
      * Set the levels returned from this module
      *
-     * @param AuthLevel[] $levels The levels returned from this module
-     *
+     * @param  AuthLevel[]  $levels The levels returned from this module
      * @return self
      */
     public function setLevels(?array $levels)
@@ -305,7 +301,6 @@ class ModuleResult implements \JsonSerializable
     {
         return $this->completed;
     }
-
 
     /**
      * @return self
@@ -372,7 +367,6 @@ class ModuleResult implements \JsonSerializable
         return $this;
     }
 
-
     /**
      * Get the value of prompted
      *
@@ -386,7 +380,6 @@ class ModuleResult implements \JsonSerializable
     /**
      * Set the value of prompted
      *
-     * @param bool $prompted
      *
      * @return self
      */
@@ -400,8 +393,7 @@ class ModuleResult implements \JsonSerializable
     /**
      * Set allows storing the module state
      *
-     * @param array $moduleState Allows storing the module state
-     *
+     * @param  array  $moduleState Allows storing the module state
      * @return self
      */
     public function setModuleState(?array $moduleState)
@@ -442,12 +434,10 @@ class ModuleResult implements \JsonSerializable
         return $this;
     }
 
-
     /**
      * Set list of approved scopes
      *
-     * @param string[] $scopesApproved List of approved scopes
-     *
+     * @param  string[]  $scopesApproved List of approved scopes
      * @return self
      */
     public function setScopesApproved(?array $scopesApproved)

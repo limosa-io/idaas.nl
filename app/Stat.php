@@ -2,8 +2,6 @@
 
 namespace App;
 
-use App\Scopes\TenantTrait;
-
 class Stat extends Model
 {
     public function statable()

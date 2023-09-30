@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\Tenant;
-use App\CloudFunctionHelper;
 use App\CloudFunction;
+use App\CloudFunctionHelper;
+use App\Tenant;
+use Illuminate\Console\Command;
 
 class InvokeFunction extends Command
 {

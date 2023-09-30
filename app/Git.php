@@ -2,10 +2,10 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use App\Scopes\TenantTrait;
 use Illuminate\Database\Eloquent\Casts\AsArrayObject;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Git extends Model
 {
@@ -15,7 +15,7 @@ class Git extends Model
     protected $casts = [
         'settings' => AsArrayObject::class,
         'pull_start_time' => 'datetime',
-        'push_start_time' => 'datetime'
+        'push_start_time' => 'datetime',
     ];
 
     protected $attributes = [

@@ -1,5 +1,5 @@
 <?php
 
 return [
-    "publish_routes" => false
+    'publish_routes' => false,
 ];

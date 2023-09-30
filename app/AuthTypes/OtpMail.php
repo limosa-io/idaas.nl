@@ -28,7 +28,7 @@ class OtpMail extends AbstractType
 
     public function getDefaultName()
     {
-        return "One Time Password via email";
+        return 'One Time Password via email';
     }
 
     /**
@@ -64,7 +64,7 @@ class OtpMail extends AbstractType
                 return $module->baseResult()->setCompleted(false)->setResponse(
                     response(
                         [
-                        'error' => 'The provided otp is incorrect.'
+                            'error' => 'The provided otp is incorrect.',
                         ],
                         422
                     )
@@ -93,8 +93,8 @@ class OtpMail extends AbstractType
                     @$module->config['template_id'],
                     [
                         'subject' => $state->getSubject(),
-                        'user' =>  $state->getSubject() ? $state->getSubject()->getUser() : null,
-                        'otp' => $otp
+                        'user' => $state->getSubject() ? $state->getSubject()->getUser() : null,
+                        'otp' => $otp,
                     ],
                     EmailTemplate::TYPE_ONE_TIME_PASSWORD,
                     $subject->getPreferredLanguage()
@@ -104,8 +104,8 @@ class OtpMail extends AbstractType
             return $module->baseResult()->setCompleted(false)->setResponse(
                 response(
                     [
-                    'user_id_hashed' => encrypt($state->getSubject()->getUserId()),
-                    'seed' => '123' //TODO: generate an always unique OTP.
+                        'user_id_hashed' => encrypt($state->getSubject()->getUserId()),
+                        'seed' => '123', //TODO: generate an always unique OTP.
                     ]
                 )
             );
@@ -126,7 +126,7 @@ class OtpMail extends AbstractType
                     [
                         'otp' => $otp,
                         'subject' => $state->getSubject(),
-                        'user' =>  $state->getSubject() ? $state->getSubject()->getUser() : null
+                        'user' => $state->getSubject() ? $state->getSubject()->getUser() : null,
                     ],
                     EmailTemplate::TYPE_ONE_TIME_PASSWORD,
                     $user->preferredLanguage
@@ -139,8 +139,8 @@ class OtpMail extends AbstractType
             return $module->baseResult()->setCompleted(false)->setResponse(
                 response(
                     [
-                    'user_id_hashed' => encrypt($user->id),
-                    'seed' => '123' //TODO: generate an always unique OTP.
+                        'user_id_hashed' => encrypt($user->id),
+                        'seed' => '123', //TODO: generate an always unique OTP.
                     ]
                 )
             );

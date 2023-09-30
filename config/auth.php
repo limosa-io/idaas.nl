@@ -79,7 +79,7 @@ return [
 
         'chainusers' => [
             'driver' => 'chainusers',
-            'model' => App\Subject::class
+            'model' => App\Subject::class,
         ],
 
     ],

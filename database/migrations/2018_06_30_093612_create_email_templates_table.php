@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateEmailTemplatesTable extends Migration
 {
@@ -18,10 +18,10 @@ class CreateEmailTemplatesTable extends Migration
 
             $table->uuid('parent_id')->nullable();
 
-            $table->string('type')->default('generic'); // default, password-forgotten, 
+            $table->string('type')->default('generic'); // default, password-forgotten,
 
             $table->string('name');
-            
+
             $table->string('subject');
 
             // mustache template

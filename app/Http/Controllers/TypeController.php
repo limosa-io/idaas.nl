@@ -16,7 +16,7 @@ class TypeController extends Controller
         $result = []; //array_diff(array_keys(AuthChain::$typeMap),['consent','start']);
 
         foreach (AuthChain::$typeMap as $key => $value) {
-            if (!in_array($key, ['consent','start'])) {
+            if (! in_array($key, ['consent', 'start'])) {
                 $object = new $value();
                 $result[$key] = $object->getDefaultName();
             }

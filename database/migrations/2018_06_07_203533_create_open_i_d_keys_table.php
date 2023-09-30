@@ -1,11 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use App\OpenIDProvider;
-use App\OpenIDKey;
-use App\Repository\KeyRepository;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateOpenIDKeysTable extends Migration
 {
@@ -17,7 +14,7 @@ class CreateOpenIDKeysTable extends Migration
     public function up()
     {
         Schema::create('open_i_d_keys', function (Blueprint $table) {
-            
+
             $table->uuid('id')->primary();
 
             $table->uuid('tenant_id')->index();
@@ -29,12 +26,12 @@ class CreateOpenIDKeysTable extends Migration
             $table->text('x509')->nullable();
 
             $table->boolean('active')->default(true);
-            
+
             $table->timestamps();
 
-            $table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');        
+            $table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
         });
-        
+
     }
 
     /**

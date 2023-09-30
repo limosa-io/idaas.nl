@@ -13,6 +13,6 @@ class Facebook extends Generic
 
     public function getDefaultName()
     {
-        return "Facebook";
+        return 'Facebook';
     }
 }

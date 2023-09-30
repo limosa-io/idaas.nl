@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateUsersTable extends Migration
 {
@@ -41,7 +41,7 @@ class CreateUsersTable extends Migration
             $table->string('phoneNumber')->nullable();
 
             $table->string('displayName')->nullable();
-            
+
             $table->text('picture')->nullable();
 
             $table->text('metadataUser')->nullable();
@@ -51,20 +51,20 @@ class CreateUsersTable extends Migration
             $table->string('extraIdentifier2')->nullable();
             $table->string('extraIdentifier3')->nullable();
             $table->string('extraIdentifier4')->nullable();
-            
+
             $table->string('user_metadata')->nullable();
             $table->string('app_metadata')->nullable();
-            
+
             $table->string('otp_secret')->nullable();
-            
+
             $table->timestamp('last_successful_login_date', 0)->nullable();
 
             $table->uuid('tenant_id')->index();
             $table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
-            
-            $table->index(['tenant_id','id']);
-            $table->index(['tenant_id','email']);
-            
+
+            $table->index(['tenant_id', 'id']);
+            $table->index(['tenant_id', 'email']);
+
             $table->rememberToken();
             $table->timestamps();
         });

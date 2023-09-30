@@ -13,9 +13,9 @@ class ImportTest extends TestCase
     {
         $response = $this->post(
             'https://master.manage.test.dev/api/import', [
-            'yaml' => file_get_contents(__DIR__ . '/import.yml')
+                'yaml' => file_get_contents(__DIR__.'/import.yml'),
             ], [
-            'Authorization' => sprintf('Bearer %s', $this->getAccessToken())
+                'Authorization' => sprintf('Bearer %s', $this->getAccessToken()),
             ]
         );
 
@@ -27,7 +27,7 @@ class ImportTest extends TestCase
     //     $response = $this->get('https://master.manage.test.dev/api/export', [
     //         'Authorization' => sprintf('Bearer %s', $this->getAccessToken())
     //     ]);
-        
+
     //     $response->assertStatus(200);
     // }
 

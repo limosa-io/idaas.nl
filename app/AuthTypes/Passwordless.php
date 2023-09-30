@@ -36,7 +36,7 @@ class Passwordless extends AbstractType
 
     public function getDefaultName()
     {
-        return "Magic Link";
+        return 'Magic Link';
     }
 
     /**
@@ -65,7 +65,7 @@ class Passwordless extends AbstractType
 
         $config->validator()->validate($token, ...[new SignedWith($config->signer(), $config->verificationKey())]);
 
-//        $token->verify(new Sha256(), new Key($publicKey->getKeyPath()));
+        //        $token->verify(new Sha256(), new Key($publicKey->getKeyPath()));
 
         // 3. check issuer, audience, expiration
         if ($token->isExpired(new DateTimeImmutable())) {
@@ -83,7 +83,7 @@ class Passwordless extends AbstractType
         }
 
         if ($state->getIncomplete() == null) {
-            throw new AuthFailedException("The provided token has already been used");
+            throw new AuthFailedException('The provided token has already been used');
         }
 
         $module = $state->getIncomplete()->getModule();
@@ -94,11 +94,11 @@ class Passwordless extends AbstractType
             ->setCompleted(true)
             ->setSubject(
                 resolve(SubjectRepository::class)
-                ->with($user->email, $this, $module)
-                ->setTypeIdentifier(
-                    $this->getIdentifier()
-                )
-                ->setUserId($user->id)
+                    ->with($user->email, $this, $module)
+                    ->setTypeIdentifier(
+                        $this->getIdentifier()
+                    )
+                    ->setUserId($user->id)
             );
 
         $state->addResult($result);
@@ -108,7 +108,7 @@ class Passwordless extends AbstractType
 
     public function getRedirect(ModuleInterface $module, State $state)
     {
-        $state = (string)$state;
+        $state = (string) $state;
     }
 
     public function process(Request $request, State $state, ModuleInterface $module)
@@ -133,16 +133,16 @@ class Passwordless extends AbstractType
                 new StandardMail(
                     @$module->config['template_id'],
                     [
-                    'url' => htmlentities(
-                        route('ice.login.passwordless') . '?token=' . urlencode(
-                            self::getToken(
-                                $state->getSubject()->getUserId(),
-                                $state
-                            )->toString()
-                        )
-                    ),
-                    'subject' => $state->getSubject(),
-                    'user' =>  $state->getSubject() ? $state->getSubject()->getUser() : null,
+                        'url' => htmlentities(
+                            route('ice.login.passwordless').'?token='.urlencode(
+                                self::getToken(
+                                    $state->getSubject()->getUserId(),
+                                    $state
+                                )->toString()
+                            )
+                        ),
+                        'subject' => $state->getSubject(),
+                        'user' => $state->getSubject() ? $state->getSubject()->getUser() : null,
                     ],
                     EmailTemplate::TYPE_PASSWORDLESS,
                     $subject->getPreferredLanguage()
@@ -161,16 +161,16 @@ class Passwordless extends AbstractType
                     );
             }
 
-            $url = route('ice.login.passwordless') . '?token=' .
+            $url = route('ice.login.passwordless').'?token='.
                 urlencode(self::getToken($user->id, $state)->toString());
 
             Mail::to($user->email)->send(
                 new StandardMail(
                     @$module->config['template_id'],
                     [
-                    'url' => htmlentities($url),
-                    'subject' => $state->getSubject(),
-                    'user' =>  $state->getSubject() ? $state->getSubject()->getUser() : null
+                        'url' => htmlentities($url),
+                        'subject' => $state->getSubject(),
+                        'user' => $state->getSubject() ? $state->getSubject()->getUser() : null,
                     ],
                     EmailTemplate::TYPE_PASSWORDLESS,
                     $user->preferredLanguage

@@ -9,7 +9,7 @@ use App\Link;
 use App\User;
 
 class LinkRepository
-{ 
+{
     public function getUserById($userId): User
     {
         return User::find($userId);
@@ -25,9 +25,9 @@ class LinkRepository
         } else {
             $link = Link::where(
                 [
-                'subject_type' => $subject->getTypeIdentifier(),
-                //'subject_module' => $module ? $module->getIdentifier() : null,
-                'subject_id' => $subject->getIdentifier()
+                    'subject_type' => $subject->getTypeIdentifier(),
+                    //'subject_module' => $module ? $module->getIdentifier() : null,
+                    'subject_id' => $subject->getIdentifier(),
                 ]
             )->first();
 
@@ -35,15 +35,15 @@ class LinkRepository
         }
     }
 
-    public function add(Type $type, Subject $subject, User $user, ?ModuleInterface $module = null)
+    public function add(Type $type, Subject $subject, User $user, ModuleInterface $module = null)
     {
         $link = Link::create(
             [
 
-            'user_id' => $user->getId(),
-            'subject_type' => $type->getIdentifier(),
-            'subject_module' => $module ? $module->getIdentifier() : null,
-            'subject_id' => $subject->getIdentifier()
+                'user_id' => $user->getId(),
+                'subject_type' => $type->getIdentifier(),
+                'subject_module' => $module ? $module->getIdentifier() : null,
+                'subject_id' => $subject->getIdentifier(),
 
             ]
         );

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 class AuthRouteProvider
 {
     protected static $prefix = 'authchain';
+
     protected static $version = 'v2';
 
     public static function routesWeb(array $options = [])
@@ -17,7 +18,7 @@ class AuthRouteProvider
         $prefix = self::$prefix;
 
         Route::prefix(self::$prefix)->namespace('App\AuthChain\Http\Controllers')->group(
-            function () use ($options, $prefix) {
+            function () use ($options) {
                 Route::prefix(self::$version)->group(
                     function () use ($options) {
                         self::webRoutes($options);
@@ -32,7 +33,7 @@ class AuthRouteProvider
         $prefix = self::$prefix;
 
         Route::prefix(self::$prefix)->namespace('App\AuthChain\Http\Controllers')->group(
-            function () use ($options, $prefix) {
+            function () use ($options) {
                 Route::prefix(self::$version)->group(
                     function () use ($options) {
                         self::apiRoutes($options);
@@ -46,9 +47,9 @@ class AuthRouteProvider
     {
         $prefix = self::$prefix;
         Route::prefix(self::$prefix)->namespace('App\AuthChain\Http\Controllers')->group(
-            function () use ($options, $prefix) {
+            function () {
                 Route::prefix(self::$version)->group(
-                    function () use ($options) {
+                    function () {
                         Route::get(
                             '/manage/types',
                             '\App\Http\Controllers\TypeController@index'
@@ -94,7 +95,6 @@ class AuthRouteProvider
                             '/manage/chain/{chain_id}',
                             '\App\Http\Controllers\ChainController@delete'
                         );
-
 
                         Route::get(
                             '/manage/authlevels',
@@ -150,9 +150,6 @@ class AuthRouteProvider
         Route::prefix('p')->group(
             function () {
 
-                /**
-                 *
-                 */
                 Route::get(
                     '/authresponse/{state}',
                     '\App\Http\Controllers\AuthChainController@getAuthResponse'
@@ -161,7 +158,6 @@ class AuthRouteProvider
                 /**
                  * State inspection endpoint
                  */
-
                 Route::options(
                     '/{module}/{state}',
                     '\App\Http\Controllers\AuthChainController@processOptions'

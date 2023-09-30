@@ -12,7 +12,7 @@ class Token extends LaravelToken
     protected $casts = [
         'scopes' => 'array',
         'revoked' => 'bool',
-        'claims' => 'array'
+        'claims' => 'array',
     ];
 
     public function client()

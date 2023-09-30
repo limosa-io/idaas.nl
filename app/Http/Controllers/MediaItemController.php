@@ -29,7 +29,6 @@ class MediaItemController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -46,7 +45,6 @@ class MediaItemController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\MediaItem $mediaItem
      * @return \Illuminate\Http\Response
      */
     public function show(MediaItem $mediaItem)
@@ -57,7 +55,6 @@ class MediaItemController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\MediaItem $mediaItem
      * @return \Illuminate\Http\Response
      */
     public function destroy(MediaItem $mediaItem)
@@ -82,7 +79,7 @@ class MediaItemController extends Controller
             $contents = str_replace('{{ tenant }}', $tenant, $contents);
 
             $files[$name] = [
-                'content' => $contents
+                'content' => $contents,
             ];
         }
 

@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateTenantsTable extends Migration
 {
@@ -25,16 +25,16 @@ class CreateTenantsTable extends Migration
 
             $table->integer('session_lifetime')->nullable();
             $table->integer('session_expire_on_close')->nullable();
-            
+
             $table->integer('cookie_lifetime')->nullable();
             $table->integer('cookie_expire_on_close')->nullable();
-            
+
             // a master tenant manages other tenants
             $table->boolean('master')->default(false);
 
             $table->string('resources_version', 10)->nullable();
 
-            $table->timestamps();   
+            $table->timestamps();
         });
     }
 

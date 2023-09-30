@@ -2,12 +2,12 @@
 
 namespace App\AuthTypes;
 
-use Laravel\Socialite\Facades\Socialite;
-use Illuminate\Http\Request;
-use App\AuthChain\State;
 use App\AuthChain\Helper;
-use App\AuthChain\ModuleInterface;
 use App\AuthChain\Message;
+use App\AuthChain\ModuleInterface;
+use App\AuthChain\State;
+use Illuminate\Http\Request;
+use Laravel\Socialite\Facades\Socialite;
 
 abstract class Generic extends AbstractType
 {
@@ -25,7 +25,7 @@ abstract class Generic extends AbstractType
             'config' => 'nullable|array',
             'config.client_id' => 'nullable',
             'config.client_secret' => 'nullable',
-            'config.create_user' => 'nullable|boolean'
+            'config.create_user' => 'nullable|boolean',
         ];
     }
 
@@ -43,12 +43,11 @@ abstract class Generic extends AbstractType
             'callback' => route(
                 'authchain.social.callback',
                 [
-                'type' => lcfirst($this->getIdentifier())
+                    'type' => lcfirst($this->getIdentifier()),
                 ]
-            )
+            ),
         ];
     }
-
 
     /**
      * Module specific
@@ -88,26 +87,26 @@ abstract class Generic extends AbstractType
         return isset($config['client_id']) && isset($config['client_secret']);
     }
 
-     /**
-      * Module specific
-      */
+    /**
+     * Module specific
+     */
     public function getRedirect(ModuleInterface $module, State $state)
     {
         $provider = Socialite::buildProvider(
             $this->getSocialProvider(),
             [
-            'client_id' => $module->config['client_id'],
-            'client_secret' => $module->config['client_secret'],
-            'redirect' => route(
-                'authchain.social.callback',
-                [
-                'type' => $this->getIdentifier()
-                ]
-            ),
+                'client_id' => $module->config['client_id'],
+                'client_secret' => $module->config['client_secret'],
+                'redirect' => route(
+                    'authchain.social.callback',
+                    [
+                        'type' => $this->getIdentifier(),
+                    ]
+                ),
             ]
         );
 
-        $result = $provider->with(['state' => (string)$state])->stateless();
+        $result = $provider->with(['state' => (string) $state])->stateless();
 
         if ($state->display == 'popup') {
             $result = $result->asPopup();
@@ -121,7 +120,7 @@ abstract class Generic extends AbstractType
      */
     public function process(Request $request, State $state, ModuleInterface $module)
     {
-        if (!$this->isConfigured($module)) {
+        if (! $this->isConfigured($module)) {
             return $module
                 ->baseResult()
                 ->addMessage(Message::error('This module has not yet been configured'))
@@ -132,7 +131,7 @@ abstract class Generic extends AbstractType
             return $module->baseResult()->setResponse(
                 response(
                     [
-                    'url' => $this->getRedirect($module, $state)->getTargetUrl()
+                        'url' => $this->getRedirect($module, $state)->getTargetUrl(),
                     ]
                 )
             )->setCompleted(false);
@@ -140,14 +139,14 @@ abstract class Generic extends AbstractType
             $provider = Socialite::buildProvider(
                 $this->getSocialProvider(),
                 [
-                'client_id' => $module->config['client_id'],
-                'client_secret' => $module->config['client_secret'],
-                'redirect' => route(
-                    'authchain.social.callback',
-                    [
-                    'type' => lcfirst($this->getIdentifier())
-                    ]
-                ),
+                    'client_id' => $module->config['client_id'],
+                    'client_secret' => $module->config['client_secret'],
+                    'redirect' => route(
+                        'authchain.social.callback',
+                        [
+                            'type' => lcfirst($this->getIdentifier()),
+                        ]
+                    ),
                 ]
             );
             $provider = $provider->stateless();
@@ -158,7 +157,7 @@ abstract class Generic extends AbstractType
                 ->baseResult()
                 ->setCompleted(true)
                 ->setSubject((new SocialSubject($this->getIdentifier(), $user))
-                ->setTypeIdentifier($this->getIdentifier()));
+                    ->setTypeIdentifier($this->getIdentifier()));
         }
     }
 
@@ -174,7 +173,7 @@ abstract class Generic extends AbstractType
                 null,
                 302,
                 [
-                'location' => $this->getRedirect($module, $state)->getTargetUrl()
+                    'location' => $this->getRedirect($module, $state)->getTargetUrl(),
                 ]
             )
         )->setCompleted(false)->setPrompted(false);

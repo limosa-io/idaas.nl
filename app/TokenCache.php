@@ -18,7 +18,7 @@ class TokenCache extends IdaasTokenCache
      */
     public function rememberUserInfo(string $tokenId, $closure)
     {
-        return Cache::remember('info:' . $tokenId, 10, $closure);
+        return Cache::remember('info:'.$tokenId, 10, $closure);
     }
 
     /**
@@ -26,7 +26,7 @@ class TokenCache extends IdaasTokenCache
      */
     public function rememberUser(string $tokenId, $closure)
     {
-        return Cache::remember('user:' . $tokenId, 10, $closure);
+        return Cache::remember('user:'.$tokenId, 10, $closure);
     }
 
     /**
@@ -42,7 +42,7 @@ class TokenCache extends IdaasTokenCache
      */
     public function clearCacheForToken(string $tokenId)
     {
-        Cache::forget('info:' . $tokenId);
-        Cache::forget('user:' . $tokenId);
+        Cache::forget('info:'.$tokenId);
+        Cache::forget('user:'.$tokenId);
     }
 }

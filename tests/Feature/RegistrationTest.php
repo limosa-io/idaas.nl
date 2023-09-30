@@ -2,12 +2,11 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\AuthModule;
-use App\AuthChain;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Helper\ChainHelper;
 use Tests\Helper\OpenIDHelper;
+use Tests\TestCase;
 
 class RegistrationTest extends TestCase
 {
@@ -26,7 +25,7 @@ class RegistrationTest extends TestCase
 
         $response = $this->get(
             'https://master.manage.test.dev/api/settings/bulk?namespace=registration', [
-            'Authorization' => sprintf('Bearer %s', $this->getAccessToken())
+                'Authorization' => sprintf('Bearer %s', $this->getAccessToken()),
             ]
         );
         $response->assertStatus(200);
@@ -34,11 +33,10 @@ class RegistrationTest extends TestCase
         $response = $this->post(
             'https://master.manage.test.dev/api/scim/v2/Me',
             [
-                "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"],
-                "urn:ietf:params:scim:schemas:core:2.0:User" =>
-                [
-                    "emails" => ["value" => "whatever@test.nl"]
-                ]
+                'schemas' => ['urn:ietf:params:scim:schemas:core:2.0:User'],
+                'urn:ietf:params:scim:schemas:core:2.0:User' => [
+                    'emails' => ['value' => 'whatever@test.nl'],
+                ],
             ]
         );
 
@@ -47,14 +45,14 @@ class RegistrationTest extends TestCase
         $response = $this->put(
             'https://master.manage.test.dev/api/settings/bulk?namespace=registration',
             [
-                "allow" => true,
-                "allow_active" => true,
-                "level_active" => "activation",
-                "attributes_create" => ["emails"],
-                "attributes_update" => []
+                'allow' => true,
+                'allow_active' => true,
+                'level_active' => 'activation',
+                'attributes_create' => ['emails'],
+                'attributes_update' => [],
             ],
             [
-                'Authorization' => sprintf('Bearer %s', $this->getAccessToken())
+                'Authorization' => sprintf('Bearer %s', $this->getAccessToken()),
             ]
         );
 
@@ -63,11 +61,10 @@ class RegistrationTest extends TestCase
         $response = $this->post(
             'https://master.manage.test.dev/api/scim/v2/Me',
             [
-                "schemas" => ["urn:ietf:params:scim:schemas:core:2.0:User"],
-                "urn:ietf:params:scim:schemas:core:2.0:User" =>
-                [
-                    "emails" => ["value" => "whatever@test.nl"]
-                ]
+                'schemas' => ['urn:ietf:params:scim:schemas:core:2.0:User'],
+                'urn:ietf:params:scim:schemas:core:2.0:User' => [
+                    'emails' => ['value' => 'whatever@test.nl'],
+                ],
             ]
         );
 
@@ -80,24 +77,24 @@ class RegistrationTest extends TestCase
         $response = $this->put(
             'https://master.manage.test.dev/api/settings/bulk?namespace=registration',
             [
-                "allow" => true,
-                "allow_active" => true,
-                "level_active" => "activation",
-                "attributes_create" => ["emails"],
-                "attributes_update" => []
+                'allow' => true,
+                'allow_active' => true,
+                'level_active' => 'activation',
+                'attributes_create' => ['emails'],
+                'attributes_update' => [],
             ],
             [
-                'Authorization' => sprintf('Bearer %s', $this->getAccessToken())
+                'Authorization' => sprintf('Bearer %s', $this->getAccessToken()),
             ]
         );
 
         // (1) Create registration module
         $authModule = ChainHelper::create($this, 'register');
         ChainHelper::link($this, AuthModule::where('type', 'start')->first()->id, $authModule->id);
-        
+
         OpenIDHelper::initWithNewClient(
             $this, [
-            'trusted' => true
+                'trusted' => true,
             ]
         )->expect('registration')->expectFinish()->expectCodeToToken();
 

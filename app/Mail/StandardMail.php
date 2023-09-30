@@ -2,10 +2,10 @@
 
 namespace App\Mail;
 
+use App\EmailTemplate;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use App\EmailTemplate;
 
 class StandardMail extends Mailable
 {

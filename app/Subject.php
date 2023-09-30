@@ -14,23 +14,25 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Str;
 use Laravel\Passport\HasApiTokens;
 
-class Subject extends Model implements SubjectInterface, StatableInterface, Authenticatable
+class Subject extends Model implements Authenticatable, StatableInterface, SubjectInterface
 {
     use HasApiTokens;
-    use TenantTrait;
     use StatableTrait;
+    use TenantTrait;
 
     protected $user = null;
+
     protected $userId = null;
 
     protected $roles = null;
 
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     protected $casts = [
         'subject' => 'array',
-        'levels' => 'array'
+        'levels' => 'array',
     ];
 
     /**
@@ -122,7 +124,7 @@ class Subject extends Model implements SubjectInterface, StatableInterface, Auth
     }
 
     /**
-     * @var ClaimEntityInterface[] $attributes
+     * @var ClaimEntityInterface[]
      */
     public function toIDTokenClaims($attributes, $scopes)
     {
@@ -133,10 +135,10 @@ class Subject extends Model implements SubjectInterface, StatableInterface, Auth
         });
 
         $result = [
-            'sub'       => $this->id, //return the identifier
+            'sub' => $this->id, //return the identifier
         ];
 
-        if (!$hasEssential) {
+        if (! $hasEssential) {
             $result['scim_id'] = $user ? $user->id : null;
         }
 
@@ -211,9 +213,9 @@ class Subject extends Model implements SubjectInterface, StatableInterface, Auth
                     $result[$attribute] = $user->phoneNumber;
                     break;
                 case 'address':
-                    if (!empty($user->address)) {
+                    if (! empty($user->address)) {
                         $result[$attribute] = [
-                            'formatted' => $user->address
+                            'formatted' => $user->address,
                         ];
                     }
                     break;
@@ -255,7 +257,7 @@ class Subject extends Model implements SubjectInterface, StatableInterface, Auth
         if (isset($claims['userinfo'])) {
             foreach ($claims['userinfo'] as $key => $value) {
                 $attributes[] = $key;
-                if (!empty($value) && isset($value['essential']) && $value['essential']) {
+                if (! empty($value) && isset($value['essential']) && $value['essential']) {
                     $hasEssential = true;
                 }
             }
@@ -278,11 +280,11 @@ class Subject extends Model implements SubjectInterface, StatableInterface, Auth
                 $cloudResult = CloudFunctionHelper::invoke(
                     $cloudFunction,
                     [
-                    'subject' => $this->subject,
-                    'context' => [
-                        'attributes' => $attributes,
-                        'scopes' => $scopes
-                    ]
+                        'subject' => $this->subject,
+                        'context' => [
+                            'attributes' => $attributes,
+                            'scopes' => $scopes,
+                        ],
                     ]
                 );
                 $result = array_merge($result, $cloudResult);
@@ -297,9 +299,9 @@ class Subject extends Model implements SubjectInterface, StatableInterface, Auth
 
         if ($user != null) {
             $result = $result + [
-                'picture'   => $user ? $user->picture : null,
-                'profile'      => $provider->getProfileURL($user->id),
-                'roles' => $this->getRoles()
+                'picture' => $user ? $user->picture : null,
+                'profile' => $provider->getProfileURL($user->id),
+                'roles' => $this->getRoles(),
             ];
         } else {
             $result = array_merge($result, $subject->getAttributes());
@@ -311,6 +313,7 @@ class Subject extends Model implements SubjectInterface, StatableInterface, Auth
                 return in_array($key, array_merge($attributesOriginal, ['sub']));
             })->toArray();
         }
+
         return $result;
     }
 
@@ -347,7 +350,7 @@ class Subject extends Model implements SubjectInterface, StatableInterface, Auth
     /**
      * Set the token value for the "remember me" session.
      *
-     * @param  string $value
+     * @param  string  $value
      * @return void
      */
     public function setRememberToken($value)

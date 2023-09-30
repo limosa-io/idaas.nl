@@ -22,14 +22,14 @@ class StatterFacade
                 'statable_id' => $statable->getKey(),
                 'statable_type' => get_class($statable),
                 'tenant_id' => resolve('App\Tenant')->id,
-                'hours' => intval(time() / 3600)
+                'hours' => intval(time() / 3600),
             ];
         }
     }
 
     public function save()
     {
-        if (!empty($this->queue)) {
+        if (! empty($this->queue)) {
             DB::table('stats')->insert($this->queue);
             $this->queue = [];
         }

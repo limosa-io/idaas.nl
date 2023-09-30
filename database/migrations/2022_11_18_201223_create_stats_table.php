@@ -2,8 +2,8 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -31,7 +31,7 @@ return new class extends Migration
 
             $table->uuid('tenant_id')->index();
 
-            $table->index(['statable_id','statable_type']);
+            $table->index(['statable_id', 'statable_type']);
 
             $table->index(['key', 'value']);
         });
@@ -44,8 +44,8 @@ return new class extends Migration
      */
     public function down()
     {
-        DB::statement("
+        DB::statement('
             DROP TABLE stats CASCADE
-        ");
+        ');
     }
 };

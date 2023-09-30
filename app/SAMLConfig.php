@@ -3,12 +3,11 @@
 namespace App;
 
 use App\AuthChain\Helper;
+use App\AuthChain\Session;
 use App\AuthChain\State;
 use App\AuthChain\UIServer;
 use ArieTimmerman\Laravel\SAML\SAML2\State\SamlState;
-use App\AuthChain\Session;
 use Illuminate\Support\Facades\URL;
-use SAML2\AuthnRequest;
 
 class SAMLConfig extends \ArieTimmerman\Laravel\SAML\SAMLConfig
 {
@@ -36,10 +35,10 @@ class SAMLConfig extends \ArieTimmerman\Laravel\SAML\SAMLConfig
 
         $uiServer = new UIServer(
             [
-                $parsed['scheme'] . '://' . $parsed['host']
+                $parsed['scheme'].'://'.$parsed['host'],
             ],
             [
-                $loginUrl
+                $loginUrl,
             ]
         );
 

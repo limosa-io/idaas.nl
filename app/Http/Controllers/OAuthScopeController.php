@@ -3,15 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\OAuthScope;
-use Illuminate\Http\Request;
 use App\OpenIDProvider;
 use Idaas\Passport\Bridge\ClaimRepository;
+use Illuminate\Http\Request;
 
 class OAuthScopeController extends Controller
 {
     protected $validations = [
         'name' => 'required|alpha_dash|min:2|unique:o_auth_scopes,name',
-        'description' => 'required'
+        'description' => 'required',
     ];
 
     /**
@@ -30,7 +30,6 @@ class OAuthScopeController extends Controller
         return resolve(ClaimRepository::class)->getScopeClaims();
     }
 
-
     public function store(Request $request)
     {
         $data = $this->validate($request, $this->validations);
@@ -48,8 +47,6 @@ class OAuthScopeController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \App\OAuthScope          $oAuthScope
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, OAuthScope $oAuthScope)
@@ -57,21 +54,21 @@ class OAuthScopeController extends Controller
         if ($oAuthScope->system) {
             return response(
                 [
-                'error' => 'You cannot update system scopes'
+                    'error' => 'You cannot update system scopes',
                 ],
                 401
             );
         }
 
         $validationsCopy = $this->validations;
-        $validationsCopy['name'] = $validationsCopy['name'] . ',' . $oAuthScope->id;
+        $validationsCopy['name'] = $validationsCopy['name'].','.$oAuthScope->id;
 
         $data = $this->validate($request, $validationsCopy);
 
         $oAuthScope->forceFill(
             [
-            'description' => $request->input('description'),
-            'name' => $request->input('name')
+                'description' => $request->input('description'),
+                'name' => $request->input('name'),
             ]
         );
 
@@ -83,7 +80,6 @@ class OAuthScopeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\OAuthScope $oAuthScope
      * @return \Illuminate\Http\Response
      */
     public function destroy(OAuthScope $oAuthScope)
@@ -91,7 +87,7 @@ class OAuthScopeController extends Controller
         if ($oAuthScope->system) {
             return response(
                 [
-                'error' => 'You cannot delete system scopes'
+                    'error' => 'You cannot delete system scopes',
                 ],
                 401
             );

@@ -8,10 +8,7 @@
 
 namespace App\AuthChain;
 
-use App\AuthChain\ModuleInterface;
-use App\AuthChain\ModuleResultList;
 use App\AuthChain\Object\App;
-use App\AuthChain\Object\Eloquent\SubjectInterface;
 use App\AuthTypes\Type;
 use App\Repository\LinkRepository;
 use App\User;
@@ -21,8 +18,11 @@ use Illuminate\Support\Str;
 class Subject implements \JsonSerializable
 {
     public const ATTRIBUTE_EMAIL = 'email';
+
     public const ATTRIBUTE_MOBILE = 'mobile';
+
     public const ATTRIBUTE_ROLES = 'roles';
+
     public const ATTRIBUTE_ACTIVE = 'active';
 
     // OpenID's locale is the same as SCIM's preferredLanguage
@@ -43,6 +43,7 @@ class Subject implements \JsonSerializable
      * @var array
      */
     protected $attributes;
+
     private $identifier;
 
     protected $uuid;
@@ -53,14 +54,14 @@ class Subject implements \JsonSerializable
         $this->uuid = (string) Str::orderedUuid();
     }
 
-    public static function with(string $identifier, Type $type, ?ModuleInterface $module = null)
+    public static function with(string $identifier, Type $type, ModuleInterface $module = null)
     {
-        $subject = new static($type->getIdentifier() . '|' . $identifier);
+        $subject = new static($type->getIdentifier().'|'.$identifier);
         $subject->setTypeIdentifier($type->getIdentifier());
 
         /**
          * @var LinkRepository
-        */
+         */
         $linkRepository = resolve(LinkRepository::class);
 
         // Type $type, Subject $subject, ?ModuleInterface $module
@@ -104,7 +105,7 @@ class Subject implements \JsonSerializable
             }
         }
 
-        if (!$hasSubject) {
+        if (! $hasSubject) {
             return null;
         }
 
@@ -112,10 +113,9 @@ class Subject implements \JsonSerializable
         $result->setUserId($firstSubject->getUserId());
         $result->setUuid($firstSubject->getUuid());
 
-        $result->setTypeIdentifier((string)$firstSubject->getTypeIdentifier());
+        $result->setTypeIdentifier((string) $firstSubject->getTypeIdentifier());
 
         $result->setAttributes($attributes);
-
 
         return $result;
     }
@@ -126,7 +126,7 @@ class Subject implements \JsonSerializable
             return null;
         }
 
-        if (!is_object($json)) {
+        if (! is_object($json)) {
             $json = (object) $json;
         }
 
@@ -183,14 +183,14 @@ class Subject implements \JsonSerializable
     public function getAttributeAllowUser($key)
     {
         $result = $this->attributes[$key] ?? (($user = $this->getUser()) != null ? $user->getAttribute($key) : null);
-        Log::debug('Try to load "' . $key . '" for user: ' . ($user ? $user->getAttribute($key) : null));
+        Log::debug('Try to load "'.$key.'" for user: '.($user ? $user->getAttribute($key) : null));
+
         return $result;
     }
 
     /**
      * Set the value of attributes
      *
-     * @param array $attributes
      *
      * @return self
      */
@@ -224,9 +224,9 @@ class Subject implements \JsonSerializable
         return [
             'uuid' => $this->uuid,
             'identifier' => $this->getIdentifier(),
-            'user_id'    => $this->getUserId(),
+            'user_id' => $this->getUserId(),
             'attributes' => $this->getAttributes(),
-            'type'     => $this->getTypeIdentifier(),
+            'type' => $this->getTypeIdentifier(),
         ];
     }
 
@@ -240,7 +240,7 @@ class Subject implements \JsonSerializable
         return $this->uuid;
     }
 
-    public function getUser(): User|null
+    public function getUser(): ?User
     {
         return $this->userId ? resolve(LinkRepository::class)->getUserById($this->userId) : null;
     }
@@ -289,14 +289,10 @@ class Subject implements \JsonSerializable
         ];
     }
 
-    /**
-     *
-     */
     public function getApprovedScopes(?string $appId)
     {
         return [];
     }
-
 
     /**
      * Set the value of uuid

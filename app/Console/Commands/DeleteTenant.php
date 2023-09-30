@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Tenant;
+use Illuminate\Console\Command;
 
 class DeleteTenant extends NewTenant
 {
@@ -42,6 +42,7 @@ class DeleteTenant extends NewTenant
 
         if ($tenant == null) {
             $this->error('This tenant does not exists!');
+
             return;
         }
 

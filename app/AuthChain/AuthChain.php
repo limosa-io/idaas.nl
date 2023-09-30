@@ -6,13 +6,10 @@
 
 namespace App\AuthChain;
 
-use Gliph\Graph\DirectedAdjacencyList;
-use App\AuthChain\Module;
-use Illuminate\Http\Request;
-use App\AuthChain\ModuleInterface;
 use App\AuthTypes\Consent;
 use App\Repository\ChainRepository;
 use App\Repository\ModuleRepository;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class AuthChain
@@ -20,6 +17,7 @@ class AuthChain
     protected static $t = null;
 
     protected $modules;
+
     protected $chain;
 
     /**
@@ -55,7 +53,6 @@ class AuthChain
             $module->init($request, $state);
         }
 
-
         /** @var ChainRepository */
         $chainRepository = resolve(ChainRepository::class);
         $chainElements = $chainRepository->all();
@@ -65,26 +62,27 @@ class AuthChain
         }
 
         foreach ($chainElements as $c) {
-            if (!isset($modules[$c->getFrom()])) {
+            if (! isset($modules[$c->getFrom()])) {
                 Log::error(sprintf('Module "%s" exists in chain but seems to be deleted', $c->getFrom()));
+
                 continue;
             }
 
-            if (!isset($modules[$c->getTo()])) {
+            if (! isset($modules[$c->getTo()])) {
                 Log::error(sprintf('Module "%s" exists in chain but seems to be deleted', $c->getFrom()));
+
                 continue;
             }
 
             $this->chain[] = [
                 $modules[$c->getFrom()],
-                $modules[$c->getTo()]
+                $modules[$c->getTo()],
             ];
 
             Log::debug(sprintf('From: %s (%s). To: %s (%s)', $modules[$c->getFrom()]->name, $c->getFrom(), $modules[$c->getTo()]->name, $c->getTo()));
         }
 
         $this->modules = $modules;
-
 
         return true;
     }
@@ -164,7 +162,6 @@ class AuthChain
             return $this->getModules();
         }
 
-
         try {
             foreach ($this->getSuccessorsOf($module) as $s) {
                 $result[] = $s;
@@ -186,12 +183,12 @@ class AuthChain
     {
         $result = [];
 
-        $starting_points = collect($this->chain)->map(fn($value) => $value[0]);
-        $to_points = collect($this->chain)->map(fn($value) => $value[1]);
+        $starting_points = collect($this->chain)->map(fn ($value) => $value[0]);
+        $to_points = collect($this->chain)->map(fn ($value) => $value[1]);
 
         foreach ($starting_points as $s) {
-            if (!$to_points->contains(fn($value) => $value->getIdentifier() == $s->getIdentifier())) {
-                if (!collect($result)->contains(fn($v) => $v->getIdentifier() == $s->getIdentifier())) {
+            if (! $to_points->contains(fn ($value) => $value->getIdentifier() == $s->getIdentifier())) {
+                if (! collect($result)->contains(fn ($v) => $v->getIdentifier() == $s->getIdentifier())) {
                     $result[] = $s;
                 }
             }
@@ -217,24 +214,23 @@ class AuthChain
         // the result is one of the following
         $succesors = $this->getSuccessorsOf($from);
 
-        Log::debug(sprintf("Er zijn %d succesors", count($succesors)));
-
+        Log::debug(sprintf('Er zijn %d succesors', count($succesors)));
 
         foreach ($succesors as $succesor) {
             $allSuccessors = $this->getAllSuccessorsOf($succesor);
 
-            Log::debug(sprintf("Er zijn %d allSuccessors", count($allSuccessors)));
+            Log::debug(sprintf('Er zijn %d allSuccessors', count($allSuccessors)));
 
             if (
                 collect($allSuccessors)->contains(fn ($value, $key) => $value->getIdentifier() == $to->getIdentifier())
             ) {
-                if (!$passive || ($to->isPassive() || $to->remembered())) {
+                if (! $passive || ($to->isPassive() || $to->remembered())) {
                     $result[] = $succesor;
                 }
             }
 
             if ($succesor->getIdentifier() == $to->getIdentifier()) {
-                if (!$passive || ($to->isPassive() || $to->remembered())) {
+                if (! $passive || ($to->isPassive() || $to->remembered())) {
                     $result[] = $succesor;
                 }
             }

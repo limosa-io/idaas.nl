@@ -6,11 +6,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\AuthChain\Session;
 use App\OpenIDProvider;
 use App\Tenant;
-use App\AuthChain\Session;
-use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -28,7 +27,7 @@ class HomeController extends Controller
 
     public function isLoggedIn(Request $request)
     {
-        return !empty(Session::getRemembered($request)->toArray()) ? 'true' : 'false';
+        return ! empty(Session::getRemembered($request)->toArray()) ? 'true' : 'false';
     }
 
     public function render($view = 'login', $data = [], Request $request = null)
@@ -38,17 +37,17 @@ class HomeController extends Controller
         $response = response()->view(
             $view,
             $data + [
-            'information' => [
-                'manage' => route('ice.manage.home'),
-                'resources_version' => $tenant->resources_version
-            ]
+                'information' => [
+                    'manage' => route('ice.manage.home'),
+                    'resources_version' => $tenant->resources_version,
+                ],
             ]
         );
 
         if ($request->input('designer')) {
             $response = $response->header(
                 'Content-Security-Policy',
-                'frame-ancestors ' . route('ice.manage.home') . ';'
+                'frame-ancestors '.route('ice.manage.home').';'
             );
         }
 

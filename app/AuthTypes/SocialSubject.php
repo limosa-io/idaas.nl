@@ -15,7 +15,7 @@ class SocialSubject extends Subject
     public function __construct($type, User $user)
     {
         $this->socialUser = $user;
-        $this->attributes = (array)$user;
-        $this->setIdentifier($type . '|' . $this->socialUser->getId());
+        $this->attributes = (array) $user;
+        $this->setIdentifier($type.'|'.$this->socialUser->getId());
     }
 }

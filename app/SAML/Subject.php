@@ -23,7 +23,7 @@ class Subject extends SAMLSubject
     public function getAttributes(\SAML2\AuthnRequest $authnRequest)
     {
         $result = [
-            'user_id' => $this->subject->getUserId()
+            'user_id' => $this->subject->getUserId(),
         ];
 
         $cloudFunction = CloudFunction::where('type', CloudFunction::TYPE_ATTRIBUTE)->first();
@@ -37,7 +37,7 @@ class Subject extends SAMLSubject
                     'subject' => $this->subject,
                     'context' => [
 
-                    ]
+                    ],
                 ]
             );
 

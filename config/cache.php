@@ -71,7 +71,7 @@ return [
         'redis' => [
             'driver' => 'redis',
             'connection' => 'default',
-            'prefix' => 'l'
+            'prefix' => 'l',
         ],
 
     ],

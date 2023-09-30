@@ -2,13 +2,13 @@
 
 namespace App\Repository;
 
-use App\OpenIDKey;
-use Illuminate\Support\Facades\Cache;
 use App\Exceptions\NoKeyException;
+use App\OpenIDKey;
 use App\Tenant;
 use Idaas\OpenID\CryptKey;
 use Idaas\Passport\KeyRepository as IdaasKeyRepository;
 use Idaas\Passport\Model\Client;
+use Illuminate\Support\Facades\Cache;
 
 class KeyRepository extends IdaasKeyRepository
 {
@@ -46,7 +46,7 @@ class KeyRepository extends IdaasKeyRepository
                 return (new CryptKey(
                     $primary->public_key
                 ))->setKid($primary->id)->setX509($primary->x509);
-                ;
+
             }
         );
     }

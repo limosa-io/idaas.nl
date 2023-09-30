@@ -6,19 +6,19 @@
 
 namespace App\Policies;
 
-use App\Tenant;
 use App\Role;
-use App\SubjectInterface;
-use Illuminate\Support\Facades\Cache;
 use App\Subject;
+use App\SubjectInterface;
+use App\Tenant;
+use Illuminate\Support\Facades\Cache;
 
 class TenantPolicy
 {
     /**
      * Determine if the given post can be updated by the user.
      *
-     * @param  \App\User $user
-     * @param  \App\Post $post
+     * @param  \App\User  $user
+     * @param  \App\Post  $post
      * @return bool
      */
     public function manage(SubjectInterface $subject)
@@ -26,7 +26,7 @@ class TenantPolicy
         $current = ($tenant = resolve(Tenant::class)) != null ? $tenant->id : '_';
 
         return Cache::remember(
-            'subject:can_manage:' . $subject->id . ':' . $current,
+            'subject:can_manage:'.$subject->id.':'.$current,
             10,
             function () use ($subject) {
                 return Role::whereIn(

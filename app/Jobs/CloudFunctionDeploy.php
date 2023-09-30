@@ -2,13 +2,13 @@
 
 namespace App\Jobs;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
 use App\CloudFunction as CloudFunctionModel;
 use App\CloudFunction\HandlerInterface;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 class CloudFunctionDeploy implements ShouldQueue
 {
@@ -18,8 +18,8 @@ class CloudFunctionDeploy implements ShouldQueue
     use SerializesModels;
 
     public $tries = 3;
-    public $timeout = 120;
 
+    public $timeout = 120;
 
     protected $cloudFunctionId;
 

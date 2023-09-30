@@ -2,8 +2,6 @@
 
 namespace App;
 
-use App\Model;
-
 class AuthLevel extends Model
 {
     /**
@@ -16,6 +14,7 @@ class AuthLevel extends Model
     protected $hidden = ['provider_id', 'type', 'tenant_id'];
 
     public const TYPE_OIDC = 'oidc';
+
     public const TYPE_SAML = 'saml';
 
     /**
@@ -51,7 +50,7 @@ class AuthLevel extends Model
     /**
      * Convers a json object to the AuthLevel
      */
-    public static function fromJsonObject($json): array|null
+    public static function fromJsonObject($json): ?array
     {
         $result = [];
 
@@ -62,10 +61,10 @@ class AuthLevel extends Model
                 if ($k == null) {
                     continue;
                 }
-                $result[] = self::where(['level' => $k->level,'type' => $k->type])->first();
+                $result[] = self::where(['level' => $k->level, 'type' => $k->type])->first();
             }
         } else {
-            $result[] = self::where(['level' => $json->level,'type' => $json->type])->first();
+            $result[] = self::where(['level' => $json->level, 'type' => $json->type])->first();
         }
 
         return count($result) == 0 ? null : $result;
@@ -74,7 +73,7 @@ class AuthLevel extends Model
     public function jsonSerialize(): array
     {
         return [
-            'id'    => $this->id,
+            'id' => $this->id,
             'type' => $this->type,
             'level' => $this->level,
         ];
@@ -104,7 +103,7 @@ class AuthLevel extends Model
 
     public function getIdentifier()
     {
-        return $this->type . ':' . $this->value;
+        return $this->type.':'.$this->value;
     }
 
     public function modules()
@@ -130,7 +129,7 @@ class AuthLevel extends Model
 
         return new self([
             'type' => self::TYPE_OIDC,
-            'level' => $level
+            'level' => $level,
         ]);
     }
 
@@ -172,7 +171,7 @@ class AuthLevel extends Model
     {
         return new self([
             'type' => self::TYPE_SAML,
-            'level' => $level
+            'level' => $level,
         ]);
     }
 }

@@ -14,11 +14,10 @@ class DatabaseSeeder extends Seeder
         //$this->call(UsersTableSeeder::class);
 
         factory(App\User::class, 50)->create()->each(function ($u) {
-            
-            echo "Created: " . $u->email . "\n";
+
+            echo 'Created: '.$u->email."\n";
 
         });
 
-        
     }
 }

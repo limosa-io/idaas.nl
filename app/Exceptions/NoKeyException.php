@@ -3,7 +3,6 @@
 namespace App\Exceptions;
 
 use Exception;
-use Session;
 
 class NoKeyException extends Exception
 {

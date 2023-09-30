@@ -36,8 +36,8 @@ interface Type
     public function getDefaultName();
 
     public function getConfigValidation();
-    public function getPublicConfigKeys();
 
+    public function getPublicConfigKeys();
 
     public function getDefaultGroup();
 
@@ -56,5 +56,8 @@ interface Type
 
     public function shouldCreateUser(ModuleInterface $module);
 
+    /**
+     * Available for the client-side code
+     */
     public function getInfo();
 }

@@ -10,9 +10,8 @@ namespace App\Http\Controllers;
 
 use App\CloudFunction;
 use App\CloudFunction\HandlerInterface;
-use App\Http\Controllers\OAuth\ClientWithoutCredentialsGrant;
-use Illuminate\Http\Request;
 use App\Jobs\CloudFunctionDeploy;
+use Illuminate\Http\Request;
 
 class CloudFunctionController extends Controller
 {
@@ -23,7 +22,7 @@ class CloudFunctionController extends Controller
             'code' => 'nullable|max:10000',
             'variables' => 'nullable|array',
             'active' => 'nullable|boolean',
-            'type' => ['in:attribute,guard,jit,user_event']
+            'type' => ['in:attribute,guard,jit,user_event'],
         ];
     }
 
@@ -44,7 +43,6 @@ class CloudFunctionController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -55,7 +53,6 @@ class CloudFunctionController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\CloudFunction $cloudFunction
      * @return \Illuminate\Http\Response
      */
     public function show(CloudFunction $cloudFunction)
@@ -67,6 +64,7 @@ class CloudFunctionController extends Controller
     {
         /** @var HandlerInterface */
         $handler = resolve(HandlerInterface::class);
+
         return $handler->invoke(
             CloudFunction::find($cloudFunction->id),
             $request->input()
@@ -76,8 +74,6 @@ class CloudFunctionController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \App\CloudFunction       $cloudFunction
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, CloudFunction $cloudFunction)
@@ -93,7 +89,6 @@ class CloudFunctionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\CloudFunction $cloudFunction
      * @return \Illuminate\Http\Response
      */
     public function destroy(CloudFunction $cloudFunction)
@@ -105,7 +100,7 @@ class CloudFunctionController extends Controller
 
     public function withDefaults($data)
     {
-        if (!isset($data['code'])) {
+        if (! isset($data['code'])) {
             $code = '';
 
             switch ($data['type']) {

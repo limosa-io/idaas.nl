@@ -15,7 +15,8 @@ class ValidationServiceProvider extends \Illuminate\Validation\ValidationService
         $this->app->singleton(
             'validation.presence',
             function ($app) {
-                return new class ($app['db']) extends DatabasePresenceVerifier {
+                return new class($app['db']) extends DatabasePresenceVerifier
+                {
                     public function table($table)
                     {
                         // Apply the tenant scope for all tables, except the 'tenants' table itself

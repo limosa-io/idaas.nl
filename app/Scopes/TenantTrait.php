@@ -2,8 +2,6 @@
 
 namespace App\Scopes;
 
-use Auth;
-
 trait TenantTrait
 {
     // abstract protected function doCreating($model);

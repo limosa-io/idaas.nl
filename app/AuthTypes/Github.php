@@ -13,6 +13,6 @@ class Github extends Generic
 
     public function getDefaultName()
     {
-        return "GitHub";
+        return 'GitHub';
     }
 }

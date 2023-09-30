@@ -6,8 +6,6 @@
 
 namespace App;
 
-use App\Model;
-
 class UIServer extends Model
 {
     // Popup toestaan bij redirect_uri lijst.

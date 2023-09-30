@@ -2,10 +2,9 @@
 
 namespace App;
 
-use App\Model;
-use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
 use App\Http\Controllers\LanguageController;
 use Illuminate\Support\Str;
+use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
 
 class EmailTemplate extends Model
 {
@@ -16,10 +15,15 @@ class EmailTemplate extends Model
     protected $casts = ['default' => 'boolean'];
 
     public const TYPE_GENERIC = 'generic';
+
     public const TYPE_ACTIVATION = 'activation';
+
     public const TYPE_FORGOTTEN = 'forgotten';
+
     public const TYPE_CHANGE_EMAIL = 'change_email';
+
     public const TYPE_ONE_TIME_PASSWORD = 'one_time_password';
+
     public const TYPE_PASSWORDLESS = 'passwordless';
 
     public function getIsParentAttribute()
@@ -83,8 +87,8 @@ class EmailTemplate extends Model
             'helpers' => [
                 't' => function ($text) use ($translations) {
                     return $translations[$text] ?? $text;
-                }
-            ]
+                },
+            ],
         ];
 
         $m = new \Mustache_Engine($options);
@@ -98,7 +102,7 @@ class EmailTemplate extends Model
 
         $data['preferredLanguage'] = $preferredLanguage;
 
-        $template = "{{%FILTERS}}\n" . $this->body;
+        $template = "{{%FILTERS}}\n".$this->body;
 
         $translations = LanguageController::dotted(LanguageController::getArray($preferredLanguage));
 
@@ -110,22 +114,22 @@ class EmailTemplate extends Model
                 },
                 'json_encode' => function ($array) {
                     return json_encode($array);
-                }
-            ]
+                },
+            ],
         ];
 
         if ($this->parent != null) {
             $options['partials'] = [
-                'parent' => $this->parent->body
+                'parent' => $this->parent->body,
             ];
 
-            $template = '{{<parent}}' . $template . '{{/parent}}';
+            $template = '{{<parent}}'.$template.'{{/parent}}';
         }
 
         $m = new \Mustache_Engine($options);
 
         foreach ($data as $key => &$value) {
-            if (!is_string($value)) {
+            if (! is_string($value)) {
                 $value = json_encode($value);
             }
         }

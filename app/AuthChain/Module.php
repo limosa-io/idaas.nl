@@ -6,9 +6,6 @@
 
 namespace App\AuthChain;
 
-use App\AuthChain\AuthChain;
-use App\AuthChain\State;
-use App\AuthChain\Subject;
 use App\AuthLevel;
 use App\AuthTypes\NullType;
 use App\AuthTypes\Type;
@@ -21,7 +18,7 @@ use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
-class Module extends Model implements ModuleInterface, \JsonSerializable
+class Module extends Model implements \JsonSerializable, ModuleInterface
 {
     /**
      * @var App\AuthTypes\Type
@@ -34,10 +31,13 @@ class Module extends Model implements ModuleInterface, \JsonSerializable
      * @var AuthLevel[]
      */
     public $levels = [];
+
     public $initialized = false;
+
     public $identifier = null;
 
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     /**
@@ -69,7 +69,7 @@ class Module extends Model implements ModuleInterface, \JsonSerializable
      */
     public function remembered()
     {
-        if (!$this->initialized) {
+        if (! $this->initialized) {
             throw new AuthFailedException('You forgot to initialize this module initialized');
         }
 
@@ -291,7 +291,7 @@ class Module extends Model implements ModuleInterface, \JsonSerializable
 
             // These attributes are not writeable
             'passive' => $this->isPassive(),
-            'levels' => $this->getLevels()
+            'levels' => $this->getLevels(),
         ];
 
         return $result;
@@ -339,7 +339,6 @@ class Module extends Model implements ModuleInterface, \JsonSerializable
         return $this->getTypeObject() ? $this->getTypeObject()->getInfo() : null;
     }
 
-
     public static function withTypeAndConfig(Type $type, array $config)
     {
         $m = new self();
@@ -353,7 +352,7 @@ class Module extends Model implements ModuleInterface, \JsonSerializable
         foreach (($config['levels'] ?? []) as $type => $level) {
             $levels[] = new AuthLevel([
                 'type' => $type,
-                'level' => $level
+                'level' => $level,
             ]);
         }
 

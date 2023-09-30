@@ -2,15 +2,10 @@
 
 namespace App;
 
-use ArieTimmerman\Laravel\SCIMServer\SCIM\Schema;
 use ArieTimmerman\Laravel\SCIMServer\Attribute\AttributeMapping;
-use App\User;
-use Illuminate\Support\Facades\Hash;
-use App\Role;
-use App\Link;
-use App\Subject;
 use ArieTimmerman\Laravel\SCIMServer\Exceptions\SCIMException;
-use App\Group;
+use ArieTimmerman\Laravel\SCIMServer\SCIM\Schema;
+use Illuminate\Support\Facades\Hash;
 use ParagonIE\ConstantTime\Base32;
 
 class SCIMConfig extends \ArieTimmerman\Laravel\SCIMServer\SCIMConfig
@@ -48,19 +43,15 @@ class SCIMConfig extends \ArieTimmerman\Laravel\SCIMServer\SCIMConfig
                 'urn:ietf:params:scim:schemas:core:2.0:User:password' => 'nullable|min:1|max:200',
 
                 // 'urn:ietf:params:scim:schemas:core:2.0:User:roles' => 'nullable|array',
-                'urn:ietf:params:scim:schemas:core:2.0:User:roles.*.value' =>
-                    ['required', function ($attribute, $value, $fail) {
-                        if (Role::find($value) == null) {
-                            return $fail($attribute . ' is not a valid role.');
-                        }
+                'urn:ietf:params:scim:schemas:core:2.0:User:roles.*.value' => ['required', function ($attribute, $value, $fail) {
+                    if (Role::find($value) == null) {
+                        return $fail($attribute.' is not a valid role.');
                     }
+                },
                 ],
-
 
                 'arietimmerman:ice:metadataUser' => 'nullable|json',
                 'arietimmerman:ice:extraIdentifier1' => 'nullable',
-
-
 
                 'arietimmerman:ice:links' => 'nullable|array',
                 'arietimmerman:ice:links.*.value' => 'required',
@@ -68,7 +59,7 @@ class SCIMConfig extends \ArieTimmerman\Laravel\SCIMServer\SCIMConfig
                     // TODO: ensure the link is not already linked to an user
 
                     if (Link::find($value) == null) {
-                        return $fail($attribute . ' is not a valid link.');
+                        return $fail($attribute.' is not a valid link.');
                     }
                 },
 
@@ -82,10 +73,10 @@ class SCIMConfig extends \ArieTimmerman\Laravel\SCIMServer\SCIMConfig
                         $valid = false;
                     }
 
-                    if (!$valid) {
-                        return $fail($attribute . ' is not a Base32 encoded string. Received: ' . $value);
+                    if (! $valid) {
+                        return $fail($attribute.' is not a Base32 encoded string. Received: '.$value);
                     }
-                }]
+                }],
             ],
 
             'validations.create' => [
@@ -95,7 +86,7 @@ class SCIMConfig extends \ArieTimmerman\Laravel\SCIMServer\SCIMConfig
             'schema' => [
                 Schema::SCHEMA_USER,
                 'arietimmerman:ice',
-                'urn:ietf:params:scim:schemas:extension:account:2.0:Password'
+                'urn:ietf:params:scim:schemas:extension:account:2.0:Password',
             ],
             'withRelations' => ['links', 'roles', 'groups'],
             'map_unmapped' => true,
@@ -105,45 +96,45 @@ class SCIMConfig extends \ArieTimmerman\Laravel\SCIMServer\SCIMConfig
             // Map a SCIM attribute to an attribute of the object.
             'mapping' => [
 
-                'id' => AttributeMapping::eloquent("id")->disableWrite(),
+                'id' => AttributeMapping::eloquent('id')->disableWrite(),
 
                 'externalId' => null,
 
                 'meta' => [
-                    'created' => AttributeMapping::eloquent("created_at")->disableWrite(),
-                    'lastModified' => AttributeMapping::eloquent("updated_at")->disableWrite(),
+                    'created' => AttributeMapping::eloquent('created_at')->disableWrite(),
+                    'lastModified' => AttributeMapping::eloquent('updated_at')->disableWrite(),
 
                     'location' => (new AttributeMapping())->setRead(
                         function ($object) {
                             return route(
                                 'scim.resource',
                                 [
-                                'resourceType' => 'Users',
-                                'resourceObject' => $object->id
+                                    'resourceType' => 'Users',
+                                    'resourceObject' => $object->id,
                                 ]
                             );
                         }
                     )->disableWrite(),
 
-                    'resourceType' => AttributeMapping::constant("User")
+                    'resourceType' => AttributeMapping::constant('User'),
                 ],
 
                 'schemas' => AttributeMapping::constant(
                     [
-                    'urn:ietf:params:scim:schemas:core:2.0:User',
-                    'arietimmerman:ice',
+                        'urn:ietf:params:scim:schemas:core:2.0:User',
+                        'arietimmerman:ice',
                     ]
                 )->ignoreWrite(),
 
                 'urn:ietf:params:scim:schemas:extension:account:2.0:Password' => [
                     'lastSuccessfulLoginDate' => AttributeMapping::eloquent(
-                        "last_successful_login_date"
-                    )->disableWrite()
+                        'last_successful_login_date'
+                    )->disableWrite(),
                 ],
 
                 'arietimmerman:ice' => [
 
-                    'links' => AttributeMapping::eloquent("link")->setRead(
+                    'links' => AttributeMapping::eloquent('link')->setRead(
                         function ($object) {
                             $result = [];
 
@@ -158,7 +149,7 @@ class SCIMConfig extends \ArieTimmerman\Laravel\SCIMServer\SCIMConfig
                             $ids = collect($value)->pluck('id');
 
                             foreach ($object->links as $key => $link) {
-                                if (!$ids->contains($link->id)) {
+                                if (! $ids->contains($link->id)) {
                                     $link->delete();
                                     unset($object->links[$key]);
                                 }
@@ -168,22 +159,22 @@ class SCIMConfig extends \ArieTimmerman\Laravel\SCIMServer\SCIMConfig
                             $existingSubjectIds = $object->links->pluck('subject_id');
 
                             foreach ($newSubjectIds->all() as $subjectId) {
-                                if (!$existingSubjectIds->contains($subjectId)) {
+                                if (! $existingSubjectIds->contains($subjectId)) {
                                     $subject = Subject::where(['identifier' => $subjectId])->first();
 
                                     if ($subject == null) {
                                         throw new SCIMException('Unknown subject', 500);
                                     }
 
-                                    $type = strtok((string)$subjectId, '|');
+                                    $type = strtok((string) $subjectId, '|');
 
                                     $link = Link::create(
                                         [
 
-                                        'user_id' => $object->id,
-                                        'subject_type' => $type,
-                                        'subject_module' => null,
-                                        'subject_id' => $subjectId
+                                            'user_id' => $object->id,
+                                            'subject_type' => $type,
+                                            'subject_module' => null,
+                                            'subject_id' => $subjectId,
 
                                         ]
                                     );
@@ -194,20 +185,20 @@ class SCIMConfig extends \ArieTimmerman\Laravel\SCIMServer\SCIMConfig
                         }
                     ),
 
-                    'extraIdentifier1' => AttributeMapping::eloquent("extraIdentifier1"),
-                    'extraIdentifier2' => AttributeMapping::eloquent("extraIdentifier2"),
-                    'extraIdentifier3' => AttributeMapping::eloquent("extraIdentifier3"),
-                    'extraIdentifier4' => AttributeMapping::eloquent("extraIdentifier4"),
+                    'extraIdentifier1' => AttributeMapping::eloquent('extraIdentifier1'),
+                    'extraIdentifier2' => AttributeMapping::eloquent('extraIdentifier2'),
+                    'extraIdentifier3' => AttributeMapping::eloquent('extraIdentifier3'),
+                    'extraIdentifier4' => AttributeMapping::eloquent('extraIdentifier4'),
 
-                    'metadataUser' => AttributeMapping::eloquent("metadataUser"),
+                    'metadataUser' => AttributeMapping::eloquent('metadataUser'),
 
-                    'gender' => AttributeMapping::eloquent("gender"),
+                    'gender' => AttributeMapping::eloquent('gender'),
 
-                    'birthDate' => AttributeMapping::eloquent("birthDate"),
+                    'birthDate' => AttributeMapping::eloquent('birthDate'),
 
-                    'timezone' => AttributeMapping::eloquent("timezone"),
+                    'timezone' => AttributeMapping::eloquent('timezone'),
 
-                    'otpSecret' => AttributeMapping::eloquent("otp_secret")->disableRead(),
+                    'otpSecret' => AttributeMapping::eloquent('otp_secret')->disableRead(),
 
                     'otpSecretPresent' => AttributeMapping::constant('otp_secret_present')->setRead(
                         function (&$object) {
@@ -215,35 +206,35 @@ class SCIMConfig extends \ArieTimmerman\Laravel\SCIMServer\SCIMConfig
                         }
                     )->disableWrite(),
 
-                    'user_metadata' => AttributeMapping::eloquent("user_metadata"),
-                    'app_metadata' => AttributeMapping::eloquent("app_metadata"),
+                    'user_metadata' => AttributeMapping::eloquent('user_metadata'),
+                    'app_metadata' => AttributeMapping::eloquent('app_metadata'),
 
                 ],
 
                 'urn:ietf:params:scim:schemas:core:2.0:User' => [
 
-                    'userName' => AttributeMapping::eloquent("name"),
+                    'userName' => AttributeMapping::eloquent('name'),
 
                     'name' => [
-                        'formatted' => AttributeMapping::eloquent("formattedName"),
-                        'familyName' => AttributeMapping::eloquent("familyName"),
-                        'givenName' => AttributeMapping::eloquent("givenName"),
-                        'middleName' => AttributeMapping::eloquent("middleName"),
+                        'formatted' => AttributeMapping::eloquent('formattedName'),
+                        'familyName' => AttributeMapping::eloquent('familyName'),
+                        'givenName' => AttributeMapping::eloquent('givenName'),
+                        'middleName' => AttributeMapping::eloquent('middleName'),
                         'honorificPrefix' => null,
-                        'honorificSuffix' => null
+                        'honorificSuffix' => null,
                     ],
 
-                    'displayName' => AttributeMapping::eloquent("displayName"),
+                    'displayName' => AttributeMapping::eloquent('displayName'),
                     'nickName' => null,
                     'profileUrl' => null,
                     'title' => null,
                     'userType' => null,
                     // // Section 5.3.5 of [RFC7231]
-                    'preferredLanguage' => AttributeMapping::eloquent("preferredLanguage"),
+                    'preferredLanguage' => AttributeMapping::eloquent('preferredLanguage'),
                     'locale' => null, // see RFC5646
                     'timezone' => null, // see RFC6557
                     'timezone' => null,
-                    'active' => AttributeMapping::eloquent("active"),
+                    'active' => AttributeMapping::eloquent('active'),
 
                     'password' => AttributeMapping::eloquent('password')->disableRead()->setAdd(
                         function ($value, &$object) {
@@ -257,55 +248,55 @@ class SCIMConfig extends \ArieTimmerman\Laravel\SCIMServer\SCIMConfig
 
                     // Multi-Valued Attributes
                     'emails' => [[
-                        "value" => AttributeMapping::eloquent("email"),
-                        "display" => null,
-                        "type" => AttributeMapping::constant("other")->ignoreWrite(),
-                        "primary" => AttributeMapping::constant(true)->ignoreWrite()
+                        'value' => AttributeMapping::eloquent('email'),
+                        'display' => null,
+                        'type' => AttributeMapping::constant('other')->ignoreWrite(),
+                        'primary' => AttributeMapping::constant(true)->ignoreWrite(),
                     ]],
 
                     'phoneNumbers' => [[
-                        "value" => AttributeMapping::eloquent("phoneNumber"),
-                        "display" => null,
-                        "type" => AttributeMapping::constant("other")->ignoreWrite(),
-                        "primary" => AttributeMapping::constant(true)->ignoreWrite()
+                        'value' => AttributeMapping::eloquent('phoneNumber'),
+                        'display' => null,
+                        'type' => AttributeMapping::constant('other')->ignoreWrite(),
+                        'primary' => AttributeMapping::constant(true)->ignoreWrite(),
                     ]],
 
                     'addresses' => [[
-                        "formatted" => AttributeMapping::eloquent("address"),
-                        "type" => AttributeMapping::constant("other")->ignoreWrite(),
-                        "primary" => AttributeMapping::constant(true)->ignoreWrite()
+                        'formatted' => AttributeMapping::eloquent('address'),
+                        'type' => AttributeMapping::constant('other')->ignoreWrite(),
+                        'primary' => AttributeMapping::constant(true)->ignoreWrite(),
                     ]],
 
                     'ims' => [[
-                        "value" => null,
-                        "display" => null,
-                        "type" => null,
-                        "primary" => null
+                        'value' => null,
+                        'display' => null,
+                        'type' => null,
+                        'primary' => null,
                     ]], // Instant messaging addresses for the User
 
                     'photos' => [[
-                        "value" => AttributeMapping::eloquent("picture"),
-                        "type" => AttributeMapping::constant("thumbnail")->ignoreWrite()
+                        'value' => AttributeMapping::eloquent('picture'),
+                        'type' => AttributeMapping::constant('thumbnail')->ignoreWrite(),
                     ]],
 
                     'entitlements' => null,
                     'roles' => AttributeMapping::eloquentCollection('roles'),
 
-                    'groups' => AttributeMapping::eloquent("groups")->setRead(
+                    'groups' => AttributeMapping::eloquent('groups')->setRead(
                         function ($object) {
                             $result = [];
 
                             foreach ($object->groups as $group) {
                                 $result[] = [
-                                'value' => $group->id,
-                                '$ref' => route(
-                                    'scim.resource',
-                                    [
-                                    'resourceType' => 'Group',
-                                    'resourceObject' => $group->id
-                                    ]
-                                ),
-                                    'display' => $group->displayName ?? $group->name
+                                    'value' => $group->id,
+                                    '$ref' => route(
+                                        'scim.resource',
+                                        [
+                                            'resourceType' => 'Group',
+                                            'resourceObject' => $group->id,
+                                        ]
+                                    ),
+                                    'display' => $group->displayName ?? $group->name,
                                 ];
                             }
 
@@ -324,11 +315,11 @@ class SCIMConfig extends \ArieTimmerman\Laravel\SCIMServer\SCIMConfig
                         }
                     ),
 
-                    'x509Certificates' => null
+                    'x509Certificates' => null,
                 ],
 
-            ]
-            ];
+            ],
+        ];
     }
 
     public function getGroupsConfig()
@@ -346,48 +337,46 @@ class SCIMConfig extends \ArieTimmerman\Laravel\SCIMServer\SCIMConfig
                 'urn:ietf:params:scim:schemas:core:2.0:Group:members' => 'nullable|array',
 
                 // Check for existing in the functions itself. More effecient due to 'whereIn' searches
-                'urn:ietf:params:scim:schemas:core:2.0:Group:members.*.value' => 'required'
+                'urn:ietf:params:scim:schemas:core:2.0:Group:members.*.value' => 'required',
             ],
 
             'mapping' => [
 
-                'id' => AttributeMapping::eloquent("id")->disableWrite(),
-
-
+                'id' => AttributeMapping::eloquent('id')->disableWrite(),
 
                 'meta' => [
-                    'created' => AttributeMapping::eloquent("created_at")->disableWrite(),
-                    'lastModified' => AttributeMapping::eloquent("updated_at")->disableWrite(),
+                    'created' => AttributeMapping::eloquent('created_at')->disableWrite(),
+                    'lastModified' => AttributeMapping::eloquent('updated_at')->disableWrite(),
 
                     'location' => (new AttributeMapping())->setRead(
                         function ($object) {
                             return route(
                                 'scim.resource',
                                 [
-                                'resourceType' => 'Groups',
-                                'resourceObject' => $object->id
+                                    'resourceType' => 'Groups',
+                                    'resourceObject' => $object->id,
                                 ]
                             );
                         }
                     )->disableWrite(),
 
-                    'resourceType' => AttributeMapping::constant("Group")
+                    'resourceType' => AttributeMapping::constant('Group'),
                 ],
 
                 'schemas' => AttributeMapping::constant(
                     [
-                    'urn:ietf:params:scim:schemas:core:2.0:Group',
+                        'urn:ietf:params:scim:schemas:core:2.0:Group',
                     ]
                 )->ignoreWrite(),
 
                 'urn:ietf:params:scim:schemas:core:2.0:Group' => [
-                    'name' => AttributeMapping::eloquent("name"),
-                    'displayName' => AttributeMapping::eloquent("displayName"),
-                    'members' => AttributeMapping::eloquent("members")->setRead(
+                    'name' => AttributeMapping::eloquent('name'),
+                    'displayName' => AttributeMapping::eloquent('displayName'),
+                    'members' => AttributeMapping::eloquent('members')->setRead(
                         function ($object) {
                             $attributes = explode(',', request()->input('attributes') ?? '');
 
-                            if (!request()->input('attributes') || !in_array('members', $attributes)) {
+                            if (! request()->input('attributes') || ! in_array('members', $attributes)) {
                                 return null;
                             }
 
@@ -395,15 +384,15 @@ class SCIMConfig extends \ArieTimmerman\Laravel\SCIMServer\SCIMConfig
 
                             foreach ($object->members as $member) {
                                 $result[] = [
-                                'value' => $member->id,
-                                '$ref' => route(
-                                    'scim.resource',
-                                    [
-                                    'resourceType' => 'Users',
-                                    'resourceObject' => $member->id
-                                    ]
-                                ),
-                                    'display' => $member->name ?? $member->email
+                                    'value' => $member->id,
+                                    '$ref' => route(
+                                        'scim.resource',
+                                        [
+                                            'resourceType' => 'Users',
+                                            'resourceObject' => $member->id,
+                                        ]
+                                    ),
+                                    'display' => $member->name ?? $member->email,
                                 ];
                             }
 
@@ -446,12 +435,12 @@ class SCIMConfig extends \ArieTimmerman\Laravel\SCIMServer\SCIMConfig
 
                             $object->members()->sync($existingUsers->all());
                         }
-                    )
-                ]
+                    ),
+                ],
 
-            ]
+            ],
 
-                ];
+        ];
     }
 
     public function getRolesConfig()
@@ -464,7 +453,7 @@ class SCIMConfig extends \ArieTimmerman\Laravel\SCIMServer\SCIMConfig
 
             'withRelations' => ['tenant'],
 
-            'schema' => ['arietimmerman:ice:Role']
+            'schema' => ['arietimmerman:ice:Role'],
 
         ];
     }
@@ -479,46 +468,46 @@ class SCIMConfig extends \ArieTimmerman\Laravel\SCIMServer\SCIMConfig
 
             'unmapped_namespace' => 'urn:ietf:params:scim:schemas:subjects',
 
-            'withRelations' => ['tenant','user:id,email'],
+            'withRelations' => ['tenant', 'user:id,email'],
 
             'schema' => ['urn:ietf:params:scim:schemas:subjects'],
 
             'mapping' => [
 
-                'id' => AttributeMapping::eloquent("id")->disableWrite(),
+                'id' => AttributeMapping::eloquent('id')->disableWrite(),
 
                 'externalId' => null,
 
                 'meta' => [
-                    'created' => AttributeMapping::eloquent("created_at")->disableWrite(),
-                    'lastModified' => AttributeMapping::eloquent("updated_at")->disableWrite(),
+                    'created' => AttributeMapping::eloquent('created_at')->disableWrite(),
+                    'lastModified' => AttributeMapping::eloquent('updated_at')->disableWrite(),
 
                     'location' => (new AttributeMapping())->setRead(
                         function ($object) {
                             return route(
                                 'scim.resource',
                                 [
-                                'resourceType' => 'Subjects',
-                                'resourceObject' => $object->id
+                                    'resourceType' => 'Subjects',
+                                    'resourceObject' => $object->id,
                                 ]
                             );
                         }
                     )->disableWrite(),
 
-                    'resourceType' => AttributeMapping::constant("Subject")
+                    'resourceType' => AttributeMapping::constant('Subject'),
                 ],
 
                 'urn:ietf:params:scim:schemas:subjects' => [
 
-                    'identifier' => AttributeMapping::eloquent("identifier"),
+                    'identifier' => AttributeMapping::eloquent('identifier'),
 
                     // 'user' => [
                     //     'id' => AttributeMapping::eloquent("user.id"),
                     //     'mail' => AttributeMapping::eloquent("user.email"),
                     // ]
 
-                ]
-            ]
+                ],
+            ],
 
         ];
     }

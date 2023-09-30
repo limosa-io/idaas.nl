@@ -1,26 +1,28 @@
 <?php
+
 namespace Tests\Helper;
 
-use Illuminate\Testing\TestResponse;
-use Illuminate\Support\Facades\Mail;
-use Tests\TestCase;
 use App\AuthTypes\OpenIDConnect;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Psr7\Query;
 use App\Mail\StandardMail;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\Psr7\Query;
+use GuzzleHttp\Psr7\Response;
 use Illuminate\Contracts\Mail\Mailable;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Illuminate\Testing\TestResponse;
 use Mockery;
+use Tests\TestCase;
 
 class LoginStateHelper
 {
-
     protected $authRequest;
 
     /* @var TestResponse */
     public $response;
+
     public $testCase;
+
     public $data;
 
     public function __construct(TestCase $testCase, TestResponse $response = null, $data = [])
@@ -66,10 +68,10 @@ class LoginStateHelper
     {
         $decoded = null;
         // The X-AuthRequest header is used when progressing through steps one the same screen
-        if($authRequest = $this->response->baseResponse->headers->get('X-AuthRequest')) {
+        if ($authRequest = $this->response->baseResponse->headers->get('X-AuthRequest')) {
             $decoded = json_decode(base64_decode($authRequest), true);
             // The state-parameter in the location header is used when coming from another page, such as when starting login, or after a step-out
-        }else if($this->response->baseResponse->getStatusCode() == 302) {
+        } elseif ($this->response->baseResponse->getStatusCode() == 302) {
             $fragment = parse_url($this->response->baseResponse->headers->get('location'), PHP_URL_FRAGMENT);
             parse_str($fragment, $result);
 
@@ -81,6 +83,7 @@ class LoginStateHelper
 
             $decoded = $response->json();
         }
+
         return $decoded;
     }
 
@@ -91,24 +94,24 @@ class LoginStateHelper
 
         $response = null;
 
-        switch($type){
-        case 'password':
-            $response = self::choosePassword($this->testCase, $decoded, $data);
-            break;
-        case 'consent':
-            $response = self::chooseConsent($this->testCase, $decoded, $data);
-            break;
-        case 'passwordless':
-            $response = self::choosePasswordless($this->testCase, $decoded, $data);
-            break;
-        case 'facebook':
-            $response = self::chooseFacebook($this->testCase, $decoded, $data);
-            break;
-        case 'registration':
-            $response = self::chooseRegistration($this->testCase, $decoded, $data);
-            break;
-        default:
-            throw Exception('Unknown type');
+        switch ($type) {
+            case 'password':
+                $response = self::choosePassword($this->testCase, $decoded, $data);
+                break;
+            case 'consent':
+                $response = self::chooseConsent($this->testCase, $decoded, $data);
+                break;
+            case 'passwordless':
+                $response = self::choosePasswordless($this->testCase, $decoded, $data);
+                break;
+            case 'facebook':
+                $response = self::chooseFacebook($this->testCase, $decoded, $data);
+                break;
+            case 'registration':
+                $response = self::chooseRegistration($this->testCase, $decoded, $data);
+                break;
+            default:
+                throw Exception('Unknown type');
         }
 
         return new static($this->testCase, $response, $this->data);
@@ -124,7 +127,7 @@ class LoginStateHelper
         $response = $this->testCase->post(
             $decoded['info']['fin'],
             [
-                'authRequest' => $decoded['stateId']
+                'authRequest' => $decoded['stateId'],
             ],
             [
             ]
@@ -159,10 +162,10 @@ class LoginStateHelper
         $response = $testCase->post(
             sprintf('/api/authchain/v2/p/%s', urlencode($module['id'])),
             [
-                'init' => true
+                'init' => true,
             ],
             [
-                'X-StateId' => $stateId
+                'X-StateId' => $stateId,
             ]
         );
 
@@ -176,16 +179,16 @@ class LoginStateHelper
         $response = $testCase->post(
             $json['url'],
             [
-                "schemas" => [
-                    "urn:ietf:params:scim:schemas:core:2.0:User"
+                'schemas' => [
+                    'urn:ietf:params:scim:schemas:core:2.0:User',
                 ],
-                "urn:ietf:params:scim:schemas:core:2.0:User" => [
-                    "emails" => [
+                'urn:ietf:params:scim:schemas:core:2.0:User' => [
+                    'emails' => [
                         [
-                            "value" => "johndoe@example.com"
-                        ]
-                    ]
-                ]
+                            'value' => 'johndoe@example.com',
+                        ],
+                    ],
+                ],
             ]
         );
 
@@ -196,10 +199,10 @@ class LoginStateHelper
         $response = $testCase->post(
             sprintf('https://master.test.dev/api/authchain/v2/p/%s', urlencode($module['id'])),
             [
-                'proof-of-creation' => $proofOfCreation
+                'proof-of-creation' => $proofOfCreation,
             ],
             [
-                'X-StateId' => $stateId
+                'X-StateId' => $stateId,
             ]
         );
 
@@ -254,11 +257,11 @@ class LoginStateHelper
             sprintf('/api/authchain/v2/p/%s', urlencode($module['id'])),
             array_merge(
                 [
-                'init' => true
+                    'init' => true,
                 ], $data
             ),
             [
-                'X-StateId' => $json['stateId']
+                'X-StateId' => $json['stateId'],
             ]
         );
 
@@ -268,7 +271,7 @@ class LoginStateHelper
 
         $response->assertJsonStructure(['url']);
 
-        $response = $testCase->get('/login/social/callback/facebook?code=123&state=' . $json['stateId']);
+        $response = $testCase->get('/login/social/callback/facebook?code=123&state='.$json['stateId']);
 
         $response->assertStatus(302);
 
@@ -290,13 +293,13 @@ class LoginStateHelper
             sprintf('/api/authchain/v2/p/%s', urlencode($module['id'])),
             array_merge(
                 [
-                'username' => 'arietimmerman@gmail.com',
-                'password' => '1234',
-                'remember' => true
+                    'username' => 'arietimmerman@gmail.com',
+                    'password' => '1234',
+                    'remember' => true,
                 ], $data
             ),
             [
-                'X-StateId' => $json['stateId']
+                'X-StateId' => $json['stateId'],
             ]
         );
 
@@ -323,7 +326,7 @@ class LoginStateHelper
             [
             ],
             [
-                'X-StateId' => $json['stateId']
+                'X-StateId' => $json['stateId'],
             ]
         );
 
@@ -350,10 +353,10 @@ class LoginStateHelper
         $response = $testCase->post(
             sprintf('/api/authchain/v2/p/%s', urlencode($module['id'])),
             [
-                'username' => 'arietimmerman@gmail.com'
+                'username' => 'arietimmerman@gmail.com',
             ],
             [
-                'X-StateId' => $json['stateId']
+                'X-StateId' => $json['stateId'],
             ]
         );
 
@@ -382,7 +385,6 @@ class LoginStateHelper
 
     }
 
-
     protected function getHandler()
     {
         return new MockHandler(
@@ -408,11 +410,8 @@ class LoginStateHelper
 
                     return new Response($response->baseResponse->getStatusCode(), $response->baseResponse->headers->all(), $response->baseResponse->getContent());
 
-                }
+                },
             ]
         );
     }
-
-
-
 }

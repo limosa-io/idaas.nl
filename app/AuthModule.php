@@ -2,11 +2,9 @@
 
 namespace App;
 
-use App\Model;
-use App\AuthChain\AuthChain;
+use App\AuthChain\Module;
 use App\Scopes\SystemScope;
 use App\Scopes\TenantTrait;
-use App\AuthChain\Module;
 use Illuminate\Support\Str;
 
 class AuthModule extends Module
@@ -24,10 +22,11 @@ class AuthModule extends Module
         'skippable' => 'boolean',
         'system' => 'boolean',
         'enabled' => 'boolean',
-        'hide_if_not_requested' => 'boolean'
+        'hide_if_not_requested' => 'boolean',
     ];
 
     protected $guarded = ['id', 'tenant_id'];
+
     protected $hidden = ['tenant_id'];
 
     protected static function boot()
@@ -108,7 +107,7 @@ class AuthModule extends Module
     {
         $result = parent::jsonSerialize();
 
-        if (!$this->withConfig && isset($result['config'])) {
+        if (! $this->withConfig && isset($result['config'])) {
             $allowed = $this->getTypeObject()->getPublicConfigKeys();
             $result['config'] = array_intersect_key($result['config'], array_combine($allowed, $allowed));
         }
@@ -121,7 +120,7 @@ class AuthModule extends Module
             $result['chained'] = $this->fromChain()->exists() || $this->toChain()->exists();
         }
 
-        if (!isset($result['skippable'])) {
+        if (! isset($result['skippable'])) {
             $result['skippable'] = false;
         }
 

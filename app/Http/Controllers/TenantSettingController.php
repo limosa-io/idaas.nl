@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Ramsey\Uuid\Uuid;
 use App\TenantSetting;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Ramsey\Uuid\Uuid;
 
 class TenantSettingController extends Controller
 {
     protected $validations;
 
     public const LANGUAGES = 'languages';
+
     public const LANGUAGE_DEFAULT = 'language_default';
 
     public function __construct()
@@ -32,15 +33,14 @@ class TenantSettingController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         return TenantSetting::create(
             [
-            'key'   => $request->input('key'),
-            'value' => $request->input(),
+                'key' => $request->input('key'),
+                'value' => $request->input(),
             ]
         );
     }
@@ -57,7 +57,7 @@ class TenantSettingController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -68,8 +68,7 @@ class TenantSettingController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int                      $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -78,16 +77,16 @@ class TenantSettingController extends Controller
         $setting = self::getSetting($id);
 
         if ($setting == null) {
-            if (!Uuid::isValid($id)) {
+            if (! Uuid::isValid($id)) {
                 $setting = TenantSetting::create(
                     [
-                    'key' => $id,
-                    'value' => $request->input()
+                        'key' => $id,
+                        'value' => $request->input(),
                     ]
                 );
             } else {
                 //TODO: throw proper exception
-                die('not good!');
+                exit('not good!');
             }
         }
 
@@ -103,7 +102,7 @@ class TenantSettingController extends Controller
 
         $validations = collect($validations)->mapWithKeys(
             function ($value, $key) use ($namespace) {
-                return [Str::after($key, $namespace . ':') => $value];
+                return [Str::after($key, $namespace.':') => $value];
             }
         )->all();
 
@@ -111,11 +110,10 @@ class TenantSettingController extends Controller
 
         return collect($data)->mapWithKeys(
             function ($value, $key) use ($namespace) {
-                return [$namespace . ':' . $key => $value];
+                return [$namespace.':'.$key => $value];
             }
         )->all();
     }
-
 
     public function updateMany(Request $request)
     {
@@ -144,7 +142,7 @@ class TenantSettingController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -158,7 +156,7 @@ class TenantSettingController extends Controller
         return response(
             TenantSetting::where('key', 'like', 'ui:%')->get()->mapWithKeys(
                 function ($item) {
-                    return [ Str::after($item->key, 'ui:') => $item->value ];
+                    return [Str::after($item->key, 'ui:') => $item->value];
                 }
             )
         )->header('Cache-Control', 'public, max-age=31536000');

@@ -2,22 +2,22 @@
 
 namespace App\Http;
 
-use Illuminate\Http\Request;
 use App\AuthChain\Helper;
 use App\AuthChain\State;
-use League\OAuth2\Server\AuthorizationServer;
-use GuzzleHttp\Psr7\Response as Psr7Response;
-use Illuminate\Contracts\Auth\Authenticatable;
 use App\Exceptions\NoSessionException;
-use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
 use App\SAML\Subject as SAMLSubject;
+use App\Subject;
 use Exception;
+use GuzzleHttp\Psr7\Response as Psr7Response;
 use Idaas\OpenID\RequestTypes\AuthenticationRequest;
 use Idaas\OpenID\SessionInformation;
 use Idaas\Passport\Http\Controllers\AuthorizationController;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Http\Request;
 use Laravel\Passport\Bridge\User;
 use Laravel\Passport\Http\Controllers\ConvertsPsrResponses;
-use App\Subject;
+use League\OAuth2\Server\AuthorizationServer;
+use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
 
 class AuthChainCompleteProcessor
 {

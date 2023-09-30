@@ -16,7 +16,7 @@ class TokenRepository extends LaravelTokenRepository
     /**
      * Creates a new Access Token.
      *
-     * @param  array $attributes
+     * @param  array  $attributes
      * @return \Laravel\Passport\Token
      */
     public function create($attributes)
@@ -27,7 +27,7 @@ class TokenRepository extends LaravelTokenRepository
     /**
      * Get a token by the given ID.
      *
-     * @param  string $id
+     * @param  string  $id
      * @return \Laravel\Passport\Token
      */
     public function find($id)
@@ -38,8 +38,8 @@ class TokenRepository extends LaravelTokenRepository
     /**
      * Get a token by the given user ID and token ID.
      *
-     * @param  string $id
-     * @param  int    $userId
+     * @param  string  $id
+     * @param  int  $userId
      * @return \Laravel\Passport\Token|null
      */
     public function findForUser($id, $userId)
@@ -50,7 +50,7 @@ class TokenRepository extends LaravelTokenRepository
     /**
      * Get the token instances for the given user ID.
      *
-     * @param  mixed $userId
+     * @param  mixed  $userId
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function forUser($userId)
@@ -61,8 +61,8 @@ class TokenRepository extends LaravelTokenRepository
     /**
      * Get a valid token instance for the given user and client.
      *
-     * @param  \Illuminate\Database\Eloquent\Model $user
-     * @param  \Laravel\Passport\Client      $client
+     * @param  \Illuminate\Database\Eloquent\Model  $user
+     * @param  \Laravel\Passport\Client  $client
      * @return \Laravel\Passport\Token|null
      */
     public function getValidToken($user, $client)
@@ -77,7 +77,6 @@ class TokenRepository extends LaravelTokenRepository
     /**
      * Store the given token instance.
      *
-     * @param  \Laravel\Passport\Token $token
      * @return void
      */
     public function save(\Laravel\Passport\Token $token)
@@ -88,7 +87,7 @@ class TokenRepository extends LaravelTokenRepository
     /**
      * Revoke an access token.
      *
-     * @param  string $id
+     * @param  string  $id
      * @return mixed
      */
     public function revokeAccessToken($id)
@@ -99,8 +98,7 @@ class TokenRepository extends LaravelTokenRepository
     /**
      * Check if the access token has been revoked.
      *
-     * @param string $id
-     *
+     * @param  string  $id
      * @return bool Return true if this token has been revoked
      */
     public function isAccessTokenRevoked($id)
@@ -115,8 +113,8 @@ class TokenRepository extends LaravelTokenRepository
     /**
      * Find a valid token for the given user and client.
      *
-     * @param  \Illuminate\Database\Eloquent\Model $user
-     * @param  \Laravel\Passport\Client      $client
+     * @param  \Illuminate\Database\Eloquent\Model  $user
+     * @param  \Laravel\Passport\Client  $client
      * @return \Laravel\Passport\Token|null
      */
     public function findValidToken($user, $client)

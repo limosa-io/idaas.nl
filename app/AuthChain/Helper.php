@@ -2,9 +2,6 @@
 
 namespace App\AuthChain;
 
-use App\AuthChain\Module;
-use App\AuthChain\ModuleInterface;
-use App\AuthChain\ModuleList;
 use App\Exceptions\AuthFailedException;
 use App\Exceptions\DidPromptException;
 use App\Exceptions\PassiveImpossibleException;
@@ -30,10 +27,9 @@ class Helper
     }
 
     /**
-     *
-     * @param  AuthLevel[] $desiredAuthLevel
-     * @param  string      $comparison
-     * @param  Module      $start            The last completed module. This may be null
+     * @param  AuthLevel[]  $desiredAuthLevel
+     * @param  string  $comparison
+     * @param  Module  $start            The last completed module. This may be null
      * @return ModuleList
      */
     public static function getModulesThatLeadsTo(
@@ -88,7 +84,7 @@ class Helper
                     $destinations[] = $module;
                 }
             } else {
-                if (!$module->enabled) {
+                if (! $module->enabled) {
                     Log::debug(sprintf('%s (%s) is not enabled', $module->name, $module->getIdentifier()));
                 } else {
                     Log::debug(sprintf(
@@ -120,7 +116,7 @@ class Helper
         foreach ($destinations as $destination) {
             Log::debug(sprintf('check next steps from %s (%s)  to %s (%s)', $start != null ? $start->name : 'null', $start != null ? $start->getIdentifier() : 'null', $destination->name, $destination->getIdentifier()));
             $next = $authChain->getNextSteps($start, $destination, $passive);
-            Log::debug(sprintf("Er zijn %d next steps", count($next)));
+            Log::debug(sprintf('Er zijn %d next steps', count($next)));
             foreach ($next as $n) {
                 //TODO: Do NOT add if $n exists in
                 $skip = false;
@@ -236,14 +232,14 @@ class Helper
 
             self::saveState($state);
 
-            $url = $redirectUris[$uriIndex] . '#' . http_build_query(['state' => (string) $state]);
+            $url = $redirectUris[$uriIndex].'#'.http_build_query(['state' => (string) $state]);
 
             $response = response()->view('authchain.redirect', ['url' => $url], 302)->withHeaders(
                 [
                     'Expires' => 0,
                     'Cache-Control' => 'no-cache, no-store, must-revalidate',
                     'Pragma' => 'no-cache',
-                    'Location' => $url
+                    'Location' => $url,
                 ]
             );
         }
@@ -264,7 +260,7 @@ class Helper
                         'settings' => [
                             'location' => $location,
                             'target' => '*',
-                        ]
+                        ],
                     ]
                 )->render()
             );
@@ -300,11 +296,11 @@ class Helper
         return StateStorage::saveState($state);
     }
 
-
     public static function loadStateFromSession($app, $stateId)
     {
         $state = self::getStateFromSession($stateId);
         $app->instance(\App\AuthChain\State::class, $state);
+
         return $state;
     }
 
@@ -338,7 +334,7 @@ class Helper
             $state->isPassive()
         );
 
-        Log::debug('May skip all?: ' . ($successors->maySkipAll() ? 'true' : 'false'));
+        Log::debug('May skip all?: '.($successors->maySkipAll() ? 'true' : 'false'));
 
         // If there is something not completed, return with that information
         if ($state->getIncomplete() != null) {
@@ -358,7 +354,7 @@ class Helper
         ) {
             Log::debug('check if last is completed');
 
-            if ($state->needsPrompt() && !$state->getModuleResults()->hasPrompted()) {
+            if ($state->needsPrompt() && ! $state->getModuleResults()->hasPrompted()) {
                 throw new DidPromptException('Not prompted while this was required.');
             }
 
@@ -372,7 +368,7 @@ class Helper
                 Log::error('Ran out of options because not a subject was discovered');
             }
 
-            if (!$state->provides($state->getRequiredAuthLevel(), 'exact')) {
+            if (! $state->provides($state->getRequiredAuthLevel(), 'exact')) {
                 Log::error(
                     sprintf(
                         'Ran out of options because the required authentication level (%s) was not obtained. Obtained %s', // phpcs:ignore Generic.Files.LineLength.TooLong
@@ -382,12 +378,12 @@ class Helper
                 );
             }
 
-            if (!$successors->maySkipAll()) {
+            if (! $successors->maySkipAll()) {
                 Log::error('Ran out of options because some successors may not be skipped');
             }
 
             // phpcs:ignore Generic.Files.LineLength.TooLong
-            Log::debug('Got: ' . json_encode($state->getModuleResults()) . ' but expected: ' . json_encode($state->getRequiredAuthLevel()));
+            Log::debug('Got: '.json_encode($state->getModuleResults()).' but expected: '.json_encode($state->getRequiredAuthLevel()));
 
             throw new AuthFailedException(
                 'We ran out of options while we have not obtained our required authentication level! Cannot authenticate.' // phpcs:ignore Generic.Files.LineLength.TooLong
@@ -447,7 +443,7 @@ class Helper
                 $module->getTypeObject()->getIdentifier() != 'start'
                 && $module->provides($state->getRequiredAuthLevel(), 'exact')
                 && $state->needsPrompt()
-                && !$state->getModuleResults()->hasPrompted()
+                && ! $state->getModuleResults()->hasPrompted()
             ) {
                 // Ensure the user is prompted for re-authentication
                 $autoComplete = new ModuleList();

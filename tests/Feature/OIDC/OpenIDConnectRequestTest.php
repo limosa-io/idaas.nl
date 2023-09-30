@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\OIDC;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Helper\OpenIDHelper;
+use Tests\TestCase;
 
 use function GuzzleHttp\json_encode;
 
@@ -36,7 +36,6 @@ class OpenIDConnectRequestTest extends TestCase
         return base64_decode(str_pad(strtr($data, '-_', '+/'), strlen($data) % 4, '=', STR_PAD_RIGHT));
     }
 
-
     public function testLoginFlow()
     {
 
@@ -47,7 +46,7 @@ class OpenIDConnectRequestTest extends TestCase
                 'redirect_uri' => route('ice.manage.completelogin'),
                 'state' => 'k2m2flx5own',
                 'nonce' => '12345678910',
-                'scope' => 'openid applications:manage'
+                'scope' => 'openid applications:manage',
             ]
         )
             ->expectInternalOpenIDConnect()
@@ -65,7 +64,7 @@ class OpenIDConnectRequestTest extends TestCase
             resolve('App\Tenant')->client_id,
             [
                 'redirect_uri' => route('ice.manage.completelogin'),
-                'scope' => 'unknown scopes'
+                'scope' => 'unknown scopes',
             ]
         )->expectAutoFinish(true, 'invalid_scope');
     }
@@ -78,31 +77,29 @@ class OpenIDConnectRequestTest extends TestCase
                 'trusted' => true,
                 'grant_type' => [
                     'authorization_code',
-                    'implicit'
+                    'implicit',
                 ],
 
                 'response_types' => [
                     'code',
                     'token',
-                    'id_token'
-                ]
+                    'id_token',
+                ],
             ],
             [
-                'claims' =>   json_encode([
-                    "userinfo" =>
-                    [
-                        "given_name" => ["essential" => true],
-                        "nickname" => null,
+                'claims' => json_encode([
+                    'userinfo' => [
+                        'given_name' => ['essential' => true],
+                        'nickname' => null,
                     ],
-                    "id_token" =>
-                    [
-                        "auth_time" => ["essential" => true],
-                        "acr" => ["values" => ["urn:mace:incommon:iap:silver"]]
-                    ]
-                ])
+                    'id_token' => [
+                        'auth_time' => ['essential' => true],
+                        'acr' => ['values' => ['urn:mace:incommon:iap:silver']],
+                    ],
+                ]),
             ]
         )->expect('passwordless')
-        ->expectAutoFinish()
-        ->expectCodeToToken();
+            ->expectAutoFinish()
+            ->expectCodeToToken();
     }
 }

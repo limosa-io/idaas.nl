@@ -5,6 +5,6 @@ return [
         'en-GB' => 'English',
         'de-DE' => 'German',
         'nl-NL' => 'Dutch',
-        'fr-FR' => 'French'
-    ]
+        'fr-FR' => 'French',
+    ],
 ];

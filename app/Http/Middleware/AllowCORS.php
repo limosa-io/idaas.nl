@@ -9,12 +9,13 @@ use Illuminate\Contracts\Encryption\DecryptException;
 class AllowCORS
 {
     public $headers = 'Content-Type, X-AuthRequest, Authorization, x-challenge';
+
     public $exposeHeaders = 'x-scim-proof-of-creation, x-challenge';
 
     /**
      * Create a new middleware instance.
      *
-     * @param  \League\OAuth2\Server\ResourceServer $server
+     * @param  \League\OAuth2\Server\ResourceServer  $server
      * @return void
      */
     public function __construct()
@@ -24,10 +25,10 @@ class AllowCORS
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Closure                 $next
-     * @param  mixed                    ...$scopes
+     * @param  \Illuminate\Http\Request  $request
+     * @param  mixed  ...$scopes
      * @return mixed
+     *
      * @throws \Illuminate\Auth\AuthenticationException
      */
     public function handle($request, Closure $next)
@@ -47,7 +48,7 @@ class AllowCORS
         }
 
         if (
-            !$response->headers->has('Content-Security-Policy')
+            ! $response->headers->has('Content-Security-Policy')
             && ($cookie = $request->cookie(HomeController::COOKIE_FRAME_INFO)) != null
         ) {
             try {
@@ -55,7 +56,7 @@ class AllowCORS
 
                 $response->headers->set(
                     'Content-Security-Policy',
-                    'frame-ancestors ' . $decrypted . ';'
+                    'frame-ancestors '.$decrypted.';'
                 );
             } catch (DecryptException $ignore) {
                 // ignore

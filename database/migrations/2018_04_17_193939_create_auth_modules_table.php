@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateAuthModulesTable extends Migration
 {
@@ -19,7 +19,7 @@ class CreateAuthModulesTable extends Migration
 
             //TODO: rename this to type
             $table->string('type', 200);
-            
+
             $table->text('config')->nullable();
 
             $table->boolean('skippable')->default(true);

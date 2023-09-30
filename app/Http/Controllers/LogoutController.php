@@ -8,8 +8,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\AuthChain\Session;
+use Illuminate\Http\Request;
 
 class LogoutController extends Controller
 {
@@ -17,6 +17,6 @@ class LogoutController extends Controller
     {
         Session::logout($request);
 
-        return "ok";
+        return 'ok';
     }
 }

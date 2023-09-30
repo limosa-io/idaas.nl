@@ -2,7 +2,6 @@
 
 namespace App;
 
-use App\Model;
 use App\Scopes\SystemScope;
 
 class OAuthScope extends Model
@@ -12,7 +11,7 @@ class OAuthScope extends Model
     ];
 
     protected $casts = [
-        'system'    => 'boolean'
+        'system' => 'boolean',
     ];
 
     public function provider()

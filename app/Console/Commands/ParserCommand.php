@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Tmilos\ScimFilterParser\Parser;
 use Tmilos\ScimFilterParser\Mode;
+use Tmilos\ScimFilterParser\Parser;
 
 class ParserCommand extends Command
 {
@@ -41,9 +41,7 @@ class ParserCommand extends Command
     {
         $parser = new Parser(Mode::PATH());
 
-
         $parser->parse('links[id eq "2"]');
-
 
         echo "Done\n";
     }

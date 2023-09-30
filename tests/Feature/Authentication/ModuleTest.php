@@ -2,17 +2,16 @@
 
 namespace Tests\Feature\Authentication;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\AuthModule;
-use ArieTimmerman\Laravel\AuthChain\AuthChain;
-use App\AuthChain as AppAuthChain;
 use App\Client;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Passport;
+use Tests\TestCase;
 
 class ModuleTest extends TestCase
 {
     use RefreshDatabase;
+
     /**
      * A basic test example.
      *
@@ -28,7 +27,7 @@ class ModuleTest extends TestCase
         $response = $this->get(
             'https://master.manage.test.dev/authchain/v2/manage/modules',
             [
-                'Authorization' => sprintf('Bearer %s', $this->getAccessToken())
+                'Authorization' => sprintf('Bearer %s', $this->getAccessToken()),
             ]
         );
 
@@ -38,21 +37,18 @@ class ModuleTest extends TestCase
         $this->assertTrue(is_array($json));
     }
 
-    /**
-     * 
-     */
     public function testCreateAndUpdate()
     {
         $response = $this->post(
             'https://master.manage.test.dev/authchain/v2/manage/modules',
             [
-                "type" => "register",
-                "enabled" => false,
-                "skippable" => true,
-                "hide_if_not_requested" => false
+                'type' => 'register',
+                'enabled' => false,
+                'skippable' => true,
+                'hide_if_not_requested' => false,
             ],
             [
-                'Authorization' => sprintf('Bearer %s', $this->getAccessToken())
+                'Authorization' => sprintf('Bearer %s', $this->getAccessToken()),
             ]
         );
 
@@ -71,7 +67,7 @@ class ModuleTest extends TestCase
             sprintf('https://master.manage.test.dev/authchain/v2/manage/modules/%s', $json['id']),
             $json,
             [
-                'Authorization' => sprintf('Bearer %s', $this->getAccessToken())
+                'Authorization' => sprintf('Bearer %s', $this->getAccessToken()),
             ]
         );
 
@@ -90,13 +86,13 @@ class ModuleTest extends TestCase
         $response = $this->post(
             'https://master.manage.test.dev/authchain/v2/manage/modules',
             [
-                "type" => "register",
-                "enabled" => false,
-                "skippable" => true,
-                "hide_if_not_requested" => false
+                'type' => 'register',
+                'enabled' => false,
+                'skippable' => true,
+                'hide_if_not_requested' => false,
             ],
             [
-                'Authorization' => sprintf('Bearer %s', $this->getAccessToken())
+                'Authorization' => sprintf('Bearer %s', $this->getAccessToken()),
             ]
         );
 
@@ -109,11 +105,11 @@ class ModuleTest extends TestCase
         $response = $this->post(
             'https://master.manage.test.dev/authchain/v2/manage/chain',
             [
-                "from"  => $start->id,
-                "to"    => $response->json('id')
+                'from' => $start->id,
+                'to' => $response->json('id'),
             ],
             [
-                'Authorization' => sprintf('Bearer %s', $this->getAccessToken())
+                'Authorization' => sprintf('Bearer %s', $this->getAccessToken()),
             ]
         );
 

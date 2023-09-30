@@ -1,9 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use App\OpenIDProvider;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateAuthChainLevelsTable extends Migration
 {
@@ -18,7 +17,7 @@ class CreateAuthChainLevelsTable extends Migration
             $table->uuid('id')->primary();
 
             $table->uuid('tenant_id')->index();
-            
+
             $table->unsignedInteger('provider_id');
 
             $table->string('type');
@@ -28,7 +27,7 @@ class CreateAuthChainLevelsTable extends Migration
 
             $table->timestamps();
 
-            $table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');  
+            $table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
         });
 
     }

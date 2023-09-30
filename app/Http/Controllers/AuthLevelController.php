@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Repository\AuthLevelRepository;
+use Illuminate\Http\Request;
 
 class AuthLevelController extends Controller
 {
@@ -21,9 +21,6 @@ class AuthLevelController extends Controller
         ];
     }
 
-    /**
-     *
-     */
     public function index(AuthLevelRepository $repository)
     {
         return $repository->all();
@@ -42,7 +39,6 @@ class AuthLevelController extends Controller
         //TODO: Delete chains related to the authModuleId!
     }
 
-
     public function create(AuthLevelRepository $repository, Request $request)
     {
         $data = $this->validate($request, $this->validations);
@@ -59,7 +55,6 @@ class AuthLevelController extends Controller
         $data = $this->validate($request, $validations);
 
         $authLevel = $repository->get($authLevelId);
-        ;
 
         //var_dump($data);exit;
         $authLevel->setLevel($data['level']);

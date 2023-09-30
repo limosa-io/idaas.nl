@@ -6,18 +6,15 @@
 
 namespace App\Http\Controllers;
 
-use App\AuthModule;
-use Illuminate\Http\Request;
-use App\Setting;
-use App\AuthLevel;
+use App\EmailTemplate;
+use App\Mail\StandardMail;
+use ArieTimmerman\Laravel\SCIMServer\Helper;
 use ArieTimmerman\Laravel\SCIMServer\Http\Controllers\MeController;
 use ArieTimmerman\Laravel\SCIMServer\PolicyDecisionPoint;
 use ArieTimmerman\Laravel\SCIMServer\ResourceType;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
-use ArieTimmerman\Laravel\SCIMServer\Helper;
 use Illuminate\Support\Facades\Mail;
-use App\EmailTemplate;
-use App\Mail\StandardMail;
 
 class SCIMMeController extends MeController
 {
@@ -43,8 +40,8 @@ class SCIMMeController extends MeController
     {
         $data = $request->validate(
             [
-            'email' => 'required|email|max:200',
-            'url' => 'required|url'
+                'email' => 'required|email|max:200',
+                'url' => 'required|url',
             ]
         );
 
@@ -61,9 +58,9 @@ class SCIMMeController extends MeController
             new StandardMail(
                 null,
                 [
-                'url' => str_replace('{TOKEN}', encrypt($data), $data['url']),
-                'subject' => $subject,
-                'user' =>  $subject->getUser(),
+                    'url' => str_replace('{TOKEN}', encrypt($data), $data['url']),
+                    'subject' => $subject,
+                    'user' => $subject->getUser(),
                 ],
                 EmailTemplate::TYPE_CHANGE_EMAIL,
                 $subject->getSubject()->getPreferredLanguage()
@@ -72,7 +69,7 @@ class SCIMMeController extends MeController
 
         return response(
             [
-            'message' => 'success'
+                'message' => 'success',
             ]
         );
     }

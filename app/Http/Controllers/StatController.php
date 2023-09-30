@@ -9,8 +9,8 @@
 namespace App\Http\Controllers;
 
 use App\Client;
-use App\User;
 use App\Token;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -34,13 +34,12 @@ class StatController extends Controller
             'applications' => Client::count(),
             'users' => User::count(),
             'tokens' => Token::count(),
-            'user_creations' => $creations
+            'user_creations' => $creations,
         ];
     }
 
     public function loginsPerDay30Days()
     {
-
 
         $results = DB::table('stats')
             ->select(['hours', DB::raw('count(*)')])
@@ -49,12 +48,11 @@ class StatController extends Controller
             ->get()
             ->map(function ($item) {
                 return [
-                    'date' => Carbon::createFromTimestamp($item->hours)->format('Y-m-d')
+                    'date' => Carbon::createFromTimestamp($item->hours)->format('Y-m-d'),
                 ];
             })->groupBy('date')->map(function ($item) {
                 return count($item);
             });
-
 
         $values = $results->all();
         ksort($values);

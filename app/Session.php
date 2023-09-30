@@ -8,8 +8,6 @@
 
 namespace App;
 
-use App\Model;
-
 class Session extends Model
 {
     protected $table = 'sessions';

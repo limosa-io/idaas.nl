@@ -2,9 +2,8 @@
 
 namespace App\AuthChain;
 
-use Illuminate\Http\Request;
 use App\AuthTypes\Type;
-use App\AuthChain\State;
+use Illuminate\Http\Request;
 
 interface ModuleInterface
 {

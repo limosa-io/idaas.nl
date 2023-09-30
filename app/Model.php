@@ -2,9 +2,9 @@
 
 namespace App;
 
+use App\Scopes\TenantTrait;
 use Illuminate\Database\Eloquent\Model as BaseModel;
 use Illuminate\Support\Str;
-use App\Scopes\TenantTrait;
 
 class Model extends BaseModel
 {
@@ -13,6 +13,7 @@ class Model extends BaseModel
     }
 
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     /**

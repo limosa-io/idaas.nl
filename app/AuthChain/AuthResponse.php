@@ -2,9 +2,6 @@
 
 namespace App\AuthChain;
 
-use App\AuthChain\ModuleList;
-use App\AuthChain\ModuleResult;
-
 class AuthResponse implements \JsonSerializable
 {
     /**
@@ -40,7 +37,6 @@ class AuthResponse implements \JsonSerializable
     /**
      * Set the value of state
      *
-     * @param State $state
      *
      * @return self
      */
@@ -64,8 +60,7 @@ class AuthResponse implements \JsonSerializable
     /**
      * Set the value of next
      *
-     * @param Module[] $next
-     *
+     * @param  Module[]  $next
      * @return self
      */
     public function setNext(ModuleList $next)
@@ -88,7 +83,6 @@ class AuthResponse implements \JsonSerializable
     /**
      * Set the value of incomplete
      *
-     * @param ModuleResult $incomplete
      *
      * @return self
      */
@@ -103,12 +97,13 @@ class AuthResponse implements \JsonSerializable
     {
         return [
             'stateId' => (string) $this->getState(),
-            'next'  => $this->getNext(),
+            'next' => $this->getNext(),
             //'last'  => $this->getState()->getLastCompleted(),
-            'info'  => $this->getState()->toArrayPublic(),
-            'client'   => $this->client
+            'info' => $this->getState()->toArrayPublic(),
+            'client' => $this->client,
         ];
     }
+
     public function jsonSerialize(): array
     {
         return $this->toArray();
@@ -122,11 +117,9 @@ class AuthResponse implements \JsonSerializable
         return base64_encode(json_encode($this->toArray()));
     }
 
-
     /**
      * Set the value of client
      *
-     * @param Client $client
      *
      * @return self
      */

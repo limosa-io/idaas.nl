@@ -2,14 +2,14 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\RemoteServiceProvider;
 use App\ModuleResult;
-use Tests\Helper\SAMLHelper;
-use Tests\Helper\OpenIDHelper;
-use Laravel\Passport\Passport;
 use App\OAuthScope;
+use App\RemoteServiceProvider;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Laravel\Passport\Passport;
+use Tests\Helper\OpenIDHelper;
+use Tests\Helper\SAMLHelper;
+use Tests\TestCase;
 
 class SAMLTest extends TestCase
 {
@@ -29,21 +29,21 @@ class SAMLTest extends TestCase
 
         $response = $this->post(
             'https://master.manage.test.dev/api/saml/manage/serviceproviders', [
-            "entityid" => "http://localhost:9080/simplesaml/module.php/saml/sp/metadata.php/default-sp",
-            "wantSignedAuthnResponse" => true,
-            "wantSignedAssertions" => true,
-            "wantSignedLogoutResponse" => false,
-            "wantSignedLogoutRequest" => false,
+                'entityid' => 'http://localhost:9080/simplesaml/module.php/saml/sp/metadata.php/default-sp',
+                'wantSignedAuthnResponse' => true,
+                'wantSignedAssertions' => true,
+                'wantSignedLogoutResponse' => false,
+                'wantSignedLogoutRequest' => false,
 
-            "SingleLogoutService" => [
-                ["Binding" => "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect", "Location" => "http://localhost:9080/simplesaml/module.php/saml/sp/saml2-logout.php/default-sp", "index" => "0"]
-            ],
+                'SingleLogoutService' => [
+                    ['Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect', 'Location' => 'http://localhost:9080/simplesaml/module.php/saml/sp/saml2-logout.php/default-sp', 'index' => '0'],
+                ],
 
-            "AssertionConsumerService" => [
-                ["Binding" => "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST", "Location" => "http://localhost:9080/simplesaml/module.php/saml/sp/saml2-acs.php/default-sp", "index" => "0"]
-            ]
+                'AssertionConsumerService' => [
+                    ['Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST', 'Location' => 'http://localhost:9080/simplesaml/module.php/saml/sp/saml2-acs.php/default-sp', 'index' => '0'],
+                ],
             ], [
-            'Authorization' => sprintf('Bearer %s', $this->getAccessToken())
+                'Authorization' => sprintf('Bearer %s', $this->getAccessToken()),
             ]
         );
         $response->assertStatus(201);
@@ -54,15 +54,15 @@ class SAMLTest extends TestCase
 
         $response = $this->post(
             'https://master.test.dev/saml/v2/login', [
-            'SAMLRequest' => base64_encode(
-                <<<SAML
+                'SAMLRequest' => base64_encode(
+                    <<<'SAML'
 <samlp:AuthnRequest xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="_9e08ac832054f79e380c463b7baea30949ff129765" Version="2.0" IssueInstant="2019-07-22T19:05:44Z" Destination="https://master.test.dev/saml/v2/login" AssertionConsumerServiceURL="http://localhost:9080/simplesaml/module.php/saml/sp/saml2-acs.php/default-sp" ProtocolBinding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST">
 <saml:Issuer>http://localhost:9080/simplesaml/module.php/saml/sp/metadata.php/default-sp</saml:Issuer>
 <samlp:NameIDPolicy Format="urn:oasis:names:tc:SAML:2.0:nameid-format:transient" AllowCreate="true" />
 </samlp:AuthnRequest>
 SAML
-            ),
-            'RelayState' => 'relay-state-test'
+                ),
+                'RelayState' => 'relay-state-test',
             ]
         );
 
@@ -72,7 +72,7 @@ SAML
 
         $helper = $loginStateHelper->expect(
             'password', [
-            'remember' => $remember
+                'remember' => $remember,
             ]
         )->expectSAMLFinish();
 
@@ -86,13 +86,13 @@ SAML
 
         $response->assertStatus(200);
 
-        $this->assertEquals($remember ? 'true' : 'false', trim('' . $response->baseResponse->getContent()));
+        $this->assertEquals($remember ? 'true' : 'false', trim(''.$response->baseResponse->getContent()));
 
         $moduleResults = ModuleResult::get();
 
         $this->assertCount($remember ? 1 : 0, $moduleResults);
 
-        $logoutMessage = <<<SAML
+        $logoutMessage = <<<'SAML'
 <samlp:LogoutRequest xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="_b58cadae88f2008d068ff0cba655ca998cd7a26510" Version="2.0" IssueInstant="2019-07-22T19:47:13Z" Destination="https://master.idaas.dev/saml/v2/logout">
     <saml:Issuer>http://localhost:9080/simplesaml/module.php/saml/sp/metadata.php/default-sp</saml:Issuer>
     <saml:NameID SPNameQualifier="http://localhost:9080/simplesaml/module.php/saml/sp/metadata.php/default-sp" Format="urn:oasis:names:tc:SAML:2.0:nameid-format:transient">8e3aa254-3678-4504-8224-9b3733b4c275</saml:NameID>
@@ -123,7 +123,7 @@ SAML;
         $this->assertArrayHasKey('RelayState', $result);
         $this->assertEquals('relay-state-logout', $result['RelayState']);
 
-        //FIXME: Ensure sessions gets deleted upon logout 
+        //FIXME: Ensure sessions gets deleted upon logout
         $response = $this->call(
             'GET', '/isLoggedIn', [], collect($helper->response->baseResponse->headers->getCookies())->mapWithKeys(
                 function ($value, $key) {
@@ -142,7 +142,7 @@ SAML;
 
     public function testImportMetadata()
     {
-        $metadata = <<<METADATA
+        $metadata = <<<'METADATA'
 <?xml version="1.0"?>
 <md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" entityID="http://localhost:9080/simplesaml/module.php/saml/sp/metadata.php/default-sp">
     <md:SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:2.0:protocol">
@@ -161,9 +161,9 @@ METADATA;
 
         $response = $this->post(
             'https://master.manage.test.dev/api/saml/manage/importMetadata', [
-            'metadata' => $metadata
+                'metadata' => $metadata,
             ], [
-            'Authorization' => sprintf('Bearer %s', $this->getAccessToken())
+                'Authorization' => sprintf('Bearer %s', $this->getAccessToken()),
             ]
         );
 
@@ -171,7 +171,6 @@ METADATA;
 
         $this->assertNotNull(RemoteServiceProvider::where('entityid', 'http://localhost:9080/simplesaml/module.php/saml/sp/metadata.php/default-sp')->first());
     }
-
 
     public function testLoginLogoutRedirect($remember = true)
     {
@@ -182,7 +181,7 @@ METADATA;
 
         $helper = SAMLHelper::initWithNewServiceProvider($this)->expect(
             'password', [
-            'remember' => $remember
+                'remember' => $remember,
             ]
         )->expectSAMLRedirectFinish();
 
@@ -191,22 +190,22 @@ METADATA;
             // FIXME: Should login without prompt
             OpenIDHelper::initWithNewClient(
                 $this, [
-                'trusted' => true,
-                'grant_type' => [
-                    'authorization_code',
-                    'implicit'
-                ],
-                'response_types' => [
-                    'code',
-                    'token',
-                    'id_token'
-                ]
+                    'trusted' => true,
+                    'grant_type' => [
+                        'authorization_code',
+                        'implicit',
+                    ],
+                    'response_types' => [
+                        'code',
+                        'token',
+                        'id_token',
+                    ],
                 ], [], collect($helper->response->baseResponse->headers->getCookies())
-                ->mapWithKeys(
-                    function ($value, $key) {
-                        return [$value->getName() => $value->getValue()];
-                    }
-                )->toArray()
+                    ->mapWithKeys(
+                        function ($value, $key) {
+                            return [$value->getName() => $value->getValue()];
+                        }
+                    )->toArray()
             )->expect('password')->expectFinish();
         }
 
@@ -220,9 +219,9 @@ METADATA;
 
         $response->assertStatus(200);
 
-        $this->assertEquals($remember ? 'true' : 'false', trim('' . $response->baseResponse->getContent()));
+        $this->assertEquals($remember ? 'true' : 'false', trim(''.$response->baseResponse->getContent()));
 
-        $logoutMessage = <<<SAML
+        $logoutMessage = <<<'SAML'
 <samlp:LogoutRequest xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="_b58cadae88f2008d068ff0cba655ca998cd7a26510" Version="2.0" IssueInstant="2019-07-22T19:47:13Z" Destination="https://master.idaas.dev/saml/v2/logout">
     <saml:Issuer>http://localhost:9080/simplesaml/module.php/saml/sp/metadata.php/default-sp</saml:Issuer>
     <saml:NameID SPNameQualifier="http://localhost:9080/simplesaml/module.php/saml/sp/metadata.php/default-sp" Format="urn:oasis:names:tc:SAML:2.0:nameid-format:transient">8e3aa254-3678-4504-8224-9b3733b4c275</saml:NameID>
@@ -253,7 +252,7 @@ SAML;
         $this->assertArrayHasKey('RelayState', $result);
         $this->assertEquals('relay-state-logout', $result['RelayState']);
 
-        //FIXME: Ensure sessions gets deleted upon logout 
+        //FIXME: Ensure sessions gets deleted upon logout
         $response = $this->call(
             'GET', '/isLoggedIn', [], collect($helper->response->baseResponse->headers->getCookies())->mapWithKeys(
                 function ($value, $key) {

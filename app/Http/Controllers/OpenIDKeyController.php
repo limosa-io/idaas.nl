@@ -6,11 +6,10 @@
 
 namespace App\Http\Controllers;
 
-use App\OAuthScope;
-use Illuminate\Http\Request;
-use App\OpenIDProvider;
 use App\OpenIDKey;
+use App\OpenIDProvider;
 use App\Repository\KeyRepository;
+use Illuminate\Http\Request;
 
 class OpenIDKeyController extends Controller
 {
@@ -35,7 +34,7 @@ class OpenIDKeyController extends Controller
                     $fail('The provided data is not a valid x509 certificate');
                 }
             }],
-            'public_key' => ['required_without:x509',function ($attribute, $value, $fail) {
+            'public_key' => ['required_without:x509', function ($attribute, $value, $fail) {
                 try {
                     if (openssl_pkey_get_public($value) === false) {
                         throw new \Exception('Invalid public key');
@@ -43,7 +42,7 @@ class OpenIDKeyController extends Controller
                 } catch (\Exception $e) {
                     $fail('The provided data is not a valid public key');
                 }
-            }]
+            }],
         ];
     }
 
@@ -58,26 +57,25 @@ class OpenIDKeyController extends Controller
         return OpenIDKey::all();
     }
 
-
     public function store(Request $request)
     {
         $data = $this->validate($request, $this->validations);
 
-        if (!empty($data['x509'])) {
+        if (! empty($data['x509'])) {
             $key = str_replace(
-                array(
+                [
                     '-----BEGIN CERTIFICATE-----',
                     '-----END CERTIFICATE-----',
                     "\r",
                     "\n",
-                    " "
-                ),
-                "",
+                    ' ',
+                ],
+                '',
                 $data['x509']
             );
             $keyForParsing =
-                "-----BEGIN CERTIFICATE-----\n" .
-                chunk_split($key, 64, "\n") .
+                "-----BEGIN CERTIFICATE-----\n".
+                chunk_split($key, 64, "\n").
                 "-----END CERTIFICATE-----\n";
             $details = openssl_pkey_get_details(openssl_pkey_get_public(openssl_x509_read($keyForParsing)));
             $data['public_key'] = $details['key'];
@@ -109,8 +107,7 @@ class OpenIDKeyController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \App\OAuthScope          $oAuthScope
+     * @param  \App\OAuthScope  $oAuthScope
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, OpenIDKey $openidKey)
@@ -118,7 +115,7 @@ class OpenIDKeyController extends Controller
         $data = $this->validate(
             $request,
             [
-            'active' => 'boolean'
+                'active' => 'boolean',
             ]
         );
 
@@ -136,7 +133,7 @@ class OpenIDKeyController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\OAuthScope $oAuthScope
+     * @param  \App\OAuthScope  $oAuthScope
      * @return \Illuminate\Http\Response
      */
     public function destroy(OpenIDKey $openidKey)

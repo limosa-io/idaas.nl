@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateOAuthScopesTable extends Migration
 {
@@ -24,7 +24,7 @@ class CreateOAuthScopesTable extends Migration
 
             $table->boolean('system')->default(false);
 
-            $table->index(['id','tenant_id']);
+            $table->index(['id', 'tenant_id']);
 
             $table->timestamps();
 

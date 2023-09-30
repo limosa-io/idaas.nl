@@ -2,15 +2,14 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\AuthModule;
-use App\AuthChain;
 use Tests\Helper\OpenIDHelper;
+use Tests\TestCase;
 
 class ConsentTest extends TestCase
 {
     use RefreshDatabase;
+
     /**
      * A basic test example.
      *
@@ -18,20 +17,20 @@ class ConsentTest extends TestCase
      */
     public function testBasicTest()
     {
-     
+
         $redirect_uri = 'https://what.ever.com';
         // Create Client
         $response = $this->post(
             '/oauth/connect/register',
             [
-                "client_name" => "test",
-                "application_type" => "web",
+                'client_name' => 'test',
+                'application_type' => 'web',
                 'redirect_uris' => [
-                    'https://what.ever.com'
-                ]
+                    'https://what.ever.com',
+                ],
             ],
             [
-                'Authorization' => sprintf('Bearer %s', $this->getAccessToken())
+                'Authorization' => sprintf('Bearer %s', $this->getAccessToken()),
             ]
         );
 
@@ -39,15 +38,14 @@ class ConsentTest extends TestCase
 
         $clientId = $response->json('client_id');
 
-        OpenIDHelper::init($this, $clientId, ['redirect_uri' => 'https://what.ever.com' ])
+        OpenIDHelper::init($this, $clientId, ['redirect_uri' => 'https://what.ever.com'])
             ->expect('password')
             ->expect('consent')
             ->expectFinish();
 
-        OpenIDHelper::init($this, $clientId, ['redirect_uri' => 'https://what.ever.com' ])
+        OpenIDHelper::init($this, $clientId, ['redirect_uri' => 'https://what.ever.com'])
             ->expect('password')
             ->expectFinishWithError();
 
     }
-    
 }

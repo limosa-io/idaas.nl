@@ -3,17 +3,17 @@
 namespace App;
 
 use App\Scopes\TenantTrait;
-use Illuminate\Contracts\Auth\Authenticatable;
 use App\Stats\StatableInterface;
 use App\Stats\StatableTrait;
 use Idaas\Passport\Model\Client as IdaasClient;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Laravel\Passport\HasApiTokens;
 
-class Client extends IdaasClient implements SubjectInterface, Authenticatable, StatableInterface, ApplicationInterface
+class Client extends IdaasClient implements ApplicationInterface, Authenticatable, StatableInterface, SubjectInterface
 {
-    use TenantTrait;
     use HasApiTokens;
     use StatableTrait;
+    use TenantTrait;
 
     protected $hidden = [
         'tenant_id',
@@ -22,7 +22,7 @@ class Client extends IdaasClient implements SubjectInterface, Authenticatable, S
         'user_id',
         'personal_access_client',
         'password_client',
-        'revoked'
+        'revoked',
     ];
 
     protected $attributes = [
@@ -70,11 +70,11 @@ class Client extends IdaasClient implements SubjectInterface, Authenticatable, S
         return $this->roles->pluck('id');
     }
 
-     /**
-      * Get the name of the unique identifier for the user.
-      *
-      * @return string
-      */
+    /**
+     * Get the name of the unique identifier for the user.
+     *
+     * @return string
+     */
     public function getAuthIdentifierName()
     {
         return 'client_id';
@@ -113,7 +113,7 @@ class Client extends IdaasClient implements SubjectInterface, Authenticatable, S
     /**
      * Set the token value for the "remember me" session.
      *
-     * @param  string $value
+     * @param  string  $value
      * @return void
      */
     public function setRememberToken($value)

@@ -3,7 +3,6 @@
 namespace App\Exceptions;
 
 use Exception;
-use Session;
 
 class CloudFunctionException extends Exception
 {
@@ -18,7 +17,7 @@ class CloudFunctionException extends Exception
             $this->getMessage(),
             502,
             [
-            'Content-Type' => 'application/json'
+                'Content-Type' => 'application/json',
             ]
         );
     }
