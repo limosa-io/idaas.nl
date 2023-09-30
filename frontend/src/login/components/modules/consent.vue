@@ -38,7 +38,7 @@ export default Vue.extend({
 
   mounted() {
 
-    this.$ice(this.module, this.authRequest, {
+    this.request({
         init: true,
       })
       .then(
@@ -64,7 +64,7 @@ export default Vue.extend({
 
   methods: {
     init() {
-      this.$ice(this.module, this.authRequest, {});
+      this.request({});
     }
   }
 });

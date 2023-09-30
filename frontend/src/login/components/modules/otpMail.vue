@@ -113,7 +113,7 @@ export default Vue.extend({
       this.activate();
 
       this.isLoading = true;
-      this.$ice(this.module, this.authRequest, {}).then(
+      this.request({}).then(
         response => {          
           this.done = true;
           this.user_id = response.data.user_id_hashed;
@@ -130,7 +130,7 @@ export default Vue.extend({
 
     onSubmitOtp(){
       
-      this.$ice(this.module, this.authRequest, {
+      this.request({
         otp: this.otp,
         user_id_hashed: this.user_id
       }).then(
@@ -153,7 +153,7 @@ export default Vue.extend({
 
       this.isLoading = true;
 
-      this.$ice(this.module, this.authRequest, {
+      this.request({
         username: this.username,
         remember: this.remember
       }).then(

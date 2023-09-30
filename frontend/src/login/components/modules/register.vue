@@ -137,7 +137,7 @@ export default Vue.extend({
 
        this.activate();
 
-       this.$ice(this.$route.params.module, this.authRequest, {
+       this.request({
             init: true
         }).then( response => {
           
@@ -190,7 +190,7 @@ export default Vue.extend({
       this.isLoading = true;
       this.$http.post(this.url, this.user).then(
         response => {          
-          this.$ice(this.module, this.authRequest, {
+          this.request({
             'proof-of-creation': response.headers.get('x-scim-proof-of-creation')
           }).then(r => {
             this.isLoading = false;

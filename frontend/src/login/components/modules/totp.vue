@@ -73,7 +73,7 @@ export default Vue.extend({
     methods: {
         onSubmit: function (event) {
 
-            this.$ice(this.module, this.authRequest, {
+            this.request({
                     otp: this.otp,
                     remember: this.remember
                 }).then(result => {

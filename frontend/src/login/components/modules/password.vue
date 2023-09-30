@@ -47,9 +47,8 @@ export default Vue.extend({
 
       remember: true,
 
-      error: null,
+      error: null
 
-      loading: false
     };
   },
 
@@ -74,20 +73,17 @@ export default Vue.extend({
         return;
       }
 
-      this.loading = true;
-      this.$ice(this.module, this.authRequest, {
+      
+      this.request({
         username: this.username,
         password: this.password,
         remember: this.remember
       }).then(
         response => {
           // do nothing special
-          this.loading = false;
         },
 
         response => {
-
-          this.loading = false;
 
           if(response.status == 422){
             this.$noty({

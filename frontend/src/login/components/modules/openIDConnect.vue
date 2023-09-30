@@ -73,7 +73,7 @@ export default Vue.extend({
       this.lastCalled = new Date();
       this.loading = true;
       
-      this.$ice(this.module, this.authRequest, {
+      this.request({
           init: true,
         })
         .then(

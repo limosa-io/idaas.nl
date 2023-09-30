@@ -92,7 +92,7 @@ export default Vue.extend({
 
       this.isLoading = true;
 
-      this.$ice(this.module, this.authRequest, {}).then(
+      this.request({}).then(
         response => {
           this.done = true;
           this.isLoading = false;
@@ -114,7 +114,7 @@ export default Vue.extend({
 
       this.isLoading = true;
 
-      this.$ice(this.module, this.authRequest, {
+      this.request({
         username: this.username,
         remember: this.remember
       }).then(

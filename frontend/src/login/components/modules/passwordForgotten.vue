@@ -151,8 +151,8 @@ export default Vue.extend({
 
       this.isLoading = true;
 
-      this.$ice(this.module, this.authRequest, {}).then(
-        response => {
+      this.request({}).then(
+        _response => {
           this.isLoading = false;
           this.done = true;
         },
@@ -172,7 +172,7 @@ export default Vue.extend({
         return;
       }
 
-      this.$ice(this.module, this.authRequest, {
+      this.request({
         password: this.password,
       }).then(
         response => {
@@ -197,7 +197,7 @@ export default Vue.extend({
 
       this.isLoading = true;
 
-      this.$ice(this.module, this.authRequest, {
+      this.request({
         username: this.username,
         remember: this.remember
       }).then(

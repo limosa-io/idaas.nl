@@ -81,9 +81,7 @@ export default Vue.extend({
 
     autoSubmit(){
 
-      this.$ice(this.module, this.authRequest, {
-        
-      }).then(
+      this.request({}).then(
         response => {
           this.done = true;
         },
@@ -101,7 +99,7 @@ export default Vue.extend({
         return;
       }
 
-      this.$ice(this.module, this.authRequest, {
+      this.request({
         username: this.username
       }).then(
         response => {

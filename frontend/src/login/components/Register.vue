@@ -112,7 +112,7 @@ export default {
   mounted(){
 
     
-    this.$ice(this.$route.params.module, this.authRequest, {
+    this.request({
         init: true
     }).then( response => {
       
@@ -131,7 +131,7 @@ export default {
       this.$http.post(this.url, this.user).then(
         response => { 
 
-          this.$ice(this.$route.params.module, this.authRequest, {
+          this.request({
               userId: response.body.id
           });
 
