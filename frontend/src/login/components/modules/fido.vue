@@ -95,7 +95,7 @@ export default Vue.extend({
 
     init() {
       var c = null;
-      this.$ice(this.module, this.authRequest, {
+      this.request({
         init: true,
       }).then((response) => {
         const args = JSON.parse(JSON.stringify(response.body.arguments));
@@ -112,7 +112,7 @@ export default Vue.extend({
             userHandle: cred.response.userHandle ? arrayBufferToBase64(cred.response.userHandle) : null
         };
 
-        return this.$ice(this.module, this.authRequest, {
+        return this.request({
           verify: true,
           response: authenticatorAttestationResponse,
           challenge: c
