@@ -1,88 +1,68 @@
 <template>
-
-<div>
-
-  <h1>{{ $t('login.consentText', { application: authRequest.info.nam } )}}</h1>
-
   <div>
+    <h1>
+      {{ $t("login.consentText", { application: props.authRequest.info.nam }) }}
+    </h1>
 
-    <div class="list-group mb-2">
+    <div>
+      <div class="list-group mb-2">
+        <ul class="list-group">
+          <li
+            class="list-group-item"
+            v-for="s of props.authRequest.info.sco"
+            :key="s"
+          >
+            {{ $t(scopeDescription[s] ? scopeDescription[s] : s) }}
+          </li>
+        </ul>
+      </div>
 
-      <ul class="list-group">
-        <li class="list-group-item" v-for="s of this.authRequest.info.sco" :key="s">
-          {{ $t(scopeDescription[s] ? scopeDescription[s] : s) }}</li>
-      </ul>
-
+      <button
+        :style="{ backgroundColor: customerstyle['button_backgroundColor'] }"
+        class="btn btn-primary btn-block"
+        @click="init"
+      >
+        <span>{{ $t("login.consentAllow") }}</span>
+      </button>
     </div>
-
-    <button :style="{backgroundColor: customerstyle['button_backgroundColor']}" class="btn btn-primary btn-block" @click="init">
-      <span>{{ $t('login.consentAllow') }}</span>
-    </button>
   </div>
-
-</div>
-
 </template>
 
-<script>
+<script setup>
+import { onMounted } from "vue";
+import { request, baseProps } from "./composable";
 
-import Vue from 'vue'
-import base from './Base';
-import {
-  EventBus
-} from '../eventBus.js';
+const props = defineProps(baseProps);
 
-export default Vue.extend({
+const scopeDescription = {};
+const scopeIcons = {
+  openid: "shoe-prints",
+  email: "at",
+};
 
-  mixins: [base],
-
-  mounted() {
-
-    this.request({
-        init: true,
-      })
-      .then(
-        response => {
-          this.scopeDescription = response.data;
-        }
-      );
-
-  },
-
-  data() {
-    return {
-      scopeDescription: {
-      },
-
-      scopeIcons: {
-        openid: 'shoe-prints',
-        email: 'at',
-
-      }
-    };
-  },
-
-  methods: {
-    init() {
-      this.request({});
-    }
-  }
+onMounted(() => {
+  request({
+    init: true,
+  }).then((response) => {
+    scopeDescription.value = response.data;
+  });
 });
 
+function init() {
+  request(props.module, props.authRequest, {});
+}
 </script>
 
 <style lang="scss" scoped>
+.list-group-item {
+  height: 62px;
+  padding-top: 20px;
+  border-left-style: none;
+  border-right-style: none;
+  border-radius: 0px;
 
-.list-group-item{
-    height: 62px;
-    padding-top: 20px;
-    border-left-style: none;
-    border-right-style: none;
-    border-radius: 0px;
-
-    svg {
-        margin-right: 10px;
-    }
+  svg {
+    margin-right: 10px;
+  }
 }
-
 </style>

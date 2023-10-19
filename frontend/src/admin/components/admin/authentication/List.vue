@@ -1,8 +1,8 @@
 
 <template>
-  <Main title="Authentication">
+  <MainTemplate title="Authentication">
     <template v-slot:header>
-      <b-modal
+      <Modal
         @ok="onSubmitNewLink"
         ref="newLinkModal"
         id="newLinkModal"
@@ -14,7 +14,7 @@
               <label for="chain.list.from">From</label>
             </div>
             <div class="col">
-              <b-form-select
+              <FormSelect
                 id="chain.list.from"
                 v-model="newLink.from"
                 :options="options"
@@ -28,7 +28,7 @@
               <label for="chain.list.to">To</label>
             </div>
             <div class="col">
-              <b-form-select
+              <FormSelect
                 id="chain.list.to"
                 v-model="newLink.to"
                 :options="options"
@@ -37,13 +37,11 @@
             </div>
           </div>
 
-          <template v-for="(e, index) in errors">
-            <div class="alert alert-danger" role="alert" :key="index">
-              {{ e[0] }}
-            </div>
-          </template>
+          <div v-for="(e, index) in errors" class="alert alert-danger" role="alert" :key="index">
+            {{ e[0] }}
+          </div>
         </form>
-      </b-modal>
+      </Modal>
 
       <Button
         to="/authentication/add"
@@ -195,128 +193,116 @@
         </tbody>
       </table>
     </template>
-  </Main>
+  </MainTemplate>
 </template>
 
 
-<script>
-import Main from "@/admin/components/general/Main.vue";
+<script setup>
+import MainTemplate from "@/admin/components/general/MainTemplate.vue";
+import { ref, onMounted, defineProps, computed } from "vue";
+import {maxios, laxios} from "@/admin/helpers.js";
+import Modal from "@/admin/components/general/Modal.vue";
+import { useRouter } from "vue-router4";
 
-export default {
-  components: {
-    Main,
-  },
-  data() {
-    return {
-      modules: null,
-      chain: null,
+const router = useRouter();
+const modules = ref(null);
+const chain = ref(null);
+const userinfo = ref({});
+const errors = ref({});
+const newLink = ref({
+  from: null,
+  to: null,
+});
 
-      userinfo: {},
+const newLinkModal = ref(null);
 
-      errors: {},
-
-      newLink: {
-        from: null,
-        to: null,
-      },
-    };
-  },
-
-  computed: {
-    options: function () {
-      var result = [];
-
-      if (this.modules)
-        for (var m of this.modules) {
-          result.push({ value: m.id, text: m.name });
-        }
-
-      return result;
+onMounted(() => {
+  // Use this for creating modules
+  maxios.get("authchain/v2/manage/modules").then(
+    (response) => {
+      modules.value = response.data;
     },
-  },
-  mounted() {
-    this.$http.get(this.$oidcUrl("oauth/userinfo")).then(
-      (response) => {
-        this.userinfo = response.data;
-      },
-      (response) => {
-        this.$router.replace({ name: "error.default" });
+    (response) => {
+      // error callback
+    }
+  );
+
+  maxios.get("authchain/v2/manage/chain").then(
+    (response) => {
+      chain.value = response.data;
+    },
+    (response) => {
+      // error callback
+    }
+  );
+
+  laxios.get("oauth/userinfo").then(
+    (response) => {
+      userinfo.value = response.data;
+    },
+    (response) => {
+      // error callback
+    }
+  );
+});
+
+const options = computed(() => {
+  var result = [];
+
+  if (modules.value)
+    for (var m of modules.value) {
+      result.push({ value: m.id, text: m.name });
+    }
+
+  return result;
+});
+
+function edit(module) {
+  router.push({
+    name: "authentication.edit",
+    params: { module_id: module.id },
+  });
+}
+
+function deleteLink(chain) {
+  maxios.delete("authchain/v2/manage/chain/" + chain.id).then(
+    (response) => {
+      //this.chain.rem
+      chain.splice(chain.indexOf(chain), 1);
+    },
+    (response) => {
+      // error callback
+    }
+  );
+}
+
+function getModule(id) {
+  return modules.value
+    ? modules.value.find((e) => {
+        return e.id == id;
+      }) || {
+        name: "Unknown",
       }
-    );
+    : {};
+}
 
-    // Use this for creating modules
-    this.$http.get(this.$murl("authchain/v2/manage/modules")).then(
-      (response) => {
-        this.modules = response.data;
-      },
-      (response) => {
-        // error callback
-      }
-    );
+function createLink() {
+  newLinkModal.value.show();
+}
 
-    this.$http.get(this.$murl("authchain/v2/manage/chain")).then(
-      (response) => {
-        this.chain = response.data;
-      },
-      (response) => {
-        // error callback
-      }
-    );
-  },
+function onSubmitNewLink(event) {
+  maxios.post("authchain/v2/manage/chain", newLink.value).then(
+    (response) => {
+      chain.value.push(response.data);
 
-  methods: {
-    edit: function (module) {
-      this.$router.push({
-        name: "authentication.edit",
-        params: { module_id: module.id },
-      });
+      newLinkModal.value.hide();
     },
+    (response) => {
+      // error callback
+      errors.value = response.data.errors;
+    }
+  );
 
-    deleteLink(chain) {
-      this.$http
-        .delete(this.$murl("authchain/v2/manage/chain/" + chain.id))
-        .then(
-          (response) => {
-            //this.chain.rem
-            this.chain.splice(this.chain.indexOf(chain), 1);
-          },
-          (response) => {
-            // error callback
-          }
-        );
-    },
-
-    getModule(id) {
-      return this.modules
-        ? this.modules.find((e) => {
-            return e.id == id;
-          }) || {
-            name: "Unknown",
-          }
-        : {};
-    },
-
-    createLink() {
-      this.$refs.newLinkModal.show();
-    },
-
-    onSubmitNewLink(event) {
-      this.$http
-        .post(this.$murl("authchain/v2/manage/chain"), this.newLink)
-        .then(
-          (response) => {
-            this.chain.push(response.data);
-
-            this.$refs.newLinkModal.hide();
-          },
-          (response) => {
-            // error callback
-            this.errors = response.data.errors;
-          }
-        );
-
-      event.preventDefault();
-    },
-  },
-};
+  event.preventDefault();
+}
 </script>

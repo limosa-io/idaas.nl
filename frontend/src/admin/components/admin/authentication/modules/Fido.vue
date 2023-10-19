@@ -5,44 +5,7 @@
   </div>
 </template>
   
-  <script>
-  export default {
-    props: {
-      module: null,
-      info: null
-    },
-  
-    data() {
-      return {
-        templates: {}
-      };
-    },
-  
-    mounted() {
-      
-     
-    },
-  
-    methods: {
-      mounted(){
-        this.$http.get(this.$murl('api/mail_template')).then(response => {
+<script setup>
 
-          this.templates = response.data;
-
-          }, response => {
-          // error callback
-        });
-      },
-
-      verify(){
-        this.request({
-
-        }).then(response => {
-
-        });
-      }
-
-    }
-  };
-  </script>
+</script>
   

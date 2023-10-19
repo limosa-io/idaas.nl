@@ -3,64 +3,43 @@
 
 <div>
 
-  <b-form-group horizontal :label-cols="3" description="Available template parameters are <code class=&quot;highlighter-rouge&quot;>otp</code>, <code class=&quot;highlighter-rouge&quot;>subject</code> and if present <code class=&quot;highlighter-rouge&quot;>user</code>."
+  <FormGroup horizontal :label-cols="3" description="Available template parameters are <code class=&quot;highlighter-rouge&quot;>otp</code>, <code class=&quot;highlighter-rouge&quot;>subject</code> and if present <code class=&quot;highlighter-rouge&quot;>user</code>."
     label="Email template" label-for="module.config.template_id">
-    <b-form-select id="module.config.template_id" aria-describedby="parentHelp" v-if="templates" value-field="id" text-field="name"
+    <FormSelect id="module.config.template_id" aria-describedby="parentHelp" v-if="templates" value-field="id" text-field="name"
       v-model="module.config.template_id" :options="templates" />
-  </b-form-group>
+  </FormGroup>
 
 </div>
 
 </template>
 
-<script>
-export default {
+<script setup>
 
-  props: {
-    module: null,
-    info: null
-  },
+import { ref, defineProps } from 'vue';
+import {maxios} from "@/admin/helpers.js";
 
-  data(){
-    return {
-      
-      errors: {},
-      
-      wasValidated: false,
-      loading: false,
+const props = defineProps(['module', 'info']);
 
-      type: null,
-      types: [],
-
-      templates: {},
-
-    }
-  },
-
-  mounted(){
+const errors = ref({});
+const wasValidated = ref(false);
+const loading = ref(false);
+const type = ref(null);
+const types = ref([]);
+const templates = ref({});
 
 
-    this.$http.get(this.$murl('api/mail_template')).then(response => {
+onMounted(() => {
 
-      this.templates = response.data;
+  maxios.get('api/mail_template').then(response => {
 
-    }, response => {
-      // error callback
-    });
-    
-    
+    templates.value = response.data;
 
-  },
+  });
 
-  methods: {
-    onSubmit(event){
+});
 
-      event.preventDefault();
-
-    }
-  }
-
-
-  
+function onSubmit(event) {
+  event.preventDefault();
 }
+
 </script>

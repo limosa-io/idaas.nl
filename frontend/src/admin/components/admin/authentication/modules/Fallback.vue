@@ -1,55 +1,31 @@
 
 <template>
-    
-<form class="needs-validation" novalidate :class="{'was-validated': wasValidated}" v-on:submit="onSubmit">
+  <form class="needs-validation" novalidate :class="{ 'was-validated': wasValidated }" v-on:submit="onSubmit">
 
-  <h3 class="c-grey-900">Fallback</h3>
+    <h3 class="c-grey-900">Fallback</h3>
 
-  <div class="form-group">
-    
-    <p>test</p>
-    
-  </div>
+    <div class="form-group">
 
+      <p>test</p>
 
-</form>
+    </div>
 
 
+  </form>
 </template>
 
 
-<script>
-export default {
+<script setup>
 
-  data(){
-    return {
-      
-      errors: {},
-      
-      wasValidated: false,
-      loading: false,
+import { ref, defineProps } from 'vue';
 
-      type: null,
-      types: []
+const errors = ref({});
+const wasValidated = ref(false);
+const loading = ref(false);
+const type = ref(null);
+const types = ref([]);
 
-    }
-  },
-
-  mounted(){
-
-    
-
-  },
-
-  methods: {
-    onSubmit(event){
-
-      event.preventDefault();
-
-    }
-  }
-
-
-  
+function onSubmit(event) {
+  event.preventDefault();
 }
 </script>

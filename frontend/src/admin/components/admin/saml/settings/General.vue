@@ -4,71 +4,71 @@
 
   <h3 class="c-grey-900">Settings</h3>
 
-  <b-form-group horizontal label="Wants signed authentication requests">
+  <FormGroup horizontal label="Wants signed authentication requests">
     
-     <b-form-checkbox id="sign.authnrequest"
+     <FormCheckbox id="sign.authnrequest"
                      v-model="provider['sign.authnrequest']"
                      :value="true"
                      :unchecked-value="false">
       {{ provider['sign.authnrequest'] ? 'Yes' : 'No' }}
-    </b-form-checkbox>
+    </FormCheckbox>
 
-  </b-form-group>
+  </FormGroup>
 
-  <b-form-group horizontal label="Sign redirect SAML responses">
+  <FormGroup horizontal label="Sign redirect SAML responses">
     
-     <b-form-checkbox id="redirect.sign"
+     <FormCheckbox id="redirect.sign"
                      v-model="provider['redirect.sign']"
                      :value="true"
                      :unchecked-value="false">
       {{ provider['redirect.sign'] ? 'Yes' : 'No' }}
-    </b-form-checkbox>
+    </FormCheckbox>
 
-  </b-form-group>
+  </FormGroup>
 
-  <b-form-group horizontal label="Enable SSO Post binding">
+  <FormGroup horizontal label="Enable SSO Post binding">
     
-     <b-form-checkbox id="ssoHttpPostEnabled"
+     <FormCheckbox id="ssoHttpPostEnabled"
                      v-model="provider['ssoHttpPostEnabled']"
                      :value="true"
                      :unchecked-value="false">
       {{ provider['ssoHttpPostEnabled'] ? 'Yes' : 'No' }}
-    </b-form-checkbox>
+    </FormCheckbox>
 
-  </b-form-group>
+  </FormGroup>
 
-  <b-form-group horizontal label="Enable SSO Redirect binding">
+  <FormGroup horizontal label="Enable SSO Redirect binding">
     
-     <b-form-checkbox id="ssoHttpRedirectEnabled"
+     <FormCheckbox id="ssoHttpRedirectEnabled"
                      v-model="provider['ssoHttpRedirectEnabled']"
                      :value="true"
                      :unchecked-value="false">
       {{ provider['ssoHttpRedirectEnabled'] ? 'Yes' : 'No' }}
-    </b-form-checkbox>
+    </FormCheckbox>
 
-  </b-form-group>
+  </FormGroup>
 
-  <b-form-group horizontal label="Enable SLO POST binding">
+  <FormGroup horizontal label="Enable SLO POST binding">
     
-     <b-form-checkbox id="sloHttpPostEnabled"
+     <FormCheckbox id="sloHttpPostEnabled"
                      v-model="provider['sloHttpPostEnabled']"
                      :value="true"
                      :unchecked-value="false">
       {{ provider['sloHttpPostEnabled'] ? 'Yes' : 'No' }}
-    </b-form-checkbox>
+    </FormCheckbox>
 
-  </b-form-group>
+  </FormGroup>
 
-  <b-form-group horizontal label="Enable SLO Redirect binding">
+  <FormGroup horizontal label="Enable SLO Redirect binding">
     
-     <b-form-checkbox id="sloHttpRedirectEnabled"
+     <FormCheckbox id="sloHttpRedirectEnabled"
                      v-model="provider['sloHttpRedirectEnabled']"
                      :value="true"
                      :unchecked-value="false">
       {{ provider['sloHttpRedirectEnabled'] ? 'Yes' : 'No' }}
-    </b-form-checkbox>
+    </FormCheckbox>
 
-  </b-form-group>
+  </FormGroup>
 
   
 
@@ -78,73 +78,42 @@
 
 </template>
 
-<script>
+<script setup>
+import {ref, getCurrentInstance, onMounted} from 'vue';
+import {maxios, notify} from '@/admin/helpers.js';
 
-export default {
+const errors = ref({});
+const wasValidated = ref(false);
+const loading = ref(false);
+const provider = ref({});
+const selected = ref(false);
 
-  data() {
-    return {
+onMounted(async () => {
+  const response = await maxios.get("api/saml/manage/identityprovider");
+  provider.value = response.data;
+});
 
-      errors: {},
+function onSubmit(event){
 
-      wasValidated: false,
-      loading: false,
+  if(event.target.checkValidity()){
 
-      provider: {},
+    maxios.put('api/saml/manage/identityprovider',
+    provider.value
+    ).then(response => {
 
-      selected: false
-
-    }
-  },
-
-  mounted() {
-
-    // api/saml/manage/identityprovider
-    this.$http.get(this.$murl('api/saml/manage/identityprovider')).then(response => {
-      
-      this.provider = response.data;
+      notify({text: 'We have succesfully saved your provider settings.'});
 
     }, response => {
-      // error callback
-      this.errors = reponse.data.errors;
+      errors.value = response.data.errors;
+      wasValidated.value = true;
     });
 
-  },
-
-  methods: {
-    onSubmit(event) {
-
-      this.$http.put(this.$murl('api/saml/manage/identityprovider'), this.provider).then(response => {
-
-        this.$noty({
-          text: 'We have succesfully saved your provider settings.'
-        });
-
-        this.errors = {};
-        //this.provider = response.data;
-        this.wasValidated = false;
-
-      }, response => {
-        // error callback
-        this.errors = response.data.errors;
-        //this.$noty({text: 'We could not save this.', type: 'error'});
-
-        this.$noty({
-          text: 'We could not save this.',
-          type: 'error'
-        });
-
-        this.wasValidated = true;
-
-      });
-
-
-
-      event.preventDefault();
-
-    }
+    //this.loading = true;
+  }else{
+    wasValidated.value = true;
   }
 
+  event.preventDefault();
 }
 
 </script>

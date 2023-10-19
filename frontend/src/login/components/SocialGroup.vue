@@ -1,7 +1,7 @@
 
 <template>
     <div class="mt-0">
-        <hr v-if="!$store.state.activeModule" class="hr-text" data-content="or">
+        <hr v-if="!state.activeModule" class="hr-text" data-content="or">
         <slot></slot>    
     </div>
 </template>
@@ -10,3 +10,13 @@
 
 </style>
 
+<script setup>
+
+
+import { useStateStore } from "./store";
+
+
+const state = useStateStore();
+
+
+</script>

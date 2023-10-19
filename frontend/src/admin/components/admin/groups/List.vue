@@ -1,8 +1,8 @@
 
 <template>
-  <Main title="Groups">
+  <MainTemplate title="Groups">
     <template v-slot:header>
-      <Button to="/groups/add"> Add Group </Button>
+      <MenuButton to="/groups/add"> Add Group </MenuButton>
     </template>
 
     <template v-slot:body v-if="loaded">
@@ -11,11 +11,7 @@
         <div>
           <form class="form-inline">
             <label class="" for="entries">Show</label>
-            <select
-              class="form-control form-control-sm ml-2 mr-2"
-              id="entries"
-              v-model="itemsPerPage"
-            >
+            <select class="form-control form-control-sm ml-2 mr-2" id="entries" v-model="itemsPerPage">
               <option value="20">20</option>
               <option value="50">50</option>
               <option value="100">100</option>
@@ -25,24 +21,15 @@
         </div>
         <form class="form-inline" v-on:submit.prevent="onSubmit">
           <label class="sr-only" for="search.email">Name</label>
-          <input
-            type="search"
-            class="form-control form-control-sm mb-2 mr-sm-2"
-            id="search.email"
-            v-model="search.email"
-            placeholder=""
-          />
+          <input type="search" class="form-control form-control-sm mb-2 mr-sm-2" id="search.email" v-model="search.email"
+            placeholder="" />
 
           <button type="submit" class="btn btn-primary mb-2 btn-sm">
             Search
           </button>
 
-          <button
-            v-if="checkedUsers && checkedUsers.length > 0"
-            @click="deleteSelected()"
-            type="button"
-            class="btn btn-danger ml-2 mb-2 btn-sm"
-          >
+          <button v-if="checkedUsers && checkedUsers.length > 0" @click="deleteSelected()" type="button"
+            class="btn btn-danger ml-2 mb-2 btn-sm">
             Deleted selected
           </button>
         </form>
@@ -69,13 +56,7 @@
               }}
             </td>
             <td @click.stop class="text-center">
-              <input
-                :value="user.id"
-                v-model="checkedUsers"
-                @click.stop
-                class=""
-                type="checkbox"
-              />
+              <input :value="user.id" v-model="checkedUsers" @click.stop class="" type="checkbox" />
             </td>
           </tr>
 
@@ -91,160 +72,133 @@
           {{ startIndex + parseInt(itemsPerPage) - 1 }} of
           {{ totalResults }} entries
         </div>
-        <b-pagination
-          v-if="totalResults > itemsPerPage"
-          @input="changePage"
-          size="md"
-          :total-rows="totalResults"
-          v-model="currentPage"
-          :per-page="itemsPerPage"
-          class=""
-        ></b-pagination>
+        <b-pagination v-if="totalResults > itemsPerPage" @input="changePage" size="md" :total-rows="totalResults"
+          v-model="currentPage" :per-page="itemsPerPage" class=""></b-pagination>
       </div>
     </template>
-  </Main>
+  </MainTemplate>
 </template>
 
 
-<script>
-import Vue from "vue";
+<script setup>
+import { ref, onMounted , getCurrentInstance, watch} from 'vue'
+import { useRouter } from 'vue-router4';
+import { maxios } from '@/admin/helpers.js';
 
-export default {
-  data() {
-    return {
-      loaded: false,
+import { notify } from '../../../helpers';
 
-      currentPage: 1,
-      startIndex: 1,
-      itemsPerPage: 20,
-      users: [],
-      totalResults: null,
+const vue = getCurrentInstance();
+const router = useRouter();
+const loaded = ref(false);
+const currentPage = ref(1);
+const startIndex = ref(1);
+const itemsPerPage = ref(20);
+const users = ref([]);
+const totalResults = ref(null);
+const checkedUsers = ref([]);
+const filter = ref(null);
+const search = ref({
+  email: null,
+});
 
-      checkedUsers: [],
+watch(itemsPerPage, function (val) {
+  changePage(currentPage);
+});
 
-      filter: null,
+onMounted(() => {
+  var currentPage = parseInt(vue.proxy.$route.params.page || 1);
+  console.log('mounted!');
+  maxios
+    .get(
+      "api/scim/v2/Groups?count=20&startIndex=" +
+      (currentPage - 1) * 20 +
+      ""
 
-      search: {
-        email: null,
+    )
+    .then(
+      (response) => {
+        users.value = response.data.Resources;
+        totalResults.value = response.data.totalResults;
+        startIndex.value = parseInt(response.data.startIndex);
+
+        loaded.value = true;
       },
-    };
-  },
-
-  beforeRouteUpdate(to, from, next) {
-    window.history.pushState(
-      {},
-      document.title,
-      "/groups/" + (to.params.page || 1)
     );
-  },
+});
 
-  watch: {
-    itemsPerPage: function (val) {
-      this.changePage(this.currentPage);
-    },
-  },
+function onSubmit() {
+  filter.value =
+    'name co "' + (search.value.email ? search.value.email : "") + '"';
+  changePage(currentPage);
+}
 
-  mounted() {
-    var currentPage = parseInt(this.$route.params.page || 1);
-    Vue.http
-      .get(
-        Vue.murl(
-          "api/scim/v2/Groups?count=20&startIndex=" +
-            (currentPage - 1) * 20 +
-            ""
-        )
+function selectAll() {
+  for (var user of users.value) {
+    checkedUsers.value.push(user.id);
+
+    checkedUsers.value = Array.from(new Set(checkedUsers.value));
+  }
+}
+
+function deleteSelected() {
+  var promises = [];
+
+  for (var i = 0; i < checkedUsers.value.length; i++) {
+    promises.push(
+      maxios.delete(
+        "api/scim/v2/Groups/" + checkedUsers.value[i]
       )
-      .then(
-        (response) => {
-          this.users = response.data.Resources;
-          this.totalResults = response.data.totalResults;
-          this.startIndex = parseInt(response.data.startIndex);
+    );
+  }
 
-          this.loaded = true;
-        },
-        (response) => {}
-      );
-  },
+  Promise.all(promises).then((e) => {
+    notify({
+      text: "We have succesfully deleted the selected groups.",
+    });
+    checkedUsers.value = [];
+    changePage(currentPage);
+  });
+}
 
-  methods: {
-    onSubmit() {
-      this.filter =
-        'name co "' + (this.search.email ? this.search.email : "") + '"';
-      this.changePage(this.currentPage);
+function changePage(page) {
+  router.push({
+    name: "groups.list",
+    params: {
+      page: page,
     },
+  });
 
-    selectAll() {
-      for (var user of this.users) {
-        this.checkedUsers.push(user.id);
+  maxios
+    .get(
+      "api/scim/v2/Groups?count=20&startIndex=" +
+      ((page || 1) - 1) * itemsPerPage.value +
+      (filter.value ? "&filter=" + filter.value : "")
 
-        this.checkedUsers = Array.from(new Set(this.checkedUsers));
+    )
+    .then(
+      (response) => {
+        users.value = response.data.Resources;
+        totalResults.value = response.data.totalResults;
+        startIndex.value = parseInt(response.data.startIndex);
       }
+    );
+}
+
+function edit(user) {
+  router.push({
+    name: "groups.edit",
+    params: {
+      group_id: user.id,
     },
-
-    deleteSelected() {
-      var promises = [];
-
-      for (var i = 0; i < this.checkedUsers.length; i++) {
-        promises.push(
-          this.$http.delete(
-            this.$murl("api/scim/v2/Groups/" + this.checkedUsers[i])
-          )
-        );
-      }
-
-      Promise.all(promises).then((e) => {
-        this.$noty({
-          text: "We have succesfully deleted the selected user.",
-        });
-        this.checkedUsers = [];
-        this.changePage(this.currentPage);
-      });
-    },
-
-    changePage(page) {
-      this.$router.push({
-        name: "groups.list",
-        params: {
-          page: page,
-        },
-      });
-
-      this.$http
-        .get(
-          this.$murl(
-            "api/scim/v2/Groups?count=20&startIndex=" +
-              ((page || 1) - 1) * this.itemsPerPage +
-              (this.filter ? "&filter=" + this.filter : "")
-          )
-        )
-        .then(
-          (response) => {
-            this.users = response.data.Resources;
-            this.totalResults = response.data.totalResults;
-            this.startIndex = parseInt(response.data.startIndex);
-          },
-          (response) => {
-            // error callback
-          }
-        );
-    },
-
-    edit(user) {
-      this.$router.push({
-        name: "groups.edit",
-        params: {
-          group_id: user.id,
-        },
-      });
-    },
-  },
-};
+  });
+}
 </script>
 
 <style lang="scss">
 .page-item.disabled .page-link {
   color: transparent;
 }
+
 .page-item .page-link,
 .page-item.disabled .page-link {
   border-color: transparent;

@@ -1,6 +1,6 @@
 
 <template>
-  <Main title="New Group">
+  <MainTemplate title="New Group">
     <template v-slot:body>
       <h4 class="c-grey-900 mt-2">Provide the required details</h4>
 
@@ -82,56 +82,62 @@
         </button>
       </form>
     </template>
-  </Main>
+  </MainTemplate>
 </template>
 
 
-<script>
-export default {
-  data() {
-    return {
-      errors: {},
+<script setup>
 
-      wasValidated: false,
-      loading: false,
+import { ref, onMounted, getCurrentInstance } from "vue";
+import {maxios} from '@/admin/helpers.js'
+import { notify } from "../../../helpers";
+import { useRoute, useRouter } from "vue-router4";
 
-      group: {
-        schemas: ["urn:ietf:params:scim:schemas:core:2.0:Group"],
-        "urn:ietf:params:scim:schemas:core:2.0:Group": {
-          name: null,
-          displayName: null,
+const router = useRouter();
+
+const vue = getCurrentInstance();
+
+const errors = ref({});
+const wasValidated = ref(false); 
+const loading = ref(false);
+const group = ref({
+  schemas: ["urn:ietf:params:scim:schemas:core:2.0:Group"],
+  "urn:ietf:params:scim:schemas:core:2.0:Group": {
+    name: null,
+    displayName: null,
+  },
+});
+
+function onSubmit(event) {
+  if (event.target.checkValidity()) {
+    loading.value = true;
+
+    maxios
+      .post("api/scim/v2/Groups", JSON.stringify(group.value), {
+        headers: { "content-type": "application/scim+json" },
+      })
+      .then(
+        (response) => {
+          notify({ text: "We have succesfully created a new group." });
+          router.replace({
+            name: "groups.edit",
+            params: { group_id: response.data.id },
+          });
         },
-      },
-    };
-  },
+        (response) => {
+          notify({ text: "There were some problems." });
 
-  methods: {
-    onSubmit(event) {
-      if (event.target.checkValidity()) {
-        this.$http
-          .post(this.$murl("api/scim/v2/Groups"), JSON.stringify(this.group), {
-            headers: { "content-type": "application/scim+json" },
-          })
-          .then(
-            (response) => {
-              this.$noty({ text: "We have succesfully created a new group." });
-              this.$router.replace({
-                name: "groups.edit",
-                params: { group_id: response.data.id },
-              });
-            },
-            (response) => {
-              this.$noty({ text: "There were some problems." });
+          errors.value = response.data.errors;
+        }
+      )
+      .finally(() => {
+        loading.value = false;
+      });
+  }
 
-              this.errors = response.data.errors;
-            }
-          );
-      }
+  wasValidated.value = true;
 
-      this.wasValidated = true;
+  event.preventDefault();
+}
 
-      event.preventDefault();
-    },
-  },
-};
 </script>

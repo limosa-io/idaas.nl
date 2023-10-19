@@ -3,75 +3,57 @@
 
 <div>
 
-  <b-form-group horizontal :label-cols="3" description="URL to your terms of service document" label="Terms of Service" label-for="module.config.terms_of_service">
-    <b-form-input type="url" id="module.config.terms_of_service" v-model="module.config.terms_of_service" />
-  </b-form-group>
+  <FormGroup horizontal :label-cols="3" description="URL to your terms of service document" label="Terms of Service" label-for="module.config.terms_of_service">
+    <FormInput type="url" id="module.config.terms_of_service" v-model="module.config.terms_of_service" />
+  </FormGroup>
 
-  <b-form-group horizontal :label-cols="3" description="URL to your privacy policy" label="Privacy Policy" label-for="module.config.privacy_policy">
-    <b-form-input type="url" id="module.config.privacy_policy" v-model="module.config.privacy_policy" />
-  </b-form-group>
+  <FormGroup horizontal :label-cols="3" description="URL to your privacy policy" label="Privacy Policy" label-for="module.config.privacy_policy">
+    <FormInput type="url" id="module.config.privacy_policy" v-model="module.config.privacy_policy" />
+  </FormGroup>
 
-  <b-form-group horizontal :label-cols="3" description="Ask the user to agree with the Terms of Service and/or Privacy Policy."
+  <FormGroup horizontal :label-cols="3" description="Ask the user to agree with the Terms of Service and/or Privacy Policy."
     label="Ask approval?" label-for="module.config.approval">
 
-    <b-form-checkbox id="module.config.approval" v-model="module.config.approval" :value="true" :unchecked-value="false">
+    <FormCheckbox id="module.config.approval" v-model="module.config.approval" :value="true" :unchecked-value="false">
       {{ module.config.approval ? 'Enabled' : 'Disabled' }}
-    </b-form-checkbox>
+    </FormCheckbox>
 
-  </b-form-group>
+  </FormGroup>
 
 </div>
 
 </template>
 
-<script>
-export default {
+<script setup>
 
-  props: {
-    module: null,
-    info: null
-  },
+import { ref, defineProps } from 'vue';
+import {maxios} from "@/admin/helpers.js";
 
-  data(){
-    return {
-      
-      errors: {},
-      
-      wasValidated: false,
-      loading: false,
+const props = defineProps(['module', 'info']);
 
-      type: null,
-      types: [],
+const errors = ref({});
+const wasValidated = ref(false);  
+const loading = ref(false);
+const type = ref(null);
+const types = ref([]);
+const templates = ref({});
+const isEnabled = ref(true);
 
-      templates: {},
+onMounted(() => {
 
-      isEnabled: true,
+  maxios.get('api/settings?namespace=registration').then(response => {
 
-    }
-  },
+    isEnabled.value = response.data.allow;
 
-  mounted(){
-
-
-    this.$http.get(this.$murl('api/settings?namespace=registration')).then(response => {
-
-      this.isEnabled = response.data.allow;
-
+    if(!response.data.allow){
+      // FIXME: this method does not exist
       this.$emit('alert',{
         text: 'You must enable registration before you can use this module.',
         link: '/registration'
       })
+    }
 
-    });
+  });
 
-
-    
-    
-    
-
-  }
-
-
-  
-}
+});
 </script>

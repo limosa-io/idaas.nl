@@ -1,6 +1,6 @@
 
 <template>
-  <Main title="New client">
+  <MainTemplate title="New client">
 
     <template v-slot:body>
       <form
@@ -32,12 +32,12 @@
 
         </div>
 
-        <b-form-group label="What type of client would you like to add?">
-          <b-form-radio-group id="radios2" v-model="clientType" name="radioSubComponent">
-            <b-form-radio value="web">Web Client</b-form-radio>
-            <b-form-radio value="native">Native Client (such as a mobile web application)</b-form-radio>
-          </b-form-radio-group>
-        </b-form-group>
+        <FormGroup label="What type of client would you like to add?">
+          <FormRadioGroup v-model="clientType" name="radioSubComponent">
+            <FormRadioButton value="web">Web Client</FormRadioButton>
+            <FormRadioButton value="native">Native Client (such as a mobile web application)</FormRadioButton>
+          </FormRadioGroup>
+        </FormGroup>
 
         <div
           v-for="(e, index) in errors.application_type"
@@ -48,55 +48,53 @@
         <button type="submit" class="btn btn-primary mt-1" :disabled="loading">Add Application</button>
       </form>
     </template>
-  </Main>
+  </MainTemplate>
 </template>
 
 
-<script>
+<script setup>
+import {ref, onMounted} from "vue";
+import {laxios} from '@/admin/helpers.js'
+import { notify } from "../../../helpers";
+import { useRouter } from "vue-router4";
 
-export default {
+const errors = ref({});
+const wasValidated = ref(false);
+const loading = ref(false);
+const clientName = ref(null);
+const clientType = ref("web");
+const router = useRouter();
 
-  data() {
-    return {
-      errors: {},
-
-      wasValidated: false,
-      loading: false,
-
-      clientName: null,
-      clientType: "web"
-    };
-  },
-
-  methods: {
-    onSubmit(event) {
-      if (event.target.checkValidity()) {
-        this.$http
-          .post(this.$oidcUrl("oauth/connect/register"), {
-            client_name: this.clientName,
-            application_type: this.clientType
-          })
-          .then(
-            response => {
-              this.$noty({
-                text: "We have succesfully saved your new OpenID Client."
-              });
-              this.$router.replace({
-                name: "oidc.client.edit",
-                params: { client_id: response.data.client_id }
-              });
-            },
-            response => {
-              this.errors = response.data.errors;
-              this.wasValidated = true;
-            }
-          );
-      } else {
-        this.wasValidated = true;
-      }
-
-      event.preventDefault();
-    }
+function onSubmit(event) {
+  if (event.target.checkValidity()) {
+    loading.value = true;
+    laxios
+      .post("oauth/connect/register", {
+        client_name: clientName.value,
+        application_type: clientType.value
+      })
+      .then(
+        response => {
+          notify({
+            text: "We have succesfully saved your new OpenID Client."
+          });
+          router.replace({
+            name: "oidc.client.edit",
+            params: { client_id: response.data.client_id }
+          });
+        },
+        response => {
+          errors.value = response.data.errors;
+          wasValidated.value = true;
+        }
+      ).finally(() => {
+        loading.value = false;
+      });
+  } else {
+    wasValidated.value = true;
   }
-};
+
+  event.preventDefault();
+}
+
 </script>

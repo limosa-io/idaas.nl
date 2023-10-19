@@ -1,7 +1,7 @@
 <template>
 
 <div>
-  <b-modal @ok="onSubmitImportX509" ref="importX509" id="importX509" title="Import X509" v-if="importx509">
+  <Modal @ok="onSubmitImportX509" ref="importX509" id="importX509" title="Import X509" v-if="importx509">
 
     <form novalidate :class="{'was-validated': wasValidated}" class="needs-validation" v-on:submit="onSubmitImportX509">
 
@@ -29,7 +29,7 @@
 
     </form>
 
-  </b-modal>
+  </Modal>
 
   <button @click="createGenerated" class="btn btn-md btn-primary mb-3 float-right" type="button">
     Generate new keypair
@@ -39,7 +39,7 @@
     Import X509
   </button>
 
-  <p>Configure the keypair used for signing access tokens and id tokens. The public key is published on <a :href="$oidcUrl('.well-known/jwks.json')">.well-known/jwks.json</a>.</p>
+  <p>Configure the keypair used for signing access tokens and id tokens. The public key is published on <a :href="getOidcUrl('/.well-known/jwks.json')">.well-known/jwks.json</a>.</p>
 
   <table class="table table-hover table-striped">
 
@@ -67,119 +67,99 @@
 
 </template>
 
-<script>
+<script setup>
 
-export default {
+import { ref, reactive, watch, computed, getCurrentInstance, onMounted } from 'vue'
+import { maxios, notify, getOidcUrl } from '@/admin/helpers.js'
+import Modal from '@/admin/components/general/Modal.vue'
 
-  data() {
-    return {
+const errors = ref(null);
+const wasValidated = ref(false);
+const loading = ref(false);
+const records = ref(null);
+const importX509 = ref(null);
 
-      errors: {},
+onMounted(async () => {
+  const response = await maxios.get("api/openidKey");
+  records.value = response.data;
+});
 
-      wasValidated: false,
-      loading: false,
+function reset(){
+  importX509.value = {
+    x509: null, private_key: null
+  };
+}
 
-      records: null,
+function activate(key) {
 
-      importx509: null
+  key.active = true;
 
-    }
-  },
-  
-
-  mounted() {
-
-    this.reset();
-
-    this.$http.get(this.$murl('api/openidKey')).then(response => {
-        console.log('succes!');
-      this.records = response.data;
-      //console.log(JSON.stringify(this.scopes));
-
-    }, response => {
+  maxios.put("api/openidKey/" + key.id, key).then(
+    (response) => {
+      key = response;
+    },
+    (response) => {
       // error callback
-      
-    });
 
-  },
-
-  watch: {
-
-  },
-
-  methods: {
-
-    reset(){
-      this.importx509 = {
-        x509: null, private_key: null
-      };
-    },
-
-    activate(key) {
-
-      key.active = true;
-
-      this.$http.put(this.$murl('api/openidKey/' + key.id), key).then(response => {
-
-        key = response;
-      }, response => {
-        this.$noty({text: response.data.error, type: 'error'});
-        key.active = false;
+      notify({
+        text: response.data.error,
+        type: "error",
       });
-
-
-    },
-
-    deactivate(key) {
 
       key.active = false;
-
-      this.$http.put(this.$murl('api/openidKey/' + key.id), key).then(response => {
-
-        key = response;
-      }, response => {
-        // error callback
-
-      this.$noty({text: response.data.error, type: 'error'});
-      });
-
-    },
-
-    createGenerated(){
-
-        this.$http.post(this.$murl('api/openidKey/createGenerated'), {}).then(response => {
-
-            this.records.push(response.data);
-        
-      }, response => {
-        // error callback
-      });
-
-    },
-
-    onSubmitImportX509(bvEvt){
-
-      this.$http.post(this.$murl('api/openidKey'), this.importx509).then(response => {
-
-            this.records.push(response.data);
-
-            this.wasValidated = false;
-
-            this.$refs.importX509.hide();
-            this.reset();
-        
-      }, response => {
-        this.errors = response.data.errors;
-        this.wasValidated = true;
-      });
-
-      bvEvt.preventDefault();
-
-
     }
+  );
+}
 
-  }
+function deactivate(key) {
 
+  key.active = false;
+
+  maxios.put("api/openidKey/" + key.id, key).then(
+    (response) => {
+      key = response;
+    },
+    (response) => {
+      // error callback
+
+      notify({
+        text: response.data.error,
+        type: "error",
+      });
+
+      key.active = true;
+    }
+  );
+}
+
+function createGenerated() {
+  maxios.post("api/openidKey/createGenerated", {}).then(
+    (response) => {
+      records.value.push(response.data);
+    },
+    (response) => {
+      // error callback
+    }
+  );
+}
+
+function onSubmitImportX509(event) {
+  maxios.post("api/openidKey", importX509.value).then(
+    (response) => {
+      records.value.push(response.data);
+
+      wasValidated.value = false;
+
+      importX509.value = null;
+      vue.proxy.$refs.importX509.hide();
+    },
+    (response) => {
+      errors.value = response.data.errors;
+      wasValidated.value = true;
+    }
+  );
+
+  event.preventDefault();
 }
 
 </script>

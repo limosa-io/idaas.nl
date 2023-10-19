@@ -1,57 +1,60 @@
 <template>
-  <div id="app">
-    <div v-on:transitionend="height = '0%'" id="progressbar" ref="progressbar" :style="{width: width, height: height}" ></div>
-   <router-view></router-view>
+  <div>
+    <div
+      v-on:transitionend="height = '0%'"
+      id="progressbar"
+      ref="progressbar"
+      :style="{ width: width, height: height }"
+    ></div>
+    <Transition>
+      <div class="notification" :class="[notification_type]" v-if="show_notify">
+        {{ notification }}
+      </div>
+    </Transition>
+    <router-view></router-view>
   </div>
 </template>
 
-<script>
-import Vue from 'vue'
+<script setup>
+import { onMounted, ref } from "vue";
+
+import {useStateStore} from "./components/store";
+import { storeToRefs } from 'pinia'
+
+const width = ref("0%");
+const height = ref("0%");
+const showProgress = ref(false);
 
 
-import { i18n } from './i18n.js'
 
-export default {
+const state = useStateStore();
+const { show_notify, notification, notification_type } = storeToRefs(state);
 
-  data() {
-    return {
-      width: '0%',
-      height: '0%',
-      showProgress: false
-    }
-  },
 
-  mounted() {
+import { i18n } from "./i18n.js";
 
-    Vue.http.interceptors.push((request, next) => {
-
-      request.headers.set('Accept-Language', i18n.locale);
-
-      this.width = '40%';
-      this.height = '3px';
-      this.showProgress = true;
-
-      next((response) => {
-        this.width = '100%';
-      });
-    });
-
-  }
-}
-
+onMounted(() => {
+  // Vue.http.interceptors.push((request, next) => {
+  //   request.headers.set("Accept-Language", i18n.global.locale);
+  //   this.width = "40%";
+  //   this.height = "3px";
+  //   showProgress.value = true;
+  //   next((response) => {
+  //     this.width = "100%";
+  //   });
+  // });
+});
 </script>
 
 <style lang="scss">
-
 @import "node_modules/bootstrap/scss/bootstrap";
 
-.pre-wrap{
+.pre-wrap {
   white-space: pre-wrap;
   line-height: 2rem;
 }
 
-
-#progressbar{
+#progressbar {
   position: fixed;
   display: block;
   background-color: rgb(59, 206, 236);
@@ -59,24 +62,22 @@ export default {
 
   transition-timing-function: ease-in;
   transition: width 0.5s, height 0.5s;
-
-  
 }
 
-body, #app{
-    width: 100vw;
-    min-height: 100vh;
-    margin: 0px;
-    padding: 0px;
+body,
+#app {
+  width: 100vw;
+  min-height: 100vh;
+  margin: 0px;
+  padding: 0px;
 }
 
-.btn-loading{
-  
+.btn-loading {
   span {
     color: transparent;
     float: left;
   }
-  
+
   &:after {
     content: " ";
     display: block;
@@ -102,6 +103,32 @@ body, #app{
   }
 }
 
+.notification {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  width: min(450px, 100%);
+  padding: 10px;
+  background-color: #519beb;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #ccc;
+  z-index: 99;
+  color: white;
+}
 
+.notification.error{
+  background-color: #eb5e51;
+}
+
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
 
 </style>

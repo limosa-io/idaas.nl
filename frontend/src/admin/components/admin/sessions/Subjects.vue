@@ -78,135 +78,79 @@
 
 </template>
 
-<script>
-import Vue from "vue";
+<script setup>
+import { ref, getCurrentInstance, onMounted, watch } from "vue";
+import {maxios, notify} from '@/admin/helpers.js';
 
-export default {
+const vue = getCurrentInstance();
+const loaded = ref(false);
+const currentPage = ref(1);
+const startIndex = ref(1);
+const itemsPerPage = ref(20);
+const resources = ref([]);
+const totalResults = ref(null);
+const checked = ref([]);
+const search = ref({
+  email: null,
+  group: null
+});
+const filter = ref(null);
 
-  data() {
-    return {
-      loaded: false,
+watch(itemsPerPage, (val) => {
+  changePage(currentPage.value);
+});
 
-      currentPage: 1,
-      startIndex: 1,
-      itemsPerPage: 20,
-      resources: [],
-      totalResults: null,
+function selectAll() {
+  for (var resource of resources) {
+    checked.push(resource.id);
 
-      checked: [],
+    checked = Array.from(new Set(checked));
+  }
+}
 
-      search: {
-        email: null,
-        group: null
-      },
+function onSubmit() {
+  changePage(currentPage.value);
+}
 
-      filter: null
-    }
-  },
+function deleteSelected() {
+  let promises = [];
 
-  watch: {
-    itemsPerPage: function (val) {
-      this.changePage(this.currentPage);
-    }
-  },
+  for (var c of checked) {
+    promises.push(maxios.delete("api/scim/v2/Subjects/" + c));
+  }
 
-  methods: {
-
-    selectAll(){
-
-
-    for (var resource of this.resources) {
-        this.checked.push(resource.id);
-
-        this.checked = Array.from(new Set(this.checked));
-      }
-
-    },
-
-    onSubmit(){
-
-      this.changePage(this.currentPage);
-
-    },
-
-    deleteSelected(){
-
-      let promises = [];
-
-      for(var c of this.checked){
-
-        promises.push(
-          this.$http.delete(this.$murl('api/scim/v2/Subjects/' + c))
-        );
-
-      }
-
-      Promise.all(promises).then(e => {
-        this.$noty({
-          text: 'We have succesfully deleted the selected subject.'
-        });
-        this.checked = [];
-        this.changePage(this.currentPage);
+  Promise.all(promises).then(
+    e => {
+      notify({
+        text: "We have succesfully deleted the selected subject."
       });
-
+      checked = [];
+      changePage(currentPage.value);
     },
+    e => {}
+  );
+}
 
-    beautify(subject){
-      return JSON.stringify(subject, undefined, 3);
-    },
-    
-    changePage(page) {
+function beautify(subject) {
+  return JSON.stringify(subject, undefined, 3);
+}
+
+function changePage(page){
+  maxios
+    .get(
       
-
-      this.$http
-        .get(
-          this.$murl(
-            `api/scim/v2/Subjects?sortBy=meta.created&sortOrder=descending&count=${this.itemsPerPage}&startIndex=` +
-            ((page || 1) - 1) * this.itemsPerPage +
-            (this.filter ? "&filter=" + this.filter : "")
-          )
-        )
-        .then(
-          response => {
-            this.resources = response.data.Resources;
-            this.totalResults = response.data.totalResults;
-            this.startIndex = parseInt(response.data.startIndex);
-          },
-          response => {
-            // error callback
-          }
-        );
-    },
-
-  },
-
-
-  mounted() {
-    var currentPage = parseInt(this.$route.params.page || 1);
-
-    this.$http
-      .get(
-        this.$murl(
-          `api/scim/v2/Subjects?sortBy=meta.created&sortOrder=descending&count=${this.itemsPerPage}&startIndex=${(currentPage - 1) * 20}`
-        )
-      )
-      .then(
-        response => {
-          this.resources = response.data.Resources;
-          this.totalResults = response.data.totalResults;
-          this.startIndex = parseInt(response.data.startIndex);
-
-          this.loaded = true;
-
-
-
-
-        },
-        response => {}
-      );
-
-  },
-
+        `api/scim/v2/Subjects?sortBy=meta.created&sortOrder=descending&count=${itemsPerPage.value}&startIndex=` +
+        ((page || 1) - 1) * itemsPerPage.value +
+        (filter.value ? "&filter=" + filter.value : "")
+      
+    )
+    .then(
+      response => {
+        resources.value = response.data.Resources;
+        totalResults.value = response.data.totalResults;
+        startIndex.value = parseInt(response.data.startIndex);
+      }
+    );
 }
 
 </script>

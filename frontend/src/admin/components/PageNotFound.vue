@@ -19,9 +19,6 @@
 </style>
 
 
-<script>
-export default {
+<script setup>
 
-    
-}
 </script>

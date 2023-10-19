@@ -2,20 +2,20 @@
 
 <div class="container-fluid">
 
-  <div class="row stats">
-    <div class="col-3" @click="$router.push('/oidc')">
+  <div class="row stats" v-if="dashboard">
+    <div class="col-3" @click="router.push('/oidc')">
       <span>{{ makeLargeReadable(dashboard.applications) }}</span>
       <span>Applications</span>
     </div>
-    <div class="col-3" @click="$router.push('/users')">
+    <div class="col-3" @click="router.push('/users')">
       <span>{{ makeLargeReadable(dashboard.users) }}</span>
       <span>Users</span>
     </div>
-    <div class="col-3" @click="$router.push('/users')">
+    <div class="col-3" @click="router.push('/users')">
       <span>{{ makeLargeReadable(dashboard.user_creations) }}</span>
       <span>New<br />Users</span>
     </div>
-    <div class="col-3" @click="$router.push('/sessions/tokens')">
+    <div class="col-3" @click="router.push('/sessions/tokens')">
       <span>{{ makeLargeReadable(dashboard.tokens) }}</span>
       <span>Tokens</span>
     </div>
@@ -113,9 +113,18 @@
 
 </style>
 
-<script>
+<script setup>
 
+import {ref, onMounted} from 'vue'
 import Chart from 'chart.js';
+import {maxios} from '@/admin/helpers.js'
+import {useRouter} from 'vue-router4';
+
+const router = useRouter();
+
+const dashboard = ref(null);
+
+
 
 var config = {
   type: 'line',
@@ -211,58 +220,33 @@ var config = {
   }
 };
 
-export default {
+function makeLargeReadable(number){
 
-
-  data() {
-    return {
-      dashboard: {}
-    }
-  },
-
-  methods: {
-
-
-    makeLargeReadable(number){
-
-      if(number > 1000000){
-        return Math.round(number / 1000000.0) + 'M';
-      }
-
-      if(number > 1000){
-        return Math.round(number / 1000.0) + 'K';
-      }
-
-      return number;
-
-    }
-
-
-
-  },
-
-  mounted() {
-
-    var ctx = this.$refs.chart1.getContext('2d');
-
-    const chart = new Chart(ctx, config);
-
-    this.$http.get(this.$murl('api/stats/dashboard')).then(response => {
-      this.dashboard = response.data;
-    });
-
-    this.$http.get(this.$murl('api/stats/loginsPerDay30Days')).then(response => {
-
-      chart.data.datasets[0].data = response.data;
-      chart.update();
-
-    }, response => {
-      // error callback
-    });
-
+  if(number > 1000000){
+    return Math.round(number / 1000000.0) + 'M';
   }
+
+  if(number > 1000){
+    return Math.round(number / 1000.0) + 'K';
+  }
+
+  return number;
 
 }
 
+onMounted(async () => {
+
+  const response = await maxios.get("api/stats/dashboard");
+  dashboard.value = response.data;
+
+  const response2 = await maxios.get("api/stats/loginsPerDay30Days");
+
+  config.data.datasets[0].data = response2.data;
+  
+
+  //FIXME: fix chart
+  //new Chart(document.getElementById("chart1"), config);
+
+});
 
 </script>

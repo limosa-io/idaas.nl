@@ -3,25 +3,21 @@
 
 <div>
 
-  <b-form-group horizontal :label-cols="3" description="Client Id." label="Client Id" label-for="module.config.client_id">
-    <b-form-input id="module.config.client_id" v-model.trim="module.config.client_id"></b-form-input>
-  </b-form-group>
+  <FormGroup horizontal :label-cols="3" description="Client Id." label="Client Id" label-for="module.config.client_id">
+    <FormInput id="module.config.client_id" v-model.trim="module.config.client_id"></FormInput>
+  </FormGroup>
 
-  <b-form-group horizontal :label-cols="3" description="Client Secret" label="Client Secret" label-for="module.config.client_secret">
-    <b-form-input id="module.config.client_secret" v-model.trim="module.config.client_secret"></b-form-input>
-  </b-form-group>
+  <FormGroup horizontal :label-cols="3" description="Client Secret" label="Client Secret" label-for="module.config.client_secret">
+    <FormInput id="module.config.client_secret" v-model.trim="module.config.client_secret"></FormInput>
+  </FormGroup>
 
-  <b-form-group horizontal :label-cols="3" description="Create a user (allow registration)" label="Create user" label-for="module.config.create_user">
+  <FormGroup horizontal :label-cols="3" description="Create a user (allow registration)" label="Create user" label-for="module.config.create_user">
 
-    <b-form-checkbox id="module.config.create_user" v-model="module.config.create_user" :value="true" :unchecked-value="false">
+    <FormCheckbox id="module.config.create_user" v-model="module.config.create_user" :value="true" :unchecked-value="false">
               {{ module.config.create_user ? 'Enabled' : 'Disabled' }}
-      </b-form-checkbox>
+      </FormCheckbox>
 
-  </b-form-group>
-
-  
-
-  
+  </FormGroup>  
 
   <p v-if="info">
     Use the following callback url in Facebook: {{ info.callback }}
@@ -32,45 +28,20 @@
 </template>
 
 
-<script>
-export default {
+<script setup>
 
-  props: {
-    module: null,
-    info: null
-  },
+import { ref, defineProps } from 'vue';
 
-  data(){
-    return {
-      
-      errors: {},
-      
-      wasValidated: false,
-      loading: false,
+const props = defineProps(['module', 'info']);
 
-      type: null,
-      types: []
+const errors = ref({});
+const wasValidated = ref(false);
+const loading = ref(false);
+const type = ref(null);
+const types = ref([]);
 
-    }
-  },
-
-  mounted(){
-
-
-    
-    
-
-  },
-
-  methods: {
-    onSubmit(event){
-
-      event.preventDefault();
-
-    }
-  }
-
-
-  
+function onSubmit(event) {
+  event.preventDefault();
 }
+
 </script>

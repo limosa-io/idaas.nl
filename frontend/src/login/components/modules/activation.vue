@@ -1,119 +1,107 @@
 <template>
+  <div class="large-form-items">
+    <form v-if="props.lonely" v-on:submit.prevent="onSubmit">
+      <template v-if="!done">
+        <div class="form-group">
+          <label
+            for="username"
+            :style="{
+              display: props.customerstyle.label_display != 'show' ? 'none' : 'block',
+            }"
+            >{{ $t("login.username") }}</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="username"
+            :placeholder="$t('login.usernamePlaceholder')"
+            v-model="username"
+          />
+        </div>
 
-<div class="large-form-items">
+        <div v-if="error" class="alert alert-danger" role="alert">
+          {{ error }}
+        </div>
 
-<form v-if="lonely" v-on:submit.prevent="onSubmit">
+        <button
+          :style="{ backgroundColor: customerstyle['button_backgroundColor'] }"
+          class="btn btn-primary btn-block"
+          type="submit"
+        >
+          <span>{{ $t("login.activationButton") }}</span>
+        </button>
+      </template>
+      <div v-else class="alert alert-info mt-2" role="alert">
+        {{ $t("login.activationMailSend") }}
+      </div>
+    </form>
 
-  <template v-if="!done">
-
-    <div class="form-group">
-      <label for="username" :style="{display: customerstyle.label_display != 'show' ? 'none' : 'block'}">{{ $t('login.username') }}</label>
-      <input type="text" class="form-control" id="username" :placeholder="$t('login.usernamePlaceholder')" v-model="username">
-    </div>
-
-    <div v-if="error" class="alert alert-danger" role="alert">
-      {{ error }}
-    </div>
-  
-
-  <button :style="{backgroundColor: customerstyle['button_backgroundColor']}" class="btn btn-primary btn-block" type="submit">
-    <span>{{ $t('login.activationButton') }}</span>
-  </button>
-
-  </template>
-  <div v-else class="alert alert-info mt-2" role="alert">
-    {{ $t('login.activationMailSend') }}
+    <a
+      v-else
+      class="nav-link text-center"
+      href="#"
+      @click.prevent="activate(props.module)"
+      active-class="active"
+      >{{ $t("login.activationLink") }}</a
+    >
   </div>
-
-</form>
-
-<a v-else class="nav-link text-center" href="#" @click.prevent="activate()" active-class="active">{{ $t('login.activationLink') }}</a>
-
-</div>
-
-
 </template>
 
-<script>
-import Vue from "vue";
-import base from "./Base";
+<script setup>
+import { onMounted, ref } from "vue";
 
-import { EventBus } from "../eventBus.js";
+import {activate} from './composable'
+import {useStateStore} from "../store";
 
-export default Vue.extend({
-  mixins: [base],
+const state = useStateStore();
 
-  data() {
-    return {
-      username: null,
+const username = ref(null);
+const done = ref(false);
+const error = ref(null);
 
-      done: false,
+onMounted(() => {
 
-      error: null
-    };
-  },
+  if (props.authRequest.info.hint) {
+    username.value = props.authRequest.info.hint;
+  }
 
-  mounted() {
-
-    EventBus.$on("username", username => {
-      this.username = username;
-    });
-
-    if(this.authRequest.info.hint){
-      this.username = this.authRequest.info.hint;
-    }
-
-    if (this.lonely && (this.authRequest.info.subject != null || this.authRequest.info.hint != null) ) {
+  if (
+    props.lonely &&
+    (props.authRequest.info.subject != null ||
+      props.authRequest.info.hint != null)
+  ) {
     // seems like 'watch' is always triggered
-      this.autoSubmit();
-    }
-    
-  },
-
-  watch: {
-    lonely: function(val){
-      if(val){
-      }
-    }
-  },
-
-  methods: {
-
-    autoSubmit(){
-
-      this.request({}).then(
-        response => {
-          this.done = true;
-        },
-        error => {
-          this.$noty({ text: error.data.error });
-          this.done = false;
-        }
-      );
-
-    },
-
-    onSubmit() {
-
-      if (this.username == null || this.username == "") {
-        return;
-      }
-
-      this.request({
-        username: this.username
-      }).then(
-        response => {
-          this.done = true;
-        },
-        error => {
-          this.$noty({ text: error.data.error });
-          this.done = false;
-        }
-      );
-
-      
-
-    }
+    autoSubmit();
   }
 });
+
+function autoSubmit() {
+  request({}).then(
+    (response) => {
+      done.value = true;
+    },
+    (error) => {
+      state.error(error.data.error);
+      done.value = false;
+    }
+  );
+}
+
+function onSubmit() {
+  if (username.value == null || username.value == "") {
+    return;
+  }
+
+  request({
+    username: username.value,
+  }).then(
+    (response) => {
+      done.value = true;
+    },
+    (error) => {
+      state.error(error.data.error);
+      done.value = false;
+    }
+  );
+}
 </script>

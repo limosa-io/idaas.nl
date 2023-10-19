@@ -1,5 +1,5 @@
 <template>
-  <Main title="Rules">
+  <MainTemplate title="Rules">
     <template v-slot:body>
       <h4 class="c-grey-900 mt-2">
         User Event Rules
@@ -120,69 +120,57 @@
         </tbody>
       </table>
     </template>
-  </Main>
+  </MainTemplate>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      cloudFunctions: null,
+<script setup>
+import {ref, onMounted, getCurrentInstance} from "vue";
+import {maxios} from '@/admin/helpers.js'
 
-      rule: {
-        display_name: null,
-        code: "",
-        active: true,
-        type: null,
-      },
+import { useRouter } from "vue-router4";
 
-      errors: [],
-    };
-  },
+const vue = getCurrentInstance();
+const router = useRouter();
+const cloudFunctions = ref([]);
+const rule = ref({
+  display_name: null,
+  code: "",
+  active: true,
+  type: null,
+});
 
-  methods: {
-    edit: function (rule) {
-      this.$router.push({ name: "rules.edit", params: { rule_id: rule.id } });
-    },
+const errors = ref([]);
 
-    loadRules() {
-      this.$http.get(this.$murl("api/cloudFunctions")).then(
-        (response) => {
-          this.cloudFunctions = response.data;
-        },
-        (response) => {
-          // error callback
-        }
-      );
-    },
+onMounted(() => {
+  loadRules();
+});
 
-    addRule(type) {
-      this.$http
-        .post(this.$murl("api/cloudFunctions"), {
-          display_name:
-            (type == "attribute" ? "Attribute Rule" : "User Event Rule") +
-            " - " +
-            new Date().toLocaleDateString(),
-          code: "",
-          active: true,
-          type: type,
-        })
-        .then(
-          (response) => {
-            this.loadRules();
-          },
-          (response) => {
-            // error callback
-            this.errors = response.data.errors;
-          }
-        );
-    },
-  },
+function edit(rule) {
+  router.push({ name: "rules.edit", params: { rule_id: rule.id } });
+}
 
-  mounted() {
-    this.loadRules();
-  },
-};
+function loadRules() {
+  maxios.get(`api/cloudFunctions`).then((response) => {
+    cloudFunctions.value = response.data;
+  });
+}
+
+function addRule(type) {
+  maxios
+    .post(`api/cloudFunctions`, {
+      display_name:
+        (type == "attribute" ? "Attribute Rule" : "User Event Rule") +
+        " - " +
+        new Date().toLocaleDateString(),
+      code: "",
+      active: true,
+      type: type,
+    })
+    .then((response) => {
+      loadRules();
+    });
+}
+
 </script>
 
 <style>

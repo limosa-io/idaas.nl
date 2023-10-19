@@ -1,29 +1,23 @@
 
 <template>
-  <Main title="Applications">
+  <MainTemplate title="Applications">
     <template v-slot:header>
       <popup-demo-application ref="popupdemo" />
 
-      <b-dropdown text right class="float-right">
         <a
-          class="dropdown-item"
-          :href="$oidcUrl('.well-known/openid-configuration')"
+          class="btn btn-md btn-secondary float-right mr-2"
+          :href="getOidcUrl('.well-known/openid-configuration')"
           target="_blank"
           >OpenID Configuration</a
         >
         <a
-          class="dropdown-item"
-          :href="$oidcUrl('.well-known/jwks.json')"
+          class="btn btn-md btn-secondary float-right mr-2"
+          :href="getOidcUrl('.well-known/jwks.json')"
           target="_blank"
           >JWK</a
         >
-      </b-dropdown>
 
-      <Button
-        class="mr-2"
-        to="/applications/oidc/add"
-        >Add Application</Button
-      >
+      <MenuButton to="/applications/oidc/add" class="mr-2" >Add Application</MenuButton>
 
       <button
         @click="createTestClient"
@@ -31,9 +25,8 @@
       >
         Add Test Application
       </button>
-
+      
       <router-link
-        tag="button"
         class="btn btn-md btn-secondary float-right mr-2"
         to="/applications/oidc/settings"
         >Settings</router-link
@@ -99,73 +92,62 @@
         </tbody>
       </table>
     </template>
-  </Main>
+  </MainTemplate>
 </template>
 
-<script>
-import Vue from "vue";
+<script setup>
+import { ref, onMounted, computed, getCurrentInstance } from "vue";
+import axios from "axios";
+import {useRouter} from 'vue-router4'
 
-// /home/arie/git/ice-complete/ice/frontend/src/admin/helpers.js
-// /home/arie/git/ice-complete/ice/frontend/src/admin/components/general/Main.vue
-import { getDecodedAccesstoken } from "@/admin/helpers.js";
+import { getDecodedAccesstoken, getOidcUrl } from "@/admin/helpers.js";
 import PopupDemoApplication from "./demo/PopupDemoApplication.vue";
 
-export default {
-  components: {
-    PopupDemoApplication
-  },
+const router = useRouter();
+const clients = ref(null);
+const search = ref(null);
+const currentClientId = ref(null);
 
-  data() {
-    return {
-      clients: null,
+const popupdemo = ref(null);
 
-      search: null,
+const vue = getCurrentInstance();
 
-      currentClientId: null,
-    };
-  },
+onMounted(() => {
+  currentClientId.value = getDecodedAccesstoken().aud;
 
-  computed: {
-    clients_filtered: function () {
-      return this.clients
-        ? this.clients.filter((value) => {
-            console.log(value.client_id);
-            return (
-              this.search == null ||
-              value.client_id.includes(this.search) ||
-              value.client_name
-                .toLowerCase()
-                .includes(this.search.toLowerCase())
-            );
-          })
-        : [];
+  axios.get("https://login.notidaas.nl/oauth/connect/register", {headers: {
+    'Authorization': 'Bearer ' + window.sessionStorage.getItem('access_token')
+  }}).then(
+    (response) => {
+      clients.value = response.data;
     },
-  },
+    (response) => {
+      // error callback
+    }
+  );
+});
 
-  methods: {
-    edit: function (client) {
-      this.$router.push({
-        name: "oidc.client.edit",
-        params: { client_id: client.client_id },
-      });
-    },
+const clients_filtered = computed(() => {
+  return clients.value != null
+    ? clients.value.filter((value) => {
+        console.log(value.client_id);
+        return (
+          search.value == null ||
+          value.client_id.includes(search.value) ||
+          value.client_name.toLowerCase().includes(search.value.toLowerCase())
+        );
+      })
+    : [];
+});
 
-    createTestClient() {
-      this.$refs.popupdemo.show();
-    },
-  },
+function edit(client) {  
+  router.push({
+    name: "oidc.client.edit",
+    params: { client_id: client.client_id },
+  });
+}
 
-  mounted() {
-    this.currentClientId = getDecodedAccesstoken().aud;
-
-    Vue.http.get(Vue.oidcUrl("oauth/connect/register")).then(
-      (response) => {
-        this.clients = response.data;
-      },
-      (response) => {
-        // error callback
-      }
-    );
-  },
-};
+function createTestClient() {
+  popupdemo.value.show();
+}
 </script>

@@ -1,34 +1,18 @@
 
 <template>
-  <Main title="Rules">
+  <MainTemplate title="Rules">
     <template v-slot:body v-if="action">
-      <form
-        class="needs-validation"
-        novalidate
-        :class="{ 'was-validated': wasValidated }"
-        v-on:submit.prevent="onSubmit"
-      >
+      <form class="needs-validation" novalidate :class="{ 'was-validated': wasValidated }" v-on:submit.prevent="onSubmit">
         <div class="form-group">
           <label for="url">Display Name</label>
-          <input
-            type="text"
-            v-model.trim="action.display_name"
-            class="form-control"
-            id="display_name"
-            aria-describedby="display_name_help"
-          />
-          <small id="display_name_help" class="form-text text-muted"
-            >Selected email templates, users and groups are provided as
-            variables to the rule.</small
-          >
+          <input type="text" v-model.trim="action.display_name" class="form-control" id="display_name"
+            aria-describedby="display_name_help" />
+          <small id="display_name_help" class="form-text text-muted">Selected email templates, users and groups are
+            provided as
+            variables to the rule.</small>
         </div>
 
-        <codemirror
-          v-if="action"
-          id="codemirror"
-          v-model="action.code"
-          :options="cmOptions"
-        ></codemirror>
+        <textarea v-if="action" v-model="action.code"></textarea>
 
         <div class="alert alert-danger" role="alert" v-if="error">
           {{ error }}
@@ -37,48 +21,21 @@
         <div class="form-group mt-3">
           <label for="url" style="z-index: 999999">Variables</label>
 
-          <multiselect
-            v-model="action.variables"
-            label="name"
-            track-by="id"
-            placeholder="Type to search"
-            :options="variableOptions"
-            :multiple="true"
-            :searchable="true"
-            :loading="isLoading"
-            :internal-search="false"
-            :clear-on-select="true"
-            :close-on-select="false"
-            :options-limit="300"
-            group-values="options"
-            group-label="group"
-            :group-select="false"
-            :max-height="600"
-            :show-no-results="false"
-            :hide-selected="true"
-            @search-change="asyncFind"
-          >
+          <multiselect v-model="action.variables" label="name" track-by="id" placeholder="Type to search"
+            :options="variableOptions" :multiple="true" :searchable="true" :loading="isLoading" :internal-search="false"
+            :clear-on-select="true" :close-on-select="false" :options-limit="300" group-values="options"
+            group-label="group" :group-select="false" :max-height="600" :show-no-results="false" :hide-selected="true"
+            @search-change="asyncFind">
             <template slot="tag" slot-scope="{ option, remove }">
-              <span
-                v-b-tooltip.hover
-                :title="`available as ${getVariableName(option)}`"
-                class="multiselect__tag"
-              >
-                <font-awesome-icon :icon="getIcon(option)" />
+              <span v-b-tooltip.hover :title="`available as ${getVariableName(option)}`" class="multiselect__tag">
+                <FontAwesomeIcon :icon="getIcon(option)" />
                 <span class="pl-2">{{ option.name }}</span>
-                <i
-                  aria-hidden="true"
-                  @click="remove(option)"
-                  tabindex="1"
-                  class="multiselect__tag-icon"
-                ></i>
+                <i aria-hidden="true" @click="remove(option)" tabindex="1" class="multiselect__tag-icon"></i>
               </span>
             </template>
 
-            <span slot="noResult"
-              >Oops! No elements found. Consider changing the search
-              query.</span
-            >
+            <span slot="noResult">Oops! No elements found. Consider changing the search
+              query.</span>
           </multiselect>
         </div>
 
@@ -93,30 +50,18 @@
                 <p>
                   <strong>Input:</strong>
                 </p>
-                <codemirror
-                  id="inputuser"
-                  v-model="input"
-                  :options="cmOptions"
-                ></codemirror>
+                <textarea id="inputuser" v-model="input"></textarea>
               </div>
 
               <div class="col-md-6">
                 <p>
                   <strong>Output:</strong>
                 </p>
-                <codemirror
-                  id="inputuser"
-                  v-model="output"
-                  :options="cmOptions"
-                ></codemirror>
+                <textarea id="inputuser" v-model="output"></textarea>
               </div>
             </div>
 
-            <button
-              class="btn btn-success mt-3 mr-2"
-              type="button"
-              @click="test"
-            >
+            <button class="btn btn-success mt-3 mr-2" type="button" @click="test">
               Run test
             </button>
           </div>
@@ -126,16 +71,12 @@
 
     <template v-slot:footer>
       <Danger body="Clicking the button below will delete this rule. This cannot be undone.">
-        <button
-            type="button"
-            class="btn btn-danger"
-            @click="deleteRule(action)"
-          >
-            Delete
-          </button>
+        <button type="button" class="btn btn-danger" @click="deleteRule(action)">
+          Delete
+        </button>
       </Danger>
     </template>
-  </Main>
+  </MainTemplate>
 </template>
 
 <style lang="scss">
@@ -162,297 +103,237 @@
 </style>
 
 
-<script>
-import Vue from "vue";
+<script setup>
+import { getCurrentInstance, onMounted, ref } from "vue";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faEnvelope, faUser, faUsers } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { maxios, notify } from '@/admin/helpers.js'
+import { useRouter } from "vue-router4";
 
 library.add(faEnvelope, faUser, faUsers);
 
-Vue.component("font-awesome-icon", FontAwesomeIcon);
+const vue = getCurrentInstance();
+const action = ref(null);
+const wasValidated = ref(false);
+const variableOptions = ref([]);
+const isLoading = ref(false);
+const error = ref(null);
+const output = ref(null);
+const input = ref(null);
+const router = useRouter();
 
-//import faGoogle from '@fortawesome/fontawesome-free-brands/faGoogle'
+onMounted(() => {
+  maxios.get(`api/cloudFunctions/${vue.proxy.$route.params.rule_id}`).then((response) => {
+    action.value = response.data;
+    action.value.variables = !action.value.variables || !Array.isArray(action.value.variables) ? [] : action.value.variables;
 
-//fontawesome.library.add(faGoogle)
-
-export default {
-  components: {
-    codemirror: (resolve) =>
-      import(
-        /* webpackChunkName: "vue-codemirror" */ "../../lib/codemirror.js"
-      ).then((m) => {
-        resolve(m.default.codemirror);
-      }),
-  },
-
-  mounted() {
-    this.$http
-      .get(this.$murl("api/cloudFunctions/" + this.$route.params.rule_id))
-      .then((response) => {
-        this.action = response.data;
-        this.action.variables =
-          !this.action.variables || !Array.isArray(this.action.variables)
-            ? []
-            : this.action.variables;
-
-        return this.action;
-      })
-      .then((action) => {
-        if (action.type == "attribute") {
-          this.$http
-            .get(this.$oidcUrl("oauth/userinfo"))
-            .then((response) => {
-              return this.$http.get(
-                this.$murl(
-                  `api/scim/v2/Subjects?sortBy=meta.created&count=1&filter=identifier+eq+"${response.data.sub}"`
-                )
-              );
-            })
-            .then((response) => {
-              this.input = JSON.stringify(
-                {
-                  subject: response.data.Resources[0],
-                  attributes: ["email", "phone"],
-                  scopes: ["openid", "email"],
-                },
-                null,
-                2
-              );
-            });
-        } else {
-          // TODO: grap last created user ??
-          // before, after (change email, user creation, user activation)
-
-          this.$http
-            .get(
-              this.$murl(
-                `api/scim/v2/Users?sortBy=meta.created&count=1&sortOrder=ascending"`
-              )
-            )
-            .then((response) => {
-              let user = response.data.Resources[0];
-              let after = JSON.parse(JSON.stringify(user));
-              after["urn:ietf:params:scim:schemas:core:2.0:User"]["emails"] = [
-                {
-                  value: "new-email@non-existing.dom",
-                },
-              ];
-
-              this.input = JSON.stringify(
-                {
-                  before: user,
-                  after: after,
-                  action: "replace",
-                  me: false,
-                },
-                null,
-                2
-              );
-            });
-        }
+    return action.value;
+  }).then((action) => {
+    if (action.type == "attribute") {
+      maxios.get(`api/scim/v2/Subjects?sortBy=meta.created&count=1&filter=identifier+eq+"${$oidc.user.sub}"`).then((response) => {
+        input.value = JSON.stringify({
+          subject: response.data.Resources[0],
+          attributes: ["email", "phone"],
+          scopes: ["openid", "email"],
+        }, null, 2);
       });
-  },
+    } else {
 
-  methods: {
-    lowerFirst(s) {
-      return s.charAt(0).toLowerCase() + s.substring(1);
-    },
-
-    getIcon(option) {
-      let result = "null";
-
-      switch (option.type) {
-        case "EmailTemplate":
-          result = "envelope";
-          break;
-        case "User":
-          result = "user";
-          break;
-        case "Group":
-          result = "users";
-          break;
-      }
-
-      return result;
-    },
-
-    getVariableName(option) {
-      return (
-        "variables." +
-        this.lowerFirst(
-          `${option.type}${this.action.variables
-            .filter((v) => v.type == option.type)
-            .findIndex((e) => e.id == option.id)}`
-        )
-      );
-    },
-
-    asyncFind(query) {
-      this.isLoading = true;
-
-      Promise.all([
-        this.$http.get(this.$murl("api/mail_template")).then((response) => {
-          return {
-            group: "Email Templates",
-            options: response.data
-              .filter((r) => {
-                return r.name.toLowerCase().includes(query.toLowerCase());
-              })
-              .map((r) => {
-                return {
-                  name: r.name,
-                  type: "EmailTemplate",
-                  id: r.id,
-                };
-              }),
-          };
-        }),
-
-        this.$http
-          .get(
-            this.$murl(
-              `api/scim/v2/Users?sortBy=id&sortOrder=desc&count=30&filter=${encodeURIComponent(
-                'emails.value co "' + query + '"'
-              )}`
-            )
-          )
-          .then((response) => {
-            return response.data.Resources;
-          })
-          .then((users) => {
-            return {
-              group: "Users",
-              options: users.map((r) => {
-                return {
-                  name: (
-                    r["urn:ietf:params:scim:schemas:core:2.0:User"].emails || []
-                  ).filter((e) => e.primary)[0].value,
-                  id: r.id,
-                  type: "User",
-                };
-              }),
-            };
-          })
-          .catch((e) => {
-            // ignore?
-          }),
-
-        this.$http
-          .get(
-            this.$murl(
-              `api/scim/v2/Groups?filter=${encodeURIComponent(
-                'name co "' + query + '"'
-              )}`
-            )
-          )
-          .then((response) => {
-            return response.data.Resources;
-          })
-          .then((users) => {
-            return {
-              group: "Groups",
-              options: users.map((r) => {
-                return {
-                  name: r["urn:ietf:params:scim:schemas:core:2.0:Group"].name,
-                  id: r.id,
-                  type: "Group",
-                };
-              }),
-            };
-          })
-          .catch((e) => {
-            // ignore?
-          }),
-      ]).then((r) => {
-        this.variableOptions = r;
-
-        this.isLoading = false;
-      });
-    },
-
-    deleteRule(rule) {
-      this.$http
-        .delete(this.$murl(`api/cloudFunctions/${rule.id}`))
-        .then((r) => {
-          this.$noty({
-            text: "We have succesfully DELETED your rule.",
-          });
-
-          this.$router.replace("/rules");
-        });
-    },
-
-    onSubmit() {
-      let promise = null;
-
-      if (!this.action.id) {
-        promise = this.$http.post(
-          this.$murl("api/cloudFunctions"),
-          this.action
-        );
-      } else {
-        promise = this.$http.put(
-          this.$murl(`api/cloudFunctions/${this.action.id}`),
-          this.action
-        );
-      }
-
-      promise
-        .then((result) => {
-          this.action = result.data;
-          this.error = null;
-
-          this.$noty({
-            text: "We have succesfully saved your rule.",
-          });
-        })
-        .catch((result) => {
-          this.error = result.data.error;
-        });
-    },
-
-    test() {
-      this.$http
-        .post(
-          this.$murl(
-            `api/cloudFunctions/invoke/${encodeURIComponent(this.action.id)}`
-          ),
-          JSON.parse(this.input)
+      maxios
+        .get(
+          `api/scim/v2/Users?sortBy=meta.created&count=1&sortOrder=ascending"`
         )
         .then((response) => {
-          this.output = JSON.stringify(response.data, null, 2);
-          this.error = null;
-        })
-        .catch((response) => {
-          this.error = response.data.error;
+          let user = response.data.Resources[0];
+          let after = JSON.parse(JSON.stringify(user));
+          after["urn:ietf:params:scim:schemas:core:2.0:User"]["emails"] = [
+            {
+              value: "new-email@non-existing.dom",
+            },
+          ];
+
+          input.value = JSON.stringify(
+            {
+              before: user,
+              after: after,
+              action: "replace",
+              me: false,
+            },
+            null,
+            2
+          );
         });
-    },
-  },
+    }
+  });
+});
 
-  data() {
-    return {
-      action: null,
-      wasValidated: false,
+function lowerFirst(s) {
+  return s.charAt(0).toLowerCase() + s.substring(1);
+}
 
-      variableOptions: [],
-      isLoading: false,
+function getIcon(option) {
+  let result = "null";
 
-      error: null,
+  switch (option.type) {
+    case "EmailTemplate":
+      result = "envelope";
+      break;
+    case "User":
+      result = "user";
+      break;
+    case "Group":
+      result = "users";
+      break;
+  }
 
-      output: null,
+  return result;
+}
 
-      input: "",
+function getVariableName(option) {
+  return (
+    "variables." +
+    lowerFirst(
+      `${option.type}${action.value.variables
+        .filter((v) => v.type == option.type)
+        .findIndex((e) => e.id == option.id)}`
+    )
+  );
+}
 
-      cmOptions: {
-        // codemirror options
-        tabSize: 4,
-        mode: "text/javascript",
-        theme: "lucario",
-        lineNumbers: true,
-        line: true,
-      },
-    };
-  },
-};
+function asyncFind(query) {
+  isLoading.value = true;
+
+  Promise.all([
+    maxios.get(`api/mail_template`).then((response) => {
+      return {
+        group: "Email Templates",
+        options: response.data
+          .filter((r) => {
+            return r.name.toLowerCase().includes(query.toLowerCase());
+          })
+          .map((r) => {
+            return {
+              name: r.name,
+              type: "EmailTemplate",
+              id: r.id,
+            };
+          }),
+      };
+    }),
+
+    maxios
+      .get(
+        `api/scim/v2/Users?sortBy=id&sortOrder=desc&count=30&filter=${encodeURIComponent(
+          'emails.value co "' + query + '"'
+        )}`
+      )
+      .then((response) => {
+        return response.data.Resources;
+      })
+      .then((users) => {
+        return {
+          group: "Users",
+          options: users.map((r) => {
+            return {
+              name: (
+                r["urn:ietf:params:scim:schemas:core:2.0:User"].emails || []
+              ).filter((e) => e.primary)[0].value,
+              id: r.id,
+              type: "User",
+            };
+          }),
+        };
+      })
+      .catch((e) => {
+        // ignore?
+      }),
+
+    maxios
+      .get(
+        `api/scim/v2/Groups?filter=${encodeURIComponent(
+          'name co "' + query + '"'
+        )}`
+      )
+      .then((response) => {
+        return response.data.Resources;
+      })
+      .then((users) => {
+        return {
+          group: "Groups",
+          options: users.map((r) => {
+            return {
+              name: r["urn:ietf:params:scim:schemas:core:2.0:Group"].name,
+              id: r.id,
+              type: "Group",
+            };
+          }),
+        };
+      })
+      .catch((e) => {
+        // ignore?
+      }),
+  ]).then((r) => {
+    variableOptions.value = r;
+
+    isLoading.value = false;
+  });
+}
+
+function deleteRule(rule) {
+  maxios
+    .delete(`api/cloudFunctions/${rule.id}`)
+    .then((r) => {
+      notify({
+        text: "We have succesfully DELETED your rule.",
+      });
+
+      router.replace("/rules");
+    });
+}
+
+function onSubmit() {
+  let promise = null;
+
+  if (!action.value.id) {
+    promise = maxios.post(
+      `api/cloudFunctions`,
+      action.value
+    );
+  } else {
+    promise = maxios.put(
+      `api/cloudFunctions/${action.value.id}`,
+      action.value
+    );
+  }
+
+  promise
+    .then((result) => {
+      action.value = result.data;
+      error.value = null;
+
+      notify({
+        text: "We have succesfully saved your rule.",
+      });
+    })
+    .catch((result) => {
+      error.value = result.data.error;
+    });
+}
+
+function test() {
+  maxios
+    .post(
+      `api/cloudFunctions/invoke/${encodeURIComponent(action.value.id)}`,
+      JSON.parse(input.value)
+    )
+    .then((response) => {
+      output.value = JSON.stringify(response.data, null, 2);
+      error.value = null;
+    })
+    .catch((response) => {
+      error.value = response.data.error;
+    });
+}
+
 </script>

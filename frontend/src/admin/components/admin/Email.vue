@@ -1,6 +1,6 @@
 
 <template>
-  <Main title="Email Templates">
+  <MainTemplate title="Email Templates">
     <router-view></router-view>
-  </Main>
+  </MainTemplate>
 </template>

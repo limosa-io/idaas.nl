@@ -14,44 +14,45 @@
           >
             <p>User self-registrations happens via SCIM using the special Me-endpoint. The registration module can be part of the authentication chain.</p>
 
-            <b-form-group
+            <FormGroup
               horizontal
               :label-cols="3"
               breakpoint="md"
               description="Enable this options if users should have the possibility to self-register."
               label="Allow self-registration"
+              id="registration_allowed"
             >
-              <b-form-checkbox
+              <FormCheckbox
                 id="registration_allowed"
                 v-model="registration.allow"
                 :value="true"
-                :unchecked-value="false"
-              >{{ registration.allow ? 'Enabled' : 'Disabled' }}</b-form-checkbox>
-            </b-form-group>
+              >{{ registration.allow ? 'Enabled' : 'Disabled' }}</FormCheckbox>
+            </FormGroup>
 
-            <b-form-group
+            <FormGroup
               horizontal
               :label-cols="3"
               breakpoint="md"
+              id="registration.allow_active"
               description="In most cases, you want to create users inactive."
               label="Register users active"
             >
-              <b-form-checkbox
+              <FormCheckbox
                 id="registration.allow_active"
                 v-model="registration.allow_active"
                 :value="true"
                 :unchecked-value="false"
-              >{{ registration.allow_active ? 'Enabled' : 'Disabled' }}</b-form-checkbox>
-            </b-form-group>
+              >{{ registration.allow_active ? 'Enabled' : 'Disabled' }}</FormCheckbox>
+            </FormGroup>
 
-            <b-form-group
+            <FormGroup
               horizontal
               :label-cols="3"
               breakpoint="md"
               description="Automatically activate users when this authentication level is reached."
               label="Activate users for this level"
             >
-              <b-form-select
+              <FormSelect
                 id="registration.level_active"
                 v-model="registration.level_active"
                 :options="levels"
@@ -59,7 +60,7 @@
                 value-field="id"
                 class="mb-3"
               />
-            </b-form-group>
+            </FormGroup>
 
             <div class="form-row">
               <label for="levels" class="col-md-3 col-form-label">Attributes for create</label>
@@ -104,17 +105,6 @@
               </div>
             </div>
 
-            <!--
-          <div class="form-row mt-3">
-            <label for="levels" class="col-md-3 col-form-label">Advanced!</label>
-            <div class="col-md-9">
-
-              <codemirror id="codemirror" v-model="registration.script" :options="cmOptions"></codemirror>
-
-            </div>
-          </div>
-            -->
-
             <div class="form-row mt-3">
               <label for="levels" class="col-md-3 col-form-label"></label>
               <div class="col-md-9">
@@ -129,129 +119,95 @@
 </template>
 
 
-<script>
-export default {
-  components: {
-    codemirror: resolve =>
-      import(
-        /* webpackChunkName: "vue-codemirror" */ "../lib/codemirror.js"
-      ).then(m => {
-        resolve(m.default.codemirror);
-      })
-  },
+<script setup>
+import { ref, onMounted, getCurrentInstance } from "vue";
+import { maxios } from "@/admin/helpers.js";
+import { notify } from "../../helpers";
 
-  mounted() {
-    this.$http
-      .get(this.$murl("api/settings?namespace=registration"))
-      .then(response => {
-        this.registration = Object.assign(
-          {
-            allow: null,
-            allow_active: null,
-            level_active: null,
-            attributes_create: [],
-            attributes_update: []
-          },
-          response.data
-        );
-        this.wasValidated = false;
-        this.loaded = true;
+const vue = getCurrentInstance();
+const loaded = ref(false);
+const wasValidated = ref(false);
+const levels = ref([]);
+const errors = ref(null);
+const registration = ref({
+  allow: null
+});
+const scimAttributes = ref([
+  "userName",
+  "name",
+  "displayName",
+  "nickName",
+  "profileUrl",
+  "userType",
+  "preferredLanguage",
+  "locale",
+  "timezone",
+  "active",
+  "password",
+  "emails",
+  "phoneNumbers",
+  "ims",
+  "photos",
+  "addresses",
+  "links",
+  "otpSecret"
+]);
+
+onMounted(() => {
+  maxios.get("api/settings/bulk?namespace=registration").then(
+    response => {
+      registration.value = response.data;
+      loaded.value = true;
+    },
+    response => {
+      notify({
+        text: "We could not load the registration settings.",
+        type: "error"
       });
-
-    this.$http.get(this.$murl("authchain/v2/manage/authlevels")).then(
-      response => {
-        this.levels = response.data;
-      },
-      response => {
-        // error callback
-      }
-    );
-  },
-
-  data() {
-    return {
-      loaded: false,
-
-      cmOptions: {
-        // codemirror options
-        tabSize: 4,
-        mode: "text/html",
-        theme: "lucario",
-        lineNumbers: true,
-        line: true
-        // more codemirror options,
-      },
-
-      errors: {},
-
-      levels: [],
-
-      wasValidated: false,
-
-      scimAttributes: [
-        "userName",
-        "name",
-        "displayName",
-        "nickName",
-        "profileUrl",
-        "userType",
-        "preferredLanguage",
-        "locale",
-        "timezone",
-        "active",
-        "password",
-        "emails",
-        "phoneNumbers",
-        "ims",
-        "photos",
-        "addresses",
-        "links",
-        "otpSecret"
-      ],
-
-      registration: {
-        // selfRegistrationEnabled: true
-
-        allow: true
-      }
-    };
-  },
-
-  methods: {
-    onSubmit(event) {
-      if (event.target.checkValidity()) {
-        this.$http
-          .put(
-            this.$murl("api/settings/bulk?namespace=registration"),
-            this.registration
-          )
-          .then(
-            response => {
-              this.$noty({
-                text:
-                  "We have succesfully saved your new OpenID Client settings."
-              });
-              this.errors = null;
-              // this.$router.replace({ name: 'oidc.client.edit', params: { client_id: response.data.client_id }});
-            },
-            response => {
-              this.errors = response.data.errors;
-              this.wasValidated = true;
-
-              this.$noty({
-                text: "We could not save this.",
-                type: "error"
-              });
-            }
-          );
-      } else {
-        this.wasValidated = true;
-        this.$noty({
-          text: "We could not save this.",
-          type: "error"
-        });
-      }
     }
+  );
+
+  maxios.get('authchain/v2/manage/authlevels').then(
+    response => {
+      levels.value = response.data;
+    },
+    response => {
+      notify({
+        text: "We could not load the authentication levels.",
+        type: "error"
+      });
+    }
+  );
+});
+
+function onSubmit(event) {
+  if (event.target.checkValidity()) {
+    maxios
+      .put("api/settings/bulk?namespace=registration", registration.value)
+      .then(
+        response => {
+          notify({
+            text: "We have succesfully saved your new registration settings."
+          });
+          errors.value = null;
+        },
+        response => {
+          errors.value = response.data.errors;
+          wasValidated.value = true;
+
+          notify({
+            text: "We could not save this.",
+            type: "error"
+          });
+        }
+      );
+  } else {
+    wasValidated.value = true;
+    notify({
+      text: "We could not save this.",
+      type: "error"
+    });
   }
-};
+}
+
 </script>

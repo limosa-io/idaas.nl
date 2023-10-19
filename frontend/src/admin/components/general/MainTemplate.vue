@@ -2,7 +2,7 @@
   <div div class="container-fluid">
     <slot name="header"></slot>
 
-    <h4 class="c-grey-900 mt-1 mb-3">{{ title }}</h4>
+    <h4 class="c-grey-900 mt-1 mb-3">{{ props.title }}</h4>
 
     <div class="row">
       <div class="col-md-12">
@@ -18,11 +18,16 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "main",
-  props: ['title'],
-};
+<script setup>
+
+import { defineProps } from "vue";
+
+const props = defineProps({
+  title: {
+    type: String
+  },
+});
+
 </script>
 
 <style>

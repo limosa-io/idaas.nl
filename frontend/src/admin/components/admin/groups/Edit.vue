@@ -1,12 +1,12 @@
 <template>
-  <Main title="Edit Group">
+  <MainTemplate title="Edit Group">
     <template v-if="group" v-slot:body>
       <form
         v-if="group"
         class="needs-validation"
         novalidate
         :class="{ 'was-validated': wasValidated }"
-        v-on:submit="onSubmit"
+        v-on:submit.prevent="onSubmit"
       >
         <div class="form-row form-group">
           <div class="col-md-3">
@@ -76,7 +76,7 @@
           </div>
         </div>
 
-        <button type="submit" class="btn btn-primary mt-3" :disabled="loading">
+        <button type="submit" class="btn btn-primary mt-3">
           Save Group
         </button>
       </form>
@@ -92,82 +92,62 @@
             Delete
           </button>
       </Danger>
-    </template></Main
-  >
-</template>
-</Main>
-
+    </template></MainTemplate>
 </template>
 
-<script>
-import Vue from "vue";
 
-export default {
-  data() {
-    return {
-      group: null,
-      errors: {},
+<script setup>
+import {ref, onMounted, getCurrentInstance, watch} from 'vue'
+import {maxios} from '@/admin/helpers.js'
+import { notify } from '../../../helpers';
+import {useRouter, useRoute} from 'vue-router4';
 
-      wasValidated: false,
-    };
-  },
+const vue = getCurrentInstance();
 
-  mounted() {
-    this.$http
-      .get(this.$murl("api/scim/v2/Groups/" + this.$route.params.group_id))
-      .then((response) => {
-        this.group = response.data;
-      });
-  },
+const group = ref(null);
+const errors = ref({});
+const wasValidated = ref(false);
+const router = useRouter();
+const route = useRoute();
 
-  methods: {
-    deleteObject(object) {
-      this.$http.delete(this.$murl("api/scim/v2/Groups/" + object.id)).then(
-        (response) => {
-          this.$noty({
-            text: "We have succesfully deleted this group.",
-          });
+onMounted(() => {
+    maxios.get('api/scim/v2/Groups/' + route.params.group_id)
+        .then(response => {
+            group.value = response.data;
+        });
+});
 
-          this.$router.replace({
-            name: "groups.list",
-          });
+function deleteObject(object) {
+    maxios.delete('api/scim/v2/Groups/' + object.id)
+        .then(response => {
+            notify({
+                text: 'We have succesfully deleted this group.',
+            });
+
+            router.replace({
+                name: 'groups.list',
+            });
+        }, response => {
+            // error callback
+        });
+}
+
+function onSubmit() {
+    maxios.put('api/scim/v2/Groups/' + route.params.group_id, JSON.stringify(group.value), {
+        headers: {
+            'content-type': 'application/scim+json',
         },
-        (response) => {
-          // error callback
-        }
-      );
-    },
+    }).then(response => {
+        notify({
+            text: 'We have succesfully saved this group.',
+        });
+        errors.value = {};
+    }, response => {
+        notify({
+            text: 'There were some errors during saving.',
+        });
+        errors.value = response.data.errors;
+    });
+}
 
-    onSubmit(event) {
-      this.$http
-        .put(
-          this.$murl("api/scim/v2/Groups/" + this.$route.params.group_id),
-          JSON.stringify(this.group),
-          {
-            headers: {
-              "content-type": "application/scim+json",
-            },
-          }
-        )
-        .then(
-          (response) => {
-            this.$noty({
-              text: "We have succesfully saved this group.",
-            });
-            this.errors = {};
-          },
-          (response) => {
-            this.$noty({
-              text: "There were some errors during saving.",
-            });
-            this.errors = response.data.errors;
-          }
-        );
-
-      event.preventDefault();
-    },
-  },
-
-  components: {},
-};
 </script>

@@ -1,14 +1,14 @@
 
 <template>
   <div>
-    <b-form-group
+    <FormGroup
       horizontal
       :label-cols="3"
       description="Available template parameters are <code class=&quot;highlighter-rouge&quot;>otp</code>, <code class=&quot;highlighter-rouge&quot;>subject</code> and if present <code class=&quot;highlighter-rouge&quot;>user</code>."
       label="Email template"
       label-for="module.config.template_id"
     >
-      <b-form-select
+      <FormSelect
         id="module.config.template_id"
         aria-describedby="parentHelp"
         v-if="templates"
@@ -17,38 +17,26 @@
         v-model="module.config.template_id"
         :options="templates"
       />
-    </b-form-group>
+    </FormGroup>
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    module: null,
-    info: null
-  },
+<script setup>
+import { ref, onMounted, defineProps } from "vue";
+import {maxios} from "@/admin/helpers.js";
+const props = defineProps(["module", "info"]);
 
-  data() {
-    return {
-      templates: {}
-    };
-  },
+const templates = ref({});
 
-  mounted() {
-    this.$http.get(this.$murl("api/mail_template")).then(
-      response => {
-        this.templates = response.data;
-      },
-      response => {
-        // error callback
-      }
-    );
-  },
-
-  methods: {
-    onSubmit(event) {
-      event.preventDefault();
+onMounted(() => {
+  maxios.get("api/mail_template").then(
+    response => {
+      templates.value = response.data;
     }
-  }
-};
+  );
+});
+
+function onSubmit(event) {
+  event.preventDefault();
+}
 </script>

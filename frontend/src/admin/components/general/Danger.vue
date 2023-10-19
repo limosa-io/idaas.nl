@@ -10,14 +10,16 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    header: {
-      type: String,
-      default: "Danger Zone",
-    },
-    body: {},
+<script setup>
+
+import { defineProps } from "vue";
+
+const props = defineProps({
+  header: {
+    type: String,
+    default: "Danger Zone",
   },
-};
+  body: {},
+});
+
 </script>

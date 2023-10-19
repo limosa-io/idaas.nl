@@ -27,16 +27,14 @@
 }
 </style>
 
-<script>
-export default {
-  
-  mounted(){
-      //TODO: revoke token
-      window.sessionStorage.clear();
-      window.localStorage.clear();
-  }
+<script setup>
 
-}
+import { onMounted } from 'vue';
+
+onMounted(() => {
+  window.sessionStorage.clear();
+  window.localStorage.clear();
+});
 
 </script>
 

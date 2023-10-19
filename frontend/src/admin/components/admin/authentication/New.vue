@@ -11,72 +11,59 @@
 </template>
 
 
-<script>
+<script setup>
 
-export default {
+import { ref, defineProps, onMounted } from 'vue';
+import {maxios} from "@/admin/helpers.js";
+import { notify } from '../../../helpers';
+import { useRouter } from 'vue-router4';
 
-  data() {
-    return {
+const router = useRouter();
+const errors = ref({});
+const wasValidated = ref(false);
+const loading = ref(false);
+const type = ref(null);
+const types = ref([]);
+const module = ref({
+  type: null,
+  name: null,
+  enabled: false,
+  skippable: true
+});
 
-      errors: {},
+onMounted(() => {
 
-      wasValidated: false,
-      loading: false,
+  maxios.get('authchain/v2/manage/types').then(response => {
 
-      module: {
-        type: null,
-        name: null,
-        enabled: false,
-        skippable: true
-      },
-      types: []
+    types.value = response.data;
 
-    }
-  },
+  });
+});
 
-  mounted() {
+function createModule(t) {
 
-    this.$http.get(this.$murl('authchain/v2/manage/types')).then(response => {
-      this.types = response.data;
-    }, response => {
-      // error callback
+  maxios.post('authchain/v2/manage/modules', {
+    type: t,
+    enabled: false,
+    skippable: true,
+    hide_if_not_requested: false
+  }).then(response => {
+
+    notify({
+      text: 'We have succesfully saved your new module.'
     });
 
-  },
+    router.replace({
+      name: 'authentication.edit',
+      params: {
+        module_id: response.data.id
+      }
+    });
 
-  methods: {
-
-    createModule(t) {
-
-      this.$http.post(this.$murl('authchain/v2/manage/modules'),
-          {
-            type: t,
-            enabled: false,
-            skippable: true,
-            hide_if_not_requested: false
-          }
-        ).then(response => {
-
-          this.$noty({
-            text: 'We have succesfully saved your new module.'
-          });
-
-          this.$router.replace({
-            name: 'authentication.edit',
-            params: {
-              module_id: response.data.id
-            }
-          });
-
-        }, response => {
-          
-          
-        });
-
-
-    }
-
-  }
+  }, response => {
+    
+    
+  });
 
 }
 

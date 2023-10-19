@@ -9,33 +9,6 @@
 </template>
 
 
-<script>
+<script setup>
 
-import module from './module';
-
-export default {
-
-  mixins: [module],
-
-  data(){
-    return {
-      
-
-
-    }
-  },
-
-  mounted(){
-
-    
-
-  },
-
-  methods: {
-    
-  }
-
-
-  
-}
 </script>
