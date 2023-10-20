@@ -70,7 +70,6 @@ const oauth = ref({
 });
 
 onMounted(() => {
-  console.log('mounted!!');
   if(getAccessToken() == null){
     doOAuth();
   }else{

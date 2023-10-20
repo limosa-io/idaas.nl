@@ -104,7 +104,6 @@ onMounted(() => {
       router.push(goto);
 
     }).catch(response => {
-      console.log(response);
       isError.value = true;
       console.error('Could not exchange code for an access token');
     });

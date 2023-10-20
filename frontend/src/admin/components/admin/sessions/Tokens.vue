@@ -64,8 +64,8 @@
   <div class="d-flex flex-row align-items-center justify-content-between">
 
     <div>Showing {{ pagination.from }} to {{ pagination.to }} of {{ pagination.total }} entries</div>
-    <b-pagination v-if="pagination.total > pagination.per_page" @input="changePage" size="md" :total-rows="pagination.total"
-      v-model="currentPage" :per-page="pagination.per_page" class=""></b-pagination>
+    <Pagination v-if="pagination.total > pagination.per_page" @input="changePage" size="md" :total-rows="pagination.total"
+      v-model="currentPage" :per-page="pagination.per_page" class=""></Pagination>
   </div>
 
 </div>

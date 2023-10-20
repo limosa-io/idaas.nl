@@ -66,7 +66,7 @@
         <tbody>
           <tr v-for="(scope, index) in scopes" :key="index">
             <th class="align-middle text-center" scope="row">
-              <b-badge @click="showScopeInformation(scope.name)" v-b-tooltip.hover
+              <b-badge @click="showScopeInformation(scope.name)"
                 title="This scope is mapped to a set of claims. Click for more information." pill variant="primary"
                 v-if="mapping != null && mapping[scope.name]">{{ index + 1 }}</b-badge><span v-else>{{ index + 1 }}</span>
             </th>

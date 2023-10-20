@@ -68,8 +68,8 @@
   </table>
 
 
-  <b-pagination v-if="pagination.total > pagination.per_page" @input="changePage" size="md" :total-rows="pagination.total"
-      v-model="currentPage" :per-page="pagination.per_page" class=""></b-pagination>
+  <Pagination v-if="pagination.total > pagination.per_page" @input="changePage" size="md" :total-rows="pagination.total"
+      v-model="currentPage" :per-page="pagination.per_page" class=""></Pagination>
 
 </div>
 

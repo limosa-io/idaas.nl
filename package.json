@@ -37,15 +37,12 @@
     "vue-codemirror": "^6.1.1",
     "vue-i18n": "9",
     "vue-multiselect": "^3.0.0-beta.2",
-    "vue-resource": "^1.5.1",
-    "vue-router": "^3.0.1",
     "vuex": "^3.0.1",
     "zxcvbn": "^4.4.2"
   },
   "dependencies": {
     "@codemirror/lang-javascript": "^6.2.1",
     "@vitejs/plugin-vue": "^1.9.4",
-    "bootstrap-vue": "^2.23.0",
     "buffer": "^6.0.3",
     "pinia": "^2.1.6",
     "sass": "^1.55.0",

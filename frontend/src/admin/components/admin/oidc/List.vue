@@ -72,7 +72,6 @@
               {{ client.client_name }}
               <span
                 class="badge badge-pill badge-info d-none d-lg-inline"
-                v-b-tooltip.hover
                 title="The management user interface you are now using, makes use of this client."
                 v-if="client.client_id == currentClientId"
                 >in use</span
@@ -130,7 +129,6 @@ onMounted(() => {
 const clients_filtered = computed(() => {
   return clients.value != null
     ? clients.value.filter((value) => {
-        console.log(value.client_id);
         return (
           search.value == null ||
           value.client_id.includes(search.value) ||

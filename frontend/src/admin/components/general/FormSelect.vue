@@ -1,5 +1,5 @@
 <template>
-  <select :id="id" class="mb-3 custom-select">
+  <select :id="elementId" class="mb-3 custom-select">
     <option v-for="(option, index) in props.options" :key="option[props.valueField]" :value="option[props.valueField]">
       {{ option[textField] }}
     </option>
@@ -13,12 +13,10 @@ import { onBeforeMount, onMounted } from 'vue';
 
 const props = defineProps({
   modelValue: {
-    type: String,
     required: true
   },
   id: {
     type: String,
-    required: true
   },
   options: {
     type: Array,
@@ -26,22 +24,18 @@ const props = defineProps({
   },
   valueField: {
     type: String,
-    required: true,
+    required: false,
     default: 'value'
   },
   textField: {
     type: String,
-    required: true,
+    required: false,
     default: 'text'
   }
 })
 
+const elementId = props.id ? props.id : 'select-' + Math.random().toString(36).substr(2, 9);
+
 const emit = defineEmits(['update:modelValue'])
-
-onBeforeMount(() => {
-  console.log('onBeforeMount');
-  console.log(props.options);
-});
-
 
 </script>

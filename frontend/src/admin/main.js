@@ -19,8 +19,8 @@ import FormSelect from './components/general/FormSelect.vue';
 import FormRadioGroup from './components/general/FormRadioGroup.vue';
 import FormRadioButton from './components/general/FormRadioButton.vue';
 import FormCheckboxGroup from './components/general/FormCheckboxGroup.vue';
+import Pagination from './components/general/Pagination.vue';
 import Danger from './components/general/Danger.vue';
-import VueMultiselect from 'vue-multiselect'
 
 // Vue.use(VueResource);
 
@@ -75,7 +75,8 @@ import VueMultiselect from 'vue-multiselect'
 const app = createApp(App);
 
 Vue.configureCompat({
-    COMPONENT_V_MODEL: false
+    COMPONENT_V_MODEL: false,
+    ATTR_ENUMERATED_COERCION: false
 })
 
 // app.use(pinia);
@@ -95,3 +96,4 @@ app.component('MenuButton', MenuButton);
 app.component('FormRadioGroup', FormRadioGroup);
 app.component('FormRadioButton', FormRadioButton);
 app.component('FormCheckboxGroup', FormCheckboxGroup);
+app.component('Pagination', Pagination);

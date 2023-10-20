@@ -13,7 +13,7 @@
 
   <FormGroup horizontal :label-cols="3" description="Create a user (allow registration)" label="Create user" label-for="module.config.create_user">
 
-    <FormCheckbox id="module.config.create_user" v-model="module.config.create_user" :value="true" :unchecked-value="false">
+    <FormCheckbox id="module.config.create_user" v-model="module.config.create_user" :value="true" >
               {{ module.config.create_user ? 'Enabled' : 'Disabled' }}
       </FormCheckbox>
 

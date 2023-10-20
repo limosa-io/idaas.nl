@@ -60,7 +60,7 @@
         <FormGroup v-if="!module.system" horizontal :label-cols="3" breakpoint="md"
           description="Sometimes disable is prefered over delete." label="Module state">
 
-          <FormCheckbox id="enabled" v-model="module.enabled" :value="true" :unchecked-value="false">
+          <FormCheckbox id="enabled" v-model="module.enabled" :value="true" >
             {{ module.enabled ? 'Enabled' : 'Disabled' }}
           </FormCheckbox>
 
@@ -72,7 +72,7 @@
           label="Show only when needed">
 
           <FormCheckbox id="hide_if_not_requested" v-model="module.hide_if_not_requested" :value="true"
-            :unchecked-value="false">
+            >
             {{ module.hide_if_not_requested ? 'Enabled' : 'Disabled' }}
           </FormCheckbox>
 

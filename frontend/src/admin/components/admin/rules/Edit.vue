@@ -27,7 +27,7 @@
             group-label="group" :group-select="false" :max-height="600" :show-no-results="false" :hide-selected="true"
             @search-change="asyncFind">
             <template slot="tag" slot-scope="{ option, remove }">
-              <span v-b-tooltip.hover :title="`available as ${getVariableName(option)}`" class="multiselect__tag">
+              <span :title="`available as ${getVariableName(option)}`" class="multiselect__tag">
                 <FontAwesomeIcon :icon="getIcon(option)" />
                 <span class="pl-2">{{ option.name }}</span>
                 <i aria-hidden="true" @click="remove(option)" tabindex="1" class="multiselect__tag-icon"></i>

@@ -72,8 +72,8 @@
           {{ startIndex + parseInt(itemsPerPage) - 1 }} of
           {{ totalResults }} entries
         </div>
-        <b-pagination v-if="totalResults > itemsPerPage" @input="changePage" size="md" :total-rows="totalResults"
-          v-model="currentPage" :per-page="itemsPerPage" class=""></b-pagination>
+        <Pagination v-if="totalResults > itemsPerPage" @update:model-value="changePage" size="md" :total-rows="totalResults"
+          v-model="currentPage" :per-page="itemsPerPage" class=""></Pagination>
       </div>
     </template>
   </MainTemplate>
@@ -107,7 +107,6 @@ watch(itemsPerPage, function (val) {
 
 onMounted(() => {
   var currentPage = parseInt(vue.proxy.$route.params.page || 1);
-  console.log('mounted!');
   maxios
     .get(
       "api/scim/v2/Groups?count=20&startIndex=" +

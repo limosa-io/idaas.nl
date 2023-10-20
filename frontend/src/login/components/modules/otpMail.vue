@@ -96,8 +96,8 @@ function onSubmitOtp() {
     otp: otp,
     user_id_hashed: user_id,
   }).then(
-    (response) => {
-      console.log(response.data);
+    (_response) => {
+      
     },
     (error) => {
       state.error(error.data.error);

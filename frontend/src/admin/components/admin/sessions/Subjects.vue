@@ -69,8 +69,8 @@
 
     <div>Showing {{ startIndex }} to {{ (startIndex+parseInt(itemsPerPage)-1) }} of {{ totalResults }} entries</div>
 
-    <b-pagination v-if="totalResults > itemsPerPage" @input="changePage" size="md" :total-rows="totalResults" v-model="currentPage"
-      :per-page="itemsPerPage" class=""></b-pagination>
+    <Pagination v-if="totalResults > itemsPerPage" @input="changePage" size="md" :total-rows="totalResults" v-model="currentPage"
+      :per-page="itemsPerPage" class=""></Pagination>
 
   </div>
 

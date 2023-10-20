@@ -189,7 +189,7 @@ TODO: Consider adding list of allowed 'audiences'
             id="trusted"
             v-model="client.trusted"
             :value="true"
-            :unchecked-value="false"
+            
             >{{ client.trusted ? "Enabled" : "Disabled" }}</FormCheckbox
           >
         </FormGroup>
@@ -474,7 +474,7 @@ TODO: Consider adding list of allowed 'audiences'
                 <option>none</option>
               </select>
               <div class="input-group-append">
-                <BFormSelect
+                <FormSelect
                   v-model="client.default_prompt_allow_override"
                   :options="[
                     { value: true, text: 'Allow Override' },
@@ -526,7 +526,7 @@ TODO: Consider adding list of allowed 'audiences'
                 </multiselect>
               </div>
               <div class="input-group-append">
-                <BFormSelect
+                <FormSelect
                   v-model="client.default_acr_values_allow_override"
                   :options="[
                     { value: true, text: 'Allow Override' },
@@ -601,7 +601,7 @@ TODO: Consider adding list of allowed 'audiences'
         <div class="form-row">
           <div class="col-md-3">User Interface</div>
           <div class="col">
-            <BFormSelect
+            <FormSelect
               v-model="client.user_interface"
               :options="options_user_interfaces"
               value-field="id"

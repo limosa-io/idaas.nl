@@ -43,11 +43,11 @@
         </form>
       </Modal>
 
-      <Button
+      <MenuButton
         to="/authentication/add"
       >
         Add Module
-      </Button>
+      </MenuButton>
     </template>
 
     <template v-slot:body>
@@ -73,7 +73,6 @@
             @click="edit(module)"
             v-for="(module, index) in modules"
             :class="{ 'table-active': module.system }"
-            v-b-tooltip.hover
             :title="
               module.system
                 ? 'The start module is at the start of every authentication process'
@@ -88,14 +87,12 @@
                 v-if="
                   userinfo && userinfo.acr && userinfo.acr.includes(module.id)
                 "
-                v-b-tooltip.hover
                 title="You have used this module to authenticate for accessing this page."
                 >Now in use</span
               >
               <span
                 v-if="!module.chained"
                 class="badge badge-pill badge-warning ml-2"
-                v-b-tooltip.hover
                 title="This module does not appear in the authentication tree. Consider deleting it."
                 >Not in use</span
               >

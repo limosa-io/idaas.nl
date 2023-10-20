@@ -20,7 +20,7 @@
         <li class="search-input" :class="{'active':searchActive}">
           <input
             autocomplete="off"
-            spellcheck="false"
+            :spellcheck="false"
             class="form-control"
             ref="search"
             id="search"

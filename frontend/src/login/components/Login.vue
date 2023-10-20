@@ -287,7 +287,6 @@ function loadStateId(id) {
       loaded.value = true;
     })
     .catch((response) => {
-      console.log(response);
       router.replace({ name: "error" });
       loaded.value = true;
     });
@@ -340,8 +339,6 @@ const { authRequest, activeModule } = storeToRefs(state);
 // });
 
 watch(authRequest, function (val) {
-  console.log("watching authRequest ....");
-  console.log(val);
   // TODO: if in iFrame, post to parent ... but to what URL? Or broadcast "get style" and only accept if state is correct?
   if (inIframe()) {
     // TODO: rename argument redirectionUrls to something like "uiUrls"

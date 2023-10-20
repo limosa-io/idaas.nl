@@ -822,9 +822,7 @@ function removeLink(link) {
 }
 
 function setUser(u) {
-  console.log('set user');
   user.value = u;
-  console.log(u)
 
   if (!user.value["arietimmerman:ice"]) {
     user.value["arietimmerman:ice"] = {};

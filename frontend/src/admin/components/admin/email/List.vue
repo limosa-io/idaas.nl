@@ -40,7 +40,7 @@
       <tbody>
 
         <tr :key="index" v-for="(emailTemplate, index) in objects" @click="edit(emailTemplate)"
-          :class="{ 'table-active': emailTemplate.default }" v-b-tooltip.hover
+          :class="{ 'table-active': emailTemplate.default }" 
           :title="emailTemplate.default ? 'This is the default email template and cannot be deleted.' : null">
           <td>{{ emailTemplate.name }}</td>
         </tr>

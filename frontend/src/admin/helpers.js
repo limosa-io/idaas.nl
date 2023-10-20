@@ -24,9 +24,40 @@ export const laxios = axios.create({
 });
 
 laxios.interceptors.request.use(function (config) {
-    config.headers.Authorization = 'Bearer ' + window.sessionStorage.getItem('access_token');
+    if (!config.public) {
+        config.headers.Authorization = 'Bearer ' + window.sessionStorage.getItem('access_token');
+    }
     return config;
 });
+
+// interceptor for axios that retries the requires in case of a failure
+maxios.interceptors.response.use(undefined, refresh_token_if_needed);
+laxios.interceptors.response.use(undefined, refresh_token_if_needed);
+
+
+
+function refresh_token_if_needed(err) {
+    const originalRequest = err.config;
+    if (err.response.status === 401 && !originalRequest._retry) {
+
+        originalRequest._retry = true;
+        return laxios.post('/token', {
+            grant_type: 'refresh_token',
+            'refresh_token': window.sessionStorage.getItem('refresh_token'),
+            client_id: window.manageClient.clientId
+        }, { public: true }).then(res => {
+            if (res.status === 200) {
+                window.sessionStorage.setItem('access_token', res.data.access_token);
+                window.sessionStorage.setItem('refresh_token', res.data.refresh_token);
+                return this(originalRequest);
+            }
+        });
+        
+
+    }
+    return Promise.reject(err);
+
+}
 
 export const getAccessToken = function () {
     return window.sessionStorage.getItem('access_token');

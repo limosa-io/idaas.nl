@@ -15,7 +15,6 @@ import { computed } from 'vue';
 
 const props = defineProps({
     modelValue: {
-        type: String,
         required: true
     },
     id: {
@@ -28,7 +27,6 @@ const props = defineProps({
         default: ''
     },
     value: {
-        type: String,
         required: true
     }
 })

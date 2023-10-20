@@ -41,7 +41,7 @@
                 id="registration.allow_active"
                 v-model="registration.allow_active"
                 :value="true"
-                :unchecked-value="false"
+                
               >{{ registration.allow_active ? 'Enabled' : 'Disabled' }}</FormCheckbox>
             </FormGroup>
 

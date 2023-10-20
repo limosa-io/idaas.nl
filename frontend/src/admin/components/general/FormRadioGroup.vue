@@ -16,11 +16,9 @@ const emit = defineEmits(['update:modelValue'])
 
 const value = computed({
   get() {
-    console.log('get: ' + props.modelValue);
     return props.modelValue
   },
   set(value) {
-    console.log('set: ' + value);
     emit('update:modelValue', value)
   }
 })

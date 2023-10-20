@@ -9,20 +9,20 @@
           >SAML Metadata</a
         >
 
-      <Button class="mr-2" :to="{ name: 'saml.serviceproviders.import' }">
+      <MenuButton class="mr-2" :to="{ name: 'saml.serviceproviders.import' }">
         Import Service Provider
-      </Button>
+      </MenuButton>
 
-      <Button class="mr-2" :to="{ name: 'saml.serviceproviders.add' }">
+      <MenuButton class="mr-2" :to="{ name: 'saml.serviceproviders.add' }">
         Add
-      </Button>
+      </MenuButton>
 
-      <Button
+      <MenuButton
         class="btn-secondary float-right mr-2"
         :to="{ name: 'saml.settings.general' }"
       >
         Settings
-      </Button>
+      </MenuButton>
     </template>
 
     <template v-slot:body>

@@ -14,7 +14,7 @@
   <FormGroup horizontal :label-cols="3" description="Ask the user to agree with the Terms of Service and/or Privacy Policy."
     label="Ask approval?" label-for="module.config.approval">
 
-    <FormCheckbox id="module.config.approval" v-model="module.config.approval" :value="true" :unchecked-value="false">
+    <FormCheckbox id="module.config.approval" v-model="module.config.approval" :value="true" >
       {{ module.config.approval ? 'Enabled' : 'Disabled' }}
     </FormCheckbox>
 

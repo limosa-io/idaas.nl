@@ -95,7 +95,7 @@
 
   <FormGroup horizontal :label-cols="3" breakpoint="md" description="Whether the service providers wants to receive signed authentication responses." label="Sign authentication responses">
 
-    <FormCheckbox id="wantSignedAuthnResponse" v-model="serviceprovider.wantSignedAuthnResponse" :value="true" :unchecked-value="false">
+    <FormCheckbox id="wantSignedAuthnResponse" v-model="serviceprovider.wantSignedAuthnResponse" :value="true" >
       {{ serviceprovider.wantSignedAuthnResponse ? 'Enabled' : 'Disabled' }}
     </FormCheckbox>
 
@@ -103,7 +103,7 @@
 
   <FormGroup horizontal :label-cols="3" breakpoint="md" description="Whether the SAML Assertions should be signed" label="Sign Assertions">
 
-    <FormCheckbox id="wantSignedAssertions" v-model="serviceprovider.wantSignedAssertions" :value="true" :unchecked-value="false">
+    <FormCheckbox id="wantSignedAssertions" v-model="serviceprovider.wantSignedAssertions" :value="true" >
       {{ serviceprovider.wantSignedAssertions ? 'Enabled' : 'Disabled' }}
     </FormCheckbox>
 
@@ -111,7 +111,7 @@
 
   <FormGroup horizontal :label-cols="3" breakpoint="md" description="Whether logout responses must be signed." label="Sign logout responses">
 
-    <FormCheckbox id="wantSignedLogoutResponse" v-model="serviceprovider.wantSignedLogoutResponse" :value="true" :unchecked-value="false">
+    <FormCheckbox id="wantSignedLogoutResponse" v-model="serviceprovider.wantSignedLogoutResponse" :value="true" >
       {{ serviceprovider.wantSignedLogoutResponse ? 'Enabled' : 'Disabled' }}
     </FormCheckbox>
 
@@ -119,7 +119,7 @@
 
   <FormGroup horizontal :label-cols="3" breakpoint="md" description="Whether logout requests must be signed." label="Sign logout requests">
 
-    <FormCheckbox id="wantSignedLogoutRequest" v-model="serviceprovider.wantSignedLogoutRequest" :value="true" :unchecked-value="false">
+    <FormCheckbox id="wantSignedLogoutRequest" v-model="serviceprovider.wantSignedLogoutRequest" :value="true" >
       {{ serviceprovider.wantSignedLogoutRequest ? 'Enabled' : 'Disabled' }}
     </FormCheckbox>
 

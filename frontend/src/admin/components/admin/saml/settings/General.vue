@@ -9,7 +9,7 @@
      <FormCheckbox id="sign.authnrequest"
                      v-model="provider['sign.authnrequest']"
                      :value="true"
-                     :unchecked-value="false">
+                     >
       {{ provider['sign.authnrequest'] ? 'Yes' : 'No' }}
     </FormCheckbox>
 
@@ -20,7 +20,7 @@
      <FormCheckbox id="redirect.sign"
                      v-model="provider['redirect.sign']"
                      :value="true"
-                     :unchecked-value="false">
+                     >
       {{ provider['redirect.sign'] ? 'Yes' : 'No' }}
     </FormCheckbox>
 
@@ -31,7 +31,7 @@
      <FormCheckbox id="ssoHttpPostEnabled"
                      v-model="provider['ssoHttpPostEnabled']"
                      :value="true"
-                     :unchecked-value="false">
+                     >
       {{ provider['ssoHttpPostEnabled'] ? 'Yes' : 'No' }}
     </FormCheckbox>
 
@@ -42,7 +42,7 @@
      <FormCheckbox id="ssoHttpRedirectEnabled"
                      v-model="provider['ssoHttpRedirectEnabled']"
                      :value="true"
-                     :unchecked-value="false">
+                     >
       {{ provider['ssoHttpRedirectEnabled'] ? 'Yes' : 'No' }}
     </FormCheckbox>
 
@@ -53,7 +53,7 @@
      <FormCheckbox id="sloHttpPostEnabled"
                      v-model="provider['sloHttpPostEnabled']"
                      :value="true"
-                     :unchecked-value="false">
+                     >
       {{ provider['sloHttpPostEnabled'] ? 'Yes' : 'No' }}
     </FormCheckbox>
 
@@ -64,7 +64,7 @@
      <FormCheckbox id="sloHttpRedirectEnabled"
                      v-model="provider['sloHttpRedirectEnabled']"
                      :value="true"
-                     :unchecked-value="false">
+                     >
       {{ provider['sloHttpRedirectEnabled'] ? 'Yes' : 'No' }}
     </FormCheckbox>
 

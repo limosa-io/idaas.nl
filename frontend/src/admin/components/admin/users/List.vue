@@ -2,7 +2,7 @@
 <template>
   <MainTemplate title="Users">
     <template v-slot:header>
-      <Button to="/users/add"> Add User </Button>
+      <MenuButton to="/users/add"> Add User </MenuButton>
     </template>
 
     <template v-slot:body v-if="loaded">
@@ -132,7 +132,7 @@
           {{ startIndex + parseInt(itemsPerPage) - 1 }} of
           {{ totalResults }} entries
         </div>
-        <b-pagination
+        <Pagination
           v-if="totalResults > itemsPerPage"
           @input="changePage"
           size="md"
@@ -140,7 +140,7 @@
           v-model="currentPage"
           :per-page="itemsPerPage"
           class=""
-        ></b-pagination>
+        ></Pagination>
       </div>
     </template>
   </MainTemplate>
