@@ -43,8 +43,9 @@
 import { ref, onMounted } from "vue";
 import {maxios} from '@/admin/helpers.js'
 import { useRoute } from "vue-router4";
+import { notify } from "../../../helpers";
 
-const customization = ref({});
+const customizations = ref({});
 const filteredLabels = ref([]);
 const selectedKey = ref(null);
 const route = useRoute();
@@ -64,21 +65,23 @@ onMounted(() => {
   maxios
     .get(`api/language/customizations/${route.params.locale}`)
     .then((response) => {
-      customization.value = response.data;
+      customizations.value = response.data;
     });
 });
 
 function createCustomization(c) {
-  customization.value[c.key] = c.value;
+  customizations.value[c.key] = c.value;
 }
 
 function save() {
   maxios
     .put(
       `api/language/customizations/${route.params.locale}`,
-      customization.value
+      customizations.value
     )
-    .then((response) => {});
+    .then((_response) => {
+      notify({ type: "success", text: "Saved" });
+    });
 }
 function flatten(object, prefix = "") {
   return Object.keys(object).reduce(
