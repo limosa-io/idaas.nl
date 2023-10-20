@@ -82,13 +82,14 @@
 
 <script setup>
 import { ref, onMounted , getCurrentInstance, watch} from 'vue'
-import { useRouter } from 'vue-router4';
+import { useRouter, useRoute } from 'vue-router4';
 import { maxios } from '@/admin/helpers.js';
 
 import { notify } from '../../../helpers';
 
 const vue = getCurrentInstance();
 const router = useRouter();
+const route = useRoute();
 const loaded = ref(false);
 const currentPage = ref(1);
 const startIndex = ref(1);
@@ -106,7 +107,7 @@ watch(itemsPerPage, function (val) {
 });
 
 onMounted(() => {
-  var currentPage = parseInt(vue.proxy.$route.params.page || 1);
+  var currentPage = parseInt(route.params.page || 1);
   maxios
     .get(
       "api/scim/v2/Groups?count=20&startIndex=" +

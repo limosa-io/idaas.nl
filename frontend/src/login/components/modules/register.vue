@@ -145,7 +145,7 @@ function goToRegister() {
 
 
 function goToRegisterNow() {
-  //this.$router.push({ name: 'login.register', params: {hash: this.$route.params.hash, module: this.module.id } });
+  //router.push({ name: 'login.register', params: {hash: route.params.hash, module: this.module.id } });
 
   activate(props.module);
 

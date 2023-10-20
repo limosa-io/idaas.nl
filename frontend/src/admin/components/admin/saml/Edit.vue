@@ -171,10 +171,11 @@
 
 import { ref, getCurrentInstance, onMounted } from 'vue'
 import {maxios, notify} from '@/admin/helpers.js'
-import { useRouter } from 'vue-router4';
+import { useRouter, useRoute } from 'vue-router4';
 
 const vue = getCurrentInstance();
 const router = useRouter();
+const route = useRoute();
 
 const errors = ref({});
 const wasValidated = ref(false);
@@ -184,7 +185,7 @@ const redirect_uris_string = ref(null);
 const groups = ref([]);
 
 onMounted(async () => {
-  const response = await maxios.get("api/saml/manage/serviceproviders/" + encodeURIComponent(vue.proxy.$route.params.id));
+  const response = await maxios.get("api/saml/manage/serviceproviders/" + encodeURIComponent(route.params.id));
   serviceprovider.value = response.data;
   redirect_uris_string.value = (serviceprovider.value && serviceprovider.value.redirect_uris) ? serviceprovider.value.redirect_uris.join('\n') : '';
   wasValidated.value = false;
@@ -200,7 +201,7 @@ onMounted(async () => {
 
 function deleteObject(object){
 
-  maxios.delete('api/saml/manage/serviceproviders/' + encodeURIComponent(vue.proxy.$route.params.id)).then(response => {
+  maxios.delete('api/saml/manage/serviceproviders/' + encodeURIComponent(route.params.id)).then(response => {
 
     notify({
         text: 'We have succesfully deleted this SAML service provider.'
@@ -218,7 +219,7 @@ function onSubmit(event) {
 
   if (event.target.checkValidity()) {
 
-    maxios.put('api/saml/manage/serviceproviders/' + encodeURIComponent(vue.proxy.$route.params.id),
+    maxios.put('api/saml/manage/serviceproviders/' + encodeURIComponent(route.params.id),
       serviceprovider.value
     ).then(response => {
 

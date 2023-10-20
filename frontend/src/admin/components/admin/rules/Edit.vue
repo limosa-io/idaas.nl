@@ -109,7 +109,7 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { faEnvelope, faUser, faUsers } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { maxios, notify } from '@/admin/helpers.js'
-import { useRouter } from "vue-router4";
+import { useRouter, useRoute } from "vue-router4";
 
 library.add(faEnvelope, faUser, faUsers);
 
@@ -122,9 +122,10 @@ const error = ref(null);
 const output = ref(null);
 const input = ref(null);
 const router = useRouter();
+const route = useRoute();
 
 onMounted(() => {
-  maxios.get(`api/cloudFunctions/${vue.proxy.$route.params.rule_id}`).then((response) => {
+  maxios.get(`api/cloudFunctions/${route.params.rule_id}`).then((response) => {
     action.value = response.data;
     action.value.variables = !action.value.variables || !Array.isArray(action.value.variables) ? [] : action.value.variables;
 

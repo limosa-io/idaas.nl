@@ -60,7 +60,7 @@
                 : DefaultModuleGroup"
           >
 
-          <!-- TODO: set active-attribute based on $route.params.module -->
+          <!-- TODO: set active-attribute based on route.params.module -->
             <template v-for="n in group">
               <component
                 :lonely="n.id ==  state.activeModule" 
