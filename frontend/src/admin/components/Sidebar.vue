@@ -34,7 +34,7 @@
 
       <!-- add class "dropdown open" if has children -->
       <template v-for="(r, index) in router.options.routes[0].children">
-        <li class="nav-item" :key="index" :class="{'mt-3': index == 0, 'dropdown': (r.children != null && !r.hideChildren), 'open': (r.children != null )  }" v-if="!r.hide" >
+        <li class="nav-item" :key="index" :class="{'mt-3': index == 0}" v-if="!r.hide" >
           
           <!-- class="sidebar-link" -->
           <router-link :to="r.path" class="sidebar-link" :exact="true" active-class="active"> 
@@ -44,19 +44,8 @@
             </span>
             <span class="title">{{ (r.meta ? r.meta.label : null) || r.name }}</span>
 
-            <span v-if="r.children && (!r.meta || !r.meta.hideChildren)" class="arrow"><i class="ti-angle-right"></i></span>
-
           </router-link>
 
-          <ul v-if="r.children && (!r.meta || !r.meta.hideChildren)" class="dropdown-menu">
-            <template v-for="(child,index) in r.children">
-              <li :key="index" v-if="!child.hide" class="nav-item dropdown">
-                <router-link :to="child.path">
-                  <span>{{  (child.meta ? child.meta.label : null) || child.name }}</span>
-                </router-link>
-              </li>
-            </template>
-          </ul>
           
         </li>
       </template>

@@ -170,13 +170,13 @@ onMounted(() => {
       }
     );
 
-  window.addEventListener("message", () => {
+  window.addEventListener("message", (event) => {
     if (event.data && event.data.type == "refresh_state") {
       loadStateId(stateId);
     }
   });
-
-  window.addEventListener("message", () => {
+  
+  window.addEventListener("message", (event) => {
     if (event.data && event.data.type == "set_style") {
       customerstyle.value = Object.assign(
         {},

@@ -37,7 +37,6 @@
               <button
                 type="button"
                 class="btn btn-danger ml-2"
-                v-if="languages.length > 1"
                 @click="deleteLanguage(index)"
               >
                 Delete
@@ -340,15 +339,15 @@ function deleteLanguage(index) {
 
 function add() {
   let languagesNew = languages.value.slice();
-  languagesNew.push(locale.value);
+  languagesNew.push(locale.value.value);
 
   save(languagesNew).then((r) => {});
 }
 
-function save(languages = null) {
-  maxios
+function save(l = null) {
+  return maxios
     .put(`api/settings/bulk?namespace=ui`, {
-      languages: (languages ? languages : languages.value).sort(),
+      languages: (l ? l : languages.value).sort(),
     })
     .catch((response) => {
       notify({
@@ -356,7 +355,8 @@ function save(languages = null) {
       });
     })
     .then((r) => {
-      languages.value = r.body.languages;
+
+      languages.value = r.data.languages;
 
       return r;
     });

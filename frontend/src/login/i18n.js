@@ -6,7 +6,10 @@ const loadedLanguages = [];
 var lastPressed = null;
 
 export const i18n = createI18n({
-  
+    legacy: false,
+    missingWarn: false,
+    fallbackWarn: false,
+    fallbackLocale: 'en-GB',
 });
 
 let old = null;

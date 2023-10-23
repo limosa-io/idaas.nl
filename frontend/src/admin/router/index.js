@@ -130,7 +130,7 @@ const routes = [
 
         meta: {
           label: 'Applications',
-          hideChildren: true,
+          hideChildren: false,
         },
 
         children: [

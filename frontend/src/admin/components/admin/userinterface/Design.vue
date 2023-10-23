@@ -200,13 +200,8 @@ onMounted(() => {
     }
   };
 
-  window.addEventListener("message", event => {
-    if (!loaded.value) {
-      loaded.value = true;
-    }
+  loaded.value = true;
 
-    postAuthrequest();
-  });
 });
 
 
@@ -256,7 +251,21 @@ const authRequest = ref({
   }
 });
 
-const style = ref({});
+const style = ref({
+        button_backgroundColor: "#2ad42b",
+        logo: null,
+        container_backgroundColor: "#20b2fa",
+        container_backgroundImage: null,
+        button_backgroundColor: "#2ad42b",
+        container_positionVertical: "middle",
+        container_positionHorizonal: "center",
+        navbar_show: "hide",
+        navbar_backgroundColor: "#343a40",
+        client_logo_show: "null",
+        client_name_show: "show",
+        title: "",
+        label_display: "hidden"
+      });
 const showupload = ref(false);
 const cropped = ref(null);
 const preview = ref(oidcUrl + "?designer=true");
@@ -266,9 +275,7 @@ var previewSettings = {};
 watch(
   style,
   val => {
-    if (loaded.value) {
-      change();
-    }
+    change();
   },
   { deep: true }
 );
@@ -294,7 +301,7 @@ watch(authRequest, val => {
 function postAuthrequest() {
   iframes.value.contentWindow.postMessage(
     {
-      authRequest: JSON.parse(JSON.stringify(this.authRequest))
+      authRequest: JSON.parse(JSON.stringify(authRequest.value))
     },
     oidcUrl
   );

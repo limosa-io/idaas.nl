@@ -77,7 +77,7 @@
 <script setup>
 
 import { useStateStore } from '../store';
-import {defineProps} from 'vue';
+import {defineProps, ref} from 'vue';
 import {request, baseProps} from './composable';
 const state = useStateStore();
 const username = ref(null);

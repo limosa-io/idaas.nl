@@ -64,6 +64,11 @@ const routes = [
         path: '/:hash?/:module?',
         name: 'login',
         component: Selection
+      },
+      {
+        path: '/',
+        name: 'login_default',
+        component: Selection
       }
     ]
 

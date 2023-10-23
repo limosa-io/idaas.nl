@@ -48,12 +48,13 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, defineProps } from "vue";
 
-import {activate} from './composable'
+import {activate, baseProps} from './composable'
 import {useStateStore} from "../store";
 
 const state = useStateStore();
+const props = defineProps(baseProps);
 
 const username = ref(null);
 const done = ref(false);

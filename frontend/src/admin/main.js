@@ -1,11 +1,6 @@
 import Vue, { createApp, configureCompat } from 'vue'
 import App from './App.vue'
 import router from './router'
-
-// import { BModal } from 'bootstrap-vue'
-// import { VBModal } from 'bootstrap-vue'
-// import {VBTooltip, BPagination, BDropdown, BDropdownItem, BFormCheckboxGroup, BFormRadio, BFormCheckbox, BFormRadioGroup, BFormTextarea, BFormSelect, BBadge} from 'bootstrap-vue';
-// import {BFormGroup, BFormInput} from './bootstrap-vue'
 import state from './components/state.js'
 import MenuButton from "@/admin/components/general/MenuButton.vue";
 import MainTemplate from "@/admin/components/general/MainTemplate.vue";
