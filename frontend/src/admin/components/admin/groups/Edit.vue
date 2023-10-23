@@ -102,8 +102,6 @@ import {maxios} from '@/admin/helpers.js'
 import { notify } from '../../../helpers';
 import {useRouter, useRoute} from 'vue-router4';
 
-const vue = getCurrentInstance();
-
 const group = ref(null);
 const errors = ref({});
 const wasValidated = ref(false);

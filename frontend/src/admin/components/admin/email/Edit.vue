@@ -4,92 +4,48 @@
     <div class="bgc-white bd bdrs-3 p-3 mt-2">
       <div class="row">
         <div class="col-md-6">
-          <form
-            ref="templateForm"
-            :class="{ 'was-validated': wasValidated }"
-            v-if="object"
-            class="needs-validation"
-            novalidate
-            v-on:submit.prevent="onSubmit"
-          >
+          <form ref="templateForm" :class="{ 'was-validated': wasValidated }" v-if="object" class="needs-validation"
+            novalidate v-on:submit.prevent="onSubmit">
             <!-- !object.is_parent &&  -->
             <div class="form-group">
               <label for="parent">Base template</label>
-              <FormSelect
-                id="parent"
-                @change="reloadPreview"
-                aria-describedby="parentHelp"
-                v-if="parents"
-                value-field="id"
-                text-field="name"
-                v-model="object.parent_id"
-                :options="parentOptions"
-                class=""
-              />
-              <small id="parentHelp" class="form-text text-muted"
-                >Consider using a parent template that defines the header, main
-                and footer section.</small
-              >
+              <FormSelect id="parent" @change="reloadPreview" aria-describedby="parentHelp" v-if="parents"
+                value-field="id" text-field="name" v-model="object.parent_id" :options="parentOptions" class="" />
+              <small id="parentHelp" class="form-text text-muted">Consider using a parent template that defines the
+                header, main
+                and footer section.</small>
             </div>
 
             <div class="form-group">
               <label for="name">Name</label>
-              <input
-                :class="{ 'is-invalid': errors['name'] ? true : false }"
-                type="text"
-                class="form-control"
-                v-model="object.name"
-                id="name"
-                aria-describedby="nameHelp"
-                placeholder="Template name"
-              />
+              <input :class="{ 'is-invalid': errors['name'] ? true : false }" type="text" class="form-control"
+                v-model="object.name" id="name" aria-describedby="nameHelp" placeholder="Template name" />
               <template v-if="errors['name']">
-                <div
-                  class="invalid-feedback"
-                  v-for="(e, index) in errors['name']"
-                  :key="index"
-                >
+                <div class="invalid-feedback" v-for="(e, index) in errors['name']" :key="index">
                   {{ e }}
                 </div>
               </template>
-              <small id="nameHelp" class="form-text text-muted"
-                >The name is not visible for end users. Use for your own
-                reference.</small
-              >
+              <small id="nameHelp" class="form-text text-muted">The name is not visible for end users. Use for your own
+                reference.</small>
             </div>
 
             <div class="form-group">
               <label for="name">Subject</label>
-              <input
-                :class="{ 'is-invalid': errors['subject'] ? true : false }"
-                type="text"
-                class="form-control"
-                v-model="object.subject"
-                id="subject"
-                aria-describedby="subjectHelp"
-                placeholder="Subject"
-              />
+              <input :class="{ 'is-invalid': errors['subject'] ? true : false }" type="text" class="form-control"
+                v-model="object.subject" id="subject" aria-describedby="subjectHelp" placeholder="Subject" />
               <template v-if="errors['subject']">
-                <div
-                  class="invalid-feedback"
-                  v-for="(e, index) in errors['subject']"
-                  :key="index"
-                >
+                <div class="invalid-feedback" v-for="(e, index) in errors['subject']" :key="index">
                   {{ e }}
                 </div>
               </template>
-              <small id="subjectHelp" class="form-text text-muted"
-                >The subject of the e-mail.</small
-              >
+              <small id="subjectHelp" class="form-text text-muted">The subject of the e-mail.</small>
             </div>
 
             <div class="form-group">
               <label for="codemirror">Body</label>
 
-              <textarea
-                id="codemirror"
-                v-model="object.body"
-              ></textarea>
+              <Codemirror @input="reloadPreview" id="codemirror" :options="cmOptions" v-model:value="object.body">
+              </Codemirror>
             </div>
 
             <div class="alert alert-info" role="alert">
@@ -111,15 +67,9 @@
       </div>
     </div>
 
-    <Danger
-      v-if="object && !object.default"
-      body="Clicking the button below will delete this application. This cannot be undone."
-    >
-      <button
-        type="button"
-        class="btn btn-danger"
-        @click="deleteObject(object)"
-      >
+    <Danger v-if="object && !object.default"
+      body="Clicking the button below will delete this application. This cannot be undone.">
+      <button type="button" class="btn btn-danger" @click="deleteObject(object)">
         Delete
       </button>
     </Danger>
@@ -131,18 +81,24 @@
 import _ from "lodash";
 import { Buffer } from "buffer";
 import Danger from "@/admin/components/general/Danger.vue";
-import {shallowRef} from 'vue';
+import { shallowRef } from 'vue';
 
 import { onMounted, watch, computed, ref, getCurrentInstance } from "vue";
-import {maxios} from "@/admin/helpers.js";
+import { maxios } from "@/admin/helpers.js";
 import { notify } from "../../../helpers";
-import {useRouter, useRoute} from 'vue-router4';
+import { useRouter, useRoute } from 'vue-router4';
 
 const route = useRoute();
 const router = useRouter();
 const parents = ref(null);
 
 const preview = ref(null);
+
+const cmOptions = ref({
+  tabSize: 4,
+  lineNumbers: true,
+  line: true,
+});
 
 
 const errors = ref({});
@@ -170,9 +126,9 @@ const vue = getCurrentInstance();
 onMounted(() => {
   maxios
     .get(
-      
-        "api/mail_template/" + encodeURIComponent(route.params.object_id)
-      
+
+      "api/mail_template/" + encodeURIComponent(route.params.object_id)
+
     )
     .then(
       (response) => {
@@ -187,7 +143,7 @@ onMounted(() => {
       }
     );
 
-    maxios.get("api/mail_template").then(
+  maxios.get("api/mail_template").then(
     (response) => {
       parents.value = response.data;
     },
@@ -201,19 +157,19 @@ function reloadPreviewNow() {
   if (!templateForm.value || templateForm.value.checkValidity()) {
     maxios
       .post(
-        
-          "api/preview_mail_template/" + encodeURIComponent(object.value.id)
+
+        "api/preview_mail_template/" + encodeURIComponent(object.value.id)
         ,
         object.value
       )
       .then(
         (response) => {
 
-          if(preview.value)
-          preview.value.contentWindow.location.replace(
-            "data:text/html;base64," +
+          if (preview.value)
+            preview.value.contentWindow.location.replace(
+              "data:text/html;base64," +
               Buffer.from(response.data.preview).toString("base64")
-          );
+            );
 
           errors.value = {};
         },
@@ -236,11 +192,9 @@ function reloadPreviewNow() {
   }
 }
 
-function reloadPreviewDebounced() {
-  return _.debounce(function () {
-    reloadPreviewNow();
-  }, 1000);
-}
+const reloadPreviewDebounced = _.debounce(() => {
+  reloadPreviewNow();
+}, 1000)
 
 function reloadPreview() {
   reloadPreviewDebounced();

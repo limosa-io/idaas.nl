@@ -21,66 +21,19 @@ import FormRadioButton from './components/general/FormRadioButton.vue';
 import FormCheckboxGroup from './components/general/FormCheckboxGroup.vue';
 import Pagination from './components/general/Pagination.vue';
 import Danger from './components/general/Danger.vue';
-
-// Vue.use(VueResource);
-
-// Vue.component(
-//   'multiselect',
-//   Multiselect
-// );
-
-// Vue.component(
-//   'vue-croppie',
-//   Croppie
-// );
-
-// Vue.component(
-//   'b-modal', BModal
-// );
-
-// Vue.component(
-//   'Button', Button
-// );
-
-// Vue.component(
-//   'MainTemplate', MainTemplate
-// );
-
-// Vue.directive('b-modal', VBModal);
-// Vue.component('b-form-group', BFormGroup); 
-// Vue.component('b-form-select', BFormSelect);
-
-// Vue.component('b-form-input', BFormInput);
-// Vue.component('b-form-textarea', BFormTextarea);
-
-// Vue.component('b-form-radio-group', BFormRadioGroup );
-// Vue.component('b-form-checkbox', BFormCheckbox );
-// Vue.component('b-form-radio', BFormRadio );
-// Vue.component('b-form-checkbox-group', BFormCheckboxGroup);
-
-// Vue.component('b-pagination', BPagination);
-
-
-// Vue.directive('b-tooltip', VBTooltip);
-
-// Vue.component('b-badge', BBadge);
-
-
-// Set a proper title
-// router.beforeEach((to, from, next) => {
-//   document.title = 'idaas.nl - ' + ((to.meta ? to.meta.label : null) || to.name || 'home')
-//   next()
-// })
+import { InstallCodemirro } from "codemirror-editor-vue3";
 
 const app = createApp(App);
 
 Vue.configureCompat({
     COMPONENT_V_MODEL: false,
-    ATTR_ENUMERATED_COERCION: false
+    ATTR_ENUMERATED_COERCION: false,
+    ATTR_FALSE_VALUE: false
 })
 
 // app.use(pinia);
 app.use(router);
+app.use(InstallCodemirro);
 // app.use(i18n);
 app.mount('#app');
 

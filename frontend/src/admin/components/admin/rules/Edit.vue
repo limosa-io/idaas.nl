@@ -12,7 +12,8 @@
             variables to the rule.</small>
         </div>
 
-        <textarea v-if="action" v-model="action.code"></textarea>
+        <Codemirror v-if="action" :options="cmOptions" v-model:value="action.code">
+        </Codemirror>
 
         <div class="alert alert-danger" role="alert" v-if="error">
           {{ error }}
@@ -50,14 +51,19 @@
                 <p>
                   <strong>Input:</strong>
                 </p>
-                <textarea id="inputuser" v-model="input"></textarea>
+
+                <Codemirror v-if="action" :options="cmOptions" v-model:value="input">
+                </Codemirror>
+
               </div>
 
               <div class="col-md-6">
                 <p>
                   <strong>Output:</strong>
                 </p>
-                <textarea id="inputuser" v-model="output"></textarea>
+
+                <Codemirror v-if="action" :options="cmOptions" v-model:value="output">
+                </Codemirror>
               </div>
             </div>
 
@@ -123,6 +129,12 @@ const output = ref(null);
 const input = ref(null);
 const router = useRouter();
 const route = useRoute();
+
+const cmOptions = ref({
+  tabSize: 4,
+  lineNumbers: true,
+  line: true,
+});
 
 onMounted(() => {
   maxios.get(`api/cloudFunctions/${route.params.rule_id}`).then((response) => {

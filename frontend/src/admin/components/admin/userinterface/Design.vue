@@ -10,58 +10,31 @@
           <div class="form-group">
             <label for="userinterface.modules">Preview Module</label>
 
-            <multiselect
-              id="userinterface.modules"
-              v-model="authRequest.next"
-              :options="modules"
-              label="name"
-              track-by="id"
-              :searchable="false"
-              :close-on-select="true"
-              :show-labels="false"
-              :multiple="true"
-              placeholder="Pick a value"
-            ></multiselect>
+            <multiselect id="userinterface.modules" v-model="authRequest.next" :options="modules" label="name"
+              track-by="id" :searchable="false" :close-on-select="true" :show-labels="false" :multiple="true"
+              placeholder="Pick a value"></multiselect>
           </div>
 
           <div class="form-group mb-0">
             <label for="userinterface.client">Preview Client</label>
 
-            <FormSelect
-              id="userinterface.client"
-              v-model="clientSelected"
-              :options="optionsClient"
-            />
+            <FormSelect id="userinterface.client" v-model="clientSelected" :options="optionsClient" />
           </div>
         </div>
 
-        <form
-          class="needs-validation"
-          novalidate
-          :class="{'was-validated': false}"
-          v-on:submit="onSubmit"
-        >
+        <form class="needs-validation" novalidate :class="{ 'was-validated': false }" v-on:submit="onSubmit">
           <template v-if="!advanced">
             <div class="row">
               <div class="col-6">
                 <div class="form-group mt-3">
                   <label for="container.title">Page Title</label>
-                  <input
-                    class="form-control"
-                    id="container.title"
-                    v-model="style['title']"
-                    type="text"
-                  />
+                  <input class="form-control" id="container.title" v-model="style['title']" type="text" />
                 </div>
               </div>
               <div class="col-6">
                 <div class="form-group mt-3">
                   <label for="label_display">Show label</label>
-                  <FormSelect
-                    v-model="style['label_display']"
-                    :options="['show','hidden']"
-                    class="mb-3"
-                  />
+                  <FormSelect v-model="style['label_display']" :options="['show', 'hidden']" class="mb-3" />
                 </div>
               </div>
             </div>
@@ -72,19 +45,11 @@
                   <label for="container.backgroundImage">Background Image</label>
 
                   <div class="input-group mb-3">
-                    <input
-                      type="text"
-                      class="form-control"
-                      aria-label="Small"
-                      id="container.backgroundImage"
-                      v-model="style['container_backgroundImage']"
-                    />
+                    <input type="text" class="form-control" aria-label="Small" id="container.backgroundImage"
+                      v-model="style['container_backgroundImage']" />
                     <div class="input-group-append">
-                      <button
-                        class="btn btn-outline-secondary"
-                        type="button"
-                        @click="showPicker(m => style['container_backgroundImage']=m.url)"
-                      >
+                      <button class="btn btn-outline-secondary" type="button"
+                        @click="showPicker(m => style['container_backgroundImage'] = m.url)">
                         <i class="ti-upload"></i>
                       </button>
                     </div>
@@ -97,19 +62,10 @@
                   <label for="style.logo">Logo</label>
 
                   <div class="input-group mb-3">
-                    <input
-                      type="text"
-                      class="form-control"
-                      aria-label="Small"
-                      id="style.logo"
-                      v-model="style['logo']"
-                    />
+                    <input type="text" class="form-control" aria-label="Small" id="style.logo" v-model="style['logo']" />
                     <div class="input-group-append">
-                      <button
-                        class="btn btn-outline-secondary"
-                        type="button"
-                        @click="showPicker(m => style['logo']=m.url)"
-                      >
+                      <button class="btn btn-outline-secondary" type="button"
+                        @click="showPicker(m => style['logo'] = m.url)">
                         <i class="ti-upload"></i>
                       </button>
                     </div>
@@ -122,22 +78,15 @@
               <div class="col-6">
                 <div class="form-group">
                   <label for="navbar.show">Show top bar</label>
-                  <FormSelect
-                    v-model="style['navbar_show']"
-                    :options="['show','hidden']"
-                    class="mb-3"
-                  />
+                  <FormSelect v-model="style['navbar_show']" :options="['show', 'hidden']" class="mb-3" />
                 </div>
               </div>
               <div class="col-6">
                 <div class="form-group">
                   <label for="button.navbar_backgroundColor">Color</label>
 
-                  <input
-                    class="form-control"
-                    v-model="style['navbar_backgroundColor']"
-                    :type="expert ? 'text' : 'color'"
-                  />
+                  <input class="form-control" v-model="style['navbar_backgroundColor']"
+                    :type="expert ? 'text' : 'color'" />
                 </div>
               </div>
             </div>
@@ -146,12 +95,8 @@
               <div class="col-6">
                 <div class="form-group">
                   <label for="container.backgroundColor">Background</label>
-                  <input
-                    class="form-control"
-                    id="container.backgroundColor"
-                    v-model="style['container_backgroundColor']"
-                    :type="expert ? 'text' : 'color'"
-                  />
+                  <input class="form-control" id="container.backgroundColor" v-model="style['container_backgroundColor']"
+                    :type="expert ? 'text' : 'color'" />
                 </div>
               </div>
 
@@ -160,11 +105,8 @@
                   <label for="button.backgroundColor">Button / text</label>
 
                   <div class="row ml-0 mr-0">
-                    <input
-                      class="form-control col"
-                      v-model="style['button_backgroundColor']"
-                      :type="expert ? 'text' : 'color'"
-                    />
+                    <input class="form-control col" v-model="style['button_backgroundColor']"
+                      :type="expert ? 'text' : 'color'" />
 
                   </div>
                 </div>
@@ -175,22 +117,14 @@
               <div class="col-6">
                 <div class="form-group">
                   <label for="client_logo_show">Show client name</label>
-                  <FormSelect
-                    v-model="style['client_name_show']"
-                    :options="['show','hidden']"
-                    class="mb-3"
-                  />
+                  <FormSelect v-model="style['client_name_show']" :options="['show', 'hidden']" class="mb-3" />
                 </div>
               </div>
 
               <div class="col-6">
                 <div class="form-group">
                   <label for="client_logo_show">Show client logo</label>
-                  <FormSelect
-                    v-model="style['client_logo_show']"
-                    :options="['show','hidden']"
-                    class="mb-3"
-                  />
+                  <FormSelect v-model="style['client_logo_show']" :options="['show', 'hidden']" class="mb-3" />
                 </div>
               </div>
             </div>
@@ -199,43 +133,33 @@
               <div class="col-6">
                 <div class="form-group">
                   <label for="container.positionHorizonal">Horizonal position</label>
-                  <FormSelect
-                    v-model="style['container_positionHorizonal']"
-                    :options="['left','center','right']"
-                    class="mb-3"
-                  />
+                  <FormSelect v-model="style['container_positionHorizonal']" :options="['left', 'center', 'right']"
+                    class="mb-3" />
                 </div>
               </div>
 
               <div class="col-6">
                 <div class="form-group">
                   <label for="container.positionVertical">Vertical position</label>
-                  <FormSelect
-                    v-model="style['container_positionVertical']"
-                    :options="['top','middle','bottom']"
-                    class="mb-3"
-                  />
+                  <FormSelect v-model="style['container_positionVertical']" :options="['top', 'middle', 'bottom']"
+                    class="mb-3" />
                 </div>
               </div>
             </div>
           </template>
 
           <template v-else>
-            <textarea
-              class="mb-3 mt-3"
-              id="codemirror"
-              v-model="style['css']"
-            ></textarea>
+
+            <Codemirror class="mb-3 mt-3" id="codemirror" :options="cmOptions" v-model:value="style['css']">
+            </Codemirror>
+
           </template>
 
           <button class="btn btn-primary btn-block">Save</button>
         </form>
 
-        <button
-          class="btn btn-link ml-0 pl-0"
-          type="button"
-          @click="advanced = !advanced"
-        >{{ advanced ? 'Basic' : 'Advanced' }}</button>
+        <button class="btn btn-link ml-0 pl-0" type="button" @click="advanced = !advanced">{{ advanced ? 'Basic' :
+          'Advanced' }}</button>
 
         <!-- FIXME: errors-->
         <!-- <router-link
@@ -245,7 +169,7 @@
       </div>
 
       <div class="col">
-          <iframe @load="change" ref="iframes" :src="preview"></iframe>
+        <iframe @load="change" ref="iframes" :src="preview"></iframe>
       </div>
     </div>
   </div>
@@ -257,8 +181,14 @@
 import Picker from './Picker.vue'
 import Modal from '@/admin/components/general/Modal.vue'
 
-import {ref, onMounted, watch, computed} from 'vue';
-import {maxios, laxios, manageUrl, oidcUrl, notify} from '@/admin/helpers.js';
+import { ref, onMounted, watch, computed } from 'vue';
+import { maxios, laxios, manageUrl, oidcUrl, notify } from '@/admin/helpers.js';
+
+const cmOptions = ref({
+  tabSize: 4,
+  lineNumbers: true,
+  line: true,
+});
 
 onMounted(() => {
   previewSettings = JSON.parse(window.localStorage.getItem("preview"));
@@ -283,11 +213,11 @@ onMounted(() => {
 const optionsClient = computed(() => {
   return clients.value != null && clients.value.length > 0
     ? clients.value.map(v => {
-        return {
-          value: v,
-          text: v.client_name
-        };
-      })
+      return {
+        value: v,
+        text: v.client_name
+      };
+    })
     : [];
 });
 
@@ -361,7 +291,7 @@ watch(authRequest, val => {
 }, { deep: true });
 
 
-function postAuthrequest(){
+function postAuthrequest() {
   iframes.value.contentWindow.postMessage(
     {
       authRequest: JSON.parse(JSON.stringify(this.authRequest))
@@ -380,7 +310,7 @@ function showPicker(c) {
   pickerModal.show();
 }
 
-function firstLoad(){
+function firstLoad() {
   maxios.get('api/settings?namespace=ui').then(response => {
     style.value = response.data;
 
@@ -448,14 +378,14 @@ function onSubmit(event) {
   event.preventDefault();
 }
 
-function change(){
+function change() {
   iframes.value.contentWindow.postMessage(
-        {
-          type: 'set_style',
-          style: JSON.parse(JSON.stringify(style.value))
-        },
-        oidcUrl
-      );
+    {
+      type: 'set_style',
+      style: JSON.parse(JSON.stringify(style.value))
+    },
+    oidcUrl
+  );
 }
 
 </script>
