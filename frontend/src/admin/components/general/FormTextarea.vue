@@ -10,9 +10,6 @@
 
 
 <script setup>
-    // :value="modelValue"
-    // @input="$emit('update:modelValue', $event.target.value)"
-
 import {  computed } from 'vue';
 
 const props = defineProps(['modelValue', 'id', 'description'])
