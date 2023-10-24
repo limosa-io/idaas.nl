@@ -110,6 +110,7 @@ import familyName from "../register/familyName.vue";
 import preferredLanguage from "../register/preferredLanguage.vue";
 import { baseProps, activate, request, overview } from "./composable";
 import { useStateStore } from "../store";
+import axios from "axios";
 
 const state = useStateStore();
 
@@ -128,6 +129,7 @@ const errors = ref({});
 const fields = ref([]);
 const isLoading = ref(false);
 const termsApproved = ref(false);
+const url = ref(null);
 const user = ref({
   schemas: ["urn:ietf:params:scim:schemas:core:2.0:User"],
   "urn:ietf:params:scim:schemas:core:2.0:User": {},
@@ -181,7 +183,7 @@ function goToRegisterNow() {
       }
     }
 
-    // url.value = response.data.url;
+    url.value = response.data.url;
   });
 }
 
@@ -197,7 +199,8 @@ function onSubmit() {
   }
 
   isLoading.value = true;
-  vue.proxy.post(this.url, this.user).then(
+
+  axios.post(url.value, user.value).then(
     (response) => {
       request(props.module, props.authRequest, {
         "proof-of-creation": response.headers.get("x-scim-proof-of-creation"),
@@ -207,6 +210,7 @@ function onSubmit() {
       });
     },
     (response) => {
+      console.log(response);
       isLoading.value = false;
       errors.value = response.body.errors;
     }

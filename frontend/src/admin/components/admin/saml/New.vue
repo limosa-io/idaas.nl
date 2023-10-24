@@ -66,8 +66,8 @@ function onSubmit(event){
       notify({text: 'We have succesfully saved your new SAML Service Provider.'});
       router.replace({ name: 'saml.serviceproviders.edit', params: { id: response.data.id }});
 
-    }, response => {
-      errors.value = response.data.errors;
+    }, e => {
+      errors.value = e.response.data.errors;
       wasValidated.value = true;
     });
     

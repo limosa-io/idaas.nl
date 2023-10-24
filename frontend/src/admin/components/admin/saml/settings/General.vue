@@ -84,13 +84,13 @@ import {maxios, notify} from '@/admin/helpers.js';
 
 const errors = ref({});
 const wasValidated = ref(false);
-const loading = ref(false);
+const loading = ref(true);
 const provider = ref({});
-const selected = ref(false);
 
 onMounted(async () => {
   const response = await maxios.get("api/saml/manage/identityprovider");
   provider.value = response.data;
+  loading.value = false;
 });
 
 function onSubmit(event){
@@ -103,12 +103,11 @@ function onSubmit(event){
 
       notify({text: 'We have succesfully saved your provider settings.'});
 
-    }, response => {
-      errors.value = response.data.errors;
+    }, e => {
+      errors.value = e.response.data.errors;
       wasValidated.value = true;
     });
 
-    //this.loading = true;
   }else{
     wasValidated.value = true;
   }

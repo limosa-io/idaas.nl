@@ -137,8 +137,8 @@ onMounted(() => {
 
         reloadPreviewNow();
       },
-      (response) => {
-        errors.value = response.data.errors;
+      (e) => {
+        errors.value = e.response.data.errors;
         wasValidated.value = true;
       }
     );
@@ -146,9 +146,6 @@ onMounted(() => {
   maxios.get("api/mail_template").then(
     (response) => {
       parents.value = response.data;
-    },
-    (response) => {
-      // error callback
     }
   );
 });

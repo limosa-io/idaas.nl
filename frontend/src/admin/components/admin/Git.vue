@@ -153,6 +153,7 @@ import {ref, onMounted, getCurrentInstance} from 'vue';
 import Danger from "@/admin/components/general/Danger.vue";
 import { notify } from '../../helpers';
 import { useRouter } from 'vue-router4';
+import {maxios} from '@/admin/helpers.js'
 
 const router = useRouter();
 const loaded = ref(false);
@@ -169,7 +170,8 @@ const git = ref({
 
 onMounted(() => {
   maxios.get("api/git").then((response) => {
-    git.value = response.data;
+    // merge the values of response.data with the values of git.value
+    Object.assign(git.value, response.data);
     loaded.value = true;
   });
 });
@@ -192,8 +194,8 @@ function onSubmit(event) {
         errors.value = null;
         router.replace({ name: 'oidc.client.edit', params: { client_id: response.data.client_id }});
       },
-      (response) => {
-        errors.value = response.data.errors;
+      (e) => {
+        errors.value = e.response.data.errors;
         wasValidated.value = true;
 
         notify({

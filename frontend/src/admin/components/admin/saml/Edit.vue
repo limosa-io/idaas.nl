@@ -169,11 +169,10 @@
 
 <script setup>
 
-import { ref, getCurrentInstance, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import {maxios, notify} from '@/admin/helpers.js'
 import { useRouter, useRoute } from 'vue-router4';
 
-const vue = getCurrentInstance();
 const router = useRouter();
 const route = useRoute();
 
@@ -227,8 +226,8 @@ function onSubmit(event) {
         text: 'We have succesfully saved your new SAML service provider settings.'
       });
 
-    }, response => {
-      errors.value = response.data.errors;
+    }, e => {
+      errors.value = e.response.data.errors;
       wasValidated.value = true;
 
       notify({

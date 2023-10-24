@@ -83,8 +83,8 @@ function onSubmit(event) {
             params: { client_id: response.data.client_id }
           });
         },
-        response => {
-          errors.value = response.data.errors;
+        e => {
+          errors.value = e.response.data.errors;
           wasValidated.value = true;
         }
       ).finally(() => {

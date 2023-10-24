@@ -154,8 +154,10 @@ const scimAttributes = ref([
 ]);
 
 onMounted(() => {
-  maxios.get("api/settings/bulk?namespace=registration").then(
+  maxios.get("api/settings?namespace=registration").then(
     response => {
+      console.log('geladen');
+      console.log(response);
       registration.value = response.data;
       loaded.value = true;
     },
@@ -191,8 +193,8 @@ function onSubmit(event) {
           });
           errors.value = null;
         },
-        response => {
-          errors.value = response.data.errors;
+        e => {
+          errors.value = e.response.data.errors;
           wasValidated.value = true;
 
           notify({

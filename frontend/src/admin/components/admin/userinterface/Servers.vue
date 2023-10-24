@@ -92,8 +92,8 @@ function onSubmit(){
   maxios.post('/api/uiServers', ui.value).then(response => {
     newModal.value.hide();
     load();
-  }).catch(error => {
-    errors.value = error.response.data.errors;
+  }).catch(e => {
+    errors.value = e.response.data.errors;
   });
 
 }

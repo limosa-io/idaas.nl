@@ -84,9 +84,9 @@ function onSubmit() {
       done.value = true;
       isLoading.value = false;
     },
-    (error) => {
+    (e) => {
       isLoading.value = false;
-      state.error(error.response.data.error);
+      state.error(e.response.data.error);
     }
   );
 }

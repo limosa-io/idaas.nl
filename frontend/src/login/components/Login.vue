@@ -94,7 +94,6 @@ import {
   watch,
   computed,
   ref,
-  getCurrentInstance,
   defineProps,
   h,
 } from "vue";
@@ -110,7 +109,6 @@ import { storeToRefs } from "pinia";
 import { post } from "./modules/composable";
 
 const state = useStateStore();
-const vue = getCurrentInstance();
 
 const props = defineProps(["authRequest"]);
 
@@ -204,8 +202,8 @@ onMounted(() => {
         }
 
         if (event.data.authRequest) {
-          state.authRequest = event.data.authRequest;
-          state.activeModule = null;
+          authRequest.value = event.data.authRequest;
+          activeModule.value = null;
         }
       },
       false
@@ -275,7 +273,10 @@ function loadStateId(id) {
         new Date().getTime()
     )
     .then((response) => {
+      console.log('load response dat2a...');
+
       state.authRequest = response.data;
+      // state.authRequest = response.data;
 
       //TODO: preferably redirect the user immediatly, without entering the login ui
       if (state.authRequest.info.don) {
@@ -293,6 +294,9 @@ function loadStateId(id) {
 }
 
 function loadFromHash() {
+
+  // https://login.notidaas.nl#state=9a70994f-edd7-4bcf-9779-89d004381c97
+
   const parsed = queryString.parse(location.hash);
 
   //ugly workaround to make it work in hash-mode
@@ -307,6 +311,7 @@ function loadFromHash() {
 
     var key = storeStateId(parsed.state);
 
+    console.log('replace with login route');
     router.replace({
       name: "login",
       params: {
@@ -327,18 +332,8 @@ function loadFromHash() {
 
 const { authRequest, activeModule } = storeToRefs(state);
 
-// TODO: FIXME
-// watch(activeModule, function (val) {
-//   vue.proxy.$router.push({
-//     name: "login",
-//     params: {
-//       hash: vue.proxy.$route.params.hash,
-//       module: val,
-//     },
-//   });
-// });
-
 watch(authRequest, function (val) {
+  console.log('authRequest updated ...');
   // TODO: if in iFrame, post to parent ... but to what URL? Or broadcast "get style" and only accept if state is correct?
   if (inIframe()) {
     // TODO: rename argument redirectionUrls to something like "uiUrls"
@@ -357,10 +352,11 @@ watch(authRequest, function (val) {
         state.info(message.message);
       }
     }
-
-    state.activeModule = val.info.inc.module;
+    console.log('update active module!');
+    console.log('activeModule: ' + val.info.inc.module);
+    activeModule.value = val.info.inc.module;
   } else if (val.next != null && val.next.length == 1) {
-    state.activeModule = val.next[0].id;
+    activeModule.value = val.next[0].id;
   } else if (val.next != null) {
     var match = false;
     for (var n of val.next) {
@@ -371,12 +367,14 @@ watch(authRequest, function (val) {
     }
 
     if (!match) {
-      state.activeModule = null;
+      console.log('activeModule to null');
+      activeModule.value = null;
     }
   } else {
-    state.activeModule = null;
+    console.log('activeModule to null. ...');
+    activeModule.value = null;
   }
-});
+}, {deep: true});
 
 // $route(to, from) {
 //   state.alert = "none";

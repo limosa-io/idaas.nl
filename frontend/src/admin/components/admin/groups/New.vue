@@ -124,10 +124,10 @@ function onSubmit(event) {
             params: { group_id: response.data.id },
           });
         },
-        (response) => {
+        (e) => {
           notify({ text: "There were some problems." });
 
-          errors.value = response.data.errors;
+          errors.value = e.response.data.errors;
         }
       )
       .finally(() => {

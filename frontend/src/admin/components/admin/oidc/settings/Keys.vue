@@ -153,8 +153,8 @@ function onSubmitImportX509(event) {
       importX509.value = null;
       vue.proxy.$refs.importX509.hide();
     },
-    (response) => {
-      errors.value = response.data.errors;
+    (e) => {
+      errors.value = e.response.data.errors;
       wasValidated.value = true;
     }
   );

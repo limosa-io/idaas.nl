@@ -154,8 +154,6 @@ import register from "./modules/register.vue";
 import sms from "./modules/sms.vue";
 import totp from "./modules/totp.vue";
 
-import { onMounted, getCurrentInstance } from "vue";
-
 import axios from "axios";
 
 const stringToModule = {
@@ -177,18 +175,7 @@ const stringToModule = {
 
 const state = useStateStore();
 
-const vue = getCurrentInstance();
-
 const props = defineProps(["next", "authRequest", "customerstyle"]);
-const route = useRoute();
-
-onMounted(() => {
-  if (route.params.module) {
-    state.activeModule = route.params.module;
-  } else {
-    state.activeModule = null;
-  }
-});
 
 function cancel() {
   document.location = props.authRequest.info.nok;
@@ -200,7 +187,7 @@ function overview() {
 
 function logout() {
   axios.get("/api/logout").then(
-    (response) => {
+    (_response) => {
       document.location = props.authRequest.info.ret;
     }
   );

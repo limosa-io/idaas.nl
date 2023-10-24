@@ -81,6 +81,8 @@ onMounted(() => {
       }, response => {
         // error callback
         isLoaded.value = false;
+        doLogout();
+
       });
 });
 

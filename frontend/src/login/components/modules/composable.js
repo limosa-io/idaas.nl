@@ -22,8 +22,8 @@ export function isIncomplete(authRequest, module) {
     return authRequest.info.inc && authRequest.info.inc.module == module.id;
 }
 
-export function getIncompleteModuleState() {
-    return (this.isIncomplete() ? this.authRequest.info.inc.moduleState : {}) || {}
+export function getIncompleteModuleState(authRequest, module) {
+    return (isIncomplete(authRequest, module) ? authRequest.info.inc.moduleState : {}) || {}
 }
 
 export function activate(module) {

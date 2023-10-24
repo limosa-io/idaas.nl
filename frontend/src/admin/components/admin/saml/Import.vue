@@ -51,9 +51,8 @@ function onSubmit(){
         notify({text: 'We have succesfully imported your new SAML Service Provider.'});
         router.replace({ name: 'saml.serviceproviders.edit', params: { id: response.data.id }});
 
-    }, response => {
-
-        error.value = response.data.error;
+    }, e => {
+        error.value = e.response.data.error;
         loading.value = false;
         
     });

@@ -140,11 +140,11 @@ function onSubmit() {
             text: 'We have succesfully saved this group.',
         });
         errors.value = {};
-    }, response => {
+    }, e => {
         notify({
             text: 'There were some errors during saving.',
         });
-        errors.value = response.data.errors;
+        errors.value = e.response.data.errors;
     });
 }
 

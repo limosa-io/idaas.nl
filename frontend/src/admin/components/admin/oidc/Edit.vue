@@ -783,8 +783,8 @@ function onSubmit(event) {
           errors.value = {};
           // this.router.replace({ name: 'oidc.client.edit', params: { client_id: response.data.client_id }});
         },
-        (response) => {
-          errors.value = response.data.errors;
+        (e) => {
+          errors.value = e.response.data.errors;
           wasValidated.value = true;
 
           notify({

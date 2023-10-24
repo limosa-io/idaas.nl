@@ -233,8 +233,8 @@ function onSubmit(event) {
       text: 'We have succesfully saved your module.'
     });
 
-  }, response => {
-    errors.value = response.data.errors;
+  }, e => {
+    errors.value = e.response.data.errors;
     wasValidated.value = true;
 
     notify({

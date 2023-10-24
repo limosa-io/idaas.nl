@@ -1,41 +1,21 @@
 <template>
   <div class="">
-    <form
-      v-if="
-        props.lonely &&
-        isIncomplete(props.authRequest, props.module) &&
-        getIncompleteModuleState().state == 'confirmed'
-      "
-      v-on:submit.prevent="onSubmitPassword"
-    >
+    <form v-if="props.lonely &&
+      isIncomplete(props.authRequest, props.module) &&
+      getIncompleteModuleState(props.authRequest, props.module).state == 'confirmed'
+      " v-on:submit.prevent="onSubmitPassword">
       <h1 class="mt-3">{{ $t("login.resetPasswordChangeTitle") }}</h1>
       <p>{{ $t("login.resetPasswordChangeDescription") }}</p>
       <div class="form-group">
-        <label
-          for="password"
-          :style="{
-            display: customerstyle.label_display != 'show' ? 'none' : 'block',
-          }"
-          >{{ $t("login.resetPasswordChangeFirst") }}</label
-        >
+        <label for="password" :style="{
+          display: customerstyle.label_display != 'show' ? 'none' : 'block',
+        }">{{ $t("login.resetPasswordChangeFirst") }}</label>
 
         <div class="input-group mb-3">
-          <input
-            tabindex="1"
-            autofocus
-            :type="showFirst ? 'text' : 'password'"
-            id="password"
-            class="form-control"
-            placeholder=""
-            v-model="password"
-          />
+          <input tabindex="1" autofocus :type="showFirst ? 'text' : 'password'" id="password" class="form-control"
+            placeholder="" v-model="password" />
           <div class="input-group-append">
-            <button
-              tabindex="-1"
-              class="btn btn-outline-secondary"
-              type="button"
-              @click="showFirst = !showFirst"
-            >
+            <button tabindex="-1" class="btn btn-outline-secondary" type="button" @click="showFirst = !showFirst">
               <i class="fas fa-eye"></i>
             </button>
           </div>
@@ -52,21 +32,10 @@
         }}</label>
 
         <div class="input-group mb-3">
-          <input
-            tabindex="2"
-            :type="showSecond ? 'text' : 'password'"
-            id="passwordRepeat"
-            class="form-control"
-            placeholder=""
-            v-model="passwordRepeat"
-          />
+          <input tabindex="2" :type="showSecond ? 'text' : 'password'" id="passwordRepeat" class="form-control"
+            placeholder="" v-model="passwordRepeat" />
           <div class="input-group-append">
-            <button
-              tabindex="-1"
-              class="btn btn-outline-secondary"
-              type="button"
-              @click="showSecond = !showSecond"
-            >
+            <button tabindex="-1" class="btn btn-outline-secondary" type="button" @click="showSecond = !showSecond">
               <i class="fas fa-eye"></i>
             </button>
           </div>
@@ -77,48 +46,27 @@
         </div>
       </div>
 
-      <button
-        :style="{ backgroundColor: customerstyle['button_backgroundColor'] }"
-        class="btn btn-primary btn-block"
-        type="submit"
-      >
+      <button :style="{ backgroundColor: customerstyle['button_backgroundColor'] }" class="btn btn-primary btn-block"
+        type="submit">
         <span>{{ $t("login.resetPasswordChangeButton") }}</span>
       </button>
     </form>
 
-    <form
-      v-else-if="props.lonely"
-      v-on:submit.prevent="onSubmit"
-      class="large-form-items"
-    >
+    <form v-else-if="props.lonely" v-on:submit.prevent="onSubmit" class="large-form-items">
       <template v-if="!done">
         <div class="form-group">
-          <label
-            for="username"
-            :style="{
-              display: customerstyle.label_display != 'show' ? 'none' : 'block',
-            }"
-            >Username</label
-          >
-          <input
-            type="text"
-            class="form-control"
-            id="username"
-            placeholder="Username or Email"
-            v-model="username"
-          />
+          <label for="username" :style="{
+            display: customerstyle.label_display != 'show' ? 'none' : 'block',
+          }">Username</label>
+          <input type="text" class="form-control" id="username" placeholder="Username or Email" v-model="username" />
         </div>
 
         <div v-if="error" class="alert alert-danger" role="alert">
           {{ error }}
         </div>
 
-        <button
-          :style="{ backgroundColor: customerstyle['button_backgroundColor'] }"
-          class="btn btn-primary btn-block"
-          :class="{ 'btn-loading': isLoading }"
-          type="submit"
-        >
+        <button :style="{ backgroundColor: customerstyle['button_backgroundColor'] }" class="btn btn-primary btn-block"
+          :class="{ 'btn-loading': isLoading }" type="submit">
           <span>{{ $t("login.resetPasswordButton") }}</span>
         </button>
       </template>
@@ -127,14 +75,8 @@
       </div>
     </form>
 
-    <a
-      v-else
-      class="nav-link text-center mt-0 mb-0"
-      href="#"
-      @click.prevent="activate(props.module)"
-      active-class="active"
-      >{{ $t("login.passwordforgottenLink") }}</a
-    >
+    <a v-else class="nav-link text-center mt-0 mb-0" href="#" @click.prevent="activate(props.module)"
+      active-class="active">{{ $t("login.passwordforgottenLink") }}</a>
   </div>
 </template>
 
@@ -144,10 +86,9 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { useStateStore } from "@/login/components/store.js";
 
-import {activate, baseProps, isIncomplete, request} from './composable'
+import { activate, baseProps, isIncomplete, request, getIncompleteModuleState } from './composable'
 
 library.add(faEye);
-
 
 const props = defineProps(baseProps);
 
@@ -214,18 +155,22 @@ function onSubmit() {
 
   isLoading.value = true;
 
-  request({
-    username: username.value,
-    remember: remember.value,
-  }).then(
-    (response) => {
-      done.value = true;
-      isLoading.value = false;
-    },
-    (error) => {
-      isLoading.value = false;
-      state.error(error.data.error);
-    }
-  );
+  request(
+    props.module,
+    props.authRequest,
+    {
+      username: username.value,
+      remember: remember.value,
+    }).then(
+      (response) => {
+        done.value = true;
+        isLoading.value = false;
+      },
+      (e) => {
+        console.error(e);
+        isLoading.value = false;
+        state.error(e.response.data.error);
+      }
+    );
 }
 </script>

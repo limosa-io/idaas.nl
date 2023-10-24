@@ -50,8 +50,8 @@ function onSubmit(){
       });
       errors.value = null;
     },
-    (response) => {
-      errors.value = response.data.errors;
+    (e) => {
+      errors.value = e.response.data.errors;
       wasValidated.value = true;
 
       notify({

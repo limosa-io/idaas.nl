@@ -143,8 +143,8 @@ function onSubmit() {
 
       useRouter().go(-1);
     },
-    (response) => {
-      errors.value = response.data.errors || {};
+    (e) => {
+      errors.value = e.response.data.errors || {};
     }
   );
 }

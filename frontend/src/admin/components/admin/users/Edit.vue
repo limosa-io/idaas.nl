@@ -157,9 +157,9 @@ img.cropped {
     <h4 class="c-grey-900 mt-1 mb-3">Edit User</h4>
     <div class="row">
       <div class="col-md-12">
-        <div v-if="user && user['urn:ietf:params:scim:schemas:core:2.0:User'].userName" class="bgc-white bd bdrs-3 p-3 mt-2">
+        <div v-if="user != null" class="bgc-white bd bdrs-3 p-3 mt-2">
           <h4 class="c-grey-900 mt-2">
-            {{ user["urn:ietf:params:scim:schemas:core:2.0:User"].userName.length > 1 }}
+            {{ user["urn:ietf:params:scim:schemas:core:2.0:User"].userName }}
           </h4>
 
           <form
@@ -811,12 +811,11 @@ function removeLink(link) {
         });
         errors.value = {};
       },
-      (response) => {
+      (e) => {
         notify({
           text: "There were some errors during saving.",
         });
-        console.error(response.data.errors);
-        errors.value = response.data.errors;
+        errors.value = e.response.data.errors;
       }
     );
 }
@@ -1151,12 +1150,12 @@ function onSubmit(event) {
         });
         errors.value = {};
       },
-      (response) => {
+      (e) => {
         wasValidated.value = true;
         notify({
           text: "There were some errors during saving.",
         });
-        errors.value = response.data.errors;
+        errors.value = e.response.data.errors;
       }
     );
 

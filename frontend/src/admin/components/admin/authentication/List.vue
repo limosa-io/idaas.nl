@@ -294,9 +294,9 @@ function onSubmitNewLink(event) {
 
       newLinkModal.value.hide();
     },
-    (response) => {
+    (e) => {
       // error callback
-      errors.value = response.data.errors;
+      errors.value = e.response.data.errors;
     }
   );
 

@@ -74,8 +74,8 @@ function onSubmit() {
     }
   }).then(response => {
     
-  }, response => {
-    errors.value = response.data.errors;
+  }, e => {
+    errors.value = e.response.data.errors;
   })
 }
 </script>
