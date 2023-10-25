@@ -12,7 +12,7 @@
 import { ref, computed } from 'vue'
 
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'input']);
 
 // properties: per-page, total-rows, modelValue
 const props = defineProps({
@@ -37,7 +37,8 @@ const currentPage = computed({
     return props.modelValue
   },
   set(value) {
-    emit('update:modelValue', value)
+    emit('input', value);
+    emit('update:modelValue', value);
   }
 })
 
