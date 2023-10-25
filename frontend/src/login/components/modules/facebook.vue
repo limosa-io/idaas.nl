@@ -14,11 +14,6 @@ import { defineProps } from "vue";
 
 import { baseProps } from "./composable";
 
-import fontawesome from "@fortawesome/fontawesome";
-import faFacebook from "@fortawesome/fontawesome-free-brands/faFacebook";
-
-fontawesome.library.add(faFacebook);
-
 const props = defineProps(baseProps);
 
 function init() {
