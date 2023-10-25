@@ -9,130 +9,101 @@
 </div>
 </template>
 
-<script>
-export default {
+<script setup>
 
-  data(){
-    return {
-      
-      errors: {},
-      
-      wasValidated: false,
-      loading: false,
+import { ref, reactive, watch, computed, getCurrentInstance, onMounted } from 'vue'
+import { maxios} from '@/admin/helpers.js'
+import { notify } from '../../../../helpers';
 
-      scope: {},
+const errors = ref(null);
+const wasValidated = ref(false);
+const loading = ref(false);
+const scope = ref({})
+const scopes = ref(null);
+const changedScopes = ref(new Set());
 
-      scopes: null,
+const newScopeModal = ref(null);
 
-      changedScopes: new Set()
+onMounted(async () => {
+  const response = await maxios.get("api/oAuthScope");
+  scopes.value = response.data;
+});
 
+function addScope(){
+  newScopeModal.value.show();
+}
+
+function changedScope(scope){
+  changedScopes.value.add(scope.id);
+}
+
+function onSubmitNewScope(event){
+  maxios.post("api/oAuthScope", scope.value).then(
+    (response) => {
+      scopes.value.push(response.data);
+      scope.value = {};
+
+      newScopeModal.value.hide();
+
+      notify({
+        text: "We have succesfully saved your new scope.",
+      });
+    },
+    (response) => {
+      errors.value = response.data.errors;
+      wasValidated.value = true;
+
+      notify({
+        text: "We could not save this.",
+        type: "error",
+      });
     }
-  },
+  );
 
-  mounted(){
+  event.preventDefault();
+}
 
-    this.$http.get(this.$murl('api/oAuthScope')).then(response => {
-      this.scopes = response.data;
-    }, response => {
-      // error callback
-    });
-
-  },
-
-
-  watch: {
-    
-  },
-
-  methods: {
-
-    addScope(){
-      this.$refs.newScopeModal.show();
+function deleteScope(scope){
+  maxios.delete("api/oAuthScope/" + scope.id).then(
+    (response) => {
+      scopes.value.splice(scopes.value.indexOf(scope), 1);
+      notify({
+        text: "Deleted the scope",
+      });
     },
+    (response) => {
+      notify({
+        text: "Could not delete this",
+      });
+    }
+  );
+}
 
-    changedScope(scope){
-      this.changedScopes.add(scope.id);
-    },
+function onSubmit(event) {
+  for (let scope of scopes.value) {
+    if (changedScopes.value.has(scope.id)) {
+      maxios.put("api/oAuthScope/" + scope.id, scope).then(
+        (response) => {
+          errors.value[scope.id] = null;
 
-    onSubmitNewScope(event){
-      this.$http.post(this.$murl('api/oAuthScope'),
-        this.scope
-        ).then(response => {
-            this.scopes.push(response.data);
-            this.scope = {};
+          changedScopes.value.delete(scope.id);
 
-            this.$refs.newScopeModal.hide();
+          notify({
+            text: "Saved scope&nbsp;<em>" + scope.name + "</em>",
+          });
+        },
+        (response) => {
+          errors.value[scope.id] = response.data;
 
-            this.$noty({text: 'We have succesfully saved your new scope.'});
-          // this.$router.replace({ name: 'oidc.client.edit', params: { client_id: response.data.client_id }});
-
-        }, response => {
-          this.errors = response.data.errors;
-          this.wasValidated = true;
-
-          this.$noty({text: 'We could not save this.', type: 'error'});
-        });
-
-
-      event.preventDefault();
-
-    },
-
-    deleteScope(scope){
-
-
-      this.$http.delete(this.$murl('api/oAuthScope/' + scope.id)).then(response => {
-
-          this.scopes.splice(this.scopes.indexOf(scope), 1);
-          this.$noty({text: 'Deleted the scope'});
-            
-        }, response => {
-          this.$noty({text: 'Could not delete this'});
+          notify({
+            text: "We could not save scope&nbsp;<em>" + scope.name + "</em>.",
+            type: "error",
+          });
         }
-        );
-
-
-    },
-
-    onSubmit(event){
-
-      // for (let item of mySet){
-
-      // }
-
-      for(let scope of this.scopes){
-        if(this.changedScopes.has(scope.id)){
-
-          this.$http.put(this.$murl('api/oAuthScope/' + scope.id),
-        scope
-        ).then(response => {
-
-          this.$set(this.errors, scope.id, null);
-
-          this.changedScopes.delete(scope.id);
-
-          this.$noty({text: 'Saved scope&nbsp;<em>' + scope.name + '</em>'});
-            
-        }, response => {
-
-          //this.errors[scope.id] = response.data;
-
-          this.$set(this.errors, scope.id, response.data)
-
-          this.$noty({text: 'We could not save scope&nbsp;<em>' + scope.name + '</em>.', type: 'error'});
-        });
-
-
-
-        }
-      }
-
-      event.preventDefault();
-
+      );
     }
   }
 
-
-  
+  event.preventDefault();
 }
 </script>

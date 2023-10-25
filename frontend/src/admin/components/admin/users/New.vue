@@ -1,6 +1,6 @@
 
 <template>
-  <Main title="New User">
+  <MainTemplate title="New User">
     <template v-slot:body v-if="user">
       <h4 class="c-grey-900 mt-2">Provide some information</h4>
 
@@ -135,58 +135,59 @@
         </button>
       </form>
     </template>
-  </Main>
+  </MainTemplate>
 </template>
 
 
-<script>
-export default {
-  data() {
-    return {
-      errors: {},
+<script setup>
+import { ref } from "vue";
+import {maxios, notify} from '@/admin/helpers.js';
+import { useRouter } from "vue-router4";
 
-      wasValidated: false,
-      loading: false,
+const router = useRouter();
+const errors = ref({});
+const wasValidated = ref(false);
+const loading = ref(false);
+const user = ref({
+  schemas: ["urn:ietf:params:scim:schemas:core:2.0:User"],
+  "urn:ietf:params:scim:schemas:core:2.0:User": {
+    userName: null,
+    password: null,
+    active: false,
+    emails: [{ value: null }],
+  },
+});
 
-      user: {
-        schemas: ["urn:ietf:params:scim:schemas:core:2.0:User"],
-        "urn:ietf:params:scim:schemas:core:2.0:User": {
-          userName: null,
-          password: null,
-          active: false,
-          emails: [{ value: null }],
+function onSubmit(event) {
+  if (event.target.checkValidity()) {
+    loading.value = true;
+
+    maxios
+      .post("api/scim/v2/Users", JSON.stringify(user.value), {
+        headers: { "content-type": "application/scim+json" },
+      })
+      .then(
+        (response) => {
+          notify({ text: "We have succesfully created a new user." });
+          router.replace({
+            name: "users.edit",
+            params: { user_id: response.data.id },
+          });
         },
-      },
-    };
-  },
+        (e) => {
+          notify({ text: "There were some problems." });
 
-  methods: {
-    onSubmit(event) {
-      if (event.target.checkValidity()) {
-        this.$http
-          .post(this.$murl("api/scim/v2/Users"), JSON.stringify(this.user), {
-            headers: { "content-type": "application/scim+json" },
-          })
-          .then(
-            (response) => {
-              this.$noty({ text: "We have succesfully created a new user." });
-              this.$router.replace({
-                name: "users.edit",
-                params: { user_id: response.data.id },
-              });
-            },
-            (response) => {
-              this.$noty({ text: "There were some problems." });
+          errors.value = e.response.data.errors;
+        }
+      )
+      .finally(() => {
+        loading.value = false;
+      });
+  }
 
-              this.errors = response.data.errors;
-            }
-          );
-      }
+  wasValidated.value = true;
 
-      this.wasValidated = true;
+  event.preventDefault();
+}
 
-      event.preventDefault();
-    },
-  },
-};
 </script>

@@ -54,5 +54,5 @@ Now configure your browser to use `localhost:8080` as a SOCKS5 proxy and browse 
 ~~~
 # from this project's root folder
 mkcert -install
-mkcert --key-file ./nginx/_wildcard.notidaas.nl-key.pem  --cert-file ./nginx/_wildcard.notidaas.nl.pem *.notidaas.nl *.manage.notidaas.nl
+mkcert --key-file ./nginx/_wildcard.notidaas.nl-key.pem  --cert-file ./nginx/_wildcard.notidaas.nl.pem *.notidaas.nl *.manage.notidaas.nl *.minio.notidaas.nl
 ~~~

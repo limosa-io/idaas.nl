@@ -5,13 +5,17 @@
       @click="closePopup"
       v-if="authRequest != null && customerstyle != null && authRequest.next"
       class="container"
-      :style="{backgroundColor: customerstyle['container_backgroundColor'], 'background-image': `url(${customerstyle['container_backgroundImage']})`}"
-      @
+      :style="{
+        backgroundColor: customerstyle['container_backgroundColor'],
+        'background-image': `url(${customerstyle['container_backgroundImage']})`,
+      }"
     >
       <nav
         class="navbar navbar-dark pt-1 pb-1 justify-content-between align-items-stretch"
-        :style="{backgroundColor: customerstyle['navbar_backgroundColor']}"
-        v-if="customerstyle && (customerstyle['navbar_show'] || 'show') == 'show'"
+        :style="{ backgroundColor: customerstyle['navbar_backgroundColor'] }"
+        v-if="
+          customerstyle && (customerstyle['navbar_show'] || 'show') == 'show'
+        "
       >
         <div>
           <img
@@ -24,48 +28,52 @@
           v-if="customerstyle && customerstyle.title"
           class="navbar-brand"
           href="#"
-        >{{ customerstyle.title }}</a>
+          >{{ customerstyle.title }}</a
+        >
         <div class="d-flex align-items-center">
-          <b-dropdown
+          <select
             v-if="customerstyle.languages && customerstyle.languages.length > 0"
             right
             :text="$t('general.locale.' + $i18n.locale)"
             variant="primary"
             class="language-selector"
           >
-            <b-dropdown-item
+            <option
               href="#"
               @click.prevent="switchLanguage(l)"
               v-for="(l, index) in customerstyle.languages"
               :key="index"
+              :value="index"
             >
-              {{
-              $t('general.locale.' + l) }}
-            </b-dropdown-item>
-          </b-dropdown>
+              {{ $t("general.locale." + l) }}
+            </option>
+          </select>
         </div>
       </nav>
       <nav v-else class="navbar justify-content-end align-items-center">
-        <b-dropdown
+        <select
           v-if="customerstyle.languages && customerstyle.languages.length > 0"
           right
           :text="$t('general.locale.' + $i18n.locale)"
           variant="primary"
           class="language-selector"
         >
-          <b-dropdown-item
-            href="#"
+          <option
             @click.prevent="switchLanguage(l)"
             v-for="(l, index) in customerstyle.languages"
             :key="index"
+            :value="index"
           >
-            {{
-            $t('general.locale.' + l) }}
-          </b-dropdown-item>
-        </b-dropdown>
+            {{ $t("general.locale." + l) }}
+          </option>
+        </select>
       </nav>
 
-      <router-view :authRequest="authRequest" :customerstyle="customerstyle" :next="next"></router-view>
+      <router-view
+        :authRequest="authRequest"
+        :customerstyle="customerstyle"
+        :next="next"
+      ></router-view>
     </div>
 
     <div class="container" v-else-if="authRequest == null">
@@ -76,336 +84,344 @@
       </div>
     </div>
 
-    <v-style v-if="customerstyle">{{ customerstyle['css'] }}</v-style>
+    <VStyle v-if="customerstyle"></VStyle>
   </div>
 </template>
 
-<script>
-import { EventBus } from "./eventBus.js";
-import Vue from "vue";
-import store from "./store";
-
-import {BDropdown, BDropdownItem} from "bootstrap-vue";
+<script setup>
+import {
+  onMounted,
+  watch,
+  computed,
+  ref,
+  defineProps,
+  h,
+} from "vue";
+import { useStateStore } from "./store";
+import { useRouter, useRoute } from "vue-router4";
+import axios from "axios";
 
 import { switchLanguage } from "@/login/i18n.js";
 
-import queryString from 'query-string';
+import queryString from "query-string";
+import { storeToRefs } from "pinia";
 
-var groupBy = function(xs, key) {
-  return xs.reduce(function(rv, x) {
+import { post } from "./modules/composable";
+
+const state = useStateStore();
+
+const props = defineProps(["authRequest"]);
+
+var groupBy = function (xs, key) {
+  return xs.reduce(function (rv, x) {
     (rv[x[key] || "default"] = rv[x[key] || "default"] || []).push(x);
     return rv;
   }, {});
 };
 
-export default {
-  components: {
-    BDropdown,
-    BDropdownItem,
+const stateId = ref(null);
 
-    "v-style": {
-      render: function(createElement) {
-        return createElement("style", this.$slots.default);
-      }
-    }
-  },
+const error = ref(null);
+const customerstyle = ref(null);
+const loaded = ref(false);
 
-  data() {
-    return {
-      state: null,
+const currentLocale = ref("en-GB");
 
-      error: null,
-      customerstyle: null,
-      loaded: false,
+const languages = ref([]);
 
-      currentLocale: "en-GB",
+const in_designer = ref(false);
 
-      languages: [],
+const css = ref(null); //'body .login-box .login-container{border-radius: 0px!important;}'
 
-      in_designer: false,
+const baseURL = location.protocol + "//" + window.location.hostname;
+const router = useRouter();
+const route = useRoute();
+const http = axios.create({
+  baseURL: baseURL,
+});
 
-      css: null //'body .login-box .login-container{border-radius: 0px!important;}'
-    };
-  },
+onMounted(() => {
+  // load the state from the hash
+  in_designer.value = queryString.parse(location.search).designer != null;
 
-  mounted() {
-    // load the state from the hash
-    this.in_designer = queryString.parse(location.search).designer != null;
+  if (!in_designer.value) {
+    loadFromHash();
+  }
 
-    if (!this.in_designer) {
-      this.loadFromHash();
-    }
-
-    this.$get(
+  http
+    .get(
       `/api/uiSettings?version=${encodeURIComponent(
         window.information.resources_version
       )}`
-    ).then(
-      response => {
-        this.customerstyle = this.setDefaults(response.data);
+    )
+    .then(
+      (response) => {
+        customerstyle.value = setDefaults(response.data);
 
-        if(this.inIframe()){
-          this.customerstyle.container_backgroundColor = "rgba(0,0,0,0.5)";
-          this.customerstyle.container_backgroundImage = null;
+        if (inIframe()) {
+          customerstyle.value.container_backgroundColor = "rgba(0,0,0,0.5)";
+          customerstyle.value.container_backgroundImage = null;
         }
-
       },
-      response => {
-        this.customerstyle = {};
+      (response) => {
+        customerstyle.value = {};
       }
     );
 
-    window.addEventListener("message", () => {
-        if(event.data && event.data.type == 'refresh_state'){
-          this.loadStateId(this.state);
-        }
-    });
-
-    window.addEventListener("message", () => {
-        if(event.data && event.data.type == 'set_style'){
-          this.customerstyle = Object.assign({}, this.customerstyle, event.data.style);
-        }
-    });
-
-    // Used for the user interface designer.
-    if (this.inIframe()) {
-      this.loaded = true;
-
-      window.onhashchange = () => {
-        this.loadFromHash();
-      };
-
-      window.addEventListener(
-        "message",
-        event => {
-          const allowedOrigin = window.information.manage;
-
-          if (!event.data || event.origin != allowedOrigin) {
-            return;
-          }
-
-          if (event.data.authRequest) {
-            store.commit("authrequest", event.data.authRequest);
-            store.commit("activeModule", null);
-          }
-        },
-        false
-      );
+  window.addEventListener("message", (event) => {
+    if (event.data && event.data.type == "refresh_state") {
+      loadStateId(stateId);
     }
-  },
-
-  watch: {
-
-    activeModule: function(val) {
-      this.$router.push({
-        name: "login",
-        params: {
-          hash: this.$route.params.hash,
-          module: val
-        }
-      });
-    },
-
-    authRequest: function(val) {
-
-      // TODO: if in iFrame, post to parent ... but to what URL? Or broadcast "get style" and only accept if state is correct?
-      if(this.inIframe()){
-        // TODO: rename argument redirectionUrls to something like "uiUrls"
-        // Pick the first one. Always. This is the 'primary ui'. The other one is the tenant's ui.
-        window.parent.postMessage(
-          {
-            type: 'get_style'
-          },
-          val.info.ser.redirectionUrls[0].match(/(.{8}.*?)(\/|$)/)[1]
-        );
-      
-      }
-
-      if (val.info.inc) {
-        if (val.info.inc.messages) {
-          for (let message of val.info.inc.messages) {
-            this.$noty({
-              text: message.message
-            });
-          }
-        }
-
-        this.$store.commit("activeModule", val.info.inc.module);
-      } else if (val.next != null && val.next.length == 1) {
-        store.commit("activeModule", val.next[0].id);
-      } else if (val.next != null) {
-        var match = false;
-        for (var n of val.next) {
-          if (n.id == this.$route.params.module) {
-            match = true;
-            break;
-          }
-        }
-
-        if (!match) {
-          this.$store.commit("activeModule", null);
-        }
-      } else {
-        this.$store.commit("activeModule", null);
-      }
-    },
-
-    $route(to, from) {
-      this.$store.commit("alert", "none");
-    }
-  },
-
-  computed: {
-    authRequest: function() {
-      return store.state.authrequest;
-    },
-
-    activeModule: function() {
-      return store.state.activeModule;
-    },
-
-    next: function() {
-      return this.authRequest && this.authRequest.next
-        ? groupBy(
-            this.authRequest.next
-              ? this.authRequest.next.sort((a, b) => {
-                  // Ensure registration is presented last
-                  if (a.group == "register" && b.group != "register") {
-                    return 1;
-                  }
-
-                  if (a.group == null && b.group != null) {
-                    return -1;
-                  }
-
-                  //Ensure the password field is first
-                  if (a.type != "password" && b.type == "password") {
-                    return 1;
-                  }
-
-                  return -1;
-                })
-              : [],
-            "group"
-          )
-        : [];
-    }
-  },
-
-  methods: {
-    closePopup(event){
-      if(event.target.id == 'idaas-container' || event.target.className.includes('login-row')){
-        window.parent.postMessage(
-          {
-            type: 'close_popup'
-          },
-          this.authRequest.info.ser.redirectionUrls[0].match(/(.{8}.*?)(\/|$)/)[1]
-        );
-
-      }
-    },
-
-    setDefaults(customerStyle) {
-      return Object.assign(
+  });
+  
+  window.addEventListener("message", (event) => {
+    if (event.data && event.data.type == "set_style") {
+      customerstyle.value = Object.assign(
         {},
-        {
-          button_backgroundColor: "#2ad42b",
-          logo: null,
-          container_backgroundColor: "#20b2fa",
-          container_backgroundImage: null,
-          button_backgroundColor: "#2ad42b",
-          container_positionVertical: "middle",
-          container_positionHorizonal: "center",
-          navbar_show: "hide",
-          navbar_backgroundColor: "#343a40",
-          client_logo_show: "null",
-          client_name_show: "show",
-          title: "",
-          label_display: "hidden"
-        },
-        customerStyle
+        customerstyle.value,
+        event.data.style
       );
+    }
+  });
+
+  // Used for the user interface designer.
+  if (inIframe()) {
+    loaded.value = true;
+
+    window.onhashchange = () => {
+      loadFromHash();
+    };
+
+    window.addEventListener(
+      "message",
+      (event) => {
+        const allowedOrigin = window.information.manage;
+
+        if (!event.data || event.origin != allowedOrigin) {
+          return;
+        }
+
+        if (event.data.authRequest) {
+          authRequest.value = event.data.authRequest;
+          activeModule.value = null;
+        }
+      },
+      false
+    );
+  }
+});
+
+function closePopup(event) {
+  if (
+    event.target.id == "idaas-container" ||
+    event.target.className.includes("login-row")
+  ) {
+    window.parent.postMessage(
+      {
+        type: "close_popup",
+      },
+      authRequest.value.info.ser.redirectionUrls[0].match(/(.{8}.*?)(\/|$)/)[1]
+    );
+  }
+}
+
+function setDefaults(customerStyle) {
+  return Object.assign(
+    {},
+    {
+      button_backgroundColor: "#2ad42b",
+      logo: null,
+      container_backgroundColor: "#20b2fa",
+      container_backgroundImage: null,
+      button_backgroundColor: "#2ad42b",
+      container_positionVertical: "middle",
+      container_positionHorizonal: "center",
+      navbar_show: "hide",
+      navbar_backgroundColor: "#343a40",
+      client_logo_show: "null",
+      client_name_show: "show",
+      title: "",
+      label_display: "hidden",
     },
+    customerStyle
+  );
+}
 
-    switchLanguage(l) {
-      switchLanguage(l);
-    },
+function storeStateId(stateId) {
+  var key = Math.random().toString(36).substring(3);
+  sessionStorage.setItem(key, stateId);
 
-    storeStateId(stateId) {
-      var key = Math.random()
-        .toString(36)
-        .substring(3);
-      sessionStorage.setItem(key, stateId);
+  return key;
+}
 
-      return key;
-    },
+function inIframe() {
+  try {
+    return window.self !== window.top;
+  } catch (e) {
+    return true;
+  }
+}
 
-    inIframe() {
-      try {
-        return window.self !== window.top;
-      } catch (e) {
-        return true;
-      }
-    },
+function loadStateId(id) {
+  stateId.value = id;
 
-    loadStateId(state) {
+  http
+    .get(
+      "/api/authchain/v2/p/authresponse/" +
+        stateId.value +
+        "?t=" +
+        new Date().getTime()
+    )
+    .then((response) => {
+      console.log('load response dat2a...');
 
-      this.state = state;
-      
-      this.$get("/api/authchain/v2/p/authresponse/" + state + '?t=' + (new Date().getTime()))
-        .then(response => {
+      state.authRequest = response.data;
+      // state.authRequest = response.data;
 
-          store.commit("authrequest", response.data);
-
-          //TODO: preferably redirect the user immediatly, without entering the login ui
-          if (this.authRequest.info.don) {
-            this.$post(this.authRequest.info.fin, {
-              authRequest: this.authRequest.stateId
-            });
-          }
-
-          this.loaded = true;
-        })
-        .catch(response => {
-          this.$router.replace({ name: "error" });
-          this.loaded = true;
+      //TODO: preferably redirect the user immediatly, without entering the login ui
+      if (state.authRequest.info.don) {
+        post(state.authRequest.info.fin, {
+          authRequest: state.authRequest.stateId,
         });
-    },
-
-    loadFromHash() {
-      const parsed = queryString.parse(location.hash);
-
-      //ugly workaround to make it work in hash-mode
-      if (parsed["/state"]) {
-        parsed.state = parsed["/state"];
       }
 
-      var state = null;
+      loaded.value = true;
+    })
+    .catch((response) => {
+      router.replace({ name: "error" });
+      loaded.value = true;
+    });
+}
 
-      if (parsed.state) {
-        state = parsed.state;
+function loadFromHash() {
 
-        var key = this.storeStateId(parsed.state);
+  // https://login.notidaas.nl#state=9a70994f-edd7-4bcf-9779-89d004381c97
 
-        this.$router.replace({
-          name: "login",
-          params: {
-            hash: key
-          }
-        }); //module: 'passport'
-      } else {
-        state = sessionStorage.getItem(this.$route.params.hash);
-      }
+  const parsed = queryString.parse(location.hash);
 
-      if (state) {
-        this.loadStateId(state);
-      } else {
-        // TODO: do not init default when in UI dev mode
-        document.location = "/init_default";
+  //ugly workaround to make it work in hash-mode
+  if (parsed["/state"]) {
+    parsed.state = parsed["/state"];
+  }
+
+  var state = null;
+
+  if (parsed.state) {
+    state = parsed.state;
+
+    var key = storeStateId(parsed.state);
+
+    console.log('replace with login route');
+    router.replace({
+      name: "login",
+      params: {
+        hash: key,
+      },
+    }); //module: 'passport'
+  } else {
+    state = sessionStorage.getItem(route.params.hash);
+  }
+
+  if (state) {
+    loadStateId(state);
+  } else {
+    // TODO: do not init default when in UI dev mode
+    document.location = "/init_default";
+  }
+}
+
+const { authRequest, activeModule } = storeToRefs(state);
+
+watch(authRequest, function (val) {
+  console.log('authRequest updated ...');
+  // TODO: if in iFrame, post to parent ... but to what URL? Or broadcast "get style" and only accept if state is correct?
+  if (inIframe()) {
+    // TODO: rename argument redirectionUrls to something like "uiUrls"
+    // Pick the first one. Always. This is the 'primary ui'. The other one is the tenant's ui.
+    window.parent.postMessage(
+      {
+        type: "get_style",
+      },
+      val.info.ser.redirectionUrls[0].match(/(.{8}.*?)(\/|$)/)[1]
+    );
+  }
+
+  if (val.info.inc) {
+    if (val.info.inc.messages) {
+      for (let message of val.info.inc.messages) {
+        state.info(message.message);
       }
     }
+    console.log('update active module!');
+    console.log('activeModule: ' + val.info.inc.module);
+    activeModule.value = val.info.inc.module;
+  } else if (val.next != null && val.next.length == 1) {
+    activeModule.value = val.next[0].id;
+  } else if (val.next != null) {
+    var match = false;
+    for (var n of val.next) {
+      if (n.id == route.params.module) {
+        match = true;
+        break;
+      }
+    }
+
+    if (!match) {
+      console.log('activeModule to null');
+      activeModule.value = null;
+    }
+  } else {
+    console.log('activeModule to null. ...');
+    activeModule.value = null;
   }
-};
+}, {deep: true});
+
+// $route(to, from) {
+//   state.alert = "none";
+// }
+
+const next = computed(function () {
+  return authRequest.value && authRequest.value.next
+    ? groupBy(
+        authRequest.value.next
+          ? authRequest.value.next.sort((a, b) => {
+              // Ensure registration is presented last
+              if (a.group == "register" && b.group != "register") {
+                return 1;
+              }
+
+              if (a.group == null && b.group != null) {
+                return -1;
+              }
+
+              //Ensure the password field is first
+              if (a.type != "password" && b.type == "password") {
+                return 1;
+              }
+
+              return -1;
+            })
+          : [],
+        "group"
+      )
+    : [];
+});
+
+// export default {
+//   components: {
+
+//     "v-style": {
+//       render: function(createElement) {
+//         return createElement("style", this.$slots.default);
+//       }
+//     }
+//   },
+
+// };
+
+const VStyle = h("style", {
+  innerHTML: customerstyle.value != null ? customerstyle.value["css"] : null,
+});
 </script>
 
 <style lang="scss">

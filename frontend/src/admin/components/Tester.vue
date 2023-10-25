@@ -74,6 +74,7 @@
 <script>
 
 import queryString from 'query-string';
+import { notify } from '../helpers';
 
 const authorizationServer = window.location.protocol + "//" + window.location.host;
 
@@ -157,7 +158,7 @@ export default {
           }, state);
 
         }, response => {
-          this.$noty({
+          notify({
             text: 'We could not save this.',
             type: 'error'
           });
@@ -188,6 +189,7 @@ export default {
   },
 
   mounted() {
+    
 
     this.$http.get(this.$oidcUrl('.well-known/openid-configuration'), {
       public: true

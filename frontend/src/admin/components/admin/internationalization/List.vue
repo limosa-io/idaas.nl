@@ -8,7 +8,7 @@
 -->
 
 <template>
-  <Main title="Lanuages">
+  <MainTemplate title="Lanuages">
     <template v-slot:body>
       <p>
         You can add multiple languages for that allow users to show the login
@@ -27,7 +27,6 @@
             <td>{{ l }}</td>
             <td>
               <router-link
-                tag="button"
                 type="button"
                 class="btn btn-dark"
                 :to="`/internationalization/${l}`"
@@ -38,7 +37,6 @@
               <button
                 type="button"
                 class="btn btn-danger ml-2"
-                v-if="languages.length > 1"
                 @click="deleteLanguage(index)"
               >
                 Delete
@@ -78,10 +76,14 @@
         <button class="btn btn-primary ml-2" @click.prevent="add">Add</button>
       </form>
     </template>
-  </Main>
+  </MainTemplate>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted } from "vue";
+import {maxios} from '@/admin/helpers.js'
+import { notify } from "../../../helpers";
+
 const RFC5646_LANGUAGE_TAGS = [
   { value: "af", label: "Afrikaans" },
   { value: "af-ZA", label: "Afrikaans (South Africa)" },
@@ -320,54 +322,45 @@ const RFC5646_LANGUAGE_TAGS = [
   { value: "zu-ZA", label: "Zulu (South Africa)" },
 ];
 
-export default {
-  data() {
-    return {
-      languages: [],
+const languages = ref([]);
+const availableTags = ref(RFC5646_LANGUAGE_TAGS);
+const locale = ref(null);
 
-      availableTags: RFC5646_LANGUAGE_TAGS,
+onMounted(() => {
+  maxios.get(`api/settings?namespace=ui`).then((response) => {
+    languages.value = response.data.languages || [];
+  });
+});
 
-      // for adding
-      locale: null,
-    };
-  },
+function deleteLanguage(index) {
+  languages.value.splice(index, 1);
+  save();
+}
 
-  mounted() {
-    this.$http.get(this.$murl("api/settings?namespace=ui")).then((response) => {
-      this.languages = response.data.languages || [];
+function add() {
+  let languagesNew = languages.value.slice();
+  languagesNew.push(locale.value.value);
+
+  save(languagesNew).then((r) => {});
+}
+
+function save(l = null) {
+  return maxios
+    .put(`api/settings/bulk?namespace=ui`, {
+      languages: (l ? l : languages.value).sort(),
+    })
+    .catch((response) => {
+      notify({
+        text: "We could not save this. You may have already added this language.",
+      });
+    })
+    .then((r) => {
+
+      languages.value = r.data.languages;
+
+      return r;
     });
-  },
-  methods: {
-    deleteLanguage(index) {
-      this.languages.splice(index, 1);
-      this.save();
-    },
-
-    add() {
-      let languagesNew = this.languages.slice();
-      languagesNew.push(this.locale.value);
-
-      this.save(languagesNew).then((r) => {});
-    },
-
-    save(languages = null) {
-      this.$http
-        .put(this.$murl("api/settings/bulk?namespace=ui"), {
-          languages: (languages ? languages : this.languages).sort(),
-        })
-        .catch((response) => {
-          this.$noty({
-            text: "We could not save this. You may have already added this language.",
-          });
-        })
-        .then((r) => {
-          this.languages = r.body.languages;
-
-          return r;
-        });
-    },
-  },
-};
+}
 </script>
 
 <style lang="scss">

@@ -18,7 +18,8 @@
         "baseUrl": ".",
         "paths": {
             "@/*": [
-                "resources/*"
+                "resources/*",
+                "frontend/src/*"
             ]
         }
     },

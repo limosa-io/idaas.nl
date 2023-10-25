@@ -1,76 +1,35 @@
 
 <template>
+  <div>
 
-<div>
+    <FormGroup horizontal :label-cols="3" description="Client Id." label="Client Id" label-for="module.config.client_id">
+      <FormInput id="module.config.client_id" v-model.trim="module.config.client_id"></FormInput>
+    </FormGroup>
 
-  <b-form-group horizontal :label-cols="3" description="Client Id." label="Client Id" label-for="module.config.client_id">
-    <b-form-input id="module.config.client_id" v-model.trim="module.config.client_id"></b-form-input>
-  </b-form-group>
+    <FormGroup horizontal :label-cols="3" description="Client Secret" label="Client Secret"
+      label-for="module.config.client_secret">
+      <FormInput id="module.config.client_secret" v-model.trim="module.config.client_secret"></FormInput>
+    </FormGroup>
 
-  <b-form-group horizontal :label-cols="3" description="Client Secret" label="Client Secret" label-for="module.config.client_secret">
-    <b-form-input id="module.config.client_secret" v-model.trim="module.config.client_secret"></b-form-input>
-  </b-form-group>
+    <FormGroup horizontal :label-cols="3" description="Create a user (allow registration)" label="Create user"
+      label-for="module.config.create_user">
+      <FormCheckbox id="module.config.create_user" v-model="module.config.create_user" :value="true">
+        {{ module.config.create_user ? 'Enabled' : 'Disabled' }}
+      </FormCheckbox>
+    </FormGroup>
 
-  <b-form-group horizontal :label-cols="3" description="Create a user (allow registration)" label="Create user" label-for="module.config.create_user">
+    <p v-if="info">
+      Use the following callback url in Facebook: {{ info.callback }}
+    </p>
 
-    <b-form-checkbox id="module.config.create_user" v-model="module.config.create_user" :value="true" :unchecked-value="false">
-              {{ module.config.create_user ? 'Enabled' : 'Disabled' }}
-      </b-form-checkbox>
-
-  </b-form-group>
-
-  
-
-  
-
-  <p v-if="info">
-    Use the following callback url in Facebook: {{ info.callback }}
-  </p>
-
-</div>
-
+  </div>
 </template>
 
 
-<script>
-export default {
+<script setup>
 
-  props: {
-    module: null,
-    info: null
-  },
+import { defineProps } from 'vue';
 
-  data(){
-    return {
-      
-      errors: {},
-      
-      wasValidated: false,
-      loading: false,
+const props = defineProps(['module', 'info']);
 
-      type: null,
-      types: []
-
-    }
-  },
-
-  mounted(){
-
-
-    
-    
-
-  },
-
-  methods: {
-    onSubmit(event){
-
-      event.preventDefault();
-
-    }
-  }
-
-
-  
-}
 </script>

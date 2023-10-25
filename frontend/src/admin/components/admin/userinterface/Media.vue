@@ -1,29 +1,13 @@
 <template>
-  <Main title="Media Manager">
+  <MainTemplate title="Media Manager">
     <Picker />
-  </Main>
+  </MainTemplate>
 </template>
 
-<script>
-export default {
-  components: {
-    Picker: () => import("./Picker.vue"),
-  },
+<script setup>
 
-  data() {
-    return {
-      mediaItems: null,
-    };
-  },
+import Picker from "./Picker.vue";
 
-  methods: {
-    loadImages() {},
-  },
-
-  mounted() {
-
-  },
-};
 </script>
 
 <style lang="scss">

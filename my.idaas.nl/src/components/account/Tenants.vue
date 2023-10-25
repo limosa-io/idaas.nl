@@ -72,7 +72,6 @@
 
 <script>
 import Vue from 'vue';
-import VueResource from 'vue-resource';
 import { VBModal } from 'bootstrap-vue'
 import { BModal } from 'bootstrap-vue'
 
@@ -102,8 +101,6 @@ library.add(faBars)
 library.add(faMagic)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
-
-Vue.use(VueResource);
 
 export default {
 

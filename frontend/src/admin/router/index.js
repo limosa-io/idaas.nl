@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import Router from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router4'
 
 import CompleteLogin from '../components/CompleteLogin.vue'
 import InitLogin from '../components/InitLogin.vue'
@@ -75,663 +75,659 @@ import InternationalizationEdit from '../components/admin/internationalization/E
 
 import Webhook from '../components/admin/Webhook.vue'
 
-Vue.use(Router);
+const routes = [
 
-export default new Router({
-  mode: 'history',
-  base: '/',
-  routes: [
+  // {
+  //   path: '/tenants',
+  //   component: Tenants
 
-    // {
-    //   path: '/tenants',
-    //   component: Tenants
+  // },
 
-    // },
+  {
+    path: '/',
+    component: Admin,
 
-    {
-      path: '/',
-      component: Admin,
+    meta: {
+      label: 'Home'
+    },
+    
+    children: [
+      {
+        path: '/',
+        name: 'dashboard',
+        component: () => import('../components/admin/Dashboard.vue'),
+        style: {
+          icon: 'c-blue-500 ti-home'
+        },
 
-      meta: {
-        label: 'Home'
+        meta: {
+          label: 'Dashboard'
+        },
       },
-      
-      children: [
-        {
-          path: '/',
-          name: 'dashboard',
-          component: () => import('../components/admin/Dashboard.vue'),
-          style: {
-            icon: 'c-blue-500 ti-home'
-          },
 
-          meta: {
-            label: 'Dashboard'
-          },
+      {
+        path: '/git',
+        name: 'git',
+        hide: true,
+        component: () => import('../components/admin/Git.vue'),
+        style: {
+          icon: 'c-blue-500 ti-home'
         },
 
-        {
-          path: '/git',
-          name: 'git',
-          hide: true,
-          component: () => import('../components/admin/Git.vue'),
-          style: {
-            icon: 'c-blue-500 ti-home'
-          },
+        meta: {
+          label: 'Git'
+        },
+      },
 
-          meta: {
-            label: 'Git'
-          },
+      {
+        path: '/oidc',
+        component: OIDC,
+        
+
+        style: {
+          icon: 'c-teal-500 ti-view-grid'
         },
 
-        {
-          path: '/oidc',
-          component: OIDC,
-          
+        meta: {
+          label: 'Applications',
+          hideChildren: false,
+        },
 
-          style: {
-            icon: 'c-teal-500 ti-view-grid'
-          },
+        children: [
+          {
+            path: '',
+            component: ListOIDC,
+            name: 'oidc.clients.list',
 
-          meta: {
-            label: 'Applications',
-            hideChildren: true,
-          },
-
-          children: [
-            {
-              path: '',
-              component: ListOIDC,
-              name: 'oidc.clients.list',
-
-              meta: {
-                label: 'Clients'
-              }
-
-            },
-            {
-              path: '/applications/oidc/add',
-              name: 'oidc.clients.new',
-              component: NewOIDC,
-
-              meta: {
-                label: 'New'
-              },
-
-            },
-            {
-              path: '/applications/oidc/edit/:client_id',
-              name: 'oidc.client.edit',
-              
-              meta: {
-                label: 'Edit'
-              },
-
-              component: EditOIDC,
-            },
-
-            {
-              path: '/applications/oidc/test',
-              
-              component: TestOIDC,
-              
-              meta: {
-                label: 'Test'
-              },
-
-
-            },
-
-            {
-              path: '/applications/oidc/settings',
-              
-              component: SettingsOIDC,
-
-              meta: {
-                label: 'Settings'
-              },
-
-              children: [
-                {
-                  path: '',
-                  component: GeneralSettingsOIDC,
-                  name: 'oidc.settings.general'
-                },
-                {
-                  path: '/applications/oidc/settings/scopes',
-                  name: 'oidc.settings.scopes',
-                  component: ScopesSettingsOIDC,
-                },
-                {
-                  path: '/applications/oidc/settings/levels',
-                  name: 'oidc.settings.levels',
-                  component: LevelsSettingsOIDC,
-                },
-                {
-                  path: '/applications/oidc/settings/claims',
-                  name: 'oidc.settings.claims',
-                  component: ClaimsSettingsOIDC,
-                },
-                {
-                  path: '/applications/oidc/settings/keys',
-                  name: 'oidc.settings.keys',
-                  component: KeysSettingsOIDC,
-                }
-
-              ]
-
+            meta: {
+              label: 'Clients'
             }
+
+          },
+          {
+            path: '/applications/oidc/add',
+            name: 'oidc.clients.new',
+            component: NewOIDC,
+
+            meta: {
+              label: 'New'
+            },
+
+          },
+          {
+            path: '/applications/oidc/edit/:client_id',
+            name: 'oidc.client.edit',
             
-          ]
-
-        },
-    
-        {
-          
-          component: Users,
-          path: '/users',
-          meta: {
-            hideChildren: true,
-            label: 'Users'
-          },
-          style: {
-            icon: 'c-deep-orange-500 ti-user'
-          },
-          
-          children: [
-            {
-              path: '/users/:page(\\d+)?',
-              component: ListUser,
-              name: 'users.list',
-              meta: {
-                label: 'Users'
-              }
+            meta: {
+              label: 'Edit'
             },
-            {
-              path: '/users/add',
-              name: 'users.new',
-              component: NewUser,
 
-              meta: {
-                label: 'New User'
-              },
+            component: EditOIDC,
+          },
 
-            },
-            {
-              path: '/users/edit/:user_id',
-              name: 'users.edit',
-
-              meta: {
-                label: 'Edit User'
-              },
-
-              component: EditUser,
-            }
+          {
+            path: '/applications/oidc/test',
             
-          ]
-    
-        },
-
-        {
-          
-          component: Groups,
-          path: '/groups',
-          meta: {
-            hideChildren: true,
-            label: 'Groups'
-          },
-          style: {
-            icon: 'blue-grey-400 ti-credit-card'
-          },
-          
-          children: [
-            {
-              path: '/groups/:page(\\d+)?',
-              component: ListGroup,
-              name: 'groups.list',
-              meta: {
-                label: 'Groups'
-              }
-            },
-
-            {
-              path: '/groups/add',
-              name: 'groups.new',
-              component: NewGroup,
-
-              meta: {
-                label: 'New Group'
-              },
-
-            },
-            {
-              path: '/groups/edit/:group_id',
-              name: 'groups.edit',
-
-              meta: {
-                label: 'Edit Group'
-              },
-
-              component: EditGroup,
-            }
-           
+            component: TestOIDC,
             
-          ]
-    
-        },
-
-        {
-          
-          component: Sessions,
-          path: '/sessions',
-          meta: {
-            hideChildren: true,
-            label: 'Sessions'
-          },
-          style: {
-            icon: 'blue-grey-300 ti-time'
-          },
-          
-          children: [
-            {
-              path: '',
-              component: ListSessions,
-              name: 'sessions.sessions',
-              meta: {
-                label: 'Sessions'
-              }
-            },
-            {
-              path: '/sessions/tokens',
-              component: ListTokens,
-              name: 'sessions.tokens',
-              meta: {
-                label: 'Tokens'
-              }
+            meta: {
+              label: 'Test'
             },
 
-            {
-              path: '/sessions/subjects/:page(\\d+)?',
-              component: ListSubjects,
-              name: 'sessions.subjects',
-              meta: {
-                label: 'Subjects'
+
+          },
+
+          {
+            path: '/applications/oidc/settings',
+            
+            component: SettingsOIDC,
+
+            meta: {
+              label: 'Settings'
+            },
+
+            children: [
+              {
+                path: '',
+                component: GeneralSettingsOIDC,
+                name: 'oidc.settings.general'
+              },
+              {
+                path: '/applications/oidc/settings/scopes',
+                name: 'oidc.settings.scopes',
+                component: ScopesSettingsOIDC,
+              },
+              {
+                path: '/applications/oidc/settings/levels',
+                name: 'oidc.settings.levels',
+                component: LevelsSettingsOIDC,
+              },
+              {
+                path: '/applications/oidc/settings/claims',
+                name: 'oidc.settings.claims',
+                component: ClaimsSettingsOIDC,
+              },
+              {
+                path: '/applications/oidc/settings/keys',
+                name: 'oidc.settings.keys',
+                component: KeysSettingsOIDC,
               }
-            }
-          ]
+
+            ]
+
+          }
+          
+        ]
+
+      },
+  
+      {
+        
+        component: Users,
+        path: '/users',
+        meta: {
+          hideChildren: true,
+          label: 'Users'
         },
-
-        {
-          path: '/registration',
-          component: Registration,
-          name: 'users.registration',
-
-          meta: {
-            label: 'Registration'
-          },
-
-          style: {
-            icon: 'c-deep-red-500  ti-id-badge'
-          },
-
+        style: {
+          icon: 'c-deep-orange-500 ti-user'
         },
         
-        {
-          path: '/email',
-          component: Email,
-
-          style: {
-            icon: 'c-deep-purple-500 ti-email'
-          },
-
-          meta: {
-            hideChildren: true,
-            label: 'Emails',
-          },
-
-          children: [
-            {
-              path: '',
-              name: 'emails.list',
-              component: ListEmail,
-
-              meta: {
-                label: 'Email Templates'
-              }
-
-            },
-
-            {
-              path: '/emails/edit/:object_id',
-              name: 'emails.edit',
-              component: EditEmail,
-
-              meta: {
-                label: 'Edit Template'
-              }
+        children: [
+          {
+            path: '/users/:page(\\d+)?',
+            component: ListUser,
+            name: 'users.list',
+            meta: {
+              label: 'Users'
             }
-
-          ]
-
-
-
-        },
-    
-        {
-          path: '/authentication',
-          component: Authentication,
-          
-
-          meta: {
-            hideChildren: true,
-            label: 'Authentication'
           },
-          
-          style: {
-            icon: 'c-brown-500 ti-lock'
-          },
+          {
+            path: '/users/add',
+            name: 'users.new',
+            component: NewUser,
 
-          children: [
-            {
-              path: '',
-              name: 'authentication.list',
-              component: AuthenticationList,
-              hide: true
-            },
-            {
-              path: '/authentication/add',
-              name: 'authentication.new',
-              component: AuthenticationNew,
-              hide: true,
-
-              meta: {
-                label: 'New'
-              }
-
+            meta: {
+              label: 'New User'
             },
 
-            {
-              path: '/authentication/edit/:module_id',
-              name: 'authentication.edit',
-              component: AuthenticationEdit,
-              hide: true,
-
-              meta: {
-                label: 'Edit'
-              }
-
-            }
-
-            
-          ]
-        },
-    
-        {
-          path: '/user-interface',
-          component: UserInterface,
-          style: {
-            icon: 'pink-400 ti-image'
           },
+          {
+            path: '/users/edit/:user_id',
+            name: 'users.edit',
 
-          meta: {
-            hideChildren: true,
-            label: 'User Interface'
-          },
-
-          children: [
-
-            {
-              path: '',
-              name: 'userinterface.servers',
-              component: UserInterfaceServers,
-
-              meta: {
-                label: 'Servers'
-              },
+            meta: {
+              label: 'Edit User'
             },
 
-            {
-              path: 'design',
-              name: 'userinterface.design',
-              component: UserInterfaceDesign,
-              meta: {
-                label: 'Design'
-              }
-            },
-
-            {
-              path: 'manager',
-              name: 'userinterface.manager',
-              component: UserInterfaceMedia,
-
-              meta: {
-                label: 'Manager'
-              },
-            }
-
-            
-
-          ]
-        },
-    
-        {
-          path: '/rules',
-          component: Rules,
-          style: {
-            icon: 'c-deep-orange-900 ti-control-forward'
-          },
-
-          meta: {
-            hideChildren: true,
-            label: 'Rules'
-          },
-
-          children: [
-
-            {
-              path: '',
-              name: 'rules.list',
-              component: RulesList,
-
-            },
-
-            {
-              path: '/rules/:rule_id',
-              name: 'rules.edit',
-              component: RulesEdit,
-
-              meta: {
-                label: 'Edit'
-              }
-
-            },
-
-            // {
-            //   path: 'attributes',
-            //   name: 'rules.attributes',
-            //   component: RulesAttributes,
-
-            //   meta: {
-            //     label: 'Attributes'
-            //   }
-
-            // },
-
-          ]
-
-        },
-
-        {
-          path: '/webhooks',
-          name: 'Webhooks',
-          component: Webhook,
-          style: {
-            icon: 'c-brown-500 ti-share'
+            component: EditUser,
           }
+          
+        ]
+  
+      },
+
+      {
+        
+        component: Groups,
+        path: '/groups',
+        meta: {
+          hideChildren: true,
+          label: 'Groups'
         },
-
-        {
-          path: '/saml',
-          component: SAML,
-
-          meta: {
-            label: 'SAML',
-            hideChildren: true
-          },
-
-          style: {
-            icon: 'c-brown-500 ti-cloud'
-          },
-
-          children: [
-            {
-              path: '',
-              name: 'saml.serviceproviders.list',
-              component: ListSAML,
-
-              meta: {
-                label: ''
-              }
-
-            },
-            {
-              path: '/applications/saml/edit/:id',
-              name: 'saml.serviceproviders.edit',
-              component: EditSAML,
-
-              meta: {
-                label: 'Edit'
-              }
-
-            },
-            {
-              path: '/applications/saml/add',
-              name: 'saml.serviceproviders.add',
-              component: NewSAML,
-
-              meta: {
-                label: 'Add'
-              },
-
-            },
-            {
-              path: '/applications/saml/import',
-              name: 'saml.serviceproviders.import',
-              component: ImportSAML,
-
-              meta: {
-                label: 'Import metadata'
-              },
-
-            },
-
-            {
-              path: '/applications/saml/settings',
-              component: SettingsSAML,
-
-              meta: {
-                label: 'Settings'
-              },
-
-              children: [
-                {
-                  path: '',
-                  component: GeneralSettingsSAML,
-                  name: 'saml.settings.general'
-                }
-              ]
-
+        style: {
+          icon: 'blue-grey-400 ti-credit-card'
+        },
+        
+        children: [
+          {
+            path: '/groups/:page(\\d+)?',
+            component: ListGroup,
+            name: 'groups.list',
+            meta: {
+              label: 'Groups'
             }
-          ]
-        },
-
-        {
-          path: '/internationalization',
-          component: Internationalization,
-
-          meta: {
-            label: 'Language',
-            hideChildren: true
           },
 
-          style: {
-            icon: 'c-brown-500 ti-world'
+          {
+            path: '/groups/add',
+            name: 'groups.new',
+            component: NewGroup,
+
+            meta: {
+              label: 'New Group'
+            },
+
+          },
+          {
+            path: '/groups/edit/:group_id',
+            name: 'groups.edit',
+
+            meta: {
+              label: 'Edit Group'
+            },
+
+            component: EditGroup,
+          }
+         
+          
+        ]
+  
+      },
+
+      {
+        
+        component: Sessions,
+        path: '/sessions',
+        meta: {
+          hideChildren: true,
+          label: 'Sessions'
+        },
+        style: {
+          icon: 'blue-grey-300 ti-time'
+        },
+        
+        children: [
+          {
+            path: '',
+            component: ListSessions,
+            name: 'sessions.sessions',
+            meta: {
+              label: 'Sessions'
+            }
+          },
+          {
+            path: '/sessions/tokens',
+            component: ListTokens,
+            name: 'sessions.tokens',
+            meta: {
+              label: 'Tokens'
+            }
           },
 
-          children: [
-            {
-              path: '',
-              name: 'internationalization.list',
-              component: InternationalizationList,
+          {
+            path: '/sessions/subjects/:page(\\d+)?',
+            component: ListSubjects,
+            name: 'sessions.subjects',
+            meta: {
+              label: 'Subjects'
+            }
+          }
+        ]
+      },
 
-              meta: {
-                label: 'List'
-              }
+      {
+        path: '/registration',
+        component: Registration,
+        name: 'users.registration',
 
-            },
-            {
-              path: '/internationalization/:locale',
-              name: 'internationalization.edit',
-              component: InternationalizationEdit,
-
-              meta: {
-                label: 'Edit'
-              }
-
-            },
-          ]
-
+        meta: {
+          label: 'Registration'
         },
 
-      ]
-    
-    },
+        style: {
+          icon: 'c-deep-red-500  ti-id-badge'
+        },
 
-    {
-      path: '/tester',
-      name: 'tester',
-      component: Tester,
-      hide: true
-    },
-    
-    {
-      path: '/logout',
-      name: 'logout',
-      component: Logout,
-      hide: true
-    },
+      },
+      
+      {
+        path: '/email',
+        component: Email,
 
-    {
-      path: '/completelogin',
-      name: 'CompleteLogin',
-      component: CompleteLogin
-    },
+        style: {
+          icon: 'c-deep-purple-500 ti-email'
+        },
 
-    {
-      path: '/initlogin',
-      name: 'initlogin',
-      component: InitLogin
-    },
+        meta: {
+          hideChildren: true,
+          label: 'Emails',
+        },
 
-    {
-      path: '/initlogout',
-      name: 'initlogout',
-      component: InitLogout
-    },
+        children: [
+          {
+            path: '',
+            name: 'emails.list',
+            component: ListEmail,
 
-    {
-      path: '/error',
-      name: 'error.default',
-      component: Error
-    },
+            meta: {
+              label: 'Email Templates'
+            }
 
-    {
-      path: '/*',
-      name: '404',
-      component: PageNotFound
-    },
+          },
 
-    
-    
-  ]
-})
+          {
+            path: '/emails/edit/:object_id',
+            name: 'emails.edit',
+            component: EditEmail,
+
+            meta: {
+              label: 'Edit Template'
+            }
+          }
+
+        ]
+
+
+
+      },
+  
+      {
+        path: '/authentication',
+        component: Authentication,
+        
+
+        meta: {
+          hideChildren: true,
+          label: 'Authentication'
+        },
+        
+        style: {
+          icon: 'c-brown-500 ti-lock'
+        },
+
+        children: [
+          {
+            path: '',
+            name: 'authentication.list',
+            component: AuthenticationList,
+            hide: true
+          },
+          {
+            path: '/authentication/add',
+            name: 'authentication.new',
+            component: AuthenticationNew,
+            hide: true,
+
+            meta: {
+              label: 'New'
+            }
+
+          },
+
+          {
+            path: '/authentication/edit/:module_id',
+            name: 'authentication.edit',
+            component: AuthenticationEdit,
+            hide: true,
+
+            meta: {
+              label: 'Edit'
+            }
+
+          }
+
+          
+        ]
+      },
+  
+      {
+        path: '/user-interface',
+        component: UserInterface,
+        style: {
+          icon: 'pink-400 ti-image'
+        },
+
+        meta: {
+          hideChildren: true,
+          label: 'User Interface'
+        },
+
+        children: [
+
+          {
+            path: '',
+            name: 'userinterface.servers',
+            component: UserInterfaceServers,
+
+            meta: {
+              label: 'Servers'
+            },
+          },
+
+          {
+            path: 'design',
+            name: 'userinterface.design',
+            component: UserInterfaceDesign,
+            meta: {
+              label: 'Design'
+            }
+          },
+
+          {
+            path: 'manager',
+            name: 'userinterface.manager',
+            component: UserInterfaceMedia,
+
+            meta: {
+              label: 'Manager'
+            },
+          }
+
+          
+
+        ]
+      },
+  
+      {
+        path: '/rules',
+        component: Rules,
+        style: {
+          icon: 'c-deep-orange-900 ti-control-forward'
+        },
+
+        meta: {
+          hideChildren: true,
+          label: 'Rules'
+        },
+
+        children: [
+
+          {
+            path: '',
+            name: 'rules.list',
+            component: RulesList,
+
+          },
+
+          {
+            path: '/rules/:rule_id',
+            name: 'rules.edit',
+            component: RulesEdit,
+
+            meta: {
+              label: 'Edit'
+            }
+
+          },
+
+          // {
+          //   path: 'attributes',
+          //   name: 'rules.attributes',
+          //   component: RulesAttributes,
+
+          //   meta: {
+          //     label: 'Attributes'
+          //   }
+
+          // },
+
+        ]
+
+      },
+
+      {
+        path: '/webhooks',
+        name: 'Webhooks',
+        component: Webhook,
+        style: {
+          icon: 'c-brown-500 ti-share'
+        }
+      },
+
+      {
+        path: '/saml',
+        component: SAML,
+
+        meta: {
+          label: 'SAML',
+          hideChildren: true
+        },
+
+        style: {
+          icon: 'c-brown-500 ti-cloud'
+        },
+
+        children: [
+          {
+            path: '',
+            name: 'saml.serviceproviders.list',
+            component: ListSAML,
+
+            meta: {
+              label: ''
+            }
+
+          },
+          {
+            path: '/applications/saml/edit/:id',
+            name: 'saml.serviceproviders.edit',
+            component: EditSAML,
+
+            meta: {
+              label: 'Edit'
+            }
+
+          },
+          {
+            path: '/applications/saml/add',
+            name: 'saml.serviceproviders.add',
+            component: NewSAML,
+
+            meta: {
+              label: 'Add'
+            },
+
+          },
+          {
+            path: '/applications/saml/import',
+            name: 'saml.serviceproviders.import',
+            component: ImportSAML,
+
+            meta: {
+              label: 'Import metadata'
+            },
+
+          },
+
+          {
+            path: '/applications/saml/settings',
+            component: SettingsSAML,
+
+            meta: {
+              label: 'Settings'
+            },
+
+            children: [
+              {
+                path: '',
+                component: GeneralSettingsSAML,
+                name: 'saml.settings.general'
+              }
+            ]
+
+          }
+        ]
+      },
+
+      {
+        path: '/internationalization',
+        component: Internationalization,
+
+        meta: {
+          label: 'Language',
+          hideChildren: true
+        },
+
+        style: {
+          icon: 'c-brown-500 ti-world'
+        },
+
+        children: [
+          {
+            path: '',
+            name: 'internationalization.list',
+            component: InternationalizationList,
+
+            meta: {
+              label: 'List'
+            }
+
+          },
+          {
+            path: '/internationalization/:locale',
+            name: 'internationalization.edit',
+            component: InternationalizationEdit,
+
+            meta: {
+              label: 'Edit'
+            }
+
+          },
+        ]
+
+      },
+
+    ]
+  
+  },
+
+  {
+    path: '/tester',
+    name: 'tester',
+    component: Tester,
+    hide: true
+  },
+  
+  {
+    path: '/logout',
+    name: 'logout',
+    component: Logout,
+    hide: true
+  },
+
+  {
+    path: '/completelogin',
+    name: 'CompleteLogin',
+    component: CompleteLogin
+  },
+
+  {
+    path: '/initlogin',
+    name: 'initlogin',
+    component: InitLogin
+  },
+
+  {
+    path: '/initlogout',
+    name: 'initlogout',
+    component: InitLogout
+  },
+
+  {
+    path: '/error',
+    name: 'error.default',
+    component: Error
+  },
+
+  {
+    path: '/*',
+    name: '404',
+    component: PageNotFound
+  },
+];
+
+export default createRouter({
+  routes: routes,
+  history: createWebHistory()
+});

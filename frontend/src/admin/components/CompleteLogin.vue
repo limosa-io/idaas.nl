@@ -34,7 +34,15 @@
 }
 </style>
 
-<script>
+<script setup>
+
+import {ref, onMounted, getCurrentInstance} from 'vue';
+import {laxios} from '@/admin/helpers.js';
+import { useRouter } from 'vue-router4';
+
+const vue = getCurrentInstance();
+const router = useRouter();
+
 /**
  * Obtains the access token from the fragment parameters.
  * 
@@ -42,76 +50,64 @@
  */
 import queryString from 'query-string';
 
-export default {
+const isError = ref(false);
+const isAccessDenied = ref(false);
 
-  data() {
-    return {
-      isError: false,
-      isAccessDenied: false
-    }
-  },
+onMounted(() => {
 
-  mounted() {
+  const parsed = Object.assign({}, queryString.parse(location.hash), queryString.parse(location.search));
 
-    const parsed = Object.assign({}, queryString.parse(location.hash), queryString.parse(location.search));
+  const error = parsed.error;
 
-    const error = parsed.error;
+  if (error) {
 
-    if (error) {
+    isError.value = true;
 
-      this.isError = true;
+    if (error == 'access_denied') {
 
-      if (error == 'access_denied') {
-
-        this.isAccessDenied = true;
-
-      } else {
-        //unexpected
-      }
-    } else if (window.localStorage.getItem('state') == null) {
-
-      this.isError = true;
-      console.error('No state was set!');
-
-    } else if (parsed.state != window.localStorage.getItem('state')) {
-
-      this.isError = true;
-      console.error('The returned state is different than the requested state. Perhaps because you\'ve started multiple logins');
+      isAccessDenied.value = true;
 
     } else {
-
-      let code = parsed.code || parsed.code;
-
-      this.$http.post(this.$oidcUrl('token'), {
-        client_id: window.manageClient.clientId,
-        grant_type: 'authorization_code',
-        code: code,
-        redirect_uri: window.manageClient.redirectUri
-      }, {
-        public: true
-      }).then(response => {
-        
-        window.sessionStorage.setItem('access_token', response.body.access_token);
-        window.sessionStorage.setItem('refresh_token', response.body.refresh_token);
-
-        window.localStorage.removeItem('state');
-
-        let goto = window.localStorage.getItem('goto') || '/';
-        window.localStorage.removeItem('goto');
-
-        this.$router.push(goto);
-
-      }).catch(response => {
-
-        this.isError = true;
-        console.error('Could not exchange code for an access token');
-
-
-      });
-
+      //unexpected
     }
+  } else if (window.localStorage.getItem('state') == null) {
 
+    isError.value = true;
+    console.error('No state was set!');
+
+  } else if (parsed.state != window.localStorage.getItem('state')) {
+
+    isError.value = true;
+    console.error('The returned state is different than the requested state. Perhaps because you\'ve started multiple logins');
+
+  } else {
+
+    let code = parsed.code || parsed.code;
+
+    laxios.post('token', {
+      client_id: window.manageClient.clientId,
+      grant_type: 'authorization_code',
+      code: code,
+      redirect_uri: window.manageClient.redirectUri
+    }, {
+      public: true
+    }).then(response => {
+      
+      window.sessionStorage.setItem('access_token', response.data.access_token);
+      window.sessionStorage.setItem('refresh_token', response.data.refresh_token);
+
+      window.localStorage.removeItem('state');
+
+      let goto = window.localStorage.getItem('goto') || '/';
+      window.localStorage.removeItem('goto');
+
+      router.push(goto);
+
+    }).catch(response => {
+      isError.value = true;
+      console.error('Could not exchange code for an access token');
+    });
   }
+});
 
-}
 </script>

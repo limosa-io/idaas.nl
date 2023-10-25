@@ -3,8 +3,8 @@
     <h4 class="c-grey-900 mt-1 mb-3">UI Servers</h4>
 
     <div class="bgc-white bd bdrs-3 p-3 mt-2">
-      <b-modal @ok="onSubmit" ref="newModel" id="newModel" title="New UI">
-        <form class="needs-validation" v-on:submit="onSubmit">
+      <Modal @ok="onSubmit" ref="newModal" title="New UI">
+        <form class="needs-validation" @submit.prevent="onSubmit">
           <div class="form-row mb-3">
             <div class="col-md-3">
               <label for="ui.url">Url</label>
@@ -14,14 +14,12 @@
             </div>
           </div>
 
-          <template v-for="(e, index) in errors">
-            <div class="alert alert-danger" role="alert" :key="index">{{ e[0] }}</div>
-          </template>
+          <div v-for="(e, index) in errors" class="alert alert-danger" role="alert" :key="index">{{ e[0] }}</div>
         </form>
-      </b-modal>
+      </Modal>
 
       <button
-        @click="$refs.newModel.show();"
+        @click="newModal.show()"
         type="button"
         class="btn btn-primary btn-sm float-right">Add Server</button>
       <p>Manage your UIs. You can connect each application to its own UI. By default, applications will make use of the default login ui.</p>
@@ -37,12 +35,12 @@
 
         <tbody>
           <tr>
-            <td>{{ $oidcUrl('') }}</td>
+            <td>{{ getOidcUrl('') }}</td>
             <td>Built in UI</td>
             <td>
               <button
                 class="btn btn-primary btn-block"
-                @click="$router.push({name: 'userinterface.design'});"
+                @click="router.push({name: 'userinterface.design'});"
               >Edit</button>
             </td>
           </tr>
@@ -59,59 +57,46 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      objects: null,
+<script setup>
 
-      ui: {
-        url: null
-      }
-    };
-  },
+import {ref, onMounted} from 'vue';
+import {maxios, getOidcUrl} from '@/admin/helpers.js';
+import Modal from '@/admin/components/general/Modal.vue';
+import { useRouter } from 'vue-router4';
 
-  mounted() {
-    this.load();
-  },
+const router = useRouter();
+const objects = ref(null);
+const ui = ref({
+  url: null
+});
+const newModal = ref(null);
+const errors= ref([]);
 
-  methods: {
-    deleteUi(ui) {
-      this.$http.delete(this.$murl("api/uiServers/" + ui.id)).then(
-        response => {
-          this.load();
-        },
-        response => {
-          // error callback
-        }
-      );
-    },
-    load() {
-      this.$http.get(this.$murl("api/uiServers")).then(
-        response => {
-          this.objects = response.data;
-        },
-        response => {
-          // error callback
-        }
-      );
-    },
-    onSubmit(event) {
-      this.$http.post(this.$murl("api/uiServers"), this.ui).then(
-        response => {
-          this.$refs.newModel.hide();
-          this.load();
-        },
-        response => {
-          // error callback
-          this.errors = response.data.errors;
-        }
-      );
+onMounted(() => {
+  load();
+});
 
-      event.preventDefault();
-    }
-  }
-};
+function deleteUi(ui){
+  maxios.delete('/api/uiServers/' + ui.id).then(_ => {
+    load();
+  });
+}
+
+function load(){
+  maxios.get('/api/uiServers').then(response => {
+    objects.value = response.data;
+  });
+}
+
+function onSubmit(){
+  maxios.post('/api/uiServers', ui.value).then(response => {
+    newModal.value.hide();
+    load();
+  }).catch(e => {
+    errors.value = e.response.data.errors;
+  });
+}
+
 </script>
 
 <style lang="scss" scoped>

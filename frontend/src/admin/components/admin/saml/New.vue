@@ -40,51 +40,42 @@
 </template>
 
 
-<script>
-export default {
+<script setup>
 
-  data(){
-    return {
-      
-      errors: {},
-      
-      wasValidated: false,
-      loading: false,
+import {ref, onMounted, getCurrentInstance} from 'vue';
+import {maxios, notify} from '@/admin/helpers.js';
+import { useRouter } from 'vue-router4';
+const vue = getCurrentInstance();
 
-      serviceProvider: {
-          entityid: null
-      }
+const router = useRouter();
+const errors = ref({});
+const wasValidated = ref(false);
+const loading = ref(false);
+const serviceProvider = ref({
+  entityid: null
+});
 
-    }
-  },
+function onSubmit(event){
 
-  methods: {
-    onSubmit(event){
+  if(event.target.checkValidity()){
 
-      if(event.target.checkValidity()){
+    maxios.post('api/saml/manage/serviceproviders',
+    serviceProvider.value
+    ).then(response => {
 
-        this.$http.post(this.$murl('api/saml/manage/serviceproviders'),
-        this.serviceProvider
-        ).then(response => {
+      notify({text: 'We have succesfully saved your new SAML Service Provider.'});
+      router.replace({ name: 'saml.serviceproviders.edit', params: { id: response.data.id }});
 
-          this.$noty({text: 'We have succesfully saved your new SAML Service Provider.'});
-          this.$router.replace({ name: 'saml.serviceproviders.edit', params: { id: response.data.id }});
-
-        }, response => {
-          this.errors = response.data.errors;
-          this.wasValidated = true;
-        });
-
-        //this.loading = true;
-      }else{
-        this.wasValidated = true;
-      }
-
-      event.preventDefault();
-    }
+    }, e => {
+      errors.value = e.response.data.errors;
+      wasValidated.value = true;
+    });
+    
+  }else{
+    wasValidated.value = true;
   }
 
-
-  
+  event.preventDefault();
 }
+
 </script>

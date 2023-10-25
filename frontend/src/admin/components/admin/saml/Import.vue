@@ -28,45 +28,37 @@
     </div>
 </template>
 
-<script>
-export default {
+<script setup>
 
-    data(){
-        return {
-            loading: false,
+import {ref, getCurrentInstance} from 'vue';
+import {maxios, notify} from '@/admin/helpers.js';
+import { useRouter } from 'vue-router4';
 
-            error: null,
+const router = useRouter();
+const loading = ref(false);
+const error = ref(null);
+const metadata = ref(null);
 
-            metadata: null,
+function onSubmit(){
 
+    loading.value = true;
+    error.value = null;
 
-        }
-    },
+    maxios.post('api/saml/manage/importMetadata', {
+        metadata: metadata.value
+    }).then(response => {
 
-    methods: {
-        onSubmit(){
+        notify({text: 'We have succesfully imported your new SAML Service Provider.'});
+        router.replace({ name: 'saml.serviceproviders.edit', params: { id: response.data.id }});
 
-            this.$http.post(this.$murl('api/saml/manage/importMetadata'),
-        {
-            metadata: this.metadata
-        }
-        ).then(response => {
-
-          this.$noty({text: 'We have succesfully imported your new SAML Service Provider.'});
-          this.$router.replace({ name: 'saml.serviceproviders.edit', params: { id: response.data.id }});
-
-        }, response => {
-
-          this.error = response.data.error;
-          
-        });
-
-            
-
-        }
-    }
+    }, e => {
+        error.value = e.response.data.error;
+        loading.value = false;
+        
+    });
 
 }
+
 </script>
 
 <style>

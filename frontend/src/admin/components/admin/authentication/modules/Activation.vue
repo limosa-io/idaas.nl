@@ -1,66 +1,31 @@
 
 <template>
+  <div>
 
-<div>
+    <FormGroup horizontal :label-cols="3"
+      description="Available template parameters are <code class=&quot;highlighter-rouge&quot;>otp</code>, <code class=&quot;highlighter-rouge&quot;>subject</code> and if present <code class=&quot;highlighter-rouge&quot;>user</code>."
+      label="Email template" label-for="module.config.template_id">
+      <FormSelect id="module.config.template_id" aria-describedby="parentHelp" v-if="templates" value-field="id"
+        text-field="name" v-model="module.config.template_id" :options="templates" />
+    </FormGroup>
 
-  <b-form-group horizontal :label-cols="3" description="Available template parameters are <code class=&quot;highlighter-rouge&quot;>otp</code>, <code class=&quot;highlighter-rouge&quot;>subject</code> and if present <code class=&quot;highlighter-rouge&quot;>user</code>."
-    label="Email template" label-for="module.config.template_id">
-    <b-form-select id="module.config.template_id" aria-describedby="parentHelp" v-if="templates" value-field="id" text-field="name"
-      v-model="module.config.template_id" :options="templates" />
-  </b-form-group>
-
-</div>
-
+  </div>
 </template>
 
-<script>
-export default {
+<script setup>
+import { maxios } from '@/admin/helpers.js'
+import { ref, onMounted, defineProps } from 'vue';
+const props = defineProps(['module', 'info']);
+const templates = ref({});
 
-  props: {
-    module: null,
-    info: null
-  },
+onMounted(() => {
 
-  data(){
-    return {
-      
-      errors: {},
-      
-      wasValidated: false,
-      loading: false,
+  maxios.get('api/mail_template').then(response => {
 
-      type: null,
-      types: [],
+    templates.value = response.data;
 
-      templates: {},
+  });
 
-    }
-  },
+});
 
-  mounted(){
-
-
-    this.$http.get(this.$murl('api/mail_template')).then(response => {
-
-      this.templates = response.data;
-
-    }, response => {
-      // error callback
-    });
-    
-    
-
-  },
-
-  methods: {
-    onSubmit(event){
-
-      event.preventDefault();
-
-    }
-  }
-
-
-  
-}
 </script>

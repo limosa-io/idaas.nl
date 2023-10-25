@@ -1,16 +1,15 @@
-import Vue from 'vue'
-import VueI18n from 'vue-i18n'
-import VueResource from 'vue-resource'
-
-Vue.use(VueResource);
-Vue.use(VueI18n)
+import {createI18n} from 'vue-i18n'
+import axios from 'axios'
 
 const loadedLanguages = [];
 
 var lastPressed = null;
 
-export const i18n = new VueI18n({
-  
+export const i18n = createI18n({
+    legacy: false,
+    missingWarn: false,
+    fallbackWarn: false,
+    fallbackLocale: 'en-GB',
 });
 
 let old = null;
@@ -35,17 +34,16 @@ export function switchLanguage(locale) {
     return new Promise( (resolve, reject) => {
         
         if(loadedLanguages.indexOf(locale) >= 0){
-            i18n.locale = locale;
+            i18n.global.locale = locale;
             localStorage.setItem('locale', locale);
             resolve(locale);
         }else{
 
-            Vue.http.get(
+            axios.get(
                 `/api/language/${locale}?version=${encodeURIComponent(window.information.resources_version)}`
             ).then( r => {
-                i18n.setLocaleMessage(locale, r.data);
-
-                i18n.locale = locale;
+                i18n.global.setLocaleMessage(locale, r.data);
+                i18n.global.locale = locale;
                 
                 localStorage.setItem('locale', locale);
                 

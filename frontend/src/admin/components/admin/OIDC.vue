@@ -4,26 +4,16 @@
 </template>
 
 
-<script>
-export default {
+<script setup>
 
-  data(){
-    return {
-      clients: null
-    };
-  },
+import {ref, onMounted} from 'vue';
+import {laxios} from '@/admin/helpers.js'
 
-  mounted(){
-    
-    this.$http.get(this.$oidcUrl('oauth/connect/register')).then(response => {
-      
-      this.clients = response.data;
+const clients = ref(null);
 
-    }, response => {
-      // error callback
-    });
-
-  }
-  
-}
+onMounted(() => {
+  laxios.get('oauth/connect/register').then(response => {
+    clients.value = response.data;
+  });
+});
 </script>

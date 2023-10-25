@@ -68,111 +68,93 @@
   </table>
 
 
-  <b-pagination v-if="pagination.total > pagination.per_page" @input="changePage" size="md" :total-rows="pagination.total"
-      v-model="currentPage" :per-page="pagination.per_page" class=""></b-pagination>
+  <Pagination v-if="pagination.total > pagination.per_page" @input="changePage" size="md" :total-rows="pagination.total"
+      v-model="currentPage" :per-page="pagination.per_page" class=""></Pagination>
 
 </div>
 
 </template>
 
 
-<script>
-export default {
+<script setup>
 
-  data() {
-    return {
-      itemsPerPage: 100,
+import {ref, watch, getCurrentInstance, onMounted} from 'vue';
+import {maxios, notify} from '@/admin/helpers.js';
 
-      checked: [],
+const vue = getCurrentInstance();
 
-      query: null,
+const itemsPerPage = ref(100);
+const checked = ref([]);
+const query = ref(null);
+const currentPage = ref(1);
+const totalResults = ref(null);
+const startIndex = ref(null);
+const pagination = ref({});
+const moduleResults = ref([]);
 
-      currentPage: 1,
-      totalResults: null,
-      startIndex: null,
+onMounted(() => {
+  changePage();
+});
 
-      pagination: {
+watch(itemsPerPage, (val) => {
+  currentPage.value = 1;
+  changePage();
+});
 
-      },
+function selectAll(){
 
-      moduleResults: []
+  for (var moduleResult of moduleResults.value) {
+      checked.value.push(moduleResult.id);
+
+      checked.value = Array.from(new Set(checked.value));
     }
-  },
 
-  mounted() {
-    this.changePage();
-  },
+}
 
-  watch: {
-    itemsPerPage: function (val) {
-      this.currentPage = 1;
-      this.changePage();
-    }
-  },
+function deleteSelected(){
 
-  methods: {
+  let promises = [];
 
-    selectAll(){
-
-
-    for (var moduleResult of this.moduleResults) {
-        this.checked.push(moduleResult.id);
-
-        this.checked = Array.from(new Set(this.checked));
-      }
-
-    },
-
-    deleteSelected(){
-
-      let promises = [];
-
-      for(var c of this.checked){
-        
-        promises.push(
-          this.$http.delete(this.$murl('api/moduleResults/' + c))
-        );
-      }
-
-      Promise.all(promises).then(e => {
-        this.$noty({
-          text: 'We have succesfully deleted the selected sessions.'
-        });
-        this.checked = [];
-        this.changePage();
-      });
-
-    },
-
-    onSubmit() {
-      this.currentPage = 1;
-      this.changePage();
-    },
+  for(var c of checked.value){
     
-    changePage() {
-
-      this.$http.get(this.$murl('api/moduleResults'), {
-        params: {
-          query: this.query,
-          page: this.currentPage,
-          size: this.itemsPerPage
-        }
-      }).then(response => {
-        this.moduleResults = response.data.data;
-        this.pagination = response.data
-      }, response => {
-        // error callback
-
-        this.totalResults = response.data.totalResults;
-        this.startIndex = parseInt(response.data.startIndex);
-
-      });
-
-    },
-
-
-
+    promises.push(
+      maxios.delete('api/moduleResults/' + c)
+    );
   }
+
+  Promise.all(promises).then(e => {
+    notify({
+      text: 'We have succesfully deleted the selected sessions.'
+    });
+    checked.value = [];
+    changePage();
+  });
+
+}
+
+function onSubmit() {
+  currentPage.value = 1;
+  changePage();
+}
+
+function changePage() {
+
+  maxios.get('api/moduleResults', {
+    params: {
+      query: query.value,
+      page: currentPage.value,
+      size: itemsPerPage.value
+    }
+  }).then(response => {
+    moduleResults.value = response.data.data;
+    pagination.value = response.data
+  }, response => {
+    // error callback
+
+    totalResults.value = response.data.totalResults;
+    startIndex.value = parseInt(response.data.startIndex);
+
+  });
 
 }
 </script>

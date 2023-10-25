@@ -1,37 +1,36 @@
 <template>
+  <div class="form-group">
+    <label for="user.preferredLanguage"
+      >Language
+      <span class="text-danger">*</span>
+    </label>
 
-<div class="form-group">
+    <select
+      class="form-control"
+      v-model="
+        props.user['urn:ietf:params:scim:schemas:core:2.0:User']
+          .preferredLanguage
+      "
+    >
+      <option disabled value="">Please select one</option>
+      <option
+        v-for="(l, index) in props.customerstyle.languages"
+        :key="index"
+        :value="l"
+      >
+        {{ $t("general.locale." + l) }}
+      </option>
+    </select>
 
-  <label for="user.preferredLanguage">Language
-    <span class="text-danger">*</span>
-  </label>
-
-  
-  <select class="form-control" v-model="user['urn:ietf:params:scim:schemas:core:2.0:User'].preferredLanguage">
-    <option disabled value="">Please select one</option>
-    <option v-for="(l, index) in customerstyle.languages" :key="index" :value="l">{{ $t('general.locale.' + l) }}</option>
-  </select>
-
-  <div v-if="!errors.type" class="invalid-feedback">
-    This is a required field and must be minimal 3 characters long.
+    <div v-if="!props.errors.type" class="invalid-feedback">
+      This is a required field and must be minimal 3 characters long.
+    </div>
   </div>
-
-</div>
-
 </template>
 
-<script>
-export default {
-    
-    props: ['user','errors', 'customerstyle'],
+<script setup>
+import { defineProps } from "vue";
 
-    data(){
-
-        return {
-            options: ['nl','de']
-        }
-    }
-    
-}
+const props = defineProps(["user", "errors", "customerstyle"]);
 </script>
 

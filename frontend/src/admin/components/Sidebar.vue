@@ -10,7 +10,7 @@
             <div class="peers ai-c fxw-nw">
               <div class="peer">
                 <div class="logo p-1">
-                  <img src="../assets/static/images/bulb.svg" width="50" style="margin-left: 6px; margin-top: 3px; padding: 12px;"  />
+                  <img :src="bulb" width="50" style="margin-left: 6px; margin-top: 3px; padding: 12px;"  />
                 </div>
               </div>
               <div class="peer peer-greed">
@@ -33,8 +33,8 @@
     <ul class="sidebar-menu scrollable pos-r">
 
       <!-- add class "dropdown open" if has children -->
-      <template v-for="(r, index) in $router.options.routes[0].children">
-        <li class="nav-item" :key="index" :class="{'mt-3': index == 0, 'dropdown': (r.children != null && !r.hideChildren), 'open': (r.children != null && $route.path.startsWith(r.path))  }" v-if="!r.hide" >
+      <template v-for="(r, index) in router.options.routes[0].children">
+        <li class="nav-item" :key="index" :class="{'mt-3': index == 0}" v-if="!r.hide" >
           
           <!-- class="sidebar-link" -->
           <router-link :to="r.path" class="sidebar-link" :exact="true" active-class="active"> 
@@ -44,19 +44,8 @@
             </span>
             <span class="title">{{ (r.meta ? r.meta.label : null) || r.name }}</span>
 
-            <span v-if="r.children && (!r.meta || !r.meta.hideChildren)" class="arrow"><i class="ti-angle-right"></i></span>
-
           </router-link>
 
-          <ul v-if="r.children && (!r.meta || !r.meta.hideChildren)" class="dropdown-menu">
-            <template v-for="(child,index) in r.children">
-              <li :key="index" v-if="!child.hide" class="nav-item dropdown">
-                <router-link :to="child.path">
-                  <span>{{  (child.meta ? child.meta.label : null) || child.name }}</span>
-                </router-link>
-              </li>
-            </template>
-          </ul>
           
         </li>
       </template>
@@ -67,8 +56,11 @@
 
 </template>
 
-<script>
-export default {
+<script setup>
 
-};
+import bulb from '../assets/static/images/bulb.svg';
+import { useRouter } from 'vue-router4';
+
+const router = useRouter();
+
 </script>

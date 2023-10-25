@@ -64,117 +64,98 @@
   <div class="d-flex flex-row align-items-center justify-content-between">
 
     <div>Showing {{ pagination.from }} to {{ pagination.to }} of {{ pagination.total }} entries</div>
-    <b-pagination v-if="pagination.total > pagination.per_page" @input="changePage" size="md" :total-rows="pagination.total"
-      v-model="currentPage" :per-page="pagination.per_page" class=""></b-pagination>
+    <Pagination v-if="pagination.total > pagination.per_page" @input="changePage" size="md" :total-rows="pagination.total"
+      v-model="currentPage" :per-page="pagination.per_page" class=""></Pagination>
   </div>
 
 </div>
 
 </template>
 
-<script>
+<script setup>
 
-export default {
+import {ref, watch, onMounted, getCurrentInstance} from 'vue';
+import {maxios, notify} from '@/admin/helpers.js';
 
-  data() {
-    return {
-      tokens: [],
+const tokens = ref([]);
+const checked = ref([]);
+const itemsPerPage = ref(20);
+const query = ref(null);
+const currentPage = ref(1);
+const totalResults = ref(null);
+const startIndex = ref(null);
+const pagination = ref({});
+const vue = getCurrentInstance();
 
-      checked: [],
+onMounted(() => {
+  changePage();
+});
 
-      itemsPerPage: 20,
+watch(itemsPerPage, (val) => {
+  currentPage.value = 1;
+  changePage();
+});
 
-      query: null,
+function selectAll(){
 
-      currentPage: 1,
-      totalResults: null,
-      startIndex: null,
+  for (var token of tokens.value) {
+      checked.value.push(token.id);
 
-      pagination: {
-
-      }
-
+      checked.value = Array.from(new Set(checked.value));
     }
-  },
-
-  mounted() {
-    this.changePage();
-  },
-
-  watch: {
-    itemsPerPage: function(val){
-      this.currentPage = 1;
-      this.changePage();
-    }
-  },
-
-  methods: {
-
-
-    selectAll(){
-
-
-    for (var token of this.tokens) {
-        this.checked.push(token.id);
-
-        this.checked = Array.from(new Set(this.checked));
-      }
-
-    },
-
-    deleteSelected(){
-
-      let promises = [];
-
-      for(var c of this.checked){
-
-        promises.push(
-
-          this.$http.post(this.$murl('api/tokens/revoke'), {
-            token: c
-          })
-
-        );
-      }
-
-      Promise.all(promises).then(e => {
-        this.$noty({
-          text: 'We have succesfully revoked the selected tokens.'
-        });
-        this.checked = [];
-        this.changePage();
-      });
-
-    },
-
-    onSubmit() {
-      this.currentPage = 1;
-      this.changePage();
-    },
-
-    changePage() {
-
-      this.$http.get(this.$murl('api/tokens'), {
-        params: {
-          query: this.query,
-          page: this.currentPage,
-          size: this.itemsPerPage
-        }
-      }).then(response => {
-        this.tokens = response.data.data
-        this.pagination = response.data
-      }, response => {
-        // error callback
-
-        this.totalResults = response.data.totalResults;
-          this.startIndex = parseInt(response.data.startIndex);
-
-      });
-
-    }
-
-  }
 
 }
+
+function deleteSelected(){
+
+  let promises = [];
+
+  for(var c of checked.value){
+
+    promises.push(
+
+      maxios.post('api/tokens/revoke', {
+        token: c
+      })
+
+    );
+  }
+
+  Promise.all(promises).then(e => {
+    notify({
+      text: 'We have succesfully revoked the selected tokens.'
+    });
+    checked.value = [];
+    changePage();
+  });
+
+}
+
+function onSubmit() {
+  currentPage.value = 1;
+  changePage();
+}
+
+function changePage() {
+
+  maxios.get('api/tokens', {
+    params: {
+      query: query.value,
+      page: currentPage.value,
+      size: itemsPerPage.value
+    }
+  }).then(response => {
+    tokens.value = response.data.data
+    pagination.value = response.data
+  }, response => {
+    // error callback
+
+    totalResults.value = response.data.totalResults;
+      startIndex.value = parseInt(response.data.startIndex);
+
+  });
+
+}
+
 </script>
 

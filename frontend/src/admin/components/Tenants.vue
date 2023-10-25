@@ -2,7 +2,7 @@
 <template>
 <div>
 
-  <b-modal v-model="showModal" id="newTenant" title="New tenant" @ok="onSubmit">
+  <Modal v-model="showModal" id="newTenant" title="New tenant" @ok="onSubmit">
     <form @submit.prevent="onSubmit">
       <div class="form-group">
         <label for="subdomain">Create your tenant on your subdomain</label>
@@ -16,7 +16,7 @@
 
       </div>
     </form>
-  </b-modal>
+  </Modal>
 
   <table class="table table-striped">
     <thead>
@@ -38,61 +38,45 @@
 
 </template>
 
-<script>
-import Vue from 'vue';
-import VueResource from 'vue-resource';
-Vue.use(VueResource);
+<script setup>
 
-export default {
+import {ref, onMounted} from 'vue';
+import { maxios } from '@/admin/helpers.js';
+import Modal from '@/admin/components/general/Modal.vue';
 
-  data() {
-    return {
-      tenants: null,
+const tenants = ref(null);
+const subdomain = ref(null);
+const showModal = ref(false);
+const errors = ref({});
 
-      subdomain: null,
+onMounted(() => {
 
-      showModal: false,
-      errors: {}
-
+  maxios.get('/api/tenants', {
+    headers: {
+      'Authorization': 'Bearer ' + window.sessionStorage.getItem('access_token')
     }
-  },
-  mounted() {
+  }).then(response => {
+    tenants.value = response.data;
+  });
 
-    this.$http.get('/api/tenants', {
-      headers: {
-        'Authorization': 'Bearer ' + this.getAccessToken()
-      }
-    }).then(response => {
-      this.tenants = response.data;
-    });
+});
 
-  },
+function getAccessToken() {
+  return window.sessionStorage.getItem('access_token');
+}
 
-  methods: {
-
-    getAccessToken() {
-      return window.sessionStorage.getItem('access_token');
-    },
-
-    onSubmit(event) {
-      this.$http.post('/api/tenants', {
-        subdomain: this.subdomain
-      }, {
-        headers: {
-          'Authorization': 'Bearer ' + this.getAccessToken()
-        }
-      }).then(response => {
-        
-      }, response => {
-        this.errors = response.data.errors;
-        event.preventDefault();
-      })
-
-
+function onSubmit() {
+  maxios.post('/api/tenants', {
+    subdomain: subdomain.value
+  }, {
+    headers: {
+      'Authorization': 'Bearer ' + getAccessToken()
     }
-
-  }
-
+  }).then(response => {
+    
+  }, e => {
+    errors.value = e.response.data.errors;
+  })
 }
 </script>
 

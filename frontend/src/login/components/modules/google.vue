@@ -6,10 +6,8 @@
 
 </template>
 
-<script>
+<script setup>
 
-import Vue from 'vue'
-import base from './Base';
 import fontawesome from '@fortawesome/fontawesome'
 
 import faGoogle from '@fortawesome/fontawesome-free-brands/faGoogle'
@@ -18,16 +16,5 @@ fontawesome.library.add(faGoogle)
 
 const URL_MODULE_NAME = "NAME_OF_THE_MODULE";
 
-export default Vue.extend({
-
-    mixins: [base],
-    
-    methods: {
-        init() {
-            
-            
-
-        }
-    }
-});
+//TODO: implement
 </script>

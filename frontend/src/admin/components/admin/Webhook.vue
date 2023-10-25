@@ -1,5 +1,5 @@
 <template>
-  <Main title="Webhook" v-if="settings">
+  <MainTemplate title="Webhook" v-if="settings">
     <p>
       A webhook allows you to receive user events - creates, updates and
       deletions - in a near real-time manner. It is not only useful for
@@ -26,67 +26,40 @@
 
       <button type="submit" class="btn btn-primary">Save</button>
     </form>
-  </Main>
+  </MainTemplate>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      settings: null,
-      wasValidated: false,
-    };
-  },
+<script setup>
 
-  mounted() {
-    this.$http
-      .get(this.$murl("api/settings?namespace=webhook"))
-      .then((response) => {
-        this.settings = Object.assign(
-          {
-            rule_user_event: null,
-            rule_jit: null,
-            rule_attribute: null,
-          },
-          response.data
-        );
+import {ref, onMounted, getCurrentInstance} from 'vue'
+import {maxios, notify} from '@/admin/helpers.js'
 
-        this.wasValidated = false;
+const settings = ref(null);
+const wasValidated = ref(false);
+
+onMounted(async () => {
+  const response = await maxios.get("api/settings?namespace=webhook");
+  settings.value = response.data;
+});
+
+function onSubmit(){
+  maxios.put("api/settings/bulk?namespace=webhook", settings.value).then(
+    (response) => {
+      notif({
+        text: "We have succesfully saved your new OpenID Client settings.",
       });
-  },
-
-  methods: {
-    onSubmit(event) {
-      if (event.target.checkValidity()) {
-        this.$http
-          .put(this.$murl("api/settings/bulk?namespace=webhook"), this.settings)
-          .then(
-            (response) => {
-              this.$noty({
-                text: "We have succesfully saved your new OpenID Client settings.",
-              });
-              this.errors = null;
-            },
-            (response) => {
-              this.errors = response.data.errors;
-              this.wasValidated = true;
-
-              this.$noty({
-                text: "We could not save this.",
-                type: "error",
-              });
-            }
-          );
-
-        //this.loading = true;
-      } else {
-        this.wasValidated = true;
-        this.$noty({
-          text: "We could not save this.",
-          type: "error",
-        });
-      }
+      errors.value = null;
     },
-  },
-};
+    (e) => {
+      errors.value = e.response.data.errors;
+      wasValidated.value = true;
+
+      notify({
+        text: "We could not save this.",
+        type: "error",
+      });
+    }
+  );
+}
+
 </script>

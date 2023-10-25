@@ -20,7 +20,7 @@
         <li class="search-input" :class="{'active':searchActive}">
           <input
             autocomplete="off"
-            spellcheck="off"
+            :spellcheck="false"
             class="form-control"
             ref="search"
             id="search"
@@ -34,14 +34,12 @@
 
           <div class="search-results" v-if="matches && matches.length >0">
             <ul class="list-group">
-              <template v-for="(m, index) in matches">
                 <li
+                v-for="(m, index) in matches" :key="index"
                   @click="matchActive = index; followMatch()"
                   class="list-group-item"
                   :class="{active: matchActive == index}"
-                  :key="index"
                 >{{ m.breadcrumb }}</li>
-              </template>
             </ul>
           </div>
         </li>
@@ -196,119 +194,115 @@ $color: #4285f4;
 </style>
 
 
-<script>
-export default {
-  name: "TopBar",
+<script setup>
+import {ref, watch, nextTick, onMounted, getCurrentInstance, computed, defineProps} from 'vue';
+import { useRoute, useRouter } from 'vue-router4';
 
-  props: ["userinfo"],
+const router = useRouter();
+const drop = ref(false);
+const searchActive = ref(false);
+const keyword = ref(null);
+const matches = ref([]);
+const matchActive = ref(0);
+const route = useRoute();
+const vue = getCurrentInstance();
 
-  data() {
-    return {
-      drop: false,
-      searchActive: false,
+const props = defineProps({
+  userinfo: {
+    type: Object,
+    required: true
+  }
+});
 
-      keyword: null,
+watch(searchActive, (val) => {
+  //Wait for the element to become visible before focus
+  nextTick(() => {
+    vue.refs.search.focus();
+  });
+});
 
-      matches: [],
-      matchActive: 0
-    };
-  },
+watch(keyword, (val) => {
 
-  watch: {
-    searchActive: function(val) {
-      //Wait for the element to become visible before focus
-      this.$nextTick(() => {
-        this.$refs.search.focus();
+  let m = [];
+
+  for (let r of routeList()) {
+    if (
+      r.path &&
+      r.path.length > 0 &&
+      val.length >= 2 &&
+      !r.path.match(":") &&
+      r.breadcrumb &&
+      r.breadcrumb.toLowerCase().match(val.toLowerCase())
+    ) {
+      m.push({
+        path: r.path,
+        breadcrumb: r.breadcrumb
       });
-    },
 
-    keyword: function(val) {
-
-      let m = [];
-
-      for (let r of this.routeList()) {
-        if (
-          r.path &&
-          r.path.length > 0 &&
-          val.length >= 2 &&
-          !r.path.match(":") &&
-          r.breadcrumb &&
-          r.breadcrumb.toLowerCase().match(val.toLowerCase())
-        ) {
-          m.push({
-            path: r.path,
-            breadcrumb: r.breadcrumb
-          });
-
-          if (m.length > 5) {
-            break;
-          }
-        }
+      if (m.length > 5) {
+        break;
       }
-
-      this.matches = m;
-    }
-  },
-
-  methods: {
-    routeList() {
-      var routes = [];
-
-      for (let x of this.$router.options.routes[0].children) {
-        let parent = {
-          path: x.path,
-          breadcrumb: x.meta ? x.meta.label : x.name,
-          name: x.name
-        };
-
-        routes.push(parent);
-
-        if (x.children) {
-          for (let y of x.children) {
-            routes.push({
-              path: y.path,
-              breadcrumb:
-                parent.breadcrumb + " > " + (y.meta ? y.meta.label : y.name),
-              name: y.name
-            });
-          }
-        }
-      }
-
-      return routes;
-    },
-
-    followMatch() {
-      this.searchActive = false;
-      this.$router.push(this.matches[this.matchActive].path);
-    },
-
-    search() {},
-
-    keyup() {
-      this.matchActive = Math.max(0, this.matchActive - 1);
-    },
-
-    keydown() {
-      this.matchActive = Math.min(
-        this.matches ? this.matches.length - 1 : 0,
-        parseInt(this.matchActive) + 1
-      );
-    }
-  },
-
-  computed: {
-    breadcrumb: function() {
-      let result = [];
-
-      for (let r of this.$route.matched) {
-        if (r.meta && r.meta.label) {
-          result.push(r);
-        }
-      }
-
-      return result;
     }
   }
-};
+
+  matches.value = m;
+});
+
+const breadcrumb = computed(() => {
+  let result = [];
+
+  for (let r of route.matched) {
+    if (r.meta && r.meta.label) {
+      result.push(r);
+    }
+  }
+
+  return result;
+});
+
+function routeList() {
+  var routes = [];
+
+  for (let x of router.options.routes[0].children) {
+    let parent = {
+      path: x.path,
+      breadcrumb: x.meta ? x.meta.label : x.name,
+      name: x.name
+    };
+
+    routes.push(parent);
+
+    if (x.children) {
+      for (let y of x.children) {
+        routes.push({
+          path: y.path,
+          breadcrumb:
+            parent.breadcrumb + " > " + (y.meta ? y.meta.label : y.name),
+          name: y.name
+        });
+      }
+    }
+  }
+
+  return routes;
+}
+
+function followMatch() {
+  searchActive.value = false;
+  router.push(matches.value[matchActive.value].path);
+}
+
+function search() {}
+
+function keyup() {
+  matchActive.value = Math.max(0, matchActive.value - 1);
+}
+
+function keydown() {
+  matchActive.value = Math.min(
+    matches.value ? matches.value.length - 1 : 0,
+    parseInt(matchActive.value) + 1
+  );
+}
+
 </script>

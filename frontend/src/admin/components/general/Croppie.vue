@@ -1,130 +1,132 @@
-<script>
+<template>
+  <div id="croppieContainer" ref="croppieContainer" :class="props.customClass"></div>
+
+</template>
+<script setup>
+import {ref, defineProps, onMounted, defineEmits} from 'vue';
 /**
  * Used for image uploads
  */
 import {Croppie} from 'croppie';
 import 'croppie/croppie.css';
 
-export default {
-  render(h) {
-    return h('div', {
-      class: this.customClass,
-      ref: 'croppieContainer',
-      id: 'croppieContainer',
-    })
-  },
-  props: {
-    boundary: {
-      type: Object,
-      default: function () {
-        return {
-          width: 400,
-          height: 400
-        }
+const emit = defineEmits(['result', 'update']);
+
+const props = defineProps({
+  boundary: {
+    type: Object,
+    default: function () {
+      return {
+        width: 400,
+        height: 400
       }
-    },
-    customClass: String,
-    enableExif: Boolean,
-    enableOrientation: {
-      type: Boolean,
-      default: true
-    },
-    enableResize: {
-      type: Boolean,
-      default: true
-    },
-    enableZoom: {
-      type: Boolean,
-      default: true
-    },
-    enforceBoundary: {
-      type: Boolean,
-      default: true
-    },
-    mouseWheelZoom: {
-      type: Boolean,
-      default: true
-    },
-    showZoomer: {
-      type: Boolean,
-      default: true
-    },
-    viewport: {
-      type: Object,
-      default: function () {
-        return {
-          width: 200,
-          height: 200,
-          type: 'square'
-        }
-      }
-    },
-  },
-  mounted() {
-    this.initCroppie();
-  },
-  data() {
-    return {
-      croppie: null
     }
   },
-  methods: {
-    initCroppie() {
-      let el = this.$refs.croppieContainer;
-
-      el.addEventListener('update', (ev) => {
-        this.$emit('update', ev.detail);
-      });
-
-      this.croppie = new Croppie(el, {
-        boundary: this.boundary,
-        enableExif: this.enableExif,
-        enableOrientation: this.enableOrientation,
-        enableZoom: this.enableZoom,
-        enableResize: this.enableResize,
-        enforceBoundary: this.enforceBoundary,
-        mouseWheelZoom: this.mouseWheelZoom,
-        viewport: this.viewport,
-        showZoomer: this.showZoomer
-      });
-    },
-    bind(options) {
-      return this.croppie.bind(options)
-    },
-    destroy() {
-      this.croppie.destroy();
-    },
-    get(cb) {
-      if (cb) {
-        cb(this.croppie.get())
-      } else {
-        return this.croppie.get()
+  customClass: String,
+  enableExif: Boolean,
+  enableOrientation: {
+    type: Boolean,
+    default: true
+  },
+  enableResize: {
+    type: Boolean,
+    default: true
+  },
+  enableZoom: {
+    type: Boolean,
+    default: true
+  },
+  enforceBoundary: {
+    type: Boolean,
+    default: true
+  },
+  mouseWheelZoom: {
+    type: Boolean,
+    default: true
+  },
+  showZoomer: {
+    type: Boolean,
+    default: true
+  },
+  viewport: {
+    type: Object,
+    default: function () {
+      return {
+        width: 200,
+        height: 200,
+        type: 'square'
       }
-    },
-    rotate(angle) {
-      this.croppie.rotate(angle);
-    },
-    setZoom(value) {
-      this.croppie.setZoom(value);
-    },
-    result(options, cb) {
-      if (!options) options = {
-        type: 'base64'
-      }
-      return this.croppie.result(options).then(output => {
-        if (!cb) {
-          this.$emit('result', output);
-        } else {
-          cb(output);
-        }
-        return output;
-      });
-    },
-    refresh() {
-      this.croppie.destroy();
-      this.initCroppie();
     }
+  },
+});
+
+const croppie = ref(null);
+
+onMounted(() => {
+  initCroppie();
+});
+
+function initCroppie() {
+  let el = document.getElementById('croppieContainer');
+
+  el.addEventListener('update', (ev) => {
+    emit('update', ev.detail);
+  });
+
+  croppie.value = new Croppie(el, {
+    boundary: props.boundary,
+    enableExif: props.enableExif,
+    enableOrientation: props.enableOrientation,
+    enableZoom: props.enableZoom,
+    enableResize: props.enableResize,
+    enforceBoundary: props.enforceBoundary,
+    mouseWheelZoom: props.mouseWheelZoom,
+    viewport: props.viewport,
+    showZoomer: props.showZoomer
+  });
+}
+
+function bind(options) {
+  return croppie.value.bind(options)
+}
+
+function destroy() {
+  croppie.value.destroy();
+}
+
+function get(cb) {
+  if (cb) {
+    cb(croppie.value.get())
+  } else {
+    return croppie.value.get()
   }
+}
+
+function rotate(angle) {
+  croppie.value.rotate(angle);
+}
+
+function setZoom(value) {
+  croppie.value.setZoom(value);
+}
+
+function result(options, cb) {
+  if (!options) options = {
+    type: 'base64'
+  }
+  return croppie.value.result(options).then(output => {
+    if (!cb) {
+      emit('result', output);
+    } else {
+      cb(output);
+    }
+    return output;
+  });
+}
+
+function refresh() {
+  croppie.value.destroy();
+  initCroppie();
 }
 
 </script>

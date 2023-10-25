@@ -1,8 +1,8 @@
 
 <template>
-  <Main title="Users">
+  <MainTemplate title="Users">
     <template v-slot:header>
-      <Button to="/users/add"> Add User </Button>
+      <MenuButton to="/users/add"> Add User </MenuButton>
     </template>
 
     <template v-slot:body v-if="loaded">
@@ -132,7 +132,7 @@
           {{ startIndex + parseInt(itemsPerPage) - 1 }} of
           {{ totalResults }} entries
         </div>
-        <b-pagination
+        <Pagination
           v-if="totalResults > itemsPerPage"
           @input="changePage"
           size="md"
@@ -140,188 +140,133 @@
           v-model="currentPage"
           :per-page="itemsPerPage"
           class=""
-        ></b-pagination>
+        ></Pagination>
       </div>
     </template>
-  </Main>
+  </MainTemplate>
 </template>
 
-<script>
-import Vue from "vue";
+<script setup>
+import {ref, getCurrentInstance, onMounted, watch} from "vue";
+import {maxios, notify} from "@/admin/helpers.js";
+import { useRoute, useRouter } from "vue-router4";
 
-export default {
-  data() {
-    return {
-      loaded: false,
+const router = useRouter();
+const loaded = ref(false);
+const currentPage = ref(1);
+const startIndex = ref(1);
+const itemsPerPage = ref(20);
+const users = ref([]);
+const totalResults = ref(null);
+const checkedUsers = ref([]);
+const groups = ref([]);
+const search = ref({
+  email: null,
+  group: null,
+});
+const filter = ref(null);
+const sortOrder = ref("descending");
+const sortBy = ref("id");
+const vue = getCurrentInstance();
 
-      currentPage: 1,
-      startIndex: 1,
-      itemsPerPage: 20,
-      users: [],
-      groups: [],
-      totalResults: null,
+watch(itemsPerPage, (val) => {
+  changePage(currentPage.value);
+});
 
-      checkedUsers: [],
+function selectAll() {
+  for (var user of users) {
+    checkedUsers.push(user.id);
 
-      filter: null,
+    checkedUsers = Array.from(new Set(checkedUsers));
+  }
+}
 
-      sortOrder: "descending",
-      sortBy: "id",
+function onSubmit() {
+  changePage(currentPage.value);
+}
 
-      search: {
-        email: null,
-        group: null,
-      },
-    };
-  },
+function formatDate(date) {
+  return new Date(date).toLocaleString();
+}
 
-  beforeRouteUpdate(to, from, next) {
-    window.history.pushState(
-      {},
-      document.title,
-      "/users/" + (to.params.page || 1)
+function setSortBy(sortBy) {
+  if (sortBy == sortBy.value) {
+    sortOrder.value = sortOrder.value == "descending" ? "ascending" : "descending";
+  } else {
+    sortBy.value = sortBy;
+    sortOrder.value = "descending";
+  }
+
+  changePage(currentPage.value);
+}
+
+function edit(user) {
+  router.push("/users/edit/" + user.id);
+}
+
+function changePage(page) {
+  maxios
+    .get(
+      `api/scim/v2/Users?sortBy=${sortBy.value}&sortOrder=${sortOrder.value}&count=${itemsPerPage.value}&startIndex=` +
+        ((page || 1) - 1) * itemsPerPage +
+        (filter.value ? "&filter=" + filter.value : "")
+    )
+    .then(
+      (response) => {
+        users.value = response.data.Resources;
+        totalResults.value = response.data.totalResults;
+        startIndex.value = parseInt(response.data.startIndex);
+      }
     );
-  },
+}
 
-  watch: {
-    itemsPerPage: function (val) {
-      this.changePage(this.currentPage);
+function deleteSelected() {
+  let promises = [];
+
+  for (var c of checkedUsers) {
+    promises.push(maxios.delete("api/scim/v2/Users/" + c));
+  }
+
+  Promise.all(promises).then(
+    e => {
+      notify({
+        text: "We have succesfully deleted the selected user.",
+      });
+      checkedUsers = [];
+      changePage(currentPage.value);
     },
-  },
+    e => {
+      notify({
+        text: "We have succesfully deleted the selected user.",
+      });
+      checkedUsers = [];
+      changePage(currentPage.value);
+    }
+  );
+}
 
-  mounted() {
-    var currentPage = parseInt(this.$route.params.page || 1);
+onMounted(() => {
+  maxios
+    .get(
+      `api/scim/v2/Users?count=${itemsPerPage.value}&startIndex=${
+        (currentPage.value - 1) * 20
+      }&sortBy=${sortBy.value}`
+    )
+    .then(
+      (response) => {
+        users.value = response.data.Resources;
+        totalResults.value = response.data.totalResults;
+        startIndex.value = parseInt(response.data.startIndex);
 
-    this.$http
-      .get(
-        Vue.murl(
-          `api/scim/v2/Users?count=${this.itemsPerPage}&startIndex=${
-            (currentPage - 1) * 20
-          }&sortBy=${this.sortBy}`
-        )
-      )
-      .then(
-        (response) => {
-          this.users = response.data.Resources;
-          this.totalResults = response.data.totalResults;
-          this.startIndex = parseInt(response.data.startIndex);
+        loaded.value = true;
 
-          this.loaded = true;
-
-          this.$http.get(this.$murl("api/scim/v2/Groups")).then((response) => {
-            this.groups = response.data.Resources;
-          });
-        },
-        (response) => {}
-      );
-  },
-
-  methods: {
-    setSortBy(field) {
-      if (this.sortBy == field) {
-        this.sortOrder =
-          this.sortOrder == "ascending" ? "descending" : "ascending";
-      }
-
-      this.sortBy = field;
-      this.changePage(this.currentPage);
-    },
-
-    formatDate(data) {
-      let date = new Date(Date.parse(data));
-      return (
-        date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear()
-      );
-    },
-
-    onSubmit() {
-      var f = [];
-
-      if (this.search.email) {
-        f.push(
-          'emails.value co "' +
-            (this.search.email ? this.search.email : "") +
-            '"'
-        );
-      }
-
-      if (this.search.group) {
-        f.push(`groups.value eq "${this.search.group}"`);
-      }
-
-      this.filter = f.join(" and ");
-
-      this.currentPage = 1;
-
-      this.changePage(this.currentPage);
-    },
-
-    selectAll() {
-      for (var user of this.users) {
-        this.checkedUsers.push(user.id);
-
-        this.checkedUsers = Array.from(new Set(this.checkedUsers));
-      }
-    },
-
-    deleteSelected() {
-      var promises = [];
-
-      for (var i = 0; i < this.checkedUsers.length; i++) {
-        promises.push(
-          this.$http.delete(
-            this.$murl("api/scim/v2/Users/" + this.checkedUsers[i])
-          )
-        );
-      }
-
-      Promise.all(promises).then((e) => {
-        this.$noty({
-          text: "We have succesfully deleted the selected user.",
+        maxios.get("api/scim/v2/Groups").then((response) => {
+          groups.value = response.data.Resources;
         });
-        this.checkedUsers = [];
-        this.changePage(this.currentPage);
-      });
-    },
+      }
+    );
+});
 
-    changePage(page) {
-      this.$router.push({
-        name: "users.list",
-        params: {
-          page: page,
-        },
-      });
-
-      this.$http
-        .get(
-          this.$murl(
-            `api/scim/v2/Users?sortBy=${this.sortBy}&sortOrder=${this.sortOrder}&count=${this.itemsPerPage}&startIndex=` +
-              ((page || 1) - 1) * this.itemsPerPage +
-              (this.filter ? "&filter=" + this.filter : "")
-          )
-        )
-        .then(
-          (response) => {
-            this.users = response.data.Resources;
-            this.totalResults = response.data.totalResults;
-            this.startIndex = parseInt(response.data.startIndex);
-          },
-          (response) => {
-            // error callback
-          }
-        );
-    },
-
-    edit(user) {
-      this.$router.push({
-        name: "users.edit",
-        params: {
-          user_id: user.id,
-        },
-      });
-    },
-  },
-};
 </script>
 
 <style lang="scss">

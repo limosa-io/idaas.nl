@@ -1,30 +1,34 @@
 <template>
-    
-    <div class="form-group">
-      
-          <label for="password">Password
-            <span class="text-danger">*</span>
-          </label>
+  <div class="form-group">
+    <label for="password"
+      >Password
+      <span class="text-danger">*</span>
+    </label>
 
-          <input required :class="{'is-invalid': errors['urn:ietf:params:scim:schemas:core:2.0:User:password']}" v-model="user['urn:ietf:params:scim:schemas:core:2.0:User'].password" type="password" class="form-control" id="password" placeholder="">
+    <input
+      required
+      :class="{
+        'is-invalid':
+          props.errors['urn:ietf:params:scim:schemas:core:2.0:User:password'],
+      }"
+      v-model="
+        props.user['urn:ietf:params:scim:schemas:core:2.0:User'].password
+      "
+      type="password"
+      class="form-control"
+      id="password"
+      placeholder=""
+    />
 
-          <div v-if="!errors.type" class="invalid-feedback">
-            This is a required field.
-          </div>
-
-        </div>
-
+    <div v-if="!props.errors.type" class="invalid-feedback">
+      This is a required field.
+    </div>
+  </div>
 </template>
 
 
-<script>
+<script setup>
+import { defineProps } from "vue";
 
-export default {
-    
-
-    props: ['user','errors'],
-
-
-}
-
+const props = defineProps(["user", "errors"]);
 </script>

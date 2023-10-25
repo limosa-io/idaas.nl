@@ -1,48 +1,39 @@
 
-<script>
+<script setup>
 /**
  * Inits the log in process. 
  * 
  * The stored state is checked in CompleteLogin
  */
 
-export default {
+import { onBeforeMount } from 'vue';
 
-  beforeRouteEnter(to, from, next) {
+onBeforeMount(() => {
 
-    var oauth = {
-      clientId: window.manageClient.clientId,
-      authorize: window.manageClient.authorize,
-      redirectUri: window.manageClient.redirectUri,
-    };
+  var oauth = {
+    clientId: window.manageClient.clientId,
+    authorize: window.manageClient.authorize,
+    redirectUri: window.manageClient.redirectUri,
+  };
 
-    if(from.name != 'logout'){
-      window.localStorage.setItem('goto',from.path);
-    }else{
-      window.localStorage.removeItem('goto');
-    }
-    
+  // FIXME: should use from-route
+  // if (from.name != 'logout') {
+  //   window.localStorage.setItem('goto', from.path);
+  // } else {
+    window.localStorage.removeItem('goto');
+  // }
 
-    var state = Math.random().toString(36).substring(2);
-    var nonce = Math.random().toString(36).substring(2);
 
-    window.localStorage.setItem('state', state);
+  var state = Math.random().toString(36).substring(2);
+  var nonce = Math.random().toString(36).substring(2);
 
-    // TODO: make it configurable whether to prompt for login or not
-    var url = oauth.authorize + '?response_type=code&client_id=' + window.encodeURIComponent(oauth.clientId) + '&redirect_uri=' + window.encodeURIComponent(oauth.redirectUri) + '&scope=openid+applications:manage&state=' + window.encodeURIComponent(state) + '&nonce=' + nonce;
+  window.localStorage.setItem('state', state);
 
-    document.location = url;
+  // TODO: make it configurable whether to prompt for login or not
+  var url = oauth.authorize + '?response_type=code&client_id=' + window.encodeURIComponent(oauth.clientId) + '&redirect_uri=' + window.encodeURIComponent(oauth.redirectUri) + '&scope=openid+applications:manage&state=' + window.encodeURIComponent(state) + '&nonce=' + nonce;
 
-  },
-  data() {
-    return {
+  document.location = url;
 
-    }
-  },
-  mounted() {
-      
-  }
-
-}
+});
 
 </script>

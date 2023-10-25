@@ -10,9 +10,9 @@
 
 <!-- <p>TODO: NameId format list configureren. Attribute mapping mogelijk maken.</p> -->
 
-  <b-form-group horizontal :label-cols="3" description="Unique identifier of this service provider." label="Entity ID" label-for="serviceprovider.entityid">
-    <b-form-input id="serviceprovider.entityid" v-model.trim="serviceprovider.entityid"></b-form-input>
-  </b-form-group>
+  <FormGroup horizontal :label-cols="3" description="Unique identifier of this service provider." label="Entity ID" label-for="serviceprovider.entityid">
+    <FormInput id="serviceprovider.entityid" v-model.trim="serviceprovider.entityid"></FormInput>
+  </FormGroup>
   
   <fieldset id="assertionConsumerService" role="group" class="b-form-group form-group">
     <div class="form-row">
@@ -93,37 +93,37 @@
     </div>
   </fieldset>
 
-  <b-form-group horizontal :label-cols="3" breakpoint="md" description="Whether the service providers wants to receive signed authentication responses." label="Sign authentication responses">
+  <FormGroup horizontal :label-cols="3" breakpoint="md" description="Whether the service providers wants to receive signed authentication responses." label="Sign authentication responses">
 
-    <b-form-checkbox id="wantSignedAuthnResponse" v-model="serviceprovider.wantSignedAuthnResponse" :value="true" :unchecked-value="false">
+    <FormCheckbox id="wantSignedAuthnResponse" v-model="serviceprovider.wantSignedAuthnResponse" :value="true" >
       {{ serviceprovider.wantSignedAuthnResponse ? 'Enabled' : 'Disabled' }}
-    </b-form-checkbox>
+    </FormCheckbox>
 
-  </b-form-group>
+  </FormGroup>
 
-  <b-form-group horizontal :label-cols="3" breakpoint="md" description="Whether the SAML Assertions should be signed" label="Sign Assertions">
+  <FormGroup horizontal :label-cols="3" breakpoint="md" description="Whether the SAML Assertions should be signed" label="Sign Assertions">
 
-    <b-form-checkbox id="wantSignedAssertions" v-model="serviceprovider.wantSignedAssertions" :value="true" :unchecked-value="false">
+    <FormCheckbox id="wantSignedAssertions" v-model="serviceprovider.wantSignedAssertions" :value="true" >
       {{ serviceprovider.wantSignedAssertions ? 'Enabled' : 'Disabled' }}
-    </b-form-checkbox>
+    </FormCheckbox>
 
-  </b-form-group>
+  </FormGroup>
 
-  <b-form-group horizontal :label-cols="3" breakpoint="md" description="Whether logout responses must be signed." label="Sign logout responses">
+  <FormGroup horizontal :label-cols="3" breakpoint="md" description="Whether logout responses must be signed." label="Sign logout responses">
 
-    <b-form-checkbox id="wantSignedLogoutResponse" v-model="serviceprovider.wantSignedLogoutResponse" :value="true" :unchecked-value="false">
+    <FormCheckbox id="wantSignedLogoutResponse" v-model="serviceprovider.wantSignedLogoutResponse" :value="true" >
       {{ serviceprovider.wantSignedLogoutResponse ? 'Enabled' : 'Disabled' }}
-    </b-form-checkbox>
+    </FormCheckbox>
 
-  </b-form-group>
+  </FormGroup>
 
-  <b-form-group horizontal :label-cols="3" breakpoint="md" description="Whether logout requests must be signed." label="Sign logout requests">
+  <FormGroup horizontal :label-cols="3" breakpoint="md" description="Whether logout requests must be signed." label="Sign logout requests">
 
-    <b-form-checkbox id="wantSignedLogoutRequest" v-model="serviceprovider.wantSignedLogoutRequest" :value="true" :unchecked-value="false">
+    <FormCheckbox id="wantSignedLogoutRequest" v-model="serviceprovider.wantSignedLogoutRequest" :value="true" >
       {{ serviceprovider.wantSignedLogoutRequest ? 'Enabled' : 'Disabled' }}
-    </b-form-checkbox>
+    </FormCheckbox>
 
-  </b-form-group>
+  </FormGroup>
 
 
   <h6 class="c-grey-900">Restrictions</h6>
@@ -154,7 +154,7 @@
         </div>
 
   <button type="submit" class="btn btn-primary">Save</button>
-  <button type="button" @click="$router.go(-1)" class="btn btn-secondary ml-1">Back</button>
+  <button type="button" @click="router.go(-1)" class="btn btn-secondary ml-1">Back</button>
 
 </form>
 </div>
@@ -167,118 +167,81 @@
 
 </template>
 
-<script>
-export default {
+<script setup>
 
-  data() {
-    return {
+import { ref, onMounted } from 'vue'
+import {maxios, notify} from '@/admin/helpers.js'
+import { useRouter, useRoute } from 'vue-router4';
 
-      errors: {},
+const router = useRouter();
+const route = useRoute();
 
-      wasValidated: false,
-      loading: false,
+const errors = ref({});
+const wasValidated = ref(false);
+const loading = ref(false);
+const serviceprovider = ref(null);
+const redirect_uris_string = ref(null);
+const groups = ref([]);
 
-      passwordType: 'password',
+onMounted(async () => {
+  const response = await maxios.get("api/saml/manage/serviceproviders/" + encodeURIComponent(route.params.id));
+  serviceprovider.value = response.data;
+  redirect_uris_string.value = (serviceprovider.value && serviceprovider.value.redirect_uris) ? serviceprovider.value.redirect_uris.join('\n') : '';
+  wasValidated.value = false;
 
-      serviceprovider: null,
+  const response2 = await maxios.get("api/scim/v2/Groups");
+  for (var v of response2.data.Resources) {
+    groups.value.push({
+      value: v.id,
+      name: v["urn:ietf:params:scim:schemas:core:2.0:Group"].name
+    });
+  }
+});
 
-      redirect_uris_string: null,
+function deleteObject(object){
 
-      groups: [],
+  maxios.delete('api/saml/manage/serviceproviders/' + encodeURIComponent(route.params.id)).then(response => {
 
-    }
-  },
+    notify({
+        text: 'We have succesfully deleted this SAML service provider.'
+      });
 
-  mounted() {
+    router.replace({ name: 'saml.serviceproviders.list' });
 
-    this.$http.get(this.$murl('api/saml/manage/serviceproviders/' + encodeURIComponent(this.$route.params.id))).then(response => {
+  }).catch(e => {
+    console.error(e);
+  })
 
-      this.serviceprovider = response.data;
+}
 
-      //this.redirect_uris_string = (this.client && this.client.redirect_uris) ? this.client.redirect_uris.join('\n') : '';
+function onSubmit(event) {
 
-      this.wasValidated = false;
+  if (event.target.checkValidity()) {
 
+    maxios.put('api/saml/manage/serviceproviders/' + encodeURIComponent(route.params.id),
+      serviceprovider.value
+    ).then(response => {
 
+      notify({
+        text: 'We have succesfully saved your new SAML service provider settings.'
+      });
 
-    }, response => {
+    }, e => {
+      errors.value = e.response.data.errors;
+      wasValidated.value = true;
 
-      this.errors = response.data.errors;
-      this.wasValidated = true;
-
-
+      notify({
+        text: 'We could not save this.',
+        type: 'error'
+      });
     });
 
-    this.$http.get(this.$murl("api/scim/v2/Groups")).then(response => {
-      for (var v of response.data.Resources) {
-        this.groups.push({
-          value: v.id,
-          name: v["urn:ietf:params:scim:schemas:core:2.0:Group"].name
-        });
-      }
+  } else {
+    wasValidated.value = true;
+    notify({
+      text: 'We could not save this.',
+      type: 'error'
     });
-
-  },
-
-  watch: {
-
-  },
-
-  methods: {
-
-
-    deleteObject(object){
-
-      this.$http.delete(this.$murl('api/saml/manage/serviceproviders/' + encodeURIComponent(this.$route.params.id))).then(response => {
-
-        this.$noty({
-            text: 'We have succesfully deleted this SAML service provider.'
-          });
-
-        this.$router.replace({ name: 'saml.serviceproviders.list' });
-
-      }).catch(e => {
-        console.error(e);
-      })
-
-    },
-
-    onSubmit(event) {
-
-      if (event.target.checkValidity()) {
-
-        this.$http.put(this.$murl('api/saml/manage/serviceproviders/' + encodeURIComponent(this.$route.params.id)),
-          this.serviceprovider
-        ).then(response => {
-
-          this.$noty({
-            text: 'We have succesfully saved your new SAML service provider settings.'
-          });
-          // this.$router.replace({ name: 'oidc.client.edit', params: { client_id: response.data.client_id }});
-
-        }, response => {
-          this.errors = response.data.errors;
-          this.wasValidated = true;
-
-          this.$noty({
-            text: 'We could not save this.',
-            type: 'error'
-          });
-        });
-
-        //this.loading = true;
-      } else {
-        this.wasValidated = true;
-        this.$noty({
-          text: 'We could not save this.',
-          type: 'error'
-        });
-      }
-
-      event.preventDefault();
-
-    }
-
   }
 
 }

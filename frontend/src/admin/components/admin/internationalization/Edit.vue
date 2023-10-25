@@ -1,5 +1,5 @@
 <template>
-  <Main title="Internationalization">
+  <MainTemplate title="Internationalization">
     <template v-slot:body>
       <table class="table mt-3">
         <thead>
@@ -35,78 +35,73 @@
 
       <button type="button" class="btn btn-primary" @click="save">Save</button>
     </template>
-  </Main>
+  </MainTemplate>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      customizations: [],
+<script setup>
 
-      filteredLabels: [],
-      selectedKey: null,
-    };
-  },
+import { ref, onMounted } from "vue";
+import {maxios} from '@/admin/helpers.js'
+import { useRoute } from "vue-router4";
+import { notify } from "../../../helpers";
 
-  methods: {
-    createCustomization(c) {
-      this.$set(this.customizations, c.key, c.value);
-    },
+const customizations = ref({});
+const filteredLabels = ref([]);
+const selectedKey = ref(null);
+const route = useRoute();
 
-    save() {
-      this.$http
-        .put(
-          this.$murl(
-            `api/language/customizations/${this.$route.params.locale}`
-          ),
-          this.customizations
-        )
-        .then((response) => {});
-    },
-
-    flatten(object, prefix = "") {
-      return Object.keys(object).reduce(
-        (prev, element) =>
-          object[element] &&
-          typeof object[element] === "object" &&
-          !Array.isArray(object[element])
-            ? {
-                ...prev,
-                ...this.flatten(object[element], `${prefix}${element}.`),
-              }
-            : {
-                ...prev,
-                ...{
-                  [`${prefix}${element}`]: object[element],
-                },
-              },
-        {}
+onMounted(() => {
+  maxios
+    .get(`api/language/defaults/${route.params.locale}`)
+    .then((response) => {
+      filteredLabels.value = Object.entries(flatten(response.data)).map(
+        ([key, value]) => ({
+          key,
+          value,
+        })
       );
-    },
-  },
+    });
 
-  mounted() {
-    this.$http
-      .get(this.$murl(`api/language/defaults/${this.$route.params.locale}`))
-      .then((response) => {
-        this.filteredLabels = Object.entries(this.flatten(response.data)).map(
-          ([key, value]) => ({
-            key,
-            value,
-          })
-        );
-      });
+  maxios
+    .get(`api/language/customizations/${route.params.locale}`)
+    .then((response) => {
+      customizations.value = response.data;
+    });
+});
 
-    this.$http
-      .get(
-        this.$murl(`api/language/customizations/${this.$route.params.locale}`)
-      )
-      .then((response) => {
-        this.customizations = response.data;
-      });
-  },
-};
+function createCustomization(c) {
+  customizations.value[c.key] = c.value;
+}
+
+function save() {
+  maxios
+    .put(
+      `api/language/customizations/${route.params.locale}`,
+      customizations.value
+    )
+    .then((_response) => {
+      notify({ type: "success", text: "Saved" });
+    });
+}
+function flatten(object, prefix = "") {
+  return Object.keys(object).reduce(
+    (prev, element) =>
+      object[element] &&
+      typeof object[element] === "object" &&
+      !Array.isArray(object[element])
+        ? {
+            ...prev,
+            ...flatten(object[element], `${prefix}${element}.`),
+          }
+        : {
+            ...prev,
+            ...{
+              [`${prefix}${element}`]: object[element],
+            },
+          },
+    {}
+  );
+}
 </script>
 
 <style scoped lang="scss">

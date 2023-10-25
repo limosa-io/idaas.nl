@@ -2,7 +2,7 @@
 
 <div class="error-container">
 
-  <template v-if="$store.state.error == 'invalid_logout_url'">
+  <template v-if="state.error == 'invalid_logout_url'">
     <h1>We could not log you out everywhere.</h1>
     <p>Please contact support.</p>
     <p class="ligher">The provided <em>post_logout_redirect_uri</em> was invalid.</p>
@@ -30,20 +30,16 @@
 }
 </style>
 
-<script>
+<script setup>
+import {onMounted} from 'vue'
+import {useStateStore} from './store'
+const state = useStateStore();
 
-export default {
+const error = window.error;
 
-    data(){
-        return {
-            error: window.error
-        }
-    },
+onMounted(() => {
+  console.error(state.error);
+});
 
-    mounted(){
-        console.error(this.$store.state.error);
-    }
-    
-}
 </script>
 

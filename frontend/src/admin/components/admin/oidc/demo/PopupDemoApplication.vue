@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-modal @hidden="url = null" :hide-footer="url == null" ok-only size ref="demoModal" id="demoModal" :title="title">
+    <Modal @hidden="url = null" :hide-footer="url == null" ok-only size ref="demoModal" id="demoModal" :title="title">
       <template v-if="url == null">
         <div class="list-group">
           <div
@@ -52,82 +52,72 @@
         <p>This test application is an OpenID Relying Party and added to the list of your applications with name 'Demo Application'.</p>
         <p>If you have some development experience, you may edit the application details on <a target="_blank" :href="url_edit">codesandbox.io</a>.</p>
       </template>
-    </b-modal>
+    </Modal>
   </div>
 </template>
 
-<script>
-export default {
-  name: "popup-demo-application",
+<script setup>
 
-  data(){
-    return {
-      url: null,
-      url_edit: null,
-      title: 'Pick your framework',
-      client: null
+import {ref, onMounted} from 'vue'
+import {maxios} from '@/admin/helpers.js'
+import Modal from '@/admin/components/general/Modal.vue'
 
-    }
-  },
+const url = ref(null);
+const title = ref(null);
+const url_edit = ref(null);
+const client = ref(null);
 
-  methods: {
-    show() {
-      this.$refs.demoModal.show();
-    },
-    createApplication(type) {
+const demoModal = ref(null)
 
-      this.title = 'Pick your framework';
+function show(){
+  demoModal.value.show();
+}
 
-      let client = null;
-      let date = new Date();
+function createApplication(type) {
 
-      this.$http
-        .post(this.$oidcUrl("oauth/connect/register"), {
-          client_name: `Test Application - ${date.getDate() + '/' + (date.getMonth()+1) + '/' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes()}`,
-          application_type: "web",
-          public: "public",
-          grant_types: ["authorization_code", "refresh_token"]
-        })
-        .then(response => {
-          client = response.data;
-          return this.$http.get(this.$murl("api/example_client"), {
-            params: {
-              client_id: response.data.client_id
-            }
-          });
-        })
-        .then(response => {
-          return this.$http
-            .post("https://codesandbox.io/api/v1/sandboxes/define?json=1", {
-              files: response.body
-            }, {
-              credentials: false
-            })
-            .then(response => {
-              // Here is your demo app => https://fvpgp.csb.app
-              return response.body.sandbox_id;
-            })
-            .catch(response => {});
-        })
-        .then(response => {
-          this.url = `https://${response}.csb.app`;
-          this.url_edit = `https://codesandbox.io/s/${response}`;
-          this.title = 'Your test application is ready';
+  title.value = 'Pick your framework';
 
-          return this.$http.put(
-            this.$oidcUrl("oauth/connect/register/" + client.client_id),
-            {
-              ...client,
-              redirect_uris: [this.url + "/"],
-              post_logout_redirect_uris: [this.url + "/"]
-            }
-          );
-        }).then(response => {
-          this.client = response.data;
-        });
-    }
-  }
-};
+  let client = null;
+  let date = new Date();
+
+  maxios.post("oauth/connect/register", {
+    client_name: `Test Application - ${date.getDate() + '/' + (date.getMonth()+1) + '/' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes()}`,
+    application_type: "web",
+    public: "public",
+    grant_types: ["authorization_code", "refresh_token"]
+  }).then(response => {
+    client = response.data;
+    return maxios.get("api/example_client", {
+      params: {
+        client_id: response.data.client_id
+      }
+    });
+  }).then(response => {
+    return maxios.post("https://codesandbox.io/api/v1/sandboxes/define?json=1", {
+      files: response.data
+    }, {
+      credentials: false
+    }).then(response => {
+      // Here is your demo app => https://fvpgp.csb.app
+      return response.data.sandbox_id;
+    }).catch(response => {});
+  }).then(response => {
+    url.value = `https://${response}.csb.app`;
+    url_edit.value = `https://codesandbox.io/s/${response}`;
+    title.value = 'Your test application is ready';
+
+    return maxios.put(
+      "oauth/connect/register/" + client.client_id,
+      {
+        ...client,
+        redirect_uris: [url.value + "/"],
+        post_logout_redirect_uris: [url.value + "/"]
+      }
+    );
+  }).then(response => {
+    client.value = response.data;
+  });
+}
 </script>
 
 <style lang="scss">

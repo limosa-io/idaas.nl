@@ -1,36 +1,34 @@
 
 <template>
-  <Main title="SAML Service Providers">
+  <MainTemplate title="SAML Service Providers">
     <template v-slot:header>
-      <b-dropdown text="" right class="float-right">
         <a
-          class="dropdown-item"
-          :href="$oidcUrl('saml/v2/metadata.xml')"
+          class="btn btn-md btn-secondary float-right mr-2"
+          :href="getOidcUrl('/saml/v2/metadata.xml')"
           target="_blank"
           >SAML Metadata</a
         >
-      </b-dropdown>
 
-      <Button class="mr-2" :to="{ name: 'saml.serviceproviders.import' }">
+      <MenuButton class="mr-2" :to="{ name: 'saml.serviceproviders.import' }">
         Import Service Provider
-      </Button>
+      </MenuButton>
 
-      <Button class="mr-2" :to="{ name: 'saml.serviceproviders.add' }">
+      <MenuButton class="mr-2" :to="{ name: 'saml.serviceproviders.add' }">
         Add
-      </Button>
+      </MenuButton>
 
-      <Button
+      <MenuButton
         class="btn-secondary float-right mr-2"
         :to="{ name: 'saml.settings.general' }"
       >
         Settings
-      </Button>
+      </MenuButton>
     </template>
 
     <template v-slot:body>
       <p>Manage your SAML Service Providers.</p>
 
-      <table class="table table-hover">
+      <table class="table table-hover" v-if="serviceProviders != null">
         <thead>
           <tr>
             <th scope="col" style="width: 20px">#</th>
@@ -54,42 +52,30 @@
         </tbody>
       </table>
     </template>
-  </Main>
+  </MainTemplate>
 </template>
 
 
-<script>
-import Main from "@/admin/components/general/Main.vue";
+<script setup>
+import MainTemplate from "@/admin/components/general/MainTemplate.vue";
+import {ref, onMounted, getCurrentInstance} from 'vue'
+import {maxios, getOidcUrl} from '@/admin/helpers.js'
+import { useRouter } from "vue-router4";
 
-export default {
-  components: {
-    Main
-  },
-  
-  data() {
-    return {
-      serviceProviders: null,
-    };
-  },
+const router = useRouter();
+const vue = getCurrentInstance();
+const serviceProviders = ref(null);
 
-  methods: {
-    edit: function (serviceProvider) {
-      this.$router.push({
-        name: "saml.serviceproviders.edit",
-        params: { id: serviceProvider.id },
-      });
-    },
-  },
+onMounted(async () => {
+  const response = await maxios.get("api/saml/manage/serviceproviders");
+  serviceProviders.value = response.data;
+});
 
-  mounted() {
-    this.$http.get(this.$murl("api/saml/manage/serviceproviders")).then(
-      (response) => {
-        this.serviceProviders = response.data;
-      },
-      (response) => {
-        // error callback
-      }
-    );
-  },
-};
+function edit(serviceProvider) {
+  router.push({
+    name: "saml.serviceproviders.edit",
+    params: { id: serviceProvider.id },
+  });
+}
+
 </script>

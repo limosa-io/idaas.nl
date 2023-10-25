@@ -1,5 +1,5 @@
 <template>
-  <Main title="Sync your configuration to a git repository">
+  <MainTemplate title="Sync your configuration to a git repository">
     <template v-slot:body v-if="loaded">
       <Danger header="This is experimental functionality" body="Most importantly: always use a private repository as application secrets are exposed." />
       
@@ -144,78 +144,76 @@
         </form>
       </div>
     </template>
-  </Main>
+  </MainTemplate>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      loaded: true,
-      wasValidated: false,
+<script setup>
 
-      errors: {},
+import {ref, onMounted, getCurrentInstance} from 'vue';
+import Danger from "@/admin/components/general/Danger.vue";
+import { notify } from '../../helpers';
+import { useRouter } from 'vue-router4';
+import {maxios} from '@/admin/helpers.js'
 
-      git: {
-        type: null, // disabled | github
-        settings: {
-          token: null,
-          owner: null,
-          repository: null,
-        },
+const router = useRouter();
+const loaded = ref(false);
+const wasValidated = ref(false);
+const errors = ref(null);
+const git = ref({
+  type: null, // disabled | github
+  settings: {
+    token: null,
+    owner: null,
+    repository: null,
+  },
+})
+
+onMounted(() => {
+  maxios.get("api/git").then((response) => {
+    // merge the values of response.data with the values of git.value
+    Object.assign(git.value, response.data);
+    loaded.value = true;
+  });
+});
+
+function pull() {
+  maxios.get("api/git/pull");
+}
+
+function push() {
+  maxios.put("api/git/push");
+}
+
+function onSubmit(event) {
+  if (event.target.checkValidity()) {
+    maxios.put("api/git", git.value).then(
+      (response) => {
+        notify({
+          text: "We have succesfully saved your new Git settings.",
+        });
+        errors.value = null;
+        router.replace({ name: 'oidc.client.edit', params: { client_id: response.data.client_id }});
       },
-    };
-  },
+      (e) => {
+        errors.value = e.response.data.errors;
+        wasValidated.value = true;
 
-  mounted() {
-    this.$http.get(this.$murl("api/git")).then((response) => {
-      this.git = response.data;
-    });
-  },
-
-  methods: {
-    pull() {
-      this.$http.get(this.$murl("api/git/pull"));
-    },
-
-    push() {
-      this.$http.put(this.$murl("api/git/push"));
-    },
-
-    onSubmit(event) {
-      if (event.target.checkValidity()) {
-        this.$http.put(this.$murl("api/git"), this.git).then(
-          (response) => {
-            this.$noty({
-              text: "We have succesfully saved your new OpenID Client settings.",
-            });
-            this.errors = null;
-            // this.$router.replace({ name: 'oidc.client.edit', params: { client_id: response.data.client_id }});
-          },
-          (response) => {
-            this.errors = response.data.errors;
-            this.wasValidated = true;
-
-            this.$noty({
-              text: "We could not save this.",
-              type: "error",
-            });
-          }
-        );
-
-        //this.loading = true;
-      } else {
-        this.wasValidated = true;
-        this.$noty({
+        notify({
           text: "We could not save this.",
           type: "error",
         });
       }
+    );
 
-      event.preventDefault();
-    },
-  },
-};
+    //this.loading = true;
+  } else {
+    wasValidated.value = true;
+    notify({
+      text: "We could not save this.",
+      type: "error",
+    });
+  }
+}
 </script>
 
 <style>

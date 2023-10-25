@@ -1,258 +1,237 @@
 <template>
+  <div>
 
-<div>
+    <Modal @ok="onSubmitNewScope" ref="newScopeModal" id="newScopeModal" title="New Scope">
 
-<b-modal @ok="onSubmitNewScope" ref="newScopeModal" id="newScopeModal" title="New Scope">
+      <form class="needs-validation" :class="{ 'was-validated': wasValidatedNewScope }" v-on:submit="onSubmitNewScope">
 
-  <form class="needs-validation" :class="{'was-validated': wasValidatedNewScope}" v-on:submit="onSubmitNewScope">
+        <div class="form-group">
+          <label for="newScopeName">Name</label>
+          <input type="name" class="form-control" id="newScopeName" aria-describedby="emailHelp"
+            placeholder="For example profile or email" v-model="scope.name">
+          <small id="emailHelp" class="form-text text-muted">Name of the scope.</small>
+        </div>
+        <div class="form-group">
+          <label for="newScopeDescription">Description</label>
+          <textarea required class="form-control" id="newScopeDescription" rows="2"
+            v-model="scope.description"></textarea>
+        </div>
 
-    <div class="form-group">
-      <label for="newScopeName">Name</label>
-      <input type="name" class="form-control" id="newScopeName" aria-describedby="emailHelp" placeholder="For example profile or email" v-model="scope.name">
-      <small id="emailHelp" class="form-text text-muted">Name of the scope.</small>
-    </div>
-    <div class="form-group">
-      <label for="newScopeDescription">Description</label>
-      <textarea required class="form-control" id="newScopeDescription" rows="2" v-model="scope.description"></textarea>
-    </div>
+      </form>
 
-  </form>
-
-</b-modal>
+    </Modal>
 
 
-<b-modal id="scopeInformation" ref="scopeInformationModal" title="Claims for scope" ok-only>
-  <p>
-   This scope can be used to request the following claims.
-  </p>
-  <p>
-    <ul class="list-group">
-   <li class="list-group-item" v-for="(c,index) in claims" :key="index">
-              {{ c }}
+    <Modal id="scopeInformation" ref="scopeInformationModal" title="Claims for scope" ok-only>
+      <p>
+        This scope can be used to request the following claims.
+      </p>
+      <p>
+      <ul class="list-group">
+        <li class="list-group-item" v-for="(c, index) in claims" :key="index">
+          {{ c }}
         </li>
-        </ul>
-   
-  </p>
-</b-modal>
+      </ul>
+
+      </p>
+    </Modal>
+
+    <form v-if="scopes != null" class="needs-validation" novalidate :class="{ 'was-validated': wasValidated }"
+      v-on:submit.prevent="onSubmit">
+
+      <button class="btn btn-sm btn-primary float-right" @click="addScope" type="button">
+        Add Scope
+      </button>
+
+      <h3 class="c-grey-900">Scopes</h3>
+
+      <p>You may define your own set of scopes. Two scopes are always there: <code class="highlighter-rouge">openid</code>
+        and <code class="highlighter-rouge">online_access</code>. Scopes with <code
+          class="highlighter-rouge">profile</code>, <code class="highlighter-rouge">email</code>, <code
+          class="highlighter-rouge">address</code> and <code class="highlighter-rouge">phone</code> are by default linked
+        to a set of attributes. </p>
+
+      <table class="table table-hover">
+
+        <thead>
+          <tr>
+            <th scope="col" class="text-center" style="width: 20px;">#</th>
+            <th class="col-md-" scope="col">Scope</th>
+            <th scope="col">Description</th>
+            <th class="col-md-1" scope="col" style="width: 50px;"></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr v-for="(scope, index) in scopes" :key="index">
+            <th class="align-middle text-center" scope="row">
+              <span @click="showScopeInformation(scope.name)"
+                title="This scope is mapped to a set of claims. Click for more information." pill variant="primary"
+                v-if="mapping != null && mapping[scope.name]">{{ index + 1 }}</span><span v-else>{{ index + 1 }}</span>
+            </th>
+            <td>
+              <input :readonly="scope.system" :class="{ 'is-invalid': errors[scope.id] && errors[scope.id].errors.name }"
+                @change="changedScope(scope)" class="form-control" type="text" v-model="scope.name" />
+
+              <div v-for="(e, index) in (errors[scope.id] ? errors[scope.id].errors.name || [] : [])"
+                class="invalid-feedback" :key="index">
+                {{ e }}
+              </div>
+
+            </td>
+            <td>
+              <textarea :readonly="scope.system"
+                :class="{ 'is-invalid': errors[scope.id] && errors[scope.id].errors.description }"
+                @change="changedScope(scope)" class="form-control" id="exampleFormControlTextarea1" rows="1"
+                v-model="scope.description"></textarea>
+
+              <div v-for="(e, index) in (errors[scope.id] ? errors[scope.id].errors.description || [] : [])"
+                class="invalid-feedback" :key="index">
+                {{ e }}
+              </div>
+
+            </td>
+            <td>
+
+              <button v-if="!scope.system" type="button" class="btn btn-danger"
+                @click="deleteScope(scope)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
 
 
-<form v-if="scopes != null" class="needs-validation" novalidate :class="{'was-validated': wasValidated}" v-on:submit="onSubmit">
-
-<button class="btn btn-sm btn-primary float-right" @click="addScope" type="button">
-          Add Scope
-  </button>
-
-  <h3 class="c-grey-900">Scopes</h3>
-
-  <p>You may define your own set of scopes. Two scopes are always there: <code class="highlighter-rouge">openid</code> and <code class="highlighter-rouge">online_access</code>. Scopes with <code class="highlighter-rouge">profile</code>, <code class="highlighter-rouge">email</code>, <code class="highlighter-rouge">address</code> and <code class="highlighter-rouge">phone</code> are by default linked to a set of attributes.   </p>
-
-  <table class="table table-hover">
-
-    <thead>
-      <tr>
-        <th scope="col" class="text-center" style="width: 20px;">#</th>
-        <th class="col-md-" scope="col">Scope</th>
-        <th scope="col">Description</th>
-        <th class="col-md-1" scope="col" style="width: 50px;"></th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr v-for="(scope, index) in scopes" :key="index">
-        <th class="align-middle text-center" scope="row">
-          <b-badge @click="showScopeInformation(scope.name)" v-b-tooltip.hover title="This scope is mapped to a set of claims. Click for more information." pill variant="primary" v-if="mapping != null && mapping[scope.name]">{{ index+1 }}</b-badge><span v-else>{{ index+1 }}</span>
-        </th>
-        <td>
-          <input :readonly="scope.system" :class="{'is-invalid': errors[scope.id] && errors[scope.id].errors.name }" @change="changedScope(scope)" class="form-control" type="text" v-model="scope.name" />
-
-        <div v-for="(e, index) in (errors[scope.id]  ? errors[scope.id].errors.name || [] : [])" class="invalid-feedback" :key="index">
-              {{ e }}
-        </div>
-
-        </td>
-        <td>
-          <textarea :readonly="scope.system" :class="{'is-invalid': errors[scope.id] && errors[scope.id].errors.description }" @change="changedScope(scope)" class="form-control" id="exampleFormControlTextarea1" rows="1" v-model="scope.description"></textarea>
-
-          <div v-for="(e, index) in (errors[scope.id]  ? errors[scope.id].errors.description || [] : [])" class="invalid-feedback" :key="index">
-              {{ e }}
-        </div>
-
-        </td>
-        <td>
-
-          <button v-if="!scope.system" type="button" class="btn btn-danger" @click="deleteScope(scope)">Delete</button>
-        </td>
-      </tr>
-    </tbody>
-
-  </table>
+      <button class="btn btn-md btn-primary" type="submit">
+        Save
+      </button>
 
 
-  <button class="btn btn-md btn-primary" type="submit">
-          Save
-  </button>
+    </form>
 
-
-</form>
-
-</div>
+  </div>
 </template>
 
-<script>
-export default {
+<script setup>
 
-  data(){
-    return {
-      
-      errors: {},
-      
-      wasValidated: false,
-      wasValidatedNewScope: false,
-      loading: false,
+import { ref, onMounted, getCurrentInstance } from 'vue';
+import { maxios, notify } from '@/admin/helpers.js';
+import Modal from '@/admin/components/general/Modal.vue'
 
-      scope: {},
+const vue = getCurrentInstance();
 
-      mapping: null,
+const errors = ref({});
+const wasValidated = ref(false);
+const wasValidatedNewScope = ref(false);
+const loading = ref(false);
+const scope = ref({});
+const mapping = ref(null);
+const claims = ref([]);
+const scopes = ref(null);
+const changedScopes = ref(new Set());
 
-      //for selected scope
-      claims: [],
+const newScopeModal = ref(null);
+const scopeInformationModal = ref(null);
 
-      scopes: null,
+onMounted(() => {
 
-      changedScopes: new Set()
+  maxios.get('api/oAuthScope').then(response => {
 
-    }
-  },
+    console.log(response.data);
+    scopes.value = response.data;
 
-  mounted(){
+    // Load after loading the most important things
+    maxios.get('api/oAuthScope/mapping').then(response => {
 
-    this.$http.get(this.$murl('api/oAuthScope')).then(response => {
-      
-      this.scopes = response.data;
-      
-      // Load after loading the most important things
-      this.$http.get(this.$murl('api/oAuthScope/mapping')).then(response => {
-      
-        this.mapping = response.data;
-        
-      }, response => {
-        // error callback
-      });
+      mapping.value = response.data;
 
     }, response => {
       // error callback
     });
 
+  }, response => {
+    // error callback
+  });
 
-    
+});
 
-  },
+function addScope() {
+  newScopeModal.value.show();
+}
 
+function showScopeInformation(scope) {
 
-  watch: {
-    
-  },
+  claims.value = mapping.value[scope];
 
-  methods: {
+  scopeInformationModal.value.show();
 
-    addScope(){
-      this.$refs.newScopeModal.show();
-    },
+}
 
-    showScopeInformation(scope){
+function changedScope(scope) {
+  changedScopes.value.add(scope.id);
+}
 
-      this.claims = this.mapping[scope];
+function onSubmitNewScope(event) {
 
-      this.$refs.scopeInformationModal.show();
+  maxios.post('api/oAuthScope',
+    scope.value
+  ).then(response => {
 
-    },
+    scopes.value.push(response.data);
+    scope.value = {};
 
-    changedScope(scope){
-      this.changedScopes.add(scope.id);
-    },
+    vue.proxy.$refs.newScopeModal.hide();
 
-    onSubmitNewScope(event){
+    notify({ text: 'We have succesfully saved your new scope.' });
 
-      this.$http.post(this.$murl('api/oAuthScope'),
-        this.scope
-        ).then(response => {
-            
-            this.scopes.push(response.data);
-            this.scope = {};
+  }, response => {
+    errors.value = response.data.errors;
+    wasValidatedNewScope.value = true;
 
-            this.$refs.newScopeModal.hide();
+    notify({ text: 'We could not save this.', type: 'error' });
+  });
+}
 
-            this.$noty({text: 'We have succesfully saved your new scope.'});
-          // this.$router.replace({ name: 'oidc.client.edit', params: { client_id: response.data.client_id }});
+function onSubmit(event) {
 
-        }, response => {
-          this.errors = response.data.errors;
-          this.wasValidated = true;
+  // for (let item of mySet){
 
-          this.$noty({text: 'We could not save this.', type: 'error'});
-        });
+  // }
 
+  for (let scope of scopes.value) {
+    if (changedScopes.value.has(scope.id)) {
 
-      event.preventDefault();
-
-    },
-
-    deleteScope(scope){
-
-
-      this.$http.delete(this.$murl('api/oAuthScope/' + scope.id)).then(response => {
-
-
-          this.scopes.splice(this.scopes.indexOf(scope), 1);
-          this.$noty({text: 'Deleted the scope'});
-            
-        }, response => {
-          this.$noty({text: 'Could not delete this'});
-        }
-        );
-
-
-    },
-
-    onSubmit(event){
-
-      // for (let item of mySet){
-
-      // }
-
-      for(let scope of this.scopes){
-        if(this.changedScopes.has(scope.id)){
-
-          this.$http.put(this.$murl('api/oAuthScope/' + scope.id),
+      maxios.put('api/oAuthScope/' + scope.id,
         scope
-        ).then(response => {
+      ).then(response => {
 
-          this.$set(this.errors, scope.id, null);
+        errors.value[scope.id] = null;
 
-          this.changedScopes.delete(scope.id);
+        changedScopes.value.delete(scope.id);
 
-          this.$noty({text: 'Saved scope&nbsp;<em>' + scope.name + '</em>'});
-            
-        }, response => {
+        notify({ text: 'Saved scope&nbsp;<em>' + scope.name + '</em>' });
 
-          //this.errors[scope.id] = response.data;
+      }, e => {
 
-          this.$set(this.errors, scope.id, response.data)
+        errors.value[scope.id] = e.response.data;
 
-          this.$noty({text: 'We could not save scope&nbsp;<em>' + scope.name + '</em>.', type: 'error'});
-        });
-
-
-
-        }
-      }
-
-      event.preventDefault();
-
+        notify({ text: 'We could not save scope&nbsp;<em>' + scope.name + '</em>.', type: 'error' });
+      });
     }
   }
-
-
-  
 }
+
+function deleteScope(scope) {
+
+  laxios.delete('api/oAuthScope/' + scope.id).then(response => {
+    scopes.value.splice(scopes.value.indexOf(scope), 1);
+    notify({ text: 'Deleted the scope' });
+
+  }, response => {
+    notify({ text: 'Could not delete this' });
+  }
+  );
+
+}
+
 </script>

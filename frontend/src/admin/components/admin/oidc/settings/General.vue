@@ -1,13 +1,13 @@
 <template>
 
-<form v-if="provider" class="needs-validation" novalidate :class="{'was-validated': wasValidated}" v-on:submit="onSubmit">
+<form v-if="provider" class="needs-validation" novalidate :class="{'was-validated': wasValidated}" @submit.prevent="onSubmit">
 
   <h3 class="c-grey-900">Settings</h3>
 
-  <b-form-group label-cols-md="3" label="Supported Response Types">
-    <b-form-checkbox-group id="checkboxes1" name="flavour1" v-model="provider.response_types_supported" :options="[{text: 'code',value:'code'},{text: 'code id_token',value:'code id_token'},{text: 'id_token',value:'id_token'},{text: 'token id_token',value:'token id_token'}]">
-    </b-form-checkbox-group>
-  </b-form-group>
+  <FormGroup label-cols-md="3" label="Supported Response Types">
+    <FormCheckbox-group id="checkboxes1" name="flavour1" v-model="provider.response_types_supported" :options="[{text: 'code',value:'code'},{text: 'code id_token',value:'code id_token'},{text: 'id_token',value:'id_token'},{text: 'token id_token',value:'token id_token'}]">
+    </FormCheckbox-group>
+  </FormGroup>
 
   <div class="form-row mb-3">
 
@@ -30,58 +30,58 @@
 
   </div>
 
-  <b-form-group :label-cols-md="3" description="Maximum life of the access token" label="Access Token Lifetime" label-for="provider.liftime_access_token">
+  <FormGroup :label-cols-md="3" description="Maximum life of the access token" label="Access Token Lifetime" label-for="provider.liftime_access_token">
 
-    <b-form-input type="number" :class="{'is-invalid': errors['liftime_access_token']}" id="provider.liftime_access_token" v-model="provider.liftime_access_token"></b-form-input>
+    <FormInput type="number" :class="{'is-invalid': errors['liftime_access_token']}" id="provider.liftime_access_token" v-model="provider.liftime_access_token"></FormInput>
 
     <div v-for="e in (errors.liftime_access_token || [])" :key="e" class="invalid-feedback">
       {{ e }}
     </div>
 
-  </b-form-group>
+  </FormGroup>
 
 
-  <b-form-group :label-cols-md="3" description="Maximum life of the ID Token" label="ID Token Lifetime" label-for="provider.liftime_id_token">
-    <b-form-input type="number" :class="{'is-invalid': errors['liftime_id_token']}" id="provider.liftime_id_token" v-model="provider.liftime_id_token"></b-form-input>
+  <FormGroup :label-cols-md="3" description="Maximum life of the ID Token" label="ID Token Lifetime" label-for="provider.liftime_id_token">
+    <FormInput type="number" :class="{'is-invalid': errors['liftime_id_token']}" id="provider.liftime_id_token" v-model="provider.liftime_id_token"></FormInput>
 
     <div v-for="e in (errors.liftime_id_token || [])" :key="e" class="invalid-feedback">
       {{ e }}
     </div>
 
-  </b-form-group>
+  </FormGroup>
 
 
-  <b-form-group :label-cols-md="3" description="Maximum life of the Refresh Token" label="Refresh Token Lifetime" label-for="provider.liftime_refresh_token">
-    <b-form-input type="number" :class="{'is-invalid': errors['liftime_refresh_token']}" id="provider.liftime_refresh_token"
-      v-model="provider.liftime_refresh_token"></b-form-input>
+  <FormGroup :label-cols-md="3" description="Maximum life of the Refresh Token" label="Refresh Token Lifetime" label-for="provider.liftime_refresh_token">
+    <FormInput type="number" :class="{'is-invalid': errors['liftime_refresh_token']}" id="provider.liftime_refresh_token"
+      v-model="provider.liftime_refresh_token"></FormInput>
 
     <div v-for="e in (errors.liftime_refresh_token || [])" :key="e" class="invalid-feedback">
       {{ e }}
     </div>
 
 
-  </b-form-group>
+  </FormGroup>
   
-  <b-form-group :label-cols-md="3" description="Allows you to populate the OpenID Connect profile-claim with a custom url. You may use the {userid} variable." label="Profile URL" label-for="provider.profile_url_template">
-    <b-form-input type="text" :class="{'is-invalid': errors['profile_url_template']}" id="provider.profile_url_template"
-      v-model="provider.profile_url_template"></b-form-input>
+  <FormGroup :label-cols-md="3" description="Allows you to populate the OpenID Connect profile-claim with a custom url. You may use the {userid} variable." label="Profile URL" label-for="provider.profile_url_template">
+    <FormInput type="text" :class="{'is-invalid': errors['profile_url_template']}" id="provider.profile_url_template"
+      v-model="provider.profile_url_template"></FormInput>
 
     <div v-for="e in (errors.profile_url_template || [])" :key="e" class="invalid-feedback">
       {{ e }}
     </div>
 
 
-  </b-form-group>
+  </FormGroup>
   
-  <b-form-group :label-cols-md="3" description="What url should be used for initialization" label="Init URL" label-for="provider.init_url">
-    <b-form-input type="text" :class="{'is-invalid': errors['init_url']}" id="provider.profile_url_template"
-      v-model="provider.init_url"></b-form-input>
+  <FormGroup :label-cols-md="3" description="What url should be used for initialization" label="Init URL" label-for="provider.init_url">
+    <FormInput type="text" :class="{'is-invalid': errors['init_url']}" id="provider.profile_url_template"
+      v-model="provider.init_url"></FormInput>
 
     <div v-for="e in (errors.init_url || [])" :key="e" class="invalid-feedback">
       {{ e }}
     </div>
 
-  </b-form-group>
+  </FormGroup>
 
   <button type="submit" class="btn btn-primary mt-3" :disabled="loading">Save Settings</button>
 
@@ -89,73 +89,51 @@
 
 </template>
 
-<script>
+<script setup>
 
-export default {
+import {ref, onMounted, getCurrentInstance} from 'vue';
+import {maxios, notify} from '@/admin/helpers.js';
 
-  data() {
-    return {
+const errors = ref({});
+const wasValidated = ref(false);
+const loading = ref(false);
+const provider = ref(null);
+const selected = ref(false);
 
-      errors: {},
+onMounted( () => {
+  maxios.get('oauth/oidc/provider').then(response => {
+    provider.value = response.data;
+  }, response => {
+    // error callback
+    errors.value = reponse.data.errors;
+  });
+})
 
-      wasValidated: false,
-      loading: false,
+function onSubmit() {
 
-      provider: null,
+  maxios.put('oauth/oidc/provider', provider.value).then(response => {
 
-      selected: false,
-
-    }
-  },
-
-  mounted() {
-
-    // oidc/provider
-
-    this.$http.get(this.$murl('oauth/oidc/provider')).then(response => {
-      
-      this.provider = response.data;
-
-    }, response => {
-      // error callback
-      this.errors = reponse.data.errors;
+    notify({
+      text: 'We have succesfully saved your provider settings.'
     });
 
-  },
+    errors.value = {};
+    //provider.value = response.data;
+    wasValidated.value = false;
 
-  methods: {
-    onSubmit(event) {
+  }, response => {
+    // error callback
+    errors.value = response.data.errors;
+    //notify({text: 'We could not save this.', type: 'error'});
 
-      this.$http.put(this.$murl('oauth/oidc/provider'), this.provider).then(response => {
+    notify({
+      text: 'We could not save this.',
+      type: 'error'
+    });
 
-        this.$noty({
-          text: 'We have succesfully saved your provider settings.'
-        });
+    wasValidated.value = true;
 
-        this.errors = {};
-        //this.provider = response.data;
-        this.wasValidated = false;
-
-      }, response => {
-        // error callback
-        this.errors = response.data.errors;
-        //this.$noty({text: 'We could not save this.', type: 'error'});
-
-        this.$noty({
-          text: 'We could not save this.',
-          type: 'error'
-        });
-
-        this.wasValidated = true;
-
-      });
-
-
-
-      event.preventDefault();
-
-    }
-  }
+  });
 
 }
 
