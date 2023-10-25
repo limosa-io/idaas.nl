@@ -21,8 +21,8 @@
 
           <div class="input-group mb-3">
 
-            <FormSelect v-model="client_id_selected" value-field="client_id" text-field="client_name"
-              :options="clients" class="form-control" />
+            <FormSelect v-model="client_id_selected" value-field="client_id" text-field="client_name" :options="clients"
+              class="form-control" />
             <div class="input-group-append">
               <a @click="router.push({ name: 'oidc.client.edit', params: { client_id: requestParameters.client_id } });"
                 v-if="requestParameters.client_id" class="btn btn-outline-primary btn-primary" type="button">Edit</a>
@@ -107,13 +107,12 @@
 
 
 <script setup>
-
 // TODO: query for clients registered.
 // Check if 'test client' has been installed. Check by name?? Or by 'redirect_uri'? If not exists => suggest to create it.
 // Show list of clients. like existing Test.vue component.
 // When client is selected, show options  for selectint available scopes, response_types, redirect_uri-s etc.    
 
-import {useRouter} from 'vue-router4'
+import { useRouter } from 'vue-router4'
 import queryString from 'query-string';
 import sha256 from 'hash.js/lib/hash/sha/256';
 import { notify } from '../../../helpers';
@@ -166,112 +165,111 @@ const testUrl = computed(() => {
 
       }
     }
+});
 
-  // see https://tools.ietf.org/html/rfc7636
+// see https://tools.ietf.org/html/rfc7636
 
-  watch(client_id_selected, (val) => {
-    if (clientSelected.value == null || clientSelected.value.client_id != val) {
+watch(client_id_selected, (val) => {
+  if (clientSelected.value == null || clientSelected.value.client_id != val) {
 
-      for (var client of clients.value) {
+    for (var client of clients.value) {
 
-        if (client.client_id == val) {
-          clientSelected.value = client;
-          break;
-        }
+      if (client.client_id == val) {
+        clientSelected.value = client;
+        break;
       }
     }
-
-    requestParameters.value.client_id = val;
-  });
-
-  watch(requestParameters, (val) => {
-    localStorage.setItem('test.parameters', JSON.stringify(val));
-  }, { deep: true });
-
-
-  onMounted(() => {
-    laxios.get('/.well-known/openid-configuration', {
-      public: true
-    }).then(response => {
-
-      provider.value = response.data;
-
-    }, response => {
-      // error callback
-    });
-  });
-
-  function loadClients() {
-
-    return new Promise((resolve, reject) => {
-      laxios.get('oauth/connect/register').then(response => {
-        clients.value = Object.values(response.data);
-
-        hasTestClient.value = clients.value.find(e => e.client_name == 'Test Client') != undefined;
-
-        requestParameters.value = JSON.parse(localStorage.getItem('test.parameters')) || {};
-
-        client_id_selected.value = requestParameters.value.client_id || null;
-
-      }).catch(response => {
-        // error callback
-        reject(response);
-      });
-    });
   }
 
-  function create_test_client() {
-    let testClient = {
-      "secret": "veS37VvsKG5lim9pE7PrmqCicTEQOPz2RcBW61jP",
-      "redirect_uris": [window.location.protocol + "//" + window.location.host + "/tester"],
-      "post_logout_redirect_uris": [window.location.protocol + "//" + window.location.host + "/tester/logout"],
-      "response_types": ["token", "code", "id_token"],
-      "grant_types": ["authorization_code", "implicit", "refresh_token"],
-      "code_challenge_methods_supported": ["S256", "plain"],
-      "application_type": "web",
-      "public": "confidential",
-      "contacts": null,
-      "logo_uri": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/1\/11\/Test-Logo.svg",
-      "client_uri": null,
-      "policy_uri": null,
-      "tos_uri": null,
-      "token_endpoint_auth_method": "client_secret_post",
-      "jwks_uri": null,
-      "jwks": null,
-      "default_max_age": null,
-      "default_prompt": null,
-      "default_prompt_allow_override": true,
-      "default_acr_values_allow_override": true,
-      "require_auth_time": null,
-      "initiate_login_uri": null,
-      "trusted": false,
-      "client_name": "Test Client"
-    };
+  requestParameters.value.client_id = val;
+});
+
+watch(requestParameters, (val) => {
+  localStorage.setItem('test.parameters', JSON.stringify(val));
+}, { deep: true });
 
 
-    laxios.post('oauth/connect/register',
+onMounted(() => {
+  laxios.get('/.well-known/openid-configuration', {
+    public: true
+  }).then(response => {
 
-      testClient.value
-    ).then(response => {
-      return loadClients();
-    }).then(response => {
-      notify({ text: 'We have succesfully saved your new OpenID Client.' });
+    provider.value = response.data;
+
+  }, response => {
+    // error callback
+  });
+});
+
+function loadClients() {
+
+  return new Promise((resolve, reject) => {
+    laxios.get('oauth/connect/register').then(response => {
+      clients.value = Object.values(response.data);
+
+      hasTestClient.value = clients.value.find(e => e.client_name == 'Test Client') != undefined;
+
+      requestParameters.value = JSON.parse(localStorage.getItem('test.parameters')) || {};
+
+      client_id_selected.value = requestParameters.value.client_id || null;
+
     }).catch(response => {
-      notify({ text: 'We could not save your new OpenID Client.' });
+      // error callback
+      reject(response);
     });
-  }
+  });
+}
 
-  function test() {
+function create_test_client() {
+  let testClient = {
+    "secret": "veS37VvsKG5lim9pE7PrmqCicTEQOPz2RcBW61jP",
+    "redirect_uris": [window.location.protocol + "//" + window.location.host + "/tester"],
+    "post_logout_redirect_uris": [window.location.protocol + "//" + window.location.host + "/tester/logout"],
+    "response_types": ["token", "code", "id_token"],
+    "grant_types": ["authorization_code", "implicit", "refresh_token"],
+    "code_challenge_methods_supported": ["S256", "plain"],
+    "application_type": "web",
+    "public": "confidential",
+    "contacts": null,
+    "logo_uri": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/1\/11\/Test-Logo.svg",
+    "client_uri": null,
+    "policy_uri": null,
+    "tos_uri": null,
+    "token_endpoint_auth_method": "client_secret_post",
+    "jwks_uri": null,
+    "jwks": null,
+    "default_max_age": null,
+    "default_prompt": null,
+    "default_prompt_allow_override": true,
+    "default_acr_values_allow_override": true,
+    "require_auth_time": null,
+    "initiate_login_uri": null,
+    "trusted": false,
+    "client_name": "Test Client"
+  };
 
-    var parameters = parametersForUrl.value;
-    parameters.state = Buffer.from(JSON.stringify(parameters.value)).toString("base64");;
-    parameters.nonce = '12345';
 
-    document.location = provider.value.authorization_endpoint + '?' + queryString.stringify(parametersForUrl.value);
+  laxios.post('oauth/connect/register',
 
-  }
+    testClient.value
+  ).then(response => {
+    return loadClients();
+  }).then(response => {
+    notify({ text: 'We have succesfully saved your new OpenID Client.' });
+  }).catch(response => {
+    notify({ text: 'We could not save your new OpenID Client.' });
+  });
+}
 
+function test() {
 
+  var parameters = parametersForUrl.value;
+  parameters.state = Buffer.from(JSON.stringify(parameters.value)).toString("base64");;
+  parameters.nonce = '12345';
+
+  document.location = provider.value.authorization_endpoint + '?' + queryString.stringify(parametersForUrl.value);
+
+}
 
 </script>
 
