@@ -96,10 +96,9 @@
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import axios from "axios";
 import {useRouter} from 'vue-router4'
 
-import { getDecodedAccesstoken, getOidcUrl } from "@/admin/helpers.js";
+import { getDecodedAccesstoken, getOidcUrl, laxios } from "@/admin/helpers.js";
 import PopupDemoApplication from "./demo/PopupDemoApplication.vue";
 
 const router = useRouter();
@@ -112,9 +111,7 @@ const popupdemo = ref(null);
 onMounted(() => {
   currentClientId.value = getDecodedAccesstoken().aud;
 
-  axios.get("https://login.notidaas.nl/oauth/connect/register", {headers: {
-    'Authorization': 'Bearer ' + window.sessionStorage.getItem('access_token')
-  }}).then(
+  laxios.get("/oauth/connect/register").then(
     (response) => {
       clients.value = response.data;
     },

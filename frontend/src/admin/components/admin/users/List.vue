@@ -173,6 +173,10 @@ watch(itemsPerPage, (val) => {
   changePage(currentPage.value);
 });
 
+watch(currentPage, val => {
+  changePage(val);
+});
+
 function selectAll() {
   for (var user of users) {
     checkedUsers.push(user.id);
