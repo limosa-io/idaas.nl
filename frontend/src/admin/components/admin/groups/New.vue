@@ -8,7 +8,7 @@
         class="needs-validation"
         novalidate
         :class="{ 'was-validated': wasValidated }"
-        v-on:submit="onSubmit"
+        v-on:submit.prevent="onSubmit"
       >
         <div class="form-row form-group">
           <div class="col-md-3">
@@ -136,8 +136,6 @@ function onSubmit(event) {
   }
 
   wasValidated.value = true;
-
-  event.preventDefault();
 }
 
 </script>

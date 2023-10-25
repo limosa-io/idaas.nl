@@ -1,14 +1,15 @@
 <template>
 
 <div>
-  <Modal @ok="onSubmitImportX509" ref="importX509" id="importX509" title="Import X509" v-if="importx509">
+  <!-- v-if="importX509" -->
+  <Modal @ok="onSubmitImportX509" ref="importmodal" id="importX509" title="Import X509" >
 
-    <form novalidate :class="{'was-validated': wasValidated}" class="needs-validation" v-on:submit="onSubmitImportX509">
+    <form novalidate :class="{'was-validated': wasValidated}" class="needs-validation" v-on:submit.prevent="onSubmitImportX509">
 
       <div class="form-group row">
         <label for="x509" class="col-sm-2 col-form-label">Certificate</label>
         <div class="col-sm-10">
-          <textarea :class="{'is-invalid': errors['x509']}" required class="form-control" rows="4" id="x509" v-model="importx509.x509"></textarea>
+          <textarea :class="{'is-invalid': errors['x509']}" required class="form-control" rows="4" id="x509" v-model="importX509.x509"></textarea>
 
           <div v-for="(e ,index) in errors['x509']" class="invalid-feedback" :key="index">
             {{ e }}
@@ -20,7 +21,7 @@
       <div class="form-group row">
         <label for="inputEmail3" class="col-sm-2 col-form-label">Private Key</label>
         <div class="col-sm-10">
-          <textarea :class="{'is-invalid': errors['private_key']}" class="form-control" rows="4" v-model="importx509.private_key"></textarea>
+          <textarea :class="{'is-invalid': errors['private_key']}" class="form-control" rows="4" v-model="importX509.private_key"></textarea>
           <div v-for="(e, index) in errors['private_key']" class="invalid-feedback" :key="index">
             {{ e }}
           </div>
@@ -35,7 +36,7 @@
     Generate new keypair
   </button>
 
-  <button @click="$refs.importX509.show();" class="btn btn-md btn-primary mb-3 mr-2 float-right" type="button">
+  <button @click="show();" class="btn btn-md btn-primary mb-3 mr-2 float-right" type="button">
     Import X509
   </button>
 
@@ -69,20 +70,26 @@
 
 <script setup>
 
-import { ref, reactive, watch, computed, getCurrentInstance, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { maxios, notify, getOidcUrl } from '@/admin/helpers.js'
 import Modal from '@/admin/components/general/Modal.vue'
 
-const errors = ref(null);
+const errors = ref({});
 const wasValidated = ref(false);
-const loading = ref(false);
 const records = ref(null);
-const importX509 = ref(null);
+const importX509 = ref({
+  x509: null, private_key: null
+});
+const importmodal = ref(null);
 
 onMounted(async () => {
   const response = await maxios.get("api/openidKey");
   records.value = response.data;
 });
+
+function show(){
+  importmodal.value.show();
+}
 
 function reset(){
   importX509.value = {
@@ -98,11 +105,10 @@ function activate(key) {
     (response) => {
       key = response;
     },
-    (response) => {
+    (e) => {
       // error callback
-
       notify({
-        text: response.data.error,
+        text: e.response.data.error,
         type: "error",
       });
 
@@ -119,11 +125,11 @@ function deactivate(key) {
     (response) => {
       key = response;
     },
-    (response) => {
+    (e) => {
       // error callback
 
       notify({
-        text: response.data.error,
+        text: e.response.data.error,
         type: "error",
       });
 
@@ -136,14 +142,11 @@ function createGenerated() {
   maxios.post("api/openidKey/createGenerated", {}).then(
     (response) => {
       records.value.push(response.data);
-    },
-    (response) => {
-      // error callback
     }
   );
 }
 
-function onSubmitImportX509(event) {
+function onSubmitImportX509() {
   maxios.post("api/openidKey", importX509.value).then(
     (response) => {
       records.value.push(response.data);
@@ -151,15 +154,13 @@ function onSubmitImportX509(event) {
       wasValidated.value = false;
 
       importX509.value = null;
-      vue.proxy.$refs.importX509.hide();
+      importmodal.value.hide();
     },
     (e) => {
       errors.value = e.response.data.errors;
       wasValidated.value = true;
     }
   );
-
-  event.preventDefault();
 }
 
 </script>

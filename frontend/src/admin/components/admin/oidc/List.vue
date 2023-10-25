@@ -6,13 +6,13 @@
 
         <a
           class="btn btn-md btn-secondary float-right mr-2"
-          :href="getOidcUrl('.well-known/openid-configuration')"
+          :href="getOidcUrl('/.well-known/openid-configuration')"
           target="_blank"
           >OpenID Configuration</a
         >
         <a
           class="btn btn-md btn-secondary float-right mr-2"
-          :href="getOidcUrl('.well-known/jwks.json')"
+          :href="getOidcUrl('/.well-known/jwks.json')"
           target="_blank"
           >JWK</a
         >

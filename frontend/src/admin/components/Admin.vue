@@ -40,34 +40,25 @@
 
 
 <script setup>
-//FIXME: rewrite to Vue3
 import '../assets/styles/index.scss';
 
 import sidebar from './Sidebar.vue'
 import TopBar from './TopBar.vue'
-import state from './state.js'
 
 import {laxios, maxios} from '@/admin/helpers.js'
 
-import {ref, onMounted, onUnmounted, getCurrentInstance} from 'vue';
+import {ref, onMounted} from 'vue';
 import Modal from '@/admin/components/general/Modal.vue'
-import { useRouter, useRoute } from 'vue-router4'
+import { useRouter } from 'vue-router4'
 import { getAccessToken } from '../helpers';
 
 const router = useRouter()
-
-const vue = getCurrentInstance();
-
 const width = ref('0%');
 const height = ref('0%');
 const withAnimations = ref(true);
 const isCollapsed = ref(false);
-const showDismissibleAlert = ref(true);
 const userinfo = ref(null);
 const isLoaded = ref(false);
-const oauth = ref({
-  accessToken: null
-});
 
 onMounted(() => {
   if(getAccessToken() == null){

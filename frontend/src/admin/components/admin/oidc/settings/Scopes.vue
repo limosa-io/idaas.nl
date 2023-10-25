@@ -36,9 +36,8 @@
       </p>
     </Modal>
 
-
     <form v-if="scopes != null" class="needs-validation" novalidate :class="{ 'was-validated': wasValidated }"
-      v-on:submit="onSubmit">
+      v-on:submit.prevent="onSubmit">
 
       <button class="btn btn-sm btn-primary float-right" @click="addScope" type="button">
         Add Scope
@@ -66,9 +65,9 @@
         <tbody>
           <tr v-for="(scope, index) in scopes" :key="index">
             <th class="align-middle text-center" scope="row">
-              <b-badge @click="showScopeInformation(scope.name)"
+              <span @click="showScopeInformation(scope.name)"
                 title="This scope is mapped to a set of claims. Click for more information." pill variant="primary"
-                v-if="mapping != null && mapping[scope.name]">{{ index + 1 }}</b-badge><span v-else>{{ index + 1 }}</span>
+                v-if="mapping != null && mapping[scope.name]">{{ index + 1 }}</span><span v-else>{{ index + 1 }}</span>
             </th>
             <td>
               <input :readonly="scope.system" :class="{ 'is-invalid': errors[scope.id] && errors[scope.id].errors.name }"
@@ -136,12 +135,13 @@ const scopeInformationModal = ref(null);
 
 onMounted(() => {
 
-  maxios.get(vue.proxy.$murl('api/oAuthScope')).then(response => {
+  maxios.get('api/oAuthScope').then(response => {
 
+    console.log(response.data);
     scopes.value = response.data;
 
     // Load after loading the most important things
-    maxios.get(vue.proxy.$murl('api/oAuthScope/mapping')).then(response => {
+    maxios.get('api/oAuthScope/mapping').then(response => {
 
       mapping.value = response.data;
 
@@ -173,7 +173,7 @@ function changedScope(scope) {
 
 function onSubmitNewScope(event) {
 
-  maxios.post(vue.proxy.$murl('api/oAuthScope'),
+  maxios.post('api/oAuthScope',
     scope.value
   ).then(response => {
 
@@ -205,17 +205,15 @@ function onSubmit(event) {
         scope
       ).then(response => {
 
-        // FIXME:
-        vue.proxy.$set(errors.value, scope.id, null);
+        errors.value[scope.id] = null;
 
         changedScopes.value.delete(scope.id);
 
         notify({ text: 'Saved scope&nbsp;<em>' + scope.name + '</em>' });
 
-      }, response => {
+      }, e => {
 
-        // FIXME: ...
-        vue.proxy.$set(errors.value, scope.id, response.data)
+        errors.value[scope.id] = e.response.data;
 
         notify({ text: 'We could not save scope&nbsp;<em>' + scope.name + '</em>.', type: 'error' });
       });

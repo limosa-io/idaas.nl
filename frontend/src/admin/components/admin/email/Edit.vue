@@ -200,7 +200,7 @@ function deleteObject(o) {
     });
 }
 
-function onSubmit(event) {
+function onSubmit() {
   if (event.target.checkValidity()) {
     maxios
       .put(
@@ -231,8 +231,6 @@ function onSubmit(event) {
       type: "error",
     });
   }
-
-  event.preventDefault();
 }
 </script>
 

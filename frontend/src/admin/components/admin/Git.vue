@@ -213,8 +213,6 @@ function onSubmit(event) {
       type: "error",
     });
   }
-
-  event.preventDefault();
 }
 </script>
 

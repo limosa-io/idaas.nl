@@ -462,15 +462,10 @@ img.cropped {
                   :show-labels="true"
                   :multiple="true"
                   placeholder="Pick a value"
-                >
-                <!-- FIXME: this templat should contain something -->
-                  <template slot="option" slot-scope="props">
-                    test
-                  </template>
-
-                  <!-- <template slot="tag" slot-scope="props">
+                >                 
+                <template slot="tag" slot-scope="props">
                   {{ props.option.display }}
-                </template> -->
+                </template> 
                 </multiselect>
               </div>
             </div>
@@ -1127,8 +1122,6 @@ function onSubmitPassword(event) {
         });
       }
     );
-
-  event.preventDefault();
 }
 
 function onSubmit(event) {
@@ -1158,8 +1151,6 @@ function onSubmit(event) {
         errors.value = e.response.data.errors;
       }
     );
-
-  event.preventDefault();
 }
 
 function readFile(event) {

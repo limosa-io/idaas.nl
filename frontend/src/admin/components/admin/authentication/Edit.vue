@@ -17,7 +17,7 @@
           class="btn btn-xs btn-dark align-right">Configure</button>
       </div>
 
-      <form class="needs-validation" novalidate :class="{ 'was-validated': wasValidated }" v-on:submit="onSubmit">
+      <form class="needs-validation" novalidate :class="{ 'was-validated': wasValidated }" v-on:submit.prevent="onSubmit">
 
         <FormGroup horizontal :label-cols="3" description="Type of the module." label="Module type"
           label-for="module.type">
@@ -165,8 +165,7 @@ onMounted(() => {
 
   laxios.get('oauth/userinfo').then(response => {
     userinfo.value = response.data;
-  }, response => {
-    // FIXME: fix router
+  }, _ => {
     router.replace({ name: 'error.default' });
   });
 
@@ -221,7 +220,7 @@ function getInfo() {
 
 }
 
-function onSubmit(event) {
+function onSubmit() {
 
   maxios.put('authchain/v2/manage/modules/' + route.params.module_id,
     module.value
@@ -240,8 +239,6 @@ function onSubmit(event) {
       type: 'error'
     });
   });
-
-  event.preventDefault();
 
 }
 

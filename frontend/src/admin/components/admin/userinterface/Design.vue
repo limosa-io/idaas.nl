@@ -22,7 +22,7 @@
           </div>
         </div>
 
-        <form class="needs-validation" novalidate :class="{ 'was-validated': false }" v-on:submit="onSubmit">
+        <form class="needs-validation" novalidate :class="{ 'was-validated': false }" v-on:submit.prevent="onSubmit">
           <template v-if="!advanced">
             <div class="row">
               <div class="col-6">
@@ -161,11 +161,7 @@
         <button class="btn btn-link ml-0 pl-0" type="button" @click="advanced = !advanced">{{ advanced ? 'Basic' :
           'Advanced' }}</button>
 
-        <!-- FIXME: errors-->
-        <!-- <router-link
-          class="btn btn-link ml-0 pl-0"
-          :to="{name: 'userinterface.manager'}"
-        >Media Manager</router-link> -->
+        <router-link class="btn btn-link ml-0 pl-0" :to="{ name: 'userinterface.manager' }">Media Manager</router-link>
       </div>
 
       <div class="col">
@@ -252,20 +248,20 @@ const authRequest = ref({
 });
 
 const style = ref({
-        button_backgroundColor: "#2ad42b",
-        logo: null,
-        container_backgroundColor: "#20b2fa",
-        container_backgroundImage: null,
-        button_backgroundColor: "#2ad42b",
-        container_positionVertical: "middle",
-        container_positionHorizonal: "center",
-        navbar_show: "hide",
-        navbar_backgroundColor: "#343a40",
-        client_logo_show: "null",
-        client_name_show: "show",
-        title: "",
-        label_display: "hidden"
-      });
+  button_backgroundColor: "#2ad42b",
+  logo: null,
+  container_backgroundColor: "#20b2fa",
+  container_backgroundImage: null,
+  button_backgroundColor: "#2ad42b",
+  container_positionVertical: "middle",
+  container_positionHorizonal: "center",
+  navbar_show: "hide",
+  navbar_backgroundColor: "#343a40",
+  client_logo_show: "null",
+  client_name_show: "show",
+  title: "",
+  label_display: "hidden"
+});
 const showupload = ref(false);
 const cropped = ref(null);
 const preview = ref(oidcUrl + "?designer=true");
@@ -382,8 +378,6 @@ function onSubmit(event) {
       type: 'error'
     });
   });
-
-  event.preventDefault();
 }
 
 function change() {

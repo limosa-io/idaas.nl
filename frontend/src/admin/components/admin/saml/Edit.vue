@@ -244,8 +244,6 @@ function onSubmit(event) {
     });
   }
 
-  event.preventDefault();
-
 }
 
 </script>

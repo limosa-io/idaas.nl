@@ -10,7 +10,7 @@
             <div class="peers ai-c fxw-nw">
               <div class="peer">
                 <div class="logo p-1">
-                  <img src="../assets/static/images/bulb.svg" width="50" style="margin-left: 6px; margin-top: 3px; padding: 12px;"  />
+                  <img :src="bulb" width="50" style="margin-left: 6px; margin-top: 3px; padding: 12px;"  />
                 </div>
               </div>
               <div class="peer peer-greed">
@@ -58,6 +58,7 @@
 
 <script setup>
 
+import bulb from '../assets/static/images/bulb.svg';
 import { useRouter } from 'vue-router4';
 
 const router = useRouter();

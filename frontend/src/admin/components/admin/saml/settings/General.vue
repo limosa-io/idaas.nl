@@ -1,6 +1,6 @@
 <template>
 
-<form class="needs-validation" novalidate :class="{'was-validated': wasValidated}" v-on:submit="onSubmit">
+<form class="needs-validation" novalidate :class="{'was-validated': wasValidated}" v-on:submit.prevent="onSubmit">
 
   <h3 class="c-grey-900">Settings</h3>
 
@@ -111,8 +111,6 @@ function onSubmit(event){
   }else{
     wasValidated.value = true;
   }
-
-  event.preventDefault();
 }
 
 </script>
