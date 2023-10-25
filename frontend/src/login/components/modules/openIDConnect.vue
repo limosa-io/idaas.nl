@@ -10,7 +10,7 @@
     style="border-color: rgba(0, 0, 0, 0.2)"
   >
     <span>{{
-      $t(props.module.config ? props.module.config.button_text : "login.oidcButton")
+      $t("login.oidcButton")
     }}</span>
   </button>
 </template>
@@ -19,7 +19,7 @@
 import { onMounted, watch, ref } from "vue";
 
 import { defineProps } from "vue";
-import { baseProps } from "./composable";
+import { baseProps, isIncomplete } from "./composable";
 import { useStateStore } from "../store";
 const props = defineProps(baseProps);
 
@@ -32,9 +32,9 @@ var lastCalled = 0;
 onMounted(() => {
   loading.value = false;
 
-  if (props.lonely && !isIncomplete()) {
+  if (props.lonely && !isIncomplete(props.authRequest, props.module)) {
     init();
-  } else if (isIncomplete()) {
+  } else if (isIncomplete(props.authRequest, props.module)) {
     state.error(
       "Could not authenticate using the chosen method. Please choose a different method.",
     );

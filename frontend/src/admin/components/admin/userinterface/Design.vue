@@ -271,6 +271,7 @@ const cropped = ref(null);
 const preview = ref(oidcUrl + "?designer=true");
 const iframes = ref(null);
 var previewSettings = {};
+const pickerModal = ref();
 
 watch(
   style,
@@ -309,12 +310,12 @@ function postAuthrequest() {
 
 function picked(m) {
   callback(m);
-  pickerModal.hide();
+  pickerModal.value.hide();
 }
 
 function showPicker(c) {
   callback = c;
-  pickerModal.show();
+  pickerModal.value.show();
 }
 
 function firstLoad() {

@@ -52,6 +52,7 @@ defineExpose({ show, hide });
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 999;
 }
 
 .overlay-content {

@@ -81,13 +81,12 @@
 
 
 <script setup>
-import { ref, onMounted , getCurrentInstance, watch} from 'vue'
+import { ref, onMounted, watch} from 'vue'
 import { useRouter, useRoute } from 'vue-router4';
 import { maxios } from '@/admin/helpers.js';
 
 import { notify } from '../../../helpers';
 
-const vue = getCurrentInstance();
 const router = useRouter();
 const route = useRoute();
 const loaded = ref(false);

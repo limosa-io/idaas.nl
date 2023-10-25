@@ -52,14 +52,13 @@
 
 <script setup>
 
-import { getCurrentInstance, ref, defineProps, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { maxios } from "@/admin/helpers.js";
 
 import Modal from '@/admin/components/general/Modal.vue';
 import { notify } from '../../../helpers';
-import { useRoute, useRouter } from 'vue-router4';
+import { useRouter } from 'vue-router4';
 
-const vue = getCurrentInstance();
 const router = useRouter();
 const objects = ref([]);
 const errors = ref([]);
@@ -99,15 +98,9 @@ function onSubmitNewTemplate() {
 }
 
 onMounted(() => {
-
   maxios.get('api/mail_template').then(response => {
-
     objects.value = response.data;
-
-  }, response => {
-    // error callback
   });
-
 });
 
 </script>

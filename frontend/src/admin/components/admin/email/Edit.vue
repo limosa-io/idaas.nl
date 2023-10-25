@@ -81,8 +81,6 @@
 import _ from "lodash";
 import { Buffer } from "buffer";
 import Danger from "@/admin/components/general/Danger.vue";
-import { shallowRef } from 'vue';
-
 import { onMounted, watch, computed, ref, getCurrentInstance } from "vue";
 import { maxios } from "@/admin/helpers.js";
 import { notify } from "../../../helpers";
@@ -100,16 +98,10 @@ const cmOptions = ref({
   line: true,
 });
 
-
 const errors = ref({});
-
 const wasValidated = ref(false);
-const loading = ref(false);
-
 const object = ref(null);
-
 const templateForm = ref(null);
-
 
 const parentOptions = computed(() => {
   var result = parents.value;
@@ -120,15 +112,10 @@ const parentOptions = computed(() => {
   return parents.value ? result : [];
 });
 
-const vue = getCurrentInstance();
-
-
 onMounted(() => {
   maxios
     .get(
-
       "api/mail_template/" + encodeURIComponent(route.params.object_id)
-
     )
     .then(
       (response) => {
@@ -202,7 +189,7 @@ function deleteObject(o) {
     .delete(
       "api/mail_template/" + encodeURIComponent(object.value.id)
     )
-    .then((response) => {
+    .then((_response) => {
       notify({
         text: "Successfully deleted the client.",
       });
@@ -221,7 +208,7 @@ function onSubmit(event) {
         object.value
       )
       .then(
-        (response) => {
+        (_response) => {
           notify({
             text: "We have succesfully saved this.",
           });

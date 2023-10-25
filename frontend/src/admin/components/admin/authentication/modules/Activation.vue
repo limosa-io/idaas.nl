@@ -13,16 +13,9 @@
 </template>
 
 <script setup>
-
 import { maxios } from '@/admin/helpers.js'
 import { ref, onMounted, defineProps } from 'vue';
 const props = defineProps(['module', 'info']);
-
-const errors = ref({});
-const wasValidated = ref(false);
-const loading = ref(false);
-const type = ref(null);
-const types = ref([]);
 const templates = ref({});
 
 onMounted(() => {
@@ -34,9 +27,5 @@ onMounted(() => {
   });
 
 });
-
-function onSubmit(event) {
-  event.preventDefault();
-}
 
 </script>

@@ -77,7 +77,7 @@ onMounted(() => {
 });
 
 function deleteUi(ui){
-  maxios.delete('/api/uiServers/' + ui.id).then(response => {
+  maxios.delete('/api/uiServers/' + ui.id).then(_ => {
     load();
   });
 }
@@ -95,7 +95,6 @@ function onSubmit(){
   }).catch(e => {
     errors.value = e.response.data.errors;
   });
-
 }
 
 </script>

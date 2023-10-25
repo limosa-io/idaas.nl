@@ -95,7 +95,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, getCurrentInstance } from "vue";
+import { ref, onMounted, computed } from "vue";
 import axios from "axios";
 import {useRouter} from 'vue-router4'
 
@@ -108,8 +108,6 @@ const search = ref(null);
 const currentClientId = ref(null);
 
 const popupdemo = ref(null);
-
-const vue = getCurrentInstance();
 
 onMounted(() => {
   currentClientId.value = getDecodedAccesstoken().aud;

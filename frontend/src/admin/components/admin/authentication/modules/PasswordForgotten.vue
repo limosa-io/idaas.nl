@@ -1,45 +1,31 @@
 
 <template>
+  <div>
 
-<div>
+    <FormGroup horizontal :label-cols="3"
+      description="Available template parameters are <code class=&quot;highlighter-rouge&quot;>otp</code>, <code class=&quot;highlighter-rouge&quot;>subject</code> and if present <code class=&quot;highlighter-rouge&quot;>user</code>."
+      label="Email template" label-for="module.config.template_id">
+      <FormSelect id="module.config.template_id" aria-describedby="parentHelp" v-if="templates" value-field="id"
+        text-field="name" v-model="module.config.template_id" :options="templates" />
+    </FormGroup>
 
-  <FormGroup horizontal :label-cols="3" description="Available template parameters are <code class=&quot;highlighter-rouge&quot;>otp</code>, <code class=&quot;highlighter-rouge&quot;>subject</code> and if present <code class=&quot;highlighter-rouge&quot;>user</code>."
-    label="Email template" label-for="module.config.template_id">
-    <FormSelect id="module.config.template_id" aria-describedby="parentHelp" v-if="templates" value-field="id" text-field="name"
-      v-model="module.config.template_id" :options="templates" />
-  </FormGroup>
-
-</div>
-
+  </div>
 </template>
 
 <script setup>
 
 import { ref, defineProps } from 'vue';
-import {maxios} from "@/admin/helpers.js";
+import { maxios } from "@/admin/helpers.js";
 
 const props = defineProps(['module', 'info']);
-
-const errors = ref({});
-const wasValidated = ref(false);
-const loading = ref(false);
-const type = ref(null);
-const types = ref([]);
 const templates = ref({});
-
 
 onMounted(() => {
 
   maxios.get('api/mail_template').then(response => {
-
     templates.value = response.data;
-
   });
 
 });
-
-function onSubmit(event) {
-  event.preventDefault();
-}
 
 </script>

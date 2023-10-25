@@ -77,14 +77,12 @@
           </FormCheckbox>
 
         </FormGroup>
-
-<!--         
-        <p>{{  module.type }}</p>
+  
         <component @alert="alert = $event"
-          v-if="module && module.type && Object.keys($options.components).indexOf(module.type) > -1" :module="module"
+          v-if="module && module.type" :module="module"
           :info="info" :wasValidated="wasValidated" :errors="errors" v-bind:is="modules[module.type]"></component>
         <div v-else>
-        </div> -->
+        </div>
 
 
         <div class="form-row">
