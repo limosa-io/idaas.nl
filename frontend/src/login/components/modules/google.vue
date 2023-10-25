@@ -7,14 +7,4 @@
 </template>
 
 <script setup>
-
-import fontawesome from '@fortawesome/fontawesome'
-
-import faGoogle from '@fortawesome/fontawesome-free-brands/faGoogle'
-
-fontawesome.library.add(faGoogle)
-
-const URL_MODULE_NAME = "NAME_OF_THE_MODULE";
-
-//TODO: implement
 </script>

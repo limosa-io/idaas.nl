@@ -11,19 +11,11 @@ export default defineConfig({
 	},
 	resolve: {
 		alias: {
-			'@': path.resolve(__dirname, './frontend/src'),
-			vue: '@vue/compat'
+			'@': path.resolve(__dirname, './frontend/src')
 		},
 	},
 	plugins: [
 		vue({
-			template: {
-				compilerOptions: {
-					compatConfig: {
-						MODE: 3
-					}
-				}
-			}
 		}),
 		laravel({
 			postcss: [

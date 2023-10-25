@@ -29,7 +29,6 @@
             @search-change="asyncFind">
             <template slot="tag" slot-scope="{ option, remove }">
               <span :title="`available as ${getVariableName(option)}`" class="multiselect__tag">
-                <FontAwesomeIcon :icon="getIcon(option)" />
                 <span class="pl-2">{{ option.name }}</span>
                 <i aria-hidden="true" @click="remove(option)" tabindex="1" class="multiselect__tag-icon"></i>
               </span>
@@ -111,13 +110,8 @@
 
 <script setup>
 import { getCurrentInstance, onMounted, ref } from "vue";
-import { library } from "@fortawesome/fontawesome-svg-core";
-import { faEnvelope, faUser, faUsers } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { maxios, notify } from '@/admin/helpers.js'
 import { useRouter, useRoute } from "vue-router4";
-
-library.add(faEnvelope, faUser, faUsers);
 
 const vue = getCurrentInstance();
 const action = ref(null);

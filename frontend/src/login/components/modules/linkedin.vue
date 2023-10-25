@@ -10,12 +10,8 @@
 </template>
 
 <script setup>
-import fontawesome from "@fortawesome/fontawesome";
-import faLinkedin from "@fortawesome/fontawesome-free-brands/faLinkedin";
 import { defineProps } from "vue";
 import { baseProps } from "./composable";
-
-fontawesome.library.add(faLinkedin);
 
 const props = defineProps(baseProps);
 

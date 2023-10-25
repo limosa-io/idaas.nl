@@ -45,7 +45,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps } from 'vue';
+import { ref, defineProps, onMounted } from 'vue';
 import {maxios} from "@/admin/helpers.js";
 
 const props = defineProps(['module', 'info']);

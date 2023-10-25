@@ -81,14 +81,10 @@
 </template>
 
 <script setup>
-import { onMounted, watch, getCurrentInstance, ref, defineProps } from "vue";
-import { library } from "@fortawesome/fontawesome-svg-core";
-import { faEye } from "@fortawesome/free-solid-svg-icons";
+import { watch, getCurrentInstance, ref, defineProps } from "vue";
 import { useStateStore } from "@/login/components/store.js";
 
 import { activate, baseProps, isIncomplete, request, getIncompleteModuleState } from './composable'
-
-library.add(faEye);
 
 const props = defineProps(baseProps);
 
