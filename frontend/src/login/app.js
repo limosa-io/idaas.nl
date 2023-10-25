@@ -4,7 +4,7 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-import { createApp, configureCompat } from 'vue'
+import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router4'
 
 import App from './App.vue'
@@ -15,12 +15,6 @@ import Error from './components/Error.vue'
 import { i18n } from './i18n'
 
 import { createPinia } from 'pinia'
-
-configureCompat({
- // MODE: 3,
-//  GLOBAL_MOUNT: false
- GLOBAL_MOUNT: 'suppress-warning'
-})
 
 const pinia = createPinia()
 

@@ -1,4 +1,4 @@
-import Vue, { createApp, configureCompat } from 'vue'
+import Vue, { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import state from './components/state.js'
@@ -19,12 +19,6 @@ import Danger from './components/general/Danger.vue';
 import { InstallCodemirro } from "codemirror-editor-vue3";
 
 const app = createApp(App);
-
-Vue.configureCompat({
-    COMPONENT_V_MODEL: false,
-    ATTR_ENUMERATED_COERCION: false,
-    ATTR_FALSE_VALUE: false
-})
 
 // app.use(pinia);
 app.use(router);
