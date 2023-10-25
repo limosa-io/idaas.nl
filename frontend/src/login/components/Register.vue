@@ -80,7 +80,7 @@
 
 <script setup>
 import { onMounted, ref, getCurrentInstance, defineProps } from "vue";
-import {baseProps, request} from "./composable";
+import {baseProps, request} from "./modules/composable";
 import axios from "axios";
 
 import userName from "./register/userName.vue";
