@@ -193,11 +193,11 @@ function formatDate(date) {
   return new Date(date).toLocaleString();
 }
 
-function setSortBy(sortBy) {
-  if (sortBy == sortBy.value) {
+function setSortBy(s) {
+  if (s == sortBy.value) {
     sortOrder.value = sortOrder.value == "descending" ? "ascending" : "descending";
   } else {
-    sortBy.value = sortBy;
+    sortBy.value = s;
     sortOrder.value = "descending";
   }
 
