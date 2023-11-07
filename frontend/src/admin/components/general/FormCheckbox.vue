@@ -1,7 +1,7 @@
 <template>
     <div class="custom-control custom-checkbox">
         <input :id="id" type="checkbox" v-model="value" class="custom-control-input">
-        <label class="custom-control-label">
+        <label :for="id" class="custom-control-label">
             <slot>{{ value }}</slot>
         </label>
     </div>
@@ -9,9 +9,6 @@
 
 
 <script setup>
-// :value="modelValue"
-// @input="$emit('update:modelValue', $event.target.value)"
-
 import { computed } from 'vue';
 
 const props = defineProps(['modelValue', 'id', 'description'])

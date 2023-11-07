@@ -83,7 +83,6 @@ function onSubmit() {
       done.value = true;
     },
     (error) => {
-      console.log(error);
       state.error(error.response.data.error);
       done.value = false;
     }

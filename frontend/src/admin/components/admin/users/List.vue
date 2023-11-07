@@ -179,13 +179,29 @@ watch(currentPage, val => {
 
 function selectAll() {
   for (var user of users) {
-    checkedUsers.push(user.id);
+    checkedUsers.value.push(user.id);
 
-    checkedUsers = Array.from(new Set(checkedUsers));
+    checkedUsers.value = Array.from(new Set(checkedUsers.value));
   }
 }
 
 function onSubmit() {
+  var f = [];
+
+  if (search.value.email) {
+    f.push(
+      'emails.value co "' +
+        (search.value.email ? search.value.email : "") +
+        '"'
+    );
+  }
+
+  if (search.value.group) {
+    f.push(`groups.value eq "${search.value.group}"`);
+  }
+
+  filter.value = f.join(" and ");
+  
   changePage(currentPage.value);
 }
 
@@ -227,7 +243,7 @@ function changePage(page) {
 function deleteSelected() {
   let promises = [];
 
-  for (var c of checkedUsers) {
+  for (var c of checkedUsers.value) {
     promises.push(maxios.delete("api/scim/v2/Users/" + c));
   }
 
@@ -236,14 +252,14 @@ function deleteSelected() {
       notify({
         text: "We have succesfully deleted the selected user.",
       });
-      checkedUsers = [];
+      checkedUsers.value = [];
       changePage(currentPage.value);
     },
     e => {
       notify({
         text: "We have succesfully deleted the selected user.",
       });
-      checkedUsers = [];
+      checkedUsers.value = [];
       changePage(currentPage.value);
     }
   );

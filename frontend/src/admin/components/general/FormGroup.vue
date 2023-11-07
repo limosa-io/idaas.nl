@@ -1,6 +1,5 @@
 <template>
     <div class="form-group form-row">
-        
             <div class="col-3">
                 <label :for="id">{{ label }}</label>
             </div>
@@ -8,7 +7,6 @@
             <div class="col">
                 <slot></slot>
             </div>
-        
     </div>
 </template>
 

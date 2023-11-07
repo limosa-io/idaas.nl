@@ -8,7 +8,7 @@
         id="newLinkModal"
         title="New authentication path"
       >
-        <form class="needs-validation" v-on:submit="onSubmitNewLink">
+        <form class="needs-validation" v-on:submit.prevent="onSubmitNewLink">
           <div class="form-row mb-3">
             <div class="col-md-3">
               <label for="chain.list.from">From</label>
@@ -287,7 +287,7 @@ function createLink() {
   newLinkModal.value.show();
 }
 
-function onSubmitNewLink(event) {
+function onSubmitNewLink() {
   maxios.post("authchain/v2/manage/chain", newLink.value).then(
     (response) => {
       chain.value.push(response.data);
@@ -299,7 +299,5 @@ function onSubmitNewLink(event) {
       errors.value = e.response.data.errors;
     }
   );
-
-  event.preventDefault();
 }
 </script>
