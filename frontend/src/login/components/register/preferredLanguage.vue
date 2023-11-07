@@ -8,7 +8,7 @@
     <select
       class="form-control"
       v-model="
-        props.user['urn:ietf:params:scim:schemas:core:2.0:User']
+        userValue['urn:ietf:params:scim:schemas:core:2.0:User']
           .preferredLanguage
       "
     >
@@ -29,8 +29,18 @@
 </template>
 
 <script setup>
-import { defineProps } from "vue";
+import { defineProps, computed } from "vue";
 
-const props = defineProps(["user", "errors", "customerstyle"]);
+const props = defineProps(["modelValue", "errors", 'customerstyle']);
+
+const userValue = computed({
+  get() {
+    return props.modelValue
+  },
+  set(value) {
+    emit('update:modelValue', value)
+  }
+})
+
 </script>
 

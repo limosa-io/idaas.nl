@@ -10,7 +10,7 @@
           props.errors['urn:ietf:params:scim:schemas:core:2.0:User:userName'],
       }"
       v-model="
-        props.user['urn:ietf:params:scim:schemas:core:2.0:User'].userName
+        userValue['urn:ietf:params:scim:schemas:core:2.0:User'].userName
       "
       required
       type="text"
@@ -27,8 +27,18 @@
 
 
 <script setup>
-import { defineProps } from "vue";
+import { defineProps, computed } from "vue";
 
-const props = defineProps(["user", "errors"]);
+const props = defineProps(["modelValue", "errors", 'customerstyle']);
+
+const userValue = computed({
+  get() {
+    return props.modelValue
+  },
+  set(value) {
+    emit('update:modelValue', value)
+  }
+})
+
 </script>
 

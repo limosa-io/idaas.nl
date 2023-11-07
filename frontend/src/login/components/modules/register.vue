@@ -24,8 +24,7 @@
             :key="f"
             :is="modules[f]"
             :customerstyle="customerstyle"
-            :user="user"
-            v-on:input="user = $event.target.value"
+            v-model="user"
             :errors="errors"
           ></component>
 

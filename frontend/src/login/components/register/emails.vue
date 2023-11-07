@@ -2,7 +2,7 @@
   <div>
     <div
       class="form-group"
-      v-for="(email, index) in props.user[
+      v-for="(email, index) in userValue[
         'urn:ietf:params:scim:schemas:core:2.0:User'
       ].emails"
       :key="index"
@@ -37,8 +37,19 @@
 </template>
 
 <script setup>
-import { defineProps } from "vue";
+import { defineProps, computed } from "vue";
 
-const props = defineProps(["user", "errors"]);
+const props = defineProps(["modelValue", "errors"]);
+
+const userValue = computed({
+  get() {
+    return props.modelValue
+  },
+  set(value) {
+    emit('update:modelValue', value)
+  }
+})
+
+
 </script>
 

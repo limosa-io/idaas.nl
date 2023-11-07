@@ -12,7 +12,7 @@
           ],
       }"
       v-model="
-        props.user['urn:ietf:params:scim:schemas:core:2.0:User'].name.familyName
+        userValue['urn:ietf:params:scim:schemas:core:2.0:User'].name.familyName
       "
       required
       type="text"
@@ -28,8 +28,17 @@
 </template>
 
 <script setup>
-import { defineProps } from "vue";
+import { defineProps, computed } from "vue";
 
-const props = defineProps(["user", "errors"]);
+const props = defineProps(["modelValue", "errors"]);
+
+const userValue = computed({
+  get() {
+    return props.modelValue
+  },
+  set(value) {
+    emit('update:modelValue', value)
+  }
+})
 </script>
 
