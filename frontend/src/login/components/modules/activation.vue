@@ -52,6 +52,7 @@ import { onMounted, ref, defineProps } from "vue";
 
 import {activate, baseProps} from './composable'
 import {useStateStore} from "../store";
+import {request} from "./composable";
 
 const state = useStateStore();
 const props = defineProps(baseProps);
