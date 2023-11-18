@@ -1,6 +1,13 @@
-![](https://github.com/arietimmerman/idaas.nl/workflows/CI/badge.svg)
+<p align="center"><a href="https://www.idaas.nl"><img src="https://www.idaas.nl/bulb.svg" alt="Identity as a Service" height="60"/></a></p>
 
-# idaas.nl
+<h1 align="center">idaas.nl</h1>
+<p align="center">The open source reference implementation for Identity-as-a-Service solutions.</p>
+
+<p align="center">
+<img src="https://github.com/arietimmerman/idaas.nl/workflows/CI/badge.svg" />
+</p>
+
+:star: Star us on GitHub — it motivates us a lot!
 
 This is the core of [idaas.nl](https://www.idaas.nl/): (not) yet another identity platform.
 
