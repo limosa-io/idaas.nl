@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Scopes\TenantScope;
 use App\Scopes\TenantTrait;
 use App\Stats\StatableInterface;
 use App\Stats\StatableTrait;
@@ -75,7 +76,7 @@ class User extends Authenticatable implements StatableInterface
     {
         //Allow a user to get roles from other tenants ...
         //wherePivot('tenant_id', resolve('App\Tenant')->id)->
-        return $this->belongsToMany('App\Role')->using('App\TenantPivot');
+        return $this->belongsToMany('App\Role')->withoutGlobalScope(TenantScope::class)->using('App\TenantPivot');
     }
 
     public function groups()

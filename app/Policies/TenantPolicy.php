@@ -29,6 +29,8 @@ class TenantPolicy
             'subject:can_manage:'.$subject->id.':'.$current,
             10,
             function () use ($subject) {
+                // this relies on the fact that Role is scoped to the current tenant
+                // display sql for Role::whereIn('id',$subject->getRoles())
                 return Role::whereIn(
                     'id',
                     $subject->getRoles()

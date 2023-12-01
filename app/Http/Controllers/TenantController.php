@@ -35,7 +35,9 @@ class TenantController extends Controller
         /** @var \App\Subject */
         $user = Auth::user();
 
-        return Tenant::whereIn('id', Role::whereIn('id', $user->getRoles())->pluck('tenant_id'));
+        $tenant_ids = Role::withoutGlobalScopes()->whereIn('id', $user->getRoles()->toArray())->pluck('tenant_id');
+
+        return Tenant::withoutGlobalScopes()->whereIn('id', $tenant_ids);
     }
 
     public function index()
