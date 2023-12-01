@@ -10,15 +10,18 @@ use App\Stats\StatableInterface;
 use App\Stats\StatableTrait;
 use Exception;
 use Idaas\OpenID\Entities\ClaimEntityInterface;
+use Illuminate\Contracts\Auth\Access\Authorizable as AccessAuthorizable;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Support\Str;
 use Laravel\Passport\HasApiTokens;
 
-class Subject extends Model implements Authenticatable, StatableInterface, SubjectInterface
+class Subject extends Model implements Authenticatable, AccessAuthorizable, StatableInterface, SubjectInterface
 {
     use HasApiTokens;
     use StatableTrait;
     use TenantTrait;
+    use Authorizable;
 
     protected $user = null;
 
@@ -83,7 +86,7 @@ class Subject extends Model implements Authenticatable, StatableInterface, Subje
     public function getUser()
     {
         if ($this->user == null) {
-            $this->user = User::find($this->getUserId());
+            $this->user = User::withoutGlobalScopes()->find($this->getUserId());
         }
 
         return $this->user;
@@ -241,7 +244,7 @@ class Subject extends Model implements Authenticatable, StatableInterface, Subje
         $user = $this->getUser();
 
         if ($user != null) {
-            $this->roles = $user->roles->pluck('id');
+            $this->roles = $user->roles()->pluck('roles.id');
         } elseif ($this->getSubject() != null) {
             $this->roles = $this->getSubject()->getRoles();
         }
