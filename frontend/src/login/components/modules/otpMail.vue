@@ -110,7 +110,7 @@ function onSubmit() {
     return;
   }
 
-  isLoading = true;
+  isLoading.value = true;
 
   request(
   props.module, props.authRequest,  
@@ -119,8 +119,8 @@ function onSubmit() {
     remember: remember.value,
   }).then(
     (response) => {
-      done = true;
-      user_id = response.data.user_id_hashed;
+      done.value = true;
+      user_id.value = response.data.user_id_hashed;
       isLoading.value = false;
     },
     (error) => {
