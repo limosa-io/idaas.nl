@@ -208,10 +208,10 @@ function onSubmit() {
         overview();
       });
     },
-    (response) => {
-      console.log(response);
+    (error) => {
+      console.log(error.response);
       isLoading.value = false;
-      errors.value = response.body.errors;
+      errors.value = error.response.data.detail;
     }
   );
 }
