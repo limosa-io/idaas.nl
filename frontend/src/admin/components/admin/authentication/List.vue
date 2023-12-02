@@ -261,11 +261,11 @@ function edit(module) {
   });
 }
 
-function deleteLink(chain) {
-  maxios.delete("authchain/v2/manage/chain/" + chain.id).then(
+function deleteLink(element) {
+  maxios.delete("authchain/v2/manage/chain/" + element.id).then(
     (response) => {
       //this.chain.rem
-      chain.splice(chain.indexOf(chain), 1);
+      chain.value.splice(chain.value.indexOf(element), 1);
     },
     (response) => {
       // error callback
