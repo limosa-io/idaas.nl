@@ -128,7 +128,9 @@ function onSubmitPassword() {
     return;
   }
 
-  request({
+  request(
+    props.module, props.authRequest,  
+  {
     password: password.value,
   }).then(
     (response) => {

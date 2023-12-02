@@ -68,7 +68,7 @@
 
 <script setup>
 import {ref, getCurrentInstance} from "vue";
-import { request, baseProps } from "./composable";
+import { request, baseProps, activate } from "./composable";
 import { useStateStore} from "../store";
 const state = useStateStore();
 const otp = ref(null);

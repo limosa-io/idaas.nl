@@ -60,7 +60,7 @@ function init() {
   lastCalled = new Date();
   loading.value = true;
 
-  request({
+  request(props.module,props.authRequest, {
     init: true,
   }).then(
     (response) => {

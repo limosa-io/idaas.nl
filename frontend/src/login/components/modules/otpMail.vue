@@ -78,7 +78,7 @@
 
 import { useStateStore } from '../store';
 import {defineProps, ref} from 'vue';
-import {request, baseProps} from './composable';
+import {request, baseProps, activate} from './composable';
 const state = useStateStore();
 const username = ref(null);
 const otp = ref(null);
