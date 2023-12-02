@@ -10,7 +10,7 @@
     <div class="account-container" v-if="loaded">
 
         <div class="logo">
-            <a href="/"><img src="../assets/bulb.svg" /></a>
+            <a href="/"><img src="../assets/limosa.svg" /></a>
         </div>
 
         <div class="modal special-modal" tabindex="-1" role="dialog">
@@ -206,7 +206,7 @@ export default {
 // $theme-colors: (primary: $blue, secondary: $gray-600, success: $green, info: $cyan, warning: $yellow, danger: $red, light: $gray-100, dark: $gray-800);
 
 $theme-colors: (
-  "primary": #3eaf7c
+  "primary": #bf3f2c
 );
 
 @import "bootstrap/scss/bootstrap";

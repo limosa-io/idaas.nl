@@ -33,7 +33,7 @@
                 <tbody>
 
                     <tr v-for="(tenant,index) in tenants" :key="index">
-                        <td>{{ tenant.subdomain }}<em>.idaas.nl</em><span v-if="tenant.isNew" class="badge badge-pill badge-warning ml-3">new</span>
+                        <td>{{ tenant.subdomain }}<em>.limosa.io</em><span v-if="tenant.isNew" class="badge badge-pill badge-warning ml-3">new</span>
 </td>
                         <td style="width:100px;">
                             <a :href="tenant.main_url" target="_blank" class="card-link">Manage</a>
@@ -58,7 +58,7 @@
         
         <div class="alert alert-primary" role="alert">
             <h2>Thanks for joining</h2>
-             <p>Before you can create your own idaas.nl environment, your account needs approval. </p>
+             <p>Before you can create your own limosa.io environment, your account needs approval. </p>
              <p>We'll inform you when this is done.</p>
         </div>
     </template>
