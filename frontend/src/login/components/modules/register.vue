@@ -209,7 +209,6 @@ function onSubmit() {
       });
     },
     (error) => {
-      console.log(error.response);
       isLoading.value = false;
       errors.value = error.response.data.detail;
     }
